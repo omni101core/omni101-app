@@ -1,0 +1,16 @@
+{
+  "name": "OMNI101",
+  "short_name": "OMNI101",
+  "description": "Il digitale che lavora con te.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06100c",
+  "theme_color": "#06100c",
+  "icons": [
+    {
+      "src": "/media/logo/omni101-mark-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}
