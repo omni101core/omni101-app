@@ -4,8 +4,8 @@
   "description": "Il digitale che lavora con te.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#06100c",
-  "theme_color": "#06100c",
+  "background_color": "#07080b",
+  "theme_color": "#07080b",
   "icons": [
     {
       "src": "/media/logo/omni101-mark-64.png",
