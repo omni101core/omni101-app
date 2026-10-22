@@ -16,7 +16,7 @@
     "ACCESS_MFA_ENFORCED": "false",
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFgSJI1-u08SQOIh",
     "AI_PROVIDER": "nvidia",
-    "AI_MODEL": "meta/llama-3.3-70b-instruct",
+    "AI_MODEL": "nvidia/nemotron-3.5-lightning-30b-a3b",
     "AI_INPUT_CENTS_PER_MILLION": "0",
     "AI_OUTPUT_CENTS_PER_MILLION": "0"
   },
@@ -37,7 +37,7 @@
         "ORGANIZATION_ID": "omni101",
         "TURNSTILE_SITE_KEY": "0x4AAAAAAFgSJI1-u08SQOIh",
         "AI_PROVIDER": "nvidia",
-        "AI_MODEL": "meta/llama-3.3-70b-instruct",
+        "AI_MODEL": "nvidia/nemotron-3.5-lightning-30b-a3b",
         "AI_INPUT_CENTS_PER_MILLION": "0",
         "AI_OUTPUT_CENTS_PER_MILLION": "0"
       },
@@ -54,7 +54,21 @@
           "pattern": "preview.omni101.app",
           "custom_domain": true
         }
+      ],
+      "workflows": [
+        {
+          "name": "omni101-intake-staging",
+          "binding": "INTAKE_WORKFLOW",
+          "class_name": "LeadIntakeWorkflow"
+        }
       ]
     }
-  }
+  },
+  "workflows": [
+    {
+      "name": "omni101-intake",
+      "binding": "INTAKE_WORKFLOW",
+      "class_name": "LeadIntakeWorkflow"
+    }
+  ]
 }
