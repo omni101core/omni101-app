@@ -9,11 +9,12 @@ export const publicDestinations = [
  {route:'/explore/commerce',title:'Demo Commerce',description:'Prototipo interattivo di catalogo e carrello. Nessun pagamento reale.'},
  {route:'/explore/workflow',title:'Demo Workflow',description:'Dimostrazione pubblica del percorso di automazione. Non esegue operazioni aziendali.'},
  {route:'/explore/creative',title:'Creative Studio',description:'Composizione creativa interattiva. Le capacità live dipendono dai provider attivi.'},
+ {route:'/explore/vision',title:'Vision Lab',description:'Riconoscimento gestuale nel browser con webcam autorizzata e controllo di elementi nell’app.'},
  {route:'/work',title:'Progetti e concept',description:'Portfolio di progetti interni e concept, con origine dichiarata.'},
  {route:'/insights',title:'Insights',description:'Contenuti ufficiali OMNI101.'},
  {route:'/start-project',title:'Descrivi il progetto',description:'Invia un brief attraverso il modulo protetto, con consenso e verifica antispam.'},
 ];
-const internalDestinations=['/admin','/admin/leads','/admin/projects','/admin/tasks','/admin/quotes','/admin/approvals','/admin/agents','/admin/agent-runs','/admin/budgets'];
+const internalDestinations=['/admin','/admin/leads','/admin/projects','/admin/tasks','/admin/proposals','/admin/approvals','/admin/agents','/admin/agent-runs','/admin/settings'];
 export const assistantToolRegistry = {
  navigate_to_route:'Navigazione esplicita verso una route consentita',open_service:'Apre una famiglia di servizi',open_demo:'Apre una demo pubblica',show_project:'Apre il portfolio',search_content:'Ricerca nel catalogo e nei contenuti pubblicati',compare_solutions:'Confronta soluzioni dal catalogo ufficiale',start_brief:'Prepara il modulo di richiesta',save_draft_brief:'Conserva il brief nel percorso del modulo',submit_lead:'Apre il modulo: consenso e Turnstile restano obbligatori',request_human_contact:'Prepara una richiesta di contatto umano',lookup_workspace:'Legge record consentiti del workspace',propose_task:'Propone un task, scrittura solo dopo conferma esplicita tramite API ordinaria',
 } as const;
@@ -34,8 +35,9 @@ const querySchema=z.object({mode:z.enum(['public','internal']).default('public')
 async function owner(request:Request,env:Env,mode:'public'|'internal') {
  if(mode==='internal'){const actor=await authenticate(request,env);requireRole(actor,internalRoles);return {actor,hash:await digest('user:'+actor.id),cookie:''};}
  const existing=request.headers.get('Cookie')?.split(';').map(c=>c.trim()).find(c=>c.startsWith('__Host-omni_assist='))?.split('=')[1];
- const token=existing&&/^[a-f0-9]{64}$/.test(existing)?existing:Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('');
- return {actor:null,hash:await digest(token),cookie:existing?'':`__Host-omni_assist=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`};
+ const valid=!!existing&&/^[a-f0-9]{64}$/.test(existing);
+ const token=valid?existing!:Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('');
+ return {actor:null,hash:await digest(token),cookie:valid?'':`__Host-omni_assist=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`};
 }
 async function throttle(request:Request,env:Env,org:string){
  const now=Date.now(),ip=request.headers.get('cf-connecting-ip')||'local';

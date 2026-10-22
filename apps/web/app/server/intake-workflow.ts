@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {digest,type Env} from './auth';
-const output=z.object({summary:z.string().min(1).max(2000),deliverable:z.string().min(20).max(12000),risks:z.array(z.string()).max(15),nextSteps:z.array(z.string()).max(15),language:z.string().max(30),services:z.array(z.enum(['BUILD','AUTOMATE','CREATE','GROW'])),proposal:z.object({name:z.string().min(3).max(160),scope:z.string().min(20).max(6000),exclusions:z.string().max(3000),assumptions:z.string().max(3000),timeline:z.string().max(2000),plan:z.array(z.string().min(3).max(300)).min(1).max(10)})});
+const output=z.object({summary:z.string().min(1).max(2000),deliverable:z.string().min(20).max(12000),risks:z.array(z.string()).max(15),nextSteps:z.array(z.string()).max(15),language:z.string().max(30),services:z.array(z.enum(['BUILD','AUTOMATE','CREATE','GROW'])),proposal:z.object({name:z.string().min(3).max(160),scope:z.string().min(20).max(6000),exclusions:z.string().max(3000),assumptions:z.string().max(3000),timeline:z.string().max(2000),plan:z.array(z.string().min(3).max(200)).min(1).max(10)})});
 export async function processIntakeAI(env:Env,leadId:string,orgId:string){
  const prior=await env.DB.prepare("SELECT id FROM agent_runs WHERE organization_id=? AND name=? AND status IN ('AWAITING_APPROVAL','APPROVED')").bind(orgId,'Intake / '+leadId).first();if(prior)return {alreadyProcessed:true};
  if(!env.AI_API_KEY||env.AI_PROVIDER!=='nvidia'||!env.AI_MODEL)throw new Error('Provider gratuito intake non configurato.');
