@@ -176,3 +176,32 @@ describe('closed delivery pipeline: delivery gate and client portal',()=>{
   expect((await call(env,a,'GET','/api/mission-control')).status).toBe(403);
  });
 });
+
+describe('deterministic planning and dependencies',()=>{
+ it('blocks cycles, stale plans and premature work without losing prior dependencies',async()=>{
+  const {sqlite,env}=database(),owner=await person(sqlite,'planner');const {project}=await seed(env,owner);
+  const create=async(name:string)=>(await call(env,owner,'POST','/api/records/tasks',{name,project_id:project,status:'TODO',priority:'NORMAL',estimate_minutes:120})).body.record.id as string;
+  const a=await create('Prerequisito'),b=await create('Dipendente');
+  const update=(taskId:string,dependsOn:string[],expectedVersion:number)=>call(env,owner,'POST','/api/projects/'+project+'/planning/dependencies',{taskId,dependsOn,expectedVersion});
+  expect((await update(b,[a],0)).status).toBe(200);
+  expect((await call(env,owner,'PATCH','/api/records/tasks/'+b,{status:'IN_PROGRESS'})).status).toBe(409);
+  expect((await update(a,[b],1)).status).toBe(409);
+  expect(one(sqlite,'SELECT version FROM project_plans WHERE project_id=?',project).version).toBe(1);
+  expect((await update(b,[],0)).status).toBe(409);
+  expect(one(sqlite,'SELECT active FROM task_dependencies WHERE task_id=? AND depends_on_task_id=?',b,a).active).toBe(1);
+  expect((await call(env,owner,'PATCH','/api/records/tasks/'+a,{status:'DONE',description:'Risultato verificato.'})).status).toBe(200);
+  expect((await call(env,owner,'PATCH','/api/records/tasks/'+b,{status:'IN_PROGRESS'})).status).toBe(200);
+  expect((await call(env,owner,'PATCH','/api/records/tasks/'+a,{status:'TODO'})).status).toBe(409);
+  const plan=await call(env,owner,'GET','/api/projects/'+project+'/planning');expect(plan.status).toBe(200);expect(plan.body.schedule.order.indexOf(a)).toBeLessThan(plan.body.schedule.order.indexOf(b));
+  expect((await update(b,[],1)).status).toBe(200);expect(one(sqlite,'SELECT active FROM task_dependencies WHERE task_id=?',b).active).toBe(0);
+ });
+ it('persists comments idempotently, validates dates and limits dependency editing to managers',async()=>{
+  const {sqlite,env}=database(),owner=await person(sqlite,'planner-owner');const {project,task}=await seed(env,owner);const dev=await person(sqlite,'planner-dev','DEVELOPER');
+  expect((await call(env,dev,'POST','/api/projects/'+project+'/planning/dependencies',{taskId:task,dependsOn:[],expectedVersion:0})).status).toBe(403);
+  const requestId=crypto.randomUUID(),path='/api/projects/'+project+'/planning/comments';
+  expect((await call(env,dev,'POST',path,{content:'Verifica in corso.',requestId})).status).toBe(201);expect((await call(env,dev,'POST',path,{content:'Verifica in corso.',requestId})).status).toBe(200);
+  expect(one(sqlite,'SELECT count(*) n FROM notes').n).toBe(1);
+  expect((await call(env,owner,'PATCH','/api/records/tasks/'+task,{start_date:'2026-12-10',due_date:'2026-12-01'})).status).toBe(400);
+  expect((await call(env,owner,'GET','/api/projects/foreign-project/planning')).status).toBe(404);
+ });
+});

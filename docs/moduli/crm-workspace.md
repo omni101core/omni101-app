@@ -58,3 +58,7 @@ SPEC-06 ha la shell workspace. SPEC-13 (CRM tabella, timeline, filtri, drawer, c
 ## Growth, Creative e Ops — 2026-10-22 sera
 
 Migrazione additiva `0006_studio_operations.sql`: `campaigns`, `growth_plans`, `creative_jobs`, `subscriptions`. Quattro risorse nel CRUD e nella navigazione, schema validato, organizzazione e audit ereditati dal server. Campagne e growth scrivibili dai ruoli sales; produzioni anche DESIGNER; abbonamenti visibili e modificabili solo finance. Campi per obiettivo/pubblico/canale, funnel/email/SEO/misura, storyboard/varianti/diritti, costo e periodicità. Sono registri operativi: non inviano email, non pubblicano, non generano asset e non attivano abbonamenti. Test integrazione su persistenza, isolamento, enum e permessi. Tema workspace scuro predefinito, toggle nell'account e preferenza distinta dal pubblico.
+
+## Centro operativo — 2026-10-22 notte
+
+`OperationsOverview`, `/api/operations`: priorità scadenza/urgenza/data, avanzamento progetti, notifiche non lette e riconoscimento lettura, approvazioni e run problematiche. Calcoli sui record, senza AI. Finanza solo OWNER/ADMIN/FINANCE: incassi, crediti, spese pagate, costo AI separato; differenza parziale per progetto, non utile fiscale. Limiti delle liste dichiarati. Nuove viste `operations`, `planning`, `milestones`, `finance-overview`. Verifica separata su branch remoto `verify-commercial` per evitare il blocco noto delle credenziali deploy: stessi typecheck/test/build/browser, nessuna pubblicazione o migrazione remota.

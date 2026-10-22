@@ -48,3 +48,9 @@ Sotto il 15% libero su `/System/Volumes/Data` non si lancia `npm install`, `npm 
 ## Runner del riallineamento — 2026-10-22 sera
 
 Run `39829566938`: typecheck, 86 test server e build test passati; interrotta durante installazione browser dopo oltre sette minuti di download molto lento dal mirror `azure.archive.ubuntu.com` (log disponibile). Il runner CI ora usa `archive.ubuntu.com` via HTTPS e installa Chromium headless shell con tutte le dipendenze, timeout 5 minuti. Nessuna modifica al Mac e nessun controllo browser rimosso. `cloud-verify.py` riusa i blob binari invariati già presenti sul branch, dopo la medesima scansione anti-segreti; evita ricaricare tutte le immagini a ogni tentativo.
+
+## Blocco credenziali e verifica senza deploy — 2026-10-22 notte
+
+Run `39833548394`, SHA `7289881`: 87 test server, 99 browser passati e 9 skip; build test/staging verdi. Fallimento autorizzazioni D1 7403, nessun deploy. Browser: token esistente limitato all'IP del Mac e privo di Workers Scripts. Nessuna modifica a quel token; proposta `omni101-app-github-ci` preparata ma NON creata, in attesa di conferma per nuova concessione di accesso. Nessun segreto copiato o rigenerato. Artifact esatto avviato da runtime Wrangler già in cache su `127.0.0.1:4176`, DB locale isolato in `/tmp/omni101-preview-7289881`, nessuna build/installazione sul Mac. Sessione runtime 33833; rollback = fermare soltanto quel processo.
+
+`cloud-verify.py --verify-only` pubblica solo su `verify-commercial`: esegue gli stessi test e build ma salta i quattro passi di staging che richiedono Cloudflare. Non dichiara online il risultato. Consente proseguire la dashboard senza reiterare 7403. `main`, release e produzione invariati.

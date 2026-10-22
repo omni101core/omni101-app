@@ -32,3 +32,12 @@ it('persists growth and creative plans, validates scope and protects studio cost
  expect((await handleApi(req('/api/records/campaigns',dev,'POST',{name:'Forbidden',status:'DRAFT'}),env))?.status).toBe(403);
  expect((await handleApi(req('/api/records/campaigns',cookie,'POST',{name:'Wrong state',status:'SENT'}),env))?.status).toBe(400);
 });
+
+it('serves real operational priorities while withholding finance from developers',async()=>{
+ const {sqlite,env}=database(),cookie=await owner(sqlite),dev=await owner(sqlite,'omni101','DEVELOPER','ops-dev'),t=Date.now();
+ sqlite.prepare('INSERT INTO tasks(id,organization_id,name,status,priority,due_date,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)').run('overdue','omni101','Attività scaduta','TODO','HIGH','2000-01-01',t,t);
+ sqlite.prepare('INSERT INTO notifications(id,organization_id,name,body,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run('notice','omni101','Da leggere','Verifica','UNREAD',t,t);
+ const a=await (await handleApi(req('/api/operations',cookie),env))!.json() as any;expect(a.overdueCount).toBe(1);expect(a.priorities[0].id).toBe('overdue');expect(a.finance).not.toBeNull();
+ const d=await (await handleApi(req('/api/operations',dev),env))!.json() as any;expect(d.finance).toBeNull();
+ expect((await handleApi(req('/api/notifications/notice/read',cookie,'POST',{}),env))?.status).toBe(200);expect(sqlite.prepare('SELECT status FROM notifications WHERE id=?').get('notice')?.status).toBe('READ');
+});

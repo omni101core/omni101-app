@@ -55,3 +55,7 @@ La pipeline è un solo flusso con stadi espliciti, non quattro app. L'evento sta
 ## Chi lo possiede ora
 
 SPEC-13 per Gantt, file e deliverable avanzati, dopo SPEC-06. Il server di pipeline è già nel tree condiviso: chi lo tocca aggiorna questo file.
+
+## Pianificazione operativa — 2026-10-22 notte
+
+Nuovo `/admin/planning`, API `/api/projects/:id/planning`, sottorisorse POST `dependencies` e `comments`. Tasks con inizio e stima minuti, milestone esistenti esposte nel CRUD. Ordinamento topologico/percorso critico e margine delle attività, senza AI e senza fingere un calendario delle persone. Dipendenze vincolate a stesso progetto/organizzazione, cicli e avvii prematuri bloccati anche da trigger SQLite. Versione condivisa del piano con claim atomico per modifiche concorrenti. Vincoli rimossi disattivati, non cancellati. Commenti attribuiti all'utente autenticato e idempotenti per requestId. Test `planning-algorithms`, `agency-pipeline` nuovi casi. Migrazione additiva 0007, verifica CI ancora da eseguire.

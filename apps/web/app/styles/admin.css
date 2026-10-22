@@ -26,3 +26,4 @@
 @media(max-width:560px){.os-stages{grid-template-columns:1fr}}
 .os-button-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .os-button-row .os-button{margin:12px 0}
+.os-priority-list{padding-left:22px}.os-priority-list li{padding:14px 0;border-bottom:1px solid var(--os-line)}.os-priority-list strong,.os-priority-list small{display:block}.os-priority-list small{color:var(--os-muted);margin-top:7px;font-size:11px}.os-project-progress{padding:15px 0;border-bottom:1px solid var(--os-line)}.os-project-progress a{display:block}.os-project-progress span{display:block;color:var(--os-muted);font-size:11px;margin:8px 0}.os-project-progress progress{width:100%;height:7px;accent-color:var(--os-gold)}
