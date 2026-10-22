@@ -81,6 +81,9 @@ test('solutions: the ring turns with the scroll on wide screens',async({page,isM
  await page.goto('/solutions');await hydrated(page);
  const ring=page.locator('.cap-carousel');
  await expect(ring).toHaveAttribute('data-enhanced','true');
+ const title=page.locator('.cap-panel[data-active="true"] .cap-title');
+ expect(await title.evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(48);
+ await expect(page.locator('.cap-panel[data-active="true"] .cap-art')).toBeVisible();
  await expect(ring).toHaveAttribute('data-active','build');
  await ring.evaluate(el=>window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY+(el.clientHeight-window.innerHeight)*.5,behavior:'instant' as ScrollBehavior}));
  await expect.poll(()=>ring.getAttribute('data-active'),{timeout:10000}).toBe('create');
@@ -92,7 +95,7 @@ test('solutions: reduced motion shows every family panel at once',async({page})=
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/solutions');await hydrated(page);
  await expect(page.locator('.cap-carousel')).toHaveAttribute('data-enhanced','false');
  const panels=page.locator('.cap-panel');await expect(panels).toHaveCount(5);
- for(let i=0;i<5;i++){await expect(panels.nth(i)).toBeVisible();await expect(panels.nth(i)).not.toHaveAttribute('inert')}
+ for(let i=0;i<5;i++){await expect(panels.nth(i)).toBeVisible();await expect(panels.nth(i).locator('.cap-art')).toBeVisible();await expect(panels.nth(i)).not.toHaveAttribute('inert')}
  await expect(page.locator('canvas')).toHaveCount(0);
  await page.getByRole('tab',{name:/GROW/}).click();
  await expect(page.locator('#catalogo h2')).toContainText('Crescere');

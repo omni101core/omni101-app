@@ -1,4 +1,4 @@
-/* Solutions: 3D family ring, catalogue and the shell pieces shared with Explore. Tokens come from public.css. */
+/* Solutions: family panels in depth, catalogue and the shell pieces shared with Explore. Tokens come from public.css. */
 .cap-hero p,.ex-hero p{max-width:640px;color:var(--muted);font-size:15px;line-height:1.7}
 .cap-carousel :focus-visible,.cap-catalog :focus-visible,.cap-cta :focus-visible,.ex-path :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 
@@ -11,17 +11,21 @@
 .cap-tabs button[aria-selected="true"],.ex-index button[aria-current="step"],.cap-filter button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#141516}
 .cap-tabs button[aria-selected="true"] span,.ex-index button[aria-current="step"] span,.cap-filter button[aria-pressed="true"] span{color:#141516}
 
-.cap-ring{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-.cap-panel{display:flex;flex-direction:column;gap:16px;padding:28px;border:1px solid var(--line);background:var(--surface)}
-.cap-panel h2{font-size:clamp(26px,3.1vw,42px);line-height:1.05;letter-spacing:-.04em;font-weight:400;margin:0}
-.cap-claim{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-.cap-case{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-left:2px solid var(--gold);background:var(--elevated)}
+.cap-stage{width:100%;max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,7vw,96px)}
+.cap-panel{display:flex;flex-direction:column;gap:clamp(14px,1.8vw,24px);min-width:0}
+.cap-title{font-size:clamp(48px,5vw,80px);line-height:.98;letter-spacing:-.045em;font-weight:400;margin:0;max-width:16ch;text-wrap:balance}
+.cap-media{position:relative;margin:0;min-height:min(58svh,560px);aspect-ratio:16/9;border:1px solid var(--line);background:var(--surface);overflow:hidden;display:flex;align-items:flex-end}
+.cap-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background-repeat:no-repeat;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.cap-panel:hover .cap-art{transform:scale(1.03)}
+.cap-over{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px clamp(20px,3vw,48px);align-items:end;grid-template-areas:"claim case" "also case" "actions case";width:100%;box-sizing:border-box;padding:clamp(80px,9vw,140px) clamp(18px,2.4vw,36px) clamp(18px,2.4vw,36px);background:linear-gradient(0deg,#101112f5 0%,#101112e6 62%,#10111200 100%)}
+.cap-claim{grid-area:claim;margin:0;max-width:44ch;color:var(--ivory);font-size:15px;line-height:1.6}
+.cap-case{grid-area:case;align-self:end;display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-left:2px solid var(--gold);background:#101112d9;backdrop-filter:blur(6px)}
 .cap-case small,.cap-example small{color:var(--gold);font-size:9px;letter-spacing:2px;text-transform:uppercase}
 .cap-case strong{font-size:18px;font-weight:400;letter-spacing:-.02em}
 .cap-case p{margin:0;font-size:13px;line-height:1.55;color:#d8d4cb}
-.cap-also{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.cap-also{grid-area:also;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
 .cap-also li{padding:5px 10px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
-.cap-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:auto}
+.cap-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;grid-area:actions}
 .cap-link{color:var(--ivory);font-size:12px;border-bottom:1px solid var(--gold);padding-bottom:2px}
 .cap-link:hover{color:var(--gold)}
 .cap-skip{align-self:flex-start;color:var(--muted);font-size:11px;letter-spacing:1.4px;text-transform:uppercase}
@@ -33,15 +37,19 @@
 .cap-badge[data-availability="SPERIMENTALE"]{border-style:dashed;color:var(--muted)}
 .cap-badge[data-availability="SPERIMENTALE"]::before{background:transparent;border:1px solid currentColor}
 
-/* Scroll-driven ring: a tall track, a pinned stage, panels on a cylinder (5 faces, 72° apart). */
+/* Scroll-driven ring: a tall track, a pinned stage, panels on a cylinder (5 faces, 72° apart). Each face is a full panel: title, big image with the concrete case over it. */
 .cap-carousel[data-enhanced="true"][data-scroll-driven="true"]{height:calc(100vh + 180vh);height:calc(100svh + 180svh)}
 .cap-carousel[data-enhanced="true"][data-scroll-driven="true"] .cap-sticky{position:sticky;top:0;height:100vh;height:100svh;box-sizing:border-box}
-.cap-carousel[data-enhanced="true"]:not([data-scroll-driven="true"]) .cap-sticky{height:min(46rem,100svh)}
-.cap-carousel[data-enhanced="true"] .cap-stage{position:relative;flex:1;min-height:0;perspective:1700px}
-.cap-carousel[data-enhanced="true"] .cap-orbit{--w:min(30rem,78vw);--r:calc(var(--w)*.688);position:absolute;top:0;bottom:0;left:50%;width:var(--w);margin-left:calc(var(--w)/-2);transform:translateZ(calc(var(--r)*-1));transform-style:preserve-3d}
+.cap-carousel[data-enhanced="true"]:not([data-scroll-driven="true"]) .cap-sticky{height:min(52rem,100svh)}
+.cap-carousel[data-enhanced="true"] .cap-stage{position:relative;display:block;flex:1;min-height:0;max-width:none;perspective:2800px}
+.cap-carousel[data-enhanced="true"] .cap-orbit{--w:min(60rem,80vw);--r:calc(var(--w)*.688);position:absolute;top:0;bottom:0;left:50%;width:var(--w);margin-left:calc(var(--w)/-2);transform:translateZ(calc(var(--r)*-1));transform-style:preserve-3d}
 .cap-carousel[data-enhanced="true"] .cap-ring{position:absolute;inset:0;display:block;transform-style:preserve-3d}
-.cap-carousel[data-enhanced="true"] .cap-panel{position:absolute;inset:0;box-sizing:border-box;overflow:auto;overscroll-behavior:contain;transform:rotateY(calc(var(--i)*72deg)) translateZ(var(--r));backface-visibility:hidden;opacity:.28;pointer-events:none;transition:opacity .5s}
-.cap-carousel[data-enhanced="true"] .cap-panel[data-active="true"]{opacity:1;pointer-events:auto;border-color:var(--gold)}
+.cap-carousel[data-enhanced="true"] .cap-panel{position:absolute;inset:0;box-sizing:border-box;overflow:hidden;gap:12px;transform:rotateY(calc(var(--i)*72deg)) translateZ(var(--r));backface-visibility:hidden;opacity:.28;pointer-events:none;transition:opacity .5s}
+.cap-carousel[data-enhanced="true"] .cap-panel[data-active="true"]{opacity:1;pointer-events:auto}
+.cap-carousel[data-enhanced="true"] .cap-panel[data-active="true"] .cap-media{border-color:var(--gold)}
+.cap-carousel[data-enhanced="true"] .cap-title{font-size:clamp(48px,4.4vw,72px);max-width:none;line-height:.95}
+.cap-carousel[data-enhanced="true"] .cap-media{flex:1;min-height:0;aspect-ratio:auto}
+.cap-carousel[data-enhanced="false"] .cap-panel[data-active="true"] .cap-media{border-color:var(--gold)}
 
 .cap-catalog{padding:90px 4.8vw 70px}
 .cap-catalog-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px 50px;flex-wrap:wrap;margin-bottom:38px}
@@ -64,9 +72,10 @@
 
 @media(max-width:700px){
  .cap-sticky{padding:20px 6vw 28px}
- .cap-carousel[data-enhanced="true"] .cap-orbit{--w:86vw}
- .cap-carousel[data-enhanced="true"] .cap-also{display:none}
- .cap-panel{padding:22px}
+ .cap-media{aspect-ratio:auto;min-height:0;flex-direction:column;align-items:stretch}
+ .cap-art{position:relative;aspect-ratio:4/3;height:auto}
+ .cap-over{grid-template-columns:1fr;grid-template-areas:"claim" "case" "also" "actions";padding:18px;background:none}
+ .cap-case{background:var(--elevated)}
  .cap-catalog{padding:64px 6vw 50px}
 }
-@media(prefers-reduced-motion:reduce){.cap-card,.cap-card:hover,.cap-tabs button,.cap-panel{transition:none;transform:none}}
+@media(prefers-reduced-motion:reduce){.cap-card,.cap-card:hover,.cap-tabs button,.cap-art,.cap-panel:hover .cap-art{transition:none;transform:none}}
