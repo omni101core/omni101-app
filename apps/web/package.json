@@ -25,7 +25,9 @@
     "@hookform/resolvers": "^5.2.2",
     "lucide-react": "^0.553.0",
     "zustand": "^5.0.8",
-    "@radix-ui/react-dialog": "^1.1.15"
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@simplewebauthn/server": "14.0.3",
+    "@simplewebauthn/browser": "14.0.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.64.0",

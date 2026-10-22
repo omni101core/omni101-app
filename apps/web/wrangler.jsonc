@@ -19,8 +19,9 @@
     {
       "binding": "DB",
       "database_name": "omni101-app",
-      "database_id": "00000000-0000-0000-0000-000000000001",
+      "database_id": "1887a135-05be-4b2e-a764-8ab5b3018a00",
       "migrations_dir": "../../packages/db/migrations"
     }
-  ]
+  ],
+  "account_id": "179e35741ac5e7a9e2c3be26f5a482b8"
 }
