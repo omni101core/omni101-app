@@ -1,0 +1,72 @@
+/* Solutions: 3D family ring, catalogue and the shell pieces shared with Explore. Tokens come from public.css. */
+.cap-hero p,.ex-hero p{max-width:640px;color:var(--muted);font-size:15px;line-height:1.7}
+.cap-carousel :focus-visible,.cap-catalog :focus-visible,.cap-cta :focus-visible,.ex-path :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.cap-carousel{position:relative;border-bottom:1px solid var(--line)}
+.cap-sticky{padding:28px 4.8vw 36px;display:flex;flex-direction:column;gap:22px}
+.cap-tabs,.ex-index ol{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 0 4px;margin:0;list-style:none}
+.cap-tabs button,.ex-index button,.cap-filter button{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s,border-color .25s}
+.cap-tabs button span,.ex-index button span,.cap-filter button span{color:var(--gold);font-size:10px}
+.cap-tabs button:hover,.ex-index button:hover,.cap-filter button:hover{border-color:var(--gold);color:var(--ivory)}
+.cap-tabs button[aria-selected="true"],.ex-index button[aria-current="step"],.cap-filter button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#141516}
+.cap-tabs button[aria-selected="true"] span,.ex-index button[aria-current="step"] span,.cap-filter button[aria-pressed="true"] span{color:#141516}
+
+.cap-ring{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.cap-panel{display:flex;flex-direction:column;gap:16px;padding:28px;border:1px solid var(--line);background:var(--surface)}
+.cap-panel h2{font-size:clamp(26px,3.1vw,42px);line-height:1.05;letter-spacing:-.04em;font-weight:400;margin:0}
+.cap-claim{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.cap-case{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-left:2px solid var(--gold);background:var(--elevated)}
+.cap-case small,.cap-example small{color:var(--gold);font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.cap-case strong{font-size:18px;font-weight:400;letter-spacing:-.02em}
+.cap-case p{margin:0;font-size:13px;line-height:1.55;color:#d8d4cb}
+.cap-also{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.cap-also li{padding:5px 10px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
+.cap-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:auto}
+.cap-link{color:var(--ivory);font-size:12px;border-bottom:1px solid var(--gold);padding-bottom:2px}
+.cap-link:hover{color:var(--gold)}
+.cap-skip{align-self:flex-start;color:var(--muted);font-size:11px;letter-spacing:1.4px;text-transform:uppercase}
+.cap-skip:hover{color:var(--gold)}
+.cap-badge{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--line);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ivory)}
+.cap-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.cap-badge[data-availability="DISPONIBILE"]{border-color:var(--gold);color:var(--gold)}
+.cap-badge[data-availability="SU_MISURA"]::before{border-radius:0;transform:rotate(45deg)}
+.cap-badge[data-availability="SPERIMENTALE"]{border-style:dashed;color:var(--muted)}
+.cap-badge[data-availability="SPERIMENTALE"]::before{background:transparent;border:1px solid currentColor}
+
+/* Scroll-driven ring: a tall track, a pinned stage, panels on a cylinder (5 faces, 72° apart). */
+.cap-carousel[data-enhanced="true"][data-scroll-driven="true"]{height:calc(100vh + 180vh);height:calc(100svh + 180svh)}
+.cap-carousel[data-enhanced="true"][data-scroll-driven="true"] .cap-sticky{position:sticky;top:0;height:100vh;height:100svh;box-sizing:border-box}
+.cap-carousel[data-enhanced="true"]:not([data-scroll-driven="true"]) .cap-sticky{height:min(46rem,100svh)}
+.cap-carousel[data-enhanced="true"] .cap-stage{position:relative;flex:1;min-height:0;perspective:1700px}
+.cap-carousel[data-enhanced="true"] .cap-orbit{--w:min(30rem,78vw);--r:calc(var(--w)*.688);position:absolute;top:0;bottom:0;left:50%;width:var(--w);margin-left:calc(var(--w)/-2);transform:translateZ(calc(var(--r)*-1));transform-style:preserve-3d}
+.cap-carousel[data-enhanced="true"] .cap-ring{position:absolute;inset:0;display:block;transform-style:preserve-3d}
+.cap-carousel[data-enhanced="true"] .cap-panel{position:absolute;inset:0;box-sizing:border-box;overflow:auto;overscroll-behavior:contain;transform:rotateY(calc(var(--i)*72deg)) translateZ(var(--r));backface-visibility:hidden;opacity:.28;pointer-events:none;transition:opacity .5s}
+.cap-carousel[data-enhanced="true"] .cap-panel[data-active="true"]{opacity:1;pointer-events:auto;border-color:var(--gold)}
+
+.cap-catalog{padding:90px 4.8vw 70px}
+.cap-catalog-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px 50px;flex-wrap:wrap;margin-bottom:38px}
+.cap-catalog-head h2{font-size:clamp(34px,4.5vw,64px);line-height:1;font-weight:400;letter-spacing:-.045em;margin:18px 0 14px}
+.cap-catalog-head p{margin:0;max-width:560px;color:var(--muted);font-size:15px;line-height:1.6}
+.cap-filter{display:flex;flex-wrap:wrap;gap:8px}
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin:0;padding:0;list-style:none}
+.cap-card{height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid var(--line);background:var(--surface);transition:border-color .3s,transform .3s}
+.cap-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.cap-card h3{margin:6px 0 0;font-size:22px;font-weight:400;letter-spacing:-.03em}
+.cap-card p{margin:0;font-size:14px;line-height:1.55;color:#d8d4cb}
+.cap-example{display:flex;flex-direction:column;gap:5px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted)!important;font-size:13px!important}
+.cap-note{color:var(--muted)!important;font-size:12px!important}
+.cap-families{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:46px;padding-top:24px;border-top:1px solid var(--line)}
+.cap-families a{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+.cap-families a:hover,.cap-families a[aria-current="page"]{color:var(--gold)}
+.cap-cta{padding:100px 4.8vw;text-align:center;border-top:1px solid var(--line)}
+.cap-cta h2{font-size:clamp(34px,5vw,72px);font-weight:400;letter-spacing:-.045em;margin:0 0 14px}
+.cap-cta p{margin:0 0 30px;color:var(--muted)}
+
+@media(max-width:700px){
+ .cap-sticky{padding:20px 6vw 28px}
+ .cap-carousel[data-enhanced="true"] .cap-orbit{--w:86vw}
+ .cap-carousel[data-enhanced="true"] .cap-also{display:none}
+ .cap-panel{padding:22px}
+ .cap-catalog{padding:64px 6vw 50px}
+}
+@media(prefers-reduced-motion:reduce){.cap-card,.cap-card:hover,.cap-tabs button,.cap-panel{transition:none;transform:none}}
