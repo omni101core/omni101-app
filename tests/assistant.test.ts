@@ -39,3 +39,14 @@ describe('OMNI ASSIST real persistence and privacy',()=>{
  it('fails closed on paid provider pricing and cross-origin requests',async()=>{const {env}=setup();const provider=mockProvider();env.AI_INPUT_CENTS_PER_MILLION='10';expect((await handleAssistant(request({message:'Crea un sito',mode:'public'}),env)).status).toBe(503);expect(provider).not.toHaveBeenCalled();const cross=new Request('https://omni101.app/api/assistant',{method:'POST',headers:{Origin:'https://evil.example'},body:JSON.stringify({message:'Crea un sito'})});expect((await handleAssistant(cross,env)).status).toBe(403);});
  it('purges expired conversations and rejects stale retrieval',async()=>{const {sqlite,env}=setup();mockProvider();const res=await handleAssistant(request({message:'Crea un sito',mode:'public'}),env);const cid=(await res.json() as {conversationId:string}).conversationId;const cookie=res.headers.get('Set-Cookie')!.split(';')[0];sqlite.prepare('UPDATE assistant_conversations SET expires_at=?').run(Date.now()-1);expect((await handleAssistant(request(undefined,cookie,'/api/assistant/conversations?conversationId='+cid),env)).status).toBe(404);expect(sqlite.prepare('SELECT count(*) n FROM assistant_messages').get()?.n).toBe(0);});
 });
+
+it('keeps subscription amounts out of the developer copilot while exposing allowed growth plans',async()=>{
+ for(const role of ['OWNER','DEVELOPER']){
+  const {sqlite,env}=setup();const cookie=await login(sqlite,role),t=Date.now();
+  sqlite.prepare('INSERT INTO subscriptions(id,organization_id,name,amount_cents,created_at,updated_at) VALUES(?,?,?,?,?,?)').run('sub','omni101','PRIVATE_SUBSCRIPTION_COST',4900,t,t);
+  sqlite.prepare('INSERT INTO campaigns(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('campaign','omni101','VISIBLE_CAMPAIGN_PLAN',t,t);
+  const provider=mockProvider();const result=await handleAssistant(request({message:'Mostra campagne e abbonamenti',mode:'internal'},cookie),env);expect(result.status).toBe(200);
+  const sent=JSON.stringify(provider.mock.calls);expect(sent).toContain('VISIBLE_CAMPAIGN_PLAN');
+  if(role==='OWNER')expect(sent).toContain('PRIVATE_SUBSCRIPTION_COST');else expect(sent).not.toContain('PRIVATE_SUBSCRIPTION_COST');
+ }
+});

@@ -59,3 +59,5 @@ SPEC-12 ha scritto Vision e voce il 22/10. Le demo commerce, workflow e creative
 ## Sette laboratori — 2026-10-22 sera
 
 Aggiunti `/explore/avatar` e `/explore/software` nel catch-all e nelle stazioni. `routes/public/product-labs.tsx`: Avatar prepara script, lingua predefinita, direzione e storyboard; dichiara video/lip-sync non integrati. Software offre CRM a colonne con modifica stato e prenotazione simulata, solo memoria locale. Nessun provider o CRM produttivo invocato. Home collega tutti i sette lab. Test `realignment.spec.ts` copre storyboard e mini prodotti. Vision e voce esistenti preservati.
+
+Avatar include ascolto dello script con SpeechSynthesis, scelta fra voci disponibili per lingua e arresto audio; cancella playback all'uscita. Ritratto originale fisso dichiarato concept. Nessun microfono o video generativo. I servizi vocali dipendono dal browser/dispositivo.

@@ -44,3 +44,7 @@ Backup del sorgente precedente, citato in `docs/CONTEXT.md` storico: `~/omni101/
 ## Disco
 
 Sotto il 15% libero su `/System/Volumes/Data` non si lancia `npm install`, `npm run build` o Playwright sul Mac. Il 22/10 il disco era sotto soglia. La verifica è solo il job.
+
+## Runner del riallineamento — 2026-10-22 sera
+
+Run `39829566938`: typecheck, 86 test server e build test passati; interrotta durante installazione browser dopo oltre sette minuti di download molto lento dal mirror `azure.archive.ubuntu.com` (log disponibile). Il runner CI ora usa `archive.ubuntu.com` via HTTPS e installa Chromium headless shell con tutte le dipendenze, timeout 5 minuti. Nessuna modifica al Mac e nessun controllo browser rimosso. `cloud-verify.py` riusa i blob binari invariati già presenti sul branch, dopo la medesima scansione anti-segreti; evita ricaricare tutte le immagini a ogni tentativo.

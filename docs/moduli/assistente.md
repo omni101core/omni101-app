@@ -48,3 +48,7 @@ Il messaggio del cliente è dato non fidato: il prompt di intake lo dice esplici
 ## Chi lo possiede ora
 
 SPEC-06 per l'assistente pubblico che crea il lead. SPEC-15 per il copilot interno, non iniziata nella mappa del 22/10 alle 15:40.
+
+## Collegamento al riallineamento — 2026-10-22 sera
+
+Catalogo navigabile esteso a voce, Avatar Studio e Software Lab, con limiti espliciti. Assistente interno e palette comandi includono campagne, growth plan, produzioni creative e abbonamenti. Contesto sempre da query fisse con organization_id; costi abbonamenti soltanto OWNER/ADMIN/FINANCE. Nessuna nuova azione automatica di pubblicazione o spesa.

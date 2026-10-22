@@ -26,7 +26,11 @@ jobs:
           npx wrangler d1 migrations apply DB --local --config wrangler.jsonc --env test
           npx wrangler d1 execute DB --local --config wrangler.jsonc --env test --file ../../tests/owner-fixture.sql
         working-directory: apps/web
-      - run: npx playwright install --with-deps chromium
+      - name: Install browser runtime
+        timeout-minutes: 5
+        run: |
+          sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
+          npx playwright install --with-deps --only-shell chromium
       - run: npx playwright test
       - name: Build verified staging
         run: npm run build

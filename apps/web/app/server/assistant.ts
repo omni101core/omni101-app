@@ -10,11 +10,14 @@ export const publicDestinations = [
  {route:'/explore/workflow',title:'Demo Workflow',description:'Dimostrazione pubblica del percorso di automazione. Non esegue operazioni aziendali.'},
  {route:'/explore/creative',title:'Creative Studio',description:'Composizione creativa interattiva. Le capacità live dipendono dai provider attivi.'},
  {route:'/explore/vision',title:'Vision Lab',description:'Riconoscimento gestuale nel browser con webcam autorizzata e controllo di elementi nell’app.'},
+ {route:'/explore/voice',title:'Voice AI Lab',description:'Sintesi vocale del browser e scenari dimostrativi. Nessuna telefonata reale.'},
+ {route:'/explore/avatar',title:'Avatar Studio',description:'Preparazione script e storyboard multilingua. Immagine rappresentativa, video e lip sync non attivi.'},
+ {route:'/explore/software',title:'Software Lab',description:'Mini CRM e prenotazioni con dati dimostrativi locali.'},
  {route:'/work',title:'Progetti e concept',description:'Portfolio di progetti interni e concept, con origine dichiarata.'},
  {route:'/insights',title:'Insights',description:'Contenuti ufficiali OMNI101.'},
  {route:'/start-project',title:'Descrivi il progetto',description:'Invia un brief attraverso il modulo protetto, con consenso e verifica antispam.'},
 ];
-const internalDestinations=['/admin','/admin/leads','/admin/projects','/admin/tasks','/admin/proposals','/admin/approvals','/admin/agents','/admin/agent-runs','/admin/settings'];
+const internalDestinations=['/admin','/admin/leads','/admin/projects','/admin/tasks','/admin/proposals','/admin/approvals','/admin/agents','/admin/agent-runs','/admin/settings','/admin/campaigns','/admin/growth-plans','/admin/creative-jobs','/admin/subscriptions'];
 export const assistantToolRegistry = {
  navigate_to_route:'Navigazione esplicita verso una route consentita',open_service:'Apre una famiglia di servizi',open_demo:'Apre una demo pubblica',show_project:'Apre il portfolio',search_content:'Ricerca nel catalogo e nei contenuti pubblicati',compare_solutions:'Confronta soluzioni dal catalogo ufficiale',start_brief:'Prepara il modulo di richiesta',save_draft_brief:'Conserva il brief nel percorso del modulo',submit_lead:'Invia la richiesta a /api/intake solo dopo conferma esplicita, consenso e Turnstile; il server rivalida tutto',request_human_contact:'Prepara una richiesta di contatto umano',lookup_workspace:'Legge record consentiti del workspace',propose_task:'Propone un task, scrittura solo dopo conferma esplicita tramite API ordinaria',
 } as const;
@@ -70,6 +73,10 @@ async function context(env:Env,org:string,actor:Identity|null,message:string){
  if(/lead|client|richiest|nuov/.test(wanted))groups.push({key:'leads',sql:'SELECT id,name,status,next_action,substr(brief,1,800) AS brief FROM leads WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
  if(/task|attivit|scadenz/.test(wanted))groups.push({key:'tasks',sql:'SELECT id,name,status,priority,due_date,project_id FROM tasks WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
  if(/progett|project|riepilog/.test(wanted))groups.push({key:'projects',sql:'SELECT id,name,status,substr(description,1,800) AS description,due_date FROM projects WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
+ if(/campagn|marketing|pubblicit/.test(wanted))groups.push({key:'campaigns',sql:'SELECT id,name,status,channel,objective,due_date FROM campaigns WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
+ if(/growth|funnel|email|seo|contenut/.test(wanted))groups.push({key:'growthPlans',sql:'SELECT id,name,status,kind,success_metric,due_date FROM growth_plans WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
+ if(/creativ|storyboard|avatar|produzion|variant/.test(wanted))groups.push({key:'creativeJobs',sql:'SELECT id,name,status,kind,substr(storyboard,1,800) AS storyboard,due_date FROM creative_jobs WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
+ if(/abbonament|subscription/.test(wanted)&&['OWNER','ADMIN','FINANCE'].includes(actor.role))groups.push({key:'subscriptions',sql:'SELECT id,name,status,provider,amount_cents,cadence,due_date FROM subscriptions WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
  if(/preventiv|propost|approva/.test(wanted)){
   if(['OWNER','ADMIN','PROJECT_MANAGER','SALES','FINANCE'].includes(actor.role))groups.push({key:'proposals',sql:'SELECT id,name,status,substr(summary,1,800) AS summary FROM quotes WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
   groups.push({key:'approvals',sql:"SELECT id,name,status,resource_type,resource_id FROM approvals WHERE organization_id=? AND status='PENDING' ORDER BY updated_at DESC LIMIT 12"});
