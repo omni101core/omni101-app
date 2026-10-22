@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {Link,NavLink} from 'react-router';
+import {Link,NavLink,useLocation} from 'react-router';
 import {ThemeToggle} from '../../ThemeToggle';
 import {gsap} from 'gsap';
 import '../../../styles/public-grammar.css';
@@ -60,4 +60,4 @@ function Menu(){
  </>;
 }
 
-export function Header(){return <header className="site-header"><Link className="wordmark" to="/">OMNI<span>101</span></Link><nav className="site-nav" aria-label="Navigazione principale">{links.map(([to,label])=><NavLink key={to} to={to}>{label}</NavLink>)}</nav><Link className="header-action" to="/start-project">Parliamone <i aria-hidden="true">↗</i></Link><ThemeToggle/><Menu/></header>}
+export function Header(){const {pathname}=useLocation();return <header className="site-header"><Link className="wordmark" to="/">OMNI<span>101</span></Link><nav className="site-nav" aria-label="Navigazione principale">{links.map(([to,label])=><NavLink key={to} to={to}>{label}</NavLink>)}</nav><Link className="header-action" to="/start-project">Parliamone <i aria-hidden="true">↗</i></Link><ThemeToggle scope={pathname==='/login'?'workspace':'public'}/><Menu/></header>}
