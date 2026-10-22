@@ -1,4 +1,6 @@
 /* Playable scenes inside the station cards. The card keeps its border; the primitive inside drops its own. */
+.ex-card[data-scena]{padding-top:26px}
+.ex-path[data-enhanced="true"] .ex-card[data-scena]{padding-top:30px}
 .ex-scena .sc-box,.ex-scena .demo-surface{padding:0;border:0;background:transparent}
 .ex-scena .demo-surface{display:flex;flex-direction:column;gap:14px}
 .ex-scena .product-card{padding:0}

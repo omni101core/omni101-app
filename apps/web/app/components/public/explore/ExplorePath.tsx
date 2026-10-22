@@ -52,7 +52,7 @@ export default function ExplorePath(){
    <div className="ex-hud"><span>{pad(active+1)} / {pad(stations.length)}</span><strong>{stations[active].kicker}</strong><i style={{transform:`scaleX(${(active+1)/stations.length})`}}/></div>
   </div>
   <ol className="ex-stations">{stations.map((s,i)=><li key={s.id} ref={node=>{items.current[i]=node}} className="ex-station" data-side={i%2===0?'left':'right'}>
-   <article className="ex-card" data-station={s.id} data-kind={s.kind} data-active={enhanced&&i===active}>
+   <article className="ex-card" data-station={s.id} data-kind={s.kind} data-scena={s.scena} data-active={enhanced&&i===active}>
     {!s.scena&&<div className="ex-visual"><Visual kind={s.visual}/></div>}
     <span className="eyebrow">{pad(i+1)} / {s.kicker}</span>
     <h2 tabIndex={-1}>{s.title}</h2>
