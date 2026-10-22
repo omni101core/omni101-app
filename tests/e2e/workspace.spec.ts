@@ -3,12 +3,12 @@ import {createHash,randomBytes,randomUUID} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {resolve} from 'node:path';
 
-// Infrastructure fixture only: a fresh isolated organization in the local test D1.
+// Infrastructure fixture only: a unique individual Owner in the isolated local test D1.
 // All product operations below use real passkey authentication and HTTP persistence.
 async function owner(page:Page,baseURL:string){
  if(new URL(baseURL).hostname!=='localhost')throw new Error('Workspace fixtures are restricted to localhost.');
- const org='workspace-e2e-'+randomUUID(),token=randomBytes(32).toString('hex'),hash=createHash('sha256').update(token).digest('hex'),now=Date.now();
- const sql=`INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES('${org}','Workspace browser verification','${org}',${now},${now}); INSERT INTO invitations(id,organization_id,email,role,token_hash,expires_at,created_at,updated_at) VALUES('${randomUUID()}','${org}','${org}@example.test','OWNER','${hash}',${now+600000},${now},${now});`;
+ const org='omni101',fixtureId='workspace-e2e-'+randomUUID(),token=randomBytes(32).toString('hex'),hash=createHash('sha256').update(token).digest('hex'),now=Date.now();
+ const sql=`INSERT INTO invitations(id,organization_id,email,role,token_hash,expires_at,created_at,updated_at) VALUES('${randomUUID()}','${org}','${fixtureId}@example.test','OWNER','${hash}',${now+600000},${now},${now});`;
  execFileSync(resolve('node_modules/.bin/wrangler'),['d1','execute','DB','--local','--config','wrangler.jsonc','--env','test','--command',sql],{cwd:resolve('apps/web'),stdio:'pipe',timeout:20000});
  const cdp=await page.context().newCDPSession(page);await cdp.send('WebAuthn.enable');await cdp.send('WebAuthn.addVirtualAuthenticator',{options:{protocol:'ctap2',transport:'internal',hasResidentKey:true,hasUserVerification:true,isUserVerified:true,automaticPresenceSimulation:true}});
  await page.goto('/portal/invite?token='+token);await page.getByRole('button',{name:'Attiva il tuo account'}).click();await expect(page).toHaveURL(/\/admin$/,{timeout:20000});await expect(page.getByRole('heading',{name:'Una visione chiara.'})).toBeVisible();
