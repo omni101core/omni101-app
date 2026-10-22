@@ -115,3 +115,16 @@ test('solutions/:family: each family has its page, its catalogue and a 404 for t
  await expect(page).toHaveURL(/\/explore\/workflow$/);
  const missing=await page.goto('/solutions/inesistente');expect(missing?.status()).toBe(404);
 });
+
+test('screenshots: the pages at desktop 1440 and mobile 390 for the visual review',async({page,isMobile},info)=>{
+ await page.setViewportSize(isMobile?{width:390,height:844}:{width:1440,height:900});
+ const shot=async(name:string,full=false)=>{await page.waitForTimeout(1600);await page.screenshot({path:`test-results/shots/${info.project.name}-${name}.png`,fullPage:full})};
+ await page.goto('/explore');await hydrated(page);await shot('explore-top');
+ await page.locator('[data-station="automate"]').scrollIntoViewIfNeeded();await shot('explore-automate');
+ await page.locator('[data-station="vision"]').scrollIntoViewIfNeeded();await shot('explore-vision');
+ await page.goto('/solutions');await hydrated(page);await shot('solutions-top');
+ if(!isMobile)await page.getByRole('tab',{name:/GROW/}).click();
+ await shot('solutions-ring');
+ await page.getByRole('link',{name:'Vai al catalogo'}).click();await shot('solutions-catalogue');
+ await page.goto('/solutions/automate');await hydrated(page);await shot('solutions-automate',true);
+});

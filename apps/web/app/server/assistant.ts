@@ -16,7 +16,7 @@ export const publicDestinations = [
 ];
 const internalDestinations=['/admin','/admin/leads','/admin/projects','/admin/tasks','/admin/proposals','/admin/approvals','/admin/agents','/admin/agent-runs','/admin/settings'];
 export const assistantToolRegistry = {
- navigate_to_route:'Navigazione esplicita verso una route consentita',open_service:'Apre una famiglia di servizi',open_demo:'Apre una demo pubblica',show_project:'Apre il portfolio',search_content:'Ricerca nel catalogo e nei contenuti pubblicati',compare_solutions:'Confronta soluzioni dal catalogo ufficiale',start_brief:'Prepara il modulo di richiesta',save_draft_brief:'Conserva il brief nel percorso del modulo',submit_lead:'Apre il modulo: consenso e Turnstile restano obbligatori',request_human_contact:'Prepara una richiesta di contatto umano',lookup_workspace:'Legge record consentiti del workspace',propose_task:'Propone un task, scrittura solo dopo conferma esplicita tramite API ordinaria',
+ navigate_to_route:'Navigazione esplicita verso una route consentita',open_service:'Apre una famiglia di servizi',open_demo:'Apre una demo pubblica',show_project:'Apre il portfolio',search_content:'Ricerca nel catalogo e nei contenuti pubblicati',compare_solutions:'Confronta soluzioni dal catalogo ufficiale',start_brief:'Prepara il modulo di richiesta',save_draft_brief:'Conserva il brief nel percorso del modulo',submit_lead:'Invia la richiesta a /api/intake solo dopo conferma esplicita, consenso e Turnstile; il server rivalida tutto',request_human_contact:'Prepara una richiesta di contatto umano',lookup_workspace:'Legge record consentiti del workspace',propose_task:'Propone un task, scrittura solo dopo conferma esplicita tramite API ordinaria',
 } as const;
 const actionSchema=z.object({type:z.enum(['navigate','brief','propose_task']),label:z.string().min(1).max(100),route:z.string().max(160).optional(),brief:z.string().max(2000).optional(),task:z.object({name:z.string().min(1).max(160),description:z.string().max(2000)}).strict().optional()}).strict();
 export const assistantOutputSchema=z.object({text:z.string().min(1).max(6000),cards:z.array(z.object({title:z.string().max(120),body:z.string().max(600),route:z.string().max(160).optional()}).strict()).max(5).default([]),checklist:z.array(z.string().max(300)).max(8).default([]),actions:z.array(actionSchema).max(5).default([])}).strict();
@@ -47,6 +47,14 @@ async function owner(request:Request,env:Env,mode:'public'|'internal') {
  const valid=!!existing&&/^[a-f0-9]{64}$/.test(existing);
  const token=valid?existing!:Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('');
  return {actor:null,hash:await digest(token),cookie:valid?'':`__Host-omni_assist=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`};
+}
+// The visitor's own public conversation, or null: the cookie never mints an identity here.
+export async function linkedConversation(request:Request,env:Env,org:string,conversationId?:string){
+ if(!conversationId)return null;
+ const existing=request.headers.get('Cookie')?.split(';').map(c=>c.trim()).find(c=>c.startsWith('__Host-omni_assist='))?.split('=')[1];
+ if(!existing||!/^[a-f0-9]{64}$/.test(existing))return null;
+ const row=await env.DB.prepare("SELECT id FROM assistant_conversations WHERE id=? AND organization_id=? AND owner_hash=? AND mode='public' AND expires_at>?").bind(conversationId,org,await digest(existing),Date.now()).first<{id:string}>();
+ return row?.id||null;
 }
 async function throttle(request:Request,env:Env,org:string){
  const now=Date.now(),ip=request.headers.get('cf-connecting-ip')||'local';

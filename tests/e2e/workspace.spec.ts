@@ -25,6 +25,132 @@ test('workspace persists board changes, rolls back failures, finds records and v
  // Real drag-and-drop follows the same persistence path as the keyboard/touch selector.
  await card.dragTo(page.getByRole('region',{name:'REVIEW',exact:true}));await expect(page.getByRole('region',{name:'REVIEW',exact:true}).locator('.os-kanban-card')).toContainText(projectName);await expect(card.getByRole('combobox')).toHaveValue('REVIEW');
  await page.keyboard.press('Control+k');const search=page.getByRole('dialog');await search.getByRole('textbox',{name:'Cerca pagine e record'}).fill(projectName);await search.getByRole('button',{name:new RegExp(projectName)}).click();await expect(page).toHaveURL(/\/admin\/projects\?record=/);await expect(page.getByRole('dialog').getByLabel('Progetto')).toHaveValue(projectName);await page.getByRole('dialog').getByRole('button',{name:'Chiudi',exact:true}).click();
- await page.goto('/admin/agent-runs');await expect(page.getByRole('heading',{name:'Mission Control'})).toBeVisible();await expect(page.getByRole('heading',{name:'Nessuna esecuzione registrata.'})).toBeVisible();const runs=await page.request.get('/api/records/agent-runs');expect(runs.ok()).toBeTruthy();expect((await runs.json()).records).toEqual([]);
+ await page.goto('/admin/agent-runs');await expect(page.getByRole('heading',{name:'Mission Control'})).toBeVisible();await page.getByRole('button',{name:'Agenti AI',exact:true}).click();await expect(page.getByRole('heading',{name:'Nessuna esecuzione registrata.'})).toBeVisible();const runs=await page.request.get('/api/records/agent-runs');expect(runs.ok()).toBeTruthy();expect((await runs.json()).records).toEqual([]);
  await page.goto('/admin/automations');await expect(page.getByRole('heading',{name:'Workflow Builder'})).toBeVisible();await expect(page.locator('.react-flow__node')).toHaveCount(5);const workflowName='Versioned verification '+randomUUID().slice(0,8);await page.getByRole('textbox',{name:'Nome workflow'}).fill(workflowName);await page.getByRole('button',{name:'Salva versione'}).click();await expect(page.getByRole('status')).toContainText('Versione 1 salvata');await page.getByRole('button',{name:'Valida senza eseguire'}).click();await expect(page.getByRole('status')).toContainText('Validazione riuscita');const definitions=await page.request.get('/api/workflows');expect(definitions.ok()).toBeTruthy();expect((await definitions.json()).records).toEqual(expect.arrayContaining([expect.objectContaining({name:workflowName,version:1,status:'DRAFT'})]));const workflowRuns=await page.request.get('/api/workflow-runs');expect((await workflowRuns.json()).records).toEqual([]);await page.reload();await page.getByRole('combobox',{name:'Workflow salvato'}).selectOption({label:workflowName+' · v1'});await expect(page.getByRole('textbox',{name:'Nome workflow'})).toHaveValue(workflowName);
+});
+
+async function authenticator(page:Page){const cdp=await page.context().newCDPSession(page);await cdp.send('WebAuthn.enable');await cdp.send('WebAuthn.addVirtualAuthenticator',{options:{protocol:'ctap2',transport:'internal',hasResidentKey:true,hasUserVerification:true,isUserVerified:true,automaticPresenceSimulation:true}})}
+
+// Same-origin fetch from the signed-in page: the browser adds the Origin and the session cookie, as the workspace UI does.
+async function api(page:Page,method:string,path:string,body?:unknown){return page.evaluate(async([method,path,body])=>{const response=await fetch(path as string,{method:method as string,headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});return {status:response.status,body:await response.json().catch(()=>null) as any}},[method,path,body] as [string,string,unknown])}
+const node=(id:string,type:string,label:string)=>({id,type,position:{x:0,y:0},data:{label}});
+const chain=(...ids:string[])=>ids.slice(1).map((target,i)=>({id:ids[i]+'-'+target,source:ids[i],target}));
+async function workflowRun(page:Page,name:string,nodes:unknown[],ids:string[],leadId:string){
+ const definition=await api(page,'POST','/api/workflows',{name,active:true,graph:{nodes,edges:chain(...ids)}});
+ expect(definition.status).toBe(201);
+ const run=await api(page,'POST','/api/workflow-runs',{definitionId:definition.body.id,leadId,idempotencyKey:'e2e-'+randomUUID()});
+ expect(run.status).toBe(202);
+ return run.body.id as string;
+}
+
+test('Mission Control shows real durable runs with steps and artifacts, and cancels a run waiting for approval',async({page,baseURL},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Virtual WebAuthn and isolated workspace are exercised once on desktop Chromium.');
+ test.setTimeout(90000);
+ await owner(page,baseURL!);
+ const key=randomUUID().slice(0,8),done='Esecuzione reale '+key,waiting='Con approvazione '+key,taskName='Task del run '+key;
+ const lead=await api(page,'POST','/api/records/leads',{name:'Lead Mission '+key,status:'QUALIFICATION',message:'Richiesta reale per Mission Control '+key});
+ expect(lead.status).toBe(201);
+ const doneRun=await workflowRun(page,done,[node('start','TRIGGER','Avvio'),node('task','CREATE_TASK',taskName),node('end','END','Fine')],['start','task','end'],lead.body.record.id);
+ const waitingRun=await workflowRun(page,waiting,[node('start','TRIGGER','Avvio'),node('review','HUMAN_APPROVAL','Revisione del socio'),node('end','END','Fine')],['start','review','end'],lead.body.record.id);
+ expect((await api(page,'GET','/api/workflow-runs/'+doneRun)).body.run.status).toBe('COMPLETED');
+ expect((await api(page,'GET','/api/workflow-runs/'+waitingRun)).body.run.status).toBe('AWAITING_APPROVAL');
+
+ await page.goto('/admin/agent-runs');
+ await expect(page.getByRole('heading',{name:'Mission Control'})).toBeVisible();
+ await page.getByRole('button',{name:new RegExp(done)}).click();
+ const detail=page.locator('section.os-panel[aria-live="polite"]');
+ await expect(detail.getByRole('heading',{name:done})).toBeVisible();
+ await expect(detail.locator('.os-run-steps li')).toHaveCount(3);
+ await expect(detail.locator('.os-run-steps')).toContainText('COMPLETED');
+ await expect(detail.getByRole('link',{name:new RegExp('TASK · '+taskName)})).toBeVisible();
+ await expect(detail.locator('[data-storage="D1"]')).toContainText('R2 non è attivo');
+ await expect(detail.getByRole('button',{name:'Pausa non disponibile'})).toBeDisabled();
+ await expect(detail.getByRole('button',{name:'Annulla esecuzione'})).toHaveCount(0);
+
+ await page.getByRole('button',{name:new RegExp(waiting)}).click();
+ await expect(detail.getByRole('heading',{name:waiting})).toBeVisible();
+ await expect(detail.getByRole('button',{name:'Riprendi'})).toBeVisible();
+ await detail.getByRole('button',{name:'Annulla esecuzione'}).click();
+ await detail.getByRole('button',{name:/^Conferma · Annulla esecuzione/}).click();
+ await expect(page.getByRole('status').filter({hasText:'Esecuzione annullata'})).toBeVisible();
+ await expect(detail.locator('.os-badge').first()).toHaveText('CANCELLED');
+ await expect(detail.getByRole('button',{name:'Annulla esecuzione'})).toHaveCount(0);
+ expect((await api(page,'GET','/api/workflow-runs/'+waitingRun)).body.run.status).toBe('CANCELLED');
+ await page.screenshot({path:'test-results/mission-control.png',fullPage:true});
+
+ // The agent filter stays empty: no AI provider runs exist in the isolated environment, and nothing is invented.
+ await page.getByRole('button',{name:'Agenti AI',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Nessuna esecuzione registrata.'})).toBeVisible();
+});
+
+function clientInvitation(clientId:string){
+ const token=randomBytes(32).toString('hex'),hash=createHash('sha256').update(token).digest('hex'),now=Date.now();
+ const sql=`INSERT INTO invitations(id,organization_id,email,role,client_id,token_hash,expires_at,created_at,updated_at) VALUES('${randomUUID()}','omni101','client-${randomUUID()}@example.test','CLIENT','${clientId}','${hash}',${now+600000},${now},${now});`;
+ execFileSync(resolve('node_modules/.bin/wrangler'),['d1','execute','DB','--local','--config','wrangler.jsonc','--env','test','--command',sql],{cwd:resolve('apps/web'),stdio:'pipe',timeout:20000});
+ return token;
+}
+
+test('delivery pipeline runs from QA rejection to client approval and maintenance ticket',async({page,browser,baseURL},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Virtual WebAuthn and isolated workspace are exercised once on desktop Chromium.');
+ test.setTimeout(120000);
+ await owner(page,baseURL!);
+ const key=randomUUID().slice(0,8),projectName='Pipeline '+key,taskName='Landing '+key,deliverableName='Sito pubblicato '+key;
+ const client=await api(page,'POST','/api/records/clients',{name:'Cliente '+key,status:'ACTIVE'});
+ const project=await api(page,'POST','/api/records/projects',{name:projectName,status:'ACTIVE',client_id:client.body.record.id});
+ const task=await api(page,'POST','/api/records/tasks',{name:taskName,project_id:project.body.record.id,status:'IN_PROGRESS',priority:'HIGH'});
+ expect([client.status,project.status,task.status]).toEqual([201,201,201]);
+
+ await page.goto('/admin/pipeline?project='+project.body.record.id);
+ await expect(page.getByRole('heading',{name:'Pipeline di progetto'})).toBeVisible();
+ await expect(page.getByLabel('Progetto',{exact:true})).toHaveValue(project.body.record.id);
+ const row=page.getByRole('row',{name:new RegExp(taskName)});
+ await row.getByRole('button',{name:'Richiedi QA'}).click();
+ await expect(page.getByRole('status').filter({hasText:'QA richiesta'})).toBeVisible();
+ await expect(page.getByRole('article').filter({hasText:'PENDING'})).toHaveCount(1);
+ // A rejection needs a reason, then sends the work back to IN_PROGRESS.
+ await expect(page.getByRole('button',{name:'Rifiuta QA'})).toBeDisabled();
+ await page.getByLabel('Motivazione dell’esito').fill('Contrasto insufficiente nella sezione hero.');
+ await page.getByRole('button',{name:'Rifiuta QA'}).click();
+ await expect(page.getByRole('status').filter({hasText:'torna in lavorazione'})).toBeVisible();
+ await expect(row.locator('.os-badge')).toHaveText('IN_PROGRESS');
+ await row.getByRole('button',{name:'Richiedi QA'}).click();
+ await page.getByLabel('Motivazione dell’esito').fill('Contrasto corretto, verificato su desktop e mobile.');
+ await page.getByRole('button',{name:'Supera QA'}).click();
+ await expect(row.locator('.os-badge')).toHaveText('DONE');
+
+ await page.getByLabel('Nome del deliverable').fill(deliverableName);
+ await page.getByLabel('Contenuto per il cliente').fill('Il sito è online: link, credenziali di prova e istruzioni.');
+ await page.getByRole('button',{name:'Prepara deliverable'}).click();
+ await expect(page.getByText(deliverableName)).toBeVisible();
+ await page.getByRole('button',{name:'Consegna al cliente'}).click();
+ await expect(page.getByRole('status').filter({hasText:'il cliente lo vede nel portale'})).toBeVisible();
+ await expect(page.locator('.os-stages li[data-state="ACTIVE"]')).toContainText('Consegna');
+ await page.screenshot({path:'test-results/pipeline-admin.png',fullPage:true});
+
+ // The client signs in with a personal passkey from an invitation and sees only the delivered work.
+ const context=await browser.newContext(),portal=await context.newPage();
+ await authenticator(portal);
+ await portal.goto('/portal/invite?token='+clientInvitation(client.body.record.id));
+ await portal.getByRole('button',{name:'Attiva il tuo account'}).click();
+ await expect(portal).toHaveURL(/\/portal$/,{timeout:20000});
+ await expect(portal.getByRole('heading',{name:'Consegne'})).toBeVisible();
+ await expect(portal.getByText(deliverableName)).toBeVisible();
+ await expect(portal.getByText(projectName).first()).toBeVisible();
+ await portal.screenshot({path:'test-results/portal-delivery.png',fullPage:true});
+ await portal.getByRole('button',{name:'Approva consegna'}).click();
+ await expect(portal.getByRole('status').filter({hasText:'Consegna approvata'})).toBeVisible();
+ await expect(portal.locator('#portal-deliverables .os-badge')).toHaveText('Approvato');
+ await portal.getByLabel('Titolo della richiesta').fill('Aggiornare il footer '+key);
+ await portal.getByLabel('Descrizione',{exact:true}).fill('Il footer mostra ancora l’anno scorso: va aggiornato.');
+ await portal.getByRole('button',{name:'Invia richiesta'}).click();
+ await expect(portal.getByRole('status').filter({hasText:'Richiesta inviata allo studio'})).toBeVisible();
+ await expect(portal.locator('#portal-tickets')).toContainText('Aggiornare il footer '+key);
+ await context.close();
+
+ await page.goto('/admin/pipeline?project='+project.body.record.id);
+ await expect(page.locator('.os-stages li[data-state="DONE"]').filter({hasText:'Consegna'})).toBeVisible();
+ await expect(page.locator('.os-stages li[data-state="ACTIVE"]')).toContainText('Manutenzione');
+ await expect(page.getByText('Aggiornare il footer '+key)).toBeVisible();
+ await expect(page.getByText('CLIENT_APPROVED')).toBeVisible();
+ expect((await api(page,'GET','/api/projects/'+project.body.record.id+'/pipeline')).body.project.status).toBe('COMPLETED');
 });

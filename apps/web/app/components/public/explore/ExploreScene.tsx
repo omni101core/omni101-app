@@ -7,7 +7,7 @@ import {stations} from './stations';
  * (gaspoorf/curve-gallery has no licence file): no code, model or asset is copied. */
 export interface PathMotion{station:number}
 const GAP=11,CHAMPAGNE=0xd2b77b,IVORY=0xf2eee6,GRAPHITE=0x101112,SURFACE=0x191a1c;
-const shapes:(()=>THREE.BufferGeometry)[]=[()=>new THREE.IcosahedronGeometry(1.3,1),()=>new THREE.BoxGeometry(1.9,1.9,1.9,2,2,2),()=>new THREE.TorusKnotGeometry(.85,.3,96,12),()=>new THREE.OctahedronGeometry(1.5,1),()=>new THREE.TorusGeometry(1.1,.42,14,40),()=>new THREE.DodecahedronGeometry(1.4,0)];
+const shapes:(()=>THREE.BufferGeometry)[]=[()=>new THREE.IcosahedronGeometry(1.3,1),()=>new THREE.BoxGeometry(1.9,1.9,1.9,2,2,2),()=>new THREE.TorusKnotGeometry(.5,.17,96,12),()=>new THREE.OctahedronGeometry(1.5,1),()=>new THREE.TorusGeometry(1.1,.42,14,40),()=>new THREE.DodecahedronGeometry(1.4,0)];
 const side=(index:number)=>index%2===0?-1:1;
 const place=(index:number)=>new THREE.Vector3(Math.sin(index*1.3)*3,Math.cos(index*.9)*1.2,-index*GAP);
 
@@ -31,7 +31,7 @@ export default function ExploreScene({motion,onState}:{motion:RefObject<PathMoti
    const group=new THREE.Group(),geometry=track(shapes[i%shapes.length]());
    const wire=new THREE.Mesh(geometry,track(new THREE.MeshBasicMaterial({color:IVORY,wireframe:true,transparent:true,opacity:.85})));
    const core=new THREE.Mesh(geometry,track(new THREE.MeshBasicMaterial({color:SURFACE})));core.scale.setScalar(.97);
-   const halo=new THREE.Mesh(track(new THREE.TorusGeometry(2.1,.012,6,96)),track(new THREE.MeshBasicMaterial({color:CHAMPAGNE,transparent:true,opacity:.55})));halo.rotation.x=Math.PI/2.4;
+   const halo=new THREE.Mesh(track(new THREE.TorusGeometry(1.9,.006,6,96)),track(new THREE.MeshBasicMaterial({color:CHAMPAGNE,transparent:true,opacity:.55})));halo.rotation.x=Math.PI/2.4;
    group.add(core,wire,halo);group.position.copy(anchor);scene.add(group);
    return {group,wire:wire.material as THREE.MeshBasicMaterial,halo};
   });
