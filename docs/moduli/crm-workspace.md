@@ -66,3 +66,5 @@ Migrazione additiva `0006_studio_operations.sql`: `campaigns`, `growth_plans`, `
 ## Continuità operativa — 2026-10-22 sera
 
 `server/operating-backlog.ts`: preparazione esplicita Owner via `POST /api/setup/operating-backlog`, pulsante nel Centro operativo. ID stabili per organizzazione, insert senza sovrascrittura, batch atomico, audit. Progetto interno OMNI101, 15 task TODO, 3 milestone senza data promessa e 3 workflow DRAFT. Dipendenze iniziali conservate alle ripetizioni, anche se archiviate dopo la prima preparazione. Nessun incarico assegnato a utenti inesistenti: solo suggerimento agente nel brief. Non avvia run o servizi. Test in `agency-pipeline.test.ts`; modifica in attesa di nuova CI. Percorso di ripresa aggiornato in `docs/operativo/ripresa.md`.
+
+Export CSV: celle testuali che iniziano con formule (`=`, `+`, `-`, `@`, anche dopo spazi) prefissate da apostrofo, per impedire esecuzione involontaria nei fogli di calcolo. Le esportazioni restano limitate ai record caricati e autorizzati.
