@@ -1,0 +1,42 @@
+OMNI101 — Creative motion components
+
+Cinematic 3D Scroll Experiences with GSAP
+Joseph Santamaria / Codrops
+https://github.com/JosephASG/codrops-cinematic-scroll-animations
+Adapted cylinder geometry, texture shaders and scroll/camera orchestration.
+
+Scroll-Reactive 3D Gallery
+Houmahani Kane / Codrops
+https://github.com/houmahani/codrops-depth-gallery
+Adapted atmospheric background shader and depth/velocity motion.
+
+Parallel Page Transitions with GSAP and React Router
+Ismael Martínez / Codrops
+https://tympanus.net/codrops/2026/10/08/building-parallel-page-transitions-with-gsap-and-react-router/
+Architecture reference; OMNI101 transition implementation.
+
+Codrops downloadable demos licensing: https://tympanus.net/codrops/licensing/
+Copyright (c) 2009-2026 Codrops and respective authors.
+
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Media: omni-cinematic-atlas.png is an original generated OMNI101 concept
+campaign, created for this project. No author demo images or customer work
+are included in this image. The depicted person is fictional.
