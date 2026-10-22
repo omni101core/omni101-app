@@ -5,8 +5,10 @@ import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {Visual} from '../Visual';
 import {useWebGLSlot} from '../webglSlot';
 import {stations} from './stations';
+import Scena from './Scena';
 import type {PathMotion} from './ExploreScene';
 import '../../../styles/explore.css';
+import './scene.css';
 
 const ExploreScene=lazy(()=>import('./ExploreScene'));
 const pad=(n:number)=>String(n).padStart(2,'0');
@@ -51,9 +53,10 @@ export default function ExplorePath(){
   </div>
   <ol className="ex-stations">{stations.map((s,i)=><li key={s.id} ref={node=>{items.current[i]=node}} className="ex-station" data-side={i%2===0?'left':'right'}>
    <article className="ex-card" data-station={s.id} data-kind={s.kind} data-active={enhanced&&i===active}>
-    <div className="ex-visual"><Visual kind={s.visual}/></div>
+    {!s.scena&&<div className="ex-visual"><Visual kind={s.visual}/></div>}
     <span className="eyebrow">{pad(i+1)} / {s.kicker}</span>
     <h2 tabIndex={-1}>{s.title}</h2>
+    {s.scena&&<div className="ex-scena"><Scena id={s.scena}/></div>}
     <p>{s.text}</p>
     {s.detail&&<p className="ex-detail"><small>Un esempio</small>{s.detail}</p>}
     <Link className="button" to={s.to}>{s.label}</Link>

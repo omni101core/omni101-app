@@ -15,6 +15,16 @@ Ismael Martínez / Codrops
 https://tympanus.net/codrops/2026/10/08/building-parallel-page-transitions-with-gsap-and-react-router/
 Architecture reference; OMNI101 transition implementation.
 
+Ease Reverse Clip Menu
+Codrops
+https://github.com/codrops/EaseReverseClipMenu
+Idea of a clip-path menu that opens from the centre and closes on its own curve; rewritten with plain GSAP tweens.
+
+Image Expansion in Typography
+Codrops
+https://github.com/codrops/ImageExpansionTypography
+Technique: scrubbed GSAP Flip from the closed to the open layout of a headline; rewritten in React.
+
 Codrops downloadable demos licensing: https://tympanus.net/codrops/licensing/
 Copyright (c) 2009-2026 Codrops and respective authors.
 

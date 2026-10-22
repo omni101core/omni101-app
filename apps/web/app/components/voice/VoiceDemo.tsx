@@ -1,6 +1,7 @@
 import {useEffect,useRef,useState,type FormEvent} from 'react';
 import {Link} from 'react-router';
 import {interpretCommand,type VoiceIntent} from './commands';
+import {BancoVoce} from '../showcase';
 import '../../styles/playground.css';
 
 type Scene='home'|'commerce'|'services';
@@ -142,7 +143,7 @@ export default function VoiceDemo(){
  }
 
  const micDisabled=listening||supported!=='yes'||micPolicy!=='allowed';
- return <section className="section voice-demo" data-reduced={reduced?'true':'false'}>
+ return <><section className="section voice-demo" data-reduced={reduced?'true':'false'}>
   <span className="eyebrow">PLAYGROUND / VOCE NEL BROWSER</span>
   <h1>Dillo, oppure scrivilo.</h1>
   <p>Il microfono parte solo dal pulsante. La sintesi usa le voci del browser{voices==null?'':` (${voices} disponibili)`}. OMNI101 non riceve audio e non usa API a pagamento. Il riconoscimento, se c’è, è l’API Web Speech del browser: in Chrome l’audio può essere elaborato dal fornitore del browser, non viene salvato qui.</p>
@@ -180,5 +181,6 @@ export default function VoiceDemo(){
    <ul className="voice-cards">{services.map(item=><li key={item.name}><strong>{item.name}</strong><span>{item.text}</span><Link to={item.to}>Apri {item.name} ↗</Link></li>)}</ul>
   </section>
   <p><Link className="text-link" to="/explore/vision">Prova Vision Lab ↗</Link></p>
- </section>;
+ </section>
+ <section className="section" aria-label="Banco voce"><BancoVoce/></section></>;
 }

@@ -1,0 +1,22 @@
+/* Playable scenes inside the station cards. The card keeps its border; the primitive inside drops its own. */
+.ex-scena .sc-box,.ex-scena .demo-surface{padding:0;border:0;background:transparent}
+.ex-scena .demo-surface{display:flex;flex-direction:column;gap:14px}
+.ex-scena .product-card{padding:0}
+.sc-formato{position:relative;overflow:hidden;width:100%;max-height:340px;margin-inline:auto;border:1px solid var(--line)}
+.sc-formato[data-formato="story"]{width:auto;max-width:100%;height:340px}
+.sc-formato .visual{position:absolute;inset:0;height:100%}
+.sc-formato-testo{position:absolute;inset:auto 0 0;display:flex;flex-direction:column;gap:4px;padding:14px;background:linear-gradient(transparent,#101112cc);font-size:10px;letter-spacing:2px;color:var(--muted)}
+.sc-formato-testo strong{font-size:clamp(15px,1.6vw,20px);font-weight:400;letter-spacing:-.02em;color:var(--ivory)}
+.sc-oggetto{width:min(100%,260px);height:200px;margin-inline:auto;transition:transform .25s}
+.sc-oggetto .visual{height:100%}
+.ex-scena .sc-pd-quadro{max-height:340px}
+.sc-range{width:100%;min-height:32px;accent-color:var(--gold)}
+/* The first station is the voice bench: it must start in the first screen, not 92vh below the hero. */
+.ex-path[data-enhanced="true"] .ex-station:first-child{min-height:0;padding-block:4vh}
+@media(max-width:700px){
+ .ex-hero p{display:none}
+ .ex-index{overflow-x:auto}
+ .ex-index ol{flex-wrap:nowrap;white-space:nowrap;width:max-content}
+ .ex-stations{padding-top:20px}
+}
+@media(prefers-reduced-motion:reduce){.sc-oggetto{transition:none}}

@@ -2,11 +2,14 @@ import {useEffect,useState} from 'react';
 import {useNavigate} from 'react-router';
 import CapabilityCarousel from './CapabilityCarousel';
 import CapabilityCatalog from './CapabilityCatalog';
+import SegmentGrid from './SegmentGrid';
 import {ClosingCTA,PublicShell} from './PublicShell';
 import {familyFromSlug,panels} from './panels';
 
-/** /solutions brings the family panels forward in depth with the scroll; /solutions/:family shows one panel, still and
- * large, with no scroll effect, and the tabs navigate. The transition key is shared by every family, so changing family keeps focus on the tab. The selected panel always decides which family the catalog below lists. */
+/** /solutions opens a deal wheel with one card per family; /solutions/:family is a still page: the family panel, the
+ * segments that buy from it (one demo each) and the filtered catalogue. The tabs navigate on the family page. The
+ * transition key is shared by every family, so changing family keeps focus on the tab. The selected family always decides
+ * which one the catalogue below lists. */
 export default function SolutionsView({slug}:{slug?:string}){
  const family=familyFromSlug(slug),fixed=family?panels.findIndex(p=>p.family===family):-1,navigate=useNavigate(),[active,setActive]=useState(Math.max(0,fixed));
  useEffect(()=>{if(fixed>=0)setActive(fixed)},[fixed]);
@@ -19,9 +22,10 @@ export default function SolutionsView({slug}:{slug?:string}){
   <section className="page-hero cap-hero">
    <span className="eyebrow">{family?panel.name+' / SOLUZIONI':'02 / SOLUZIONI'}</span>
    <h1>{family?<>{panel.title}.<br/><em>{panel.headline}</em></>:<>Ogni idea,<br/><em>una possibilità concreta.</em></>}</h1>
-   <p>{family?panel.claim:'Quattro famiglie e un’area sperimentale. Scorri: ogni pannello arriva dal fondo con un’applicazione reale; sotto trovi il catalogo, con ciò che realizziamo oggi e ciò che progettiamo su misura.'}</p>
+   <p>{family?panel.claim:'Quattro famiglie e un’area sperimentale: il mazzo si apre e si alza in una ruota, una carta per famiglia. Scegline una, con il mouse, la tastiera o un gesto; sotto trovi il catalogo, con ciò che realizziamo oggi e ciò che progettiamo su misura.'}</p>
   </section>
-  <CapabilityCarousel active={active} scrollDriven={fixed<0} onSelect={select} linkSelf={fixed<0}/>
+  <CapabilityCarousel active={active} fixed={fixed>=0} onSelect={select}/>
+  {family&&<SegmentGrid family={family} name={panel.name}/>}
   <CapabilityCatalog index={active}/>
   <ClosingCTA/>
  </PublicShell>;

@@ -47,7 +47,7 @@ export function PublicTransition({routeKey,children}:{routeKey:string;children:R
    const timeline=gsap.timeline({defaults:{ease:'power3.inOut'},onComplete:finish});
    timeline.to(previous,{y:-52,scale:.986,autoAlpha:0,clipPath:'inset(0% 0% 18% 0%)',duration:.48},0)
     .fromTo(next,{y:76,autoAlpha:0,clipPath:'inset(76px 0px 0px 0px)'},{y:0,autoAlpha:1,clipPath:'inset(0px 0px 0px 0px)',duration:.62,ease:'power3.out'},.06);
-   if(title)timeline.fromTo(title,{y:36,clipPath:'inset(0% 0% 100% 0%)'},{y:0,clipPath:'inset(0% 0% 0% 0%)',duration:.46,ease:'power3.out'},.14);
+   if(title&&!title.hasAttribute('data-reveal-title'))timeline.fromTo(title,{y:36,clipPath:'inset(0% 0% 100% 0%)'},{y:0,clipPath:'inset(0% 0% 0% 0%)',duration:.46,ease:'power3.out'},.14);
    if(supporting.length)timeline.fromTo(supporting,{y:18,autoAlpha:0},{y:0,autoAlpha:1,duration:.38,stagger:.035,ease:'power2.out'},.22);
    if(tracking)timeline.fromTo(tracking,{scaleX:0,autoAlpha:1,transformOrigin:'0% 50%'},{scaleX:1,duration:.34,ease:'power2.inOut'},0).to(tracking,{autoAlpha:0,duration:.17},.48);
   },scope);

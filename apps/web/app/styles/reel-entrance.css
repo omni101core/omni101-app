@@ -1,1 +1,51 @@
-.omni-reel{height:485px;margin-top:30px}.omni-reel .reel-stage{height:425px;perspective:1000px;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}.omni-reel .reel-wheel{top:30px;width:260px;height:347px;margin-left:-130px;transition:none;will-change:transform}.omni-reel .reel-card,.omni-reel.expanded .reel-card{height:347px;transition:none;will-change:transform,opacity;border-color:#ffffff30;border-radius:3px;box-shadow:0 20px 40px #0007;backface-visibility:hidden}.omni-reel .reel-card>.reel-campaign{height:302px;position:relative;background-image:url('/media/omni-cinematic-atlas.png');background-size:400% 100%;background-repeat:no-repeat;overflow:hidden}.reel-campaign>.visual{position:absolute;inset:0;z-index:-1}.omni-reel .reel-card>div:last-child{height:45px;background:#151618;padding:12px;font-size:10px}.omni-reel .reel-skip{width:auto;padding:0 14px;margin-left:8px}.omni-reel .reel-controls{padding:12px 0}.omni-reel .reel-card:focus-visible{outline:3px solid #d2b77b;outline-offset:5px}@media(max-width:760px){.omni-reel{height:385px;margin-top:20px}.omni-reel .reel-stage{height:330px;perspective:780px}.omni-reel .reel-wheel{width:220px;height:290px;margin-left:-110px;top:10px}.omni-reel .reel-card,.omni-reel.expanded .reel-card{height:290px}.omni-reel .reel-card>.reel-campaign{height:248px}.omni-reel .reel-card>div:last-child{height:42px;font-size:8px}.omni-reel .reel-controls>span{max-width:130px;line-height:1.6}.omni-reel .reel-controls{margin:0 6vw}}@media(prefers-reduced-motion:reduce){.omni-reel{height:auto}.omni-reel .reel-stage{height:auto;perspective:none;overflow:visible;mask-image:none}.omni-reel .reel-wheel{position:relative;left:auto;top:auto;margin:0;padding:20px 6vw;width:100%;height:auto;transform:none!important;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.omni-reel .reel-card{position:relative;inset:auto;width:auto;transform:none!important;opacity:1!important;height:300px}.omni-reel .reel-card>.reel-campaign{height:255px}.omni-reel .reel-controls{margin-top:15px}@media(max-width:760px){.omni-reel .reel-wheel{grid-template-columns:repeat(2,1fr)}.omni-reel .reel-card{height:245px}.omni-reel .reel-card>.reel-campaign{height:200px}}}
+/* Home hero: the reel ring and its loader are one scene (ReelOrbit + reel-ring.ts). Overrides the older .reel-* rules of public.css. */
+.home-hero{position:relative;display:flex;flex-direction:column;min-height:calc(100svh - 100px);padding:0 4.8vw 28px;overflow:clip;isolation:isolate}
+.omni-reel .reel-stage{position:relative;flex:1 1 auto;min-height:340px;height:auto;margin:0 -4.8vw;overflow:hidden;perspective:1150px;touch-action:pan-y;cursor:grab;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.omni-reel .reel-stage:active{cursor:grabbing}
+.omni-reel .reel-stage:focus-visible{outline:2px solid #d2b77b;outline-offset:-6px}
+.omni-reel .reel-wheel{position:absolute;top:44%;left:50%;width:0;height:0;margin:0;transform-style:preserve-3d;transition:none;will-change:transform}
+.omni-reel .reel-card,.omni-reel.expanded .reel-card{position:absolute;inset:auto;left:0;top:0;width:180px;height:318px;margin:-159px 0 0 -90px;display:flex;flex-direction:column;transition:none;will-change:transform,opacity;opacity:0;border:1px solid #ffffff30;border-radius:3px;background:#151618;box-shadow:0 20px 40px #0007;overflow:hidden}
+.omni-reel .reel-card>.reel-campaign{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#1d1e20}
+.reel-campaign>.visual{position:absolute;inset:0;height:auto}
+.reel-campaign>img{display:block;width:100%;height:100%;object-fit:cover}
+.omni-reel .reel-card>div:last-child{flex:none;height:38px;display:flex;justify-content:space-between;align-items:center;padding:0 12px;font-size:10px;color:#ddd5c5;background:#151618}
+.omni-reel .reel-card:focus-visible{outline:3px solid #d2b77b;outline-offset:5px}
+.omni-reel .reel-controls{margin:0;padding:12px 0}
+.omni-reel .reel-controls>div{display:flex;gap:7px}
+
+/* Loader: same scene, the hero covered by a dark page while the ring is dealt; the cards stay above it. */
+.reel-loader{position:absolute;inset:0;z-index:20;display:none;background:var(--bg,#101112);pointer-events:none}
+@media (scripting:enabled) and (prefers-reduced-motion:no-preference){
+ .omni-reel.reel-entering .reel-loader{display:block;animation:reel-loader-failsafe .01s linear 9s forwards}
+ .omni-reel.reel-entering .reel-stage{z-index:30}
+}
+@keyframes reel-loader-failsafe{to{opacity:0;visibility:hidden}}
+.reel-loader-caption{position:absolute;left:4.8vw;bottom:74px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#9b9b90}
+.reel-skip{position:absolute;left:4.8vw;bottom:30px;z-index:40;pointer-events:auto;min-height:36px;padding:0 14px;border:1px solid #484944;background:transparent;color:#d5d1c7;font-size:10px}
+.reel-skip:focus-visible{outline:2px solid #d2b77b;outline-offset:3px}
+.reel-count{position:absolute;right:4.8vw;bottom:22px;display:flex;align-items:flex-end;font:300 clamp(64px,11vw,160px)/1 ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.05em;color:var(--ivory,#f2eee6)}
+.reel-digit{display:block;height:1em;width:.6em;overflow:hidden}
+.reel-digit>span{display:block;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.reel-digit i{display:block;height:1em;font-style:normal;line-height:1}
+.reel-count em{font-style:normal;font-size:.3em;line-height:1.9;color:#d2b77b}
+
+@media (max-width:1100px){.home-hero{min-height:calc(100svh - 85px)}}
+@media (max-width:760px){
+ .home-hero{min-height:calc(100svh - 78px);padding-bottom:20px}
+ .omni-reel .reel-stage{min-height:300px}
+ .omni-reel .reel-card,.omni-reel.expanded .reel-card{width:150px;height:268px;margin:-134px 0 0 -75px}
+ .reel-loader-caption{bottom:64px}
+ .reel-skip{bottom:22px}
+ .reel-count{bottom:14px}
+}
+
+/* Reduced motion and no scripting: the final state, a plain grid of the same links. */
+@media (prefers-reduced-motion:reduce),(scripting:none){
+ .reel-loader{display:none!important}
+ .omni-reel .reel-stage{height:auto;min-height:0;perspective:none;overflow:visible;mask-image:none;cursor:auto}
+ .omni-reel .reel-wheel{position:relative;top:auto;left:auto;width:100%;height:auto;transform:none!important;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 4.8vw}
+ .omni-reel .reel-card,.omni-reel.expanded .reel-card{position:relative;left:auto;top:auto;width:auto;height:300px;margin:0;transform:none!important;opacity:1!important}
+}
+@media (max-width:760px){
+ @media (prefers-reduced-motion:reduce){.omni-reel .reel-wheel{grid-template-columns:repeat(2,1fr)}.omni-reel .reel-card,.omni-reel.expanded .reel-card{height:245px}}
+}

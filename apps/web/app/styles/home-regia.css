@@ -1,0 +1,44 @@
+/* Home (REGIA v2): ingresso con l'anello di reel, frase con porte, capitolo cinematico, quattro porte. */
+.home-top{display:flex;justify-content:space-between;align-items:center;padding-top:44px}
+.home-title{margin:26px 0 0;font-size:clamp(46px,6.3vw,104px);font-weight:400;line-height:.96;letter-spacing:-.06em;position:relative;z-index:3}
+.home-title em{display:block;font-family:'Instrument Serif',serif;font-weight:400;color:var(--gold);letter-spacing:-.03em}
+.home-sentence{max-width:760px;margin:6px 0 0;font-size:clamp(15px,1.5vw,21px);line-height:1.5;color:var(--muted);letter-spacing:-.01em}
+.home-sentence a{color:var(--ivory);border-bottom:1px solid #d2b77b88;transition:color .25s,border-color .25s}
+.home-sentence a:hover,.home-sentence a:focus-visible{color:var(--gold);border-color:var(--gold)}
+.home-foot{display:flex;justify-content:space-between;align-items:center;gap:30px;margin-top:22px;position:relative;z-index:3}
+.home-foot .hero-actions{margin-top:0}
+.home-numbers{display:flex;gap:34px;margin:0}
+.home-numbers>div{display:flex;flex-direction:column-reverse;gap:2px}
+.home-numbers dt{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:#8e8d85}
+.home-numbers dd{margin:0;font-size:28px;letter-spacing:-.04em}
+
+.home-doors{padding:120px 4.8vw 110px}
+.home-doors-title{margin:0 0 56px;font-size:clamp(42px,5.3vw,78px);line-height:1.05;font-weight:400;letter-spacing:-.045em}
+.home-doors-title em{font-family:'Instrument Serif',serif;font-weight:400;color:var(--gold)}
+.home-doors ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.home-door{display:grid;grid-template-columns:90px minmax(0,1.1fr) minmax(0,1fr) 40px;align-items:center;gap:20px;padding:30px 0;border-bottom:1px solid var(--line);transition:padding-left .45s cubic-bezier(.2,.6,.2,1),background .45s}
+.home-door:hover,.home-door:focus-visible{padding-left:18px;background:#ffffff06}
+.home-door-index{font-size:10px;letter-spacing:1.4px;color:#8e8d85}
+.home-door-name{font-size:clamp(26px,3.4vw,52px);letter-spacing:-.04em;line-height:1.05}
+.home-door-line{font-size:13px;line-height:1.6;color:var(--muted)}
+.home-door-arrow{justify-self:end;font-size:22px;color:var(--gold);transition:transform .45s cubic-bezier(.2,.6,.2,1)}
+.home-door:hover .home-door-arrow{transform:translate(4px,-4px)}
+.home-door:focus-visible{outline:2px solid #d2b77b;outline-offset:2px}
+
+@media (max-width:1100px){.home-top{padding-top:30px}}
+@media (max-width:760px){
+ .home-top{padding-top:20px}
+ .home-top .availability{display:none}
+ .home-title{margin-top:14px;font-size:clamp(40px,11.5vw,56px)}
+ .home-sentence{font-size:14px}
+ .home-foot{flex-direction:column;align-items:flex-start;gap:16px;margin-top:14px}
+ .home-numbers{gap:24px}
+ .home-numbers dd{font-size:22px}
+ .home-doors{padding:80px 6vw 70px}
+ .home-door{grid-template-columns:1fr 32px;gap:6px 12px;padding:22px 0}
+ .home-door-index{display:none}
+ .home-door-name{grid-column:1}
+ .home-door-line{grid-column:1;grid-row:2}
+ .home-door-arrow{grid-column:2;grid-row:1}
+}
+@media (prefers-reduced-motion:reduce){.home-door,.home-door-arrow,.home-sentence a{transition:none}}

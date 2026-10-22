@@ -65,3 +65,10 @@ test('reduced motion keeps vision and voice usable without permission prompts',a
  await expect(page.getByRole('button',{name:'Ascolta il pannello'})).toBeVisible();
  expect(await page.evaluate(()=>(window as unknown as {__omniCalls:string[]}).__omniCalls)).toEqual([]);
 });
+
+test('permissions policy opens the microphone only on voice and the camera only on vision',async({request})=>{
+ const policy=async(path:string)=>(await request.get(path)).headers()['permissions-policy'];
+ expect(await policy('/explore/voice')).toBe('camera=(), microphone=(self), geolocation=()');
+ expect(await policy('/explore/vision')).toBe('camera=(self), microphone=(), geolocation=()');
+ for(const path of ['/','/explore','/explore/commerce','/solutions'])expect(await policy(path)).toBe('camera=(), microphone=(), geolocation=()');
+});
