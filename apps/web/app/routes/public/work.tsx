@@ -32,11 +32,13 @@ export function WorkCase({pathname}:{pathname:string}){
   if(!el||!from||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const scope=el.closest<HTMLElement>('[data-public-transition]');
   let tween:gsap.core.Tween|null=null,started=false,timer=0;
-  const run=()=>{if(started)return;started=true;scope?.removeEventListener('omni:public-transition-end',run);window.clearTimeout(timer);tween=flipFrom(el,from,{duration:1})};
+  const run=()=>{if(started)return;started=true;scope?.removeEventListener('omni:public-transition-end',later);window.clearTimeout(timer);tween=flipFrom(el,from,{duration:1,onComplete:()=>{gsap.set(el,{clearProps:'all'})}})};
+  // the end event fires inside PublicTransition's gsap.context: start on the next frame so its revert cannot undo this tween
+  const later=()=>{requestAnimationFrame(run)};
   gsap.set(el,{autoAlpha:0});
   if(!scope||scope.dataset.phase==='idle')run();
-  else{scope.addEventListener('omni:public-transition-end',run);timer=window.setTimeout(run,2600)}
-  return()=>{scope?.removeEventListener('omni:public-transition-end',run);window.clearTimeout(timer);tween?.kill();gsap.set(el,{clearProps:'all'})};
+  else{scope.addEventListener('omni:public-transition-end',later);timer=window.setTimeout(run,2600)}
+  return()=>{scope?.removeEventListener('omni:public-transition-end',later);window.clearTimeout(timer);tween?.kill();gsap.set(el,{clearProps:'all'})};
  },[p.slug]);
  return <><div className="case-hero case-flip" ref={hero} data-kind={kindOf(p.type)}><WorkMedia index={index} kind={p.kind} eager/></div><PageHero kicker={p.type+' / '+p.category} title={<>{p.name.split(' / ')[0]}<br/><em>{p.name.split(' / ')[1]}</em></>} text={p.description}/><section className="section case-detail"><div className="case-facts"><div><small>TIPO</small>{KINDS[kindOf(p.type)].label}</div><div><small>AMBITO</small>{p.category}</div><div><small>CLIENTE</small>Nessun cliente commerciale dichiarato</div><Link className="text-link" to="/work">← Tutti i progetti</Link></div><div><h2 className="section-heading">Un’idea.<br/><em>Una possibilità concreta.</em></h2><p>{p.description} Questo progetto esplora un approccio di design e interazione. Non rappresenta un risultato commerciale di un cliente e non attribuisce metriche o performance non misurate.</p><Link className="text-link" to={p.category==='Commerce'?'/explore/commerce':p.category==='Automazioni'?'/explore/workflow':'/explore'}>Esplora il laboratorio ↗</Link></div></section></>;
 }
