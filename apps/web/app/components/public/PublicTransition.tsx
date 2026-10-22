@@ -51,10 +51,12 @@ export function PublicTransition({routeKey,children}:{routeKey:string;children:R
    if(supporting.length)timeline.fromTo(supporting,{y:18,autoAlpha:0},{y:0,autoAlpha:1,duration:.38,stagger:.035,ease:'power2.out'},.22);
    if(tracking)timeline.fromTo(tracking,{scaleX:0,autoAlpha:1,transformOrigin:'0% 50%'},{scaleX:1,duration:.34,ease:'power2.inOut'},0).to(tracking,{autoAlpha:0,duration:.17},.48);
   },scope);
+  // A starved main thread must never leave the departing page mounted: settle by wall clock.
+  const guard=window.setTimeout(()=>{context.revert();finish();},2400);
   // A preference change mid-flight is an immediate accessible swap, not a new animation.
   const motionChange=()=>{if(preference.matches){context.revert();finish();}};
   preference.addEventListener('change',motionChange);
-  return()=>{sequence.current++;preference.removeEventListener('change',motionChange);context.revert();};
+  return()=>{window.clearTimeout(guard);sequence.current++;preference.removeEventListener('change',motionChange);context.revert();};
  },[routeKey,frame.departing?.routeKey]);
  return <div ref={root} className="public-transition" data-public-transition data-route={routeKey} data-phase={frame.departing?'running':'idle'}>
   {frame.departing&&<div ref={outgoing} key={frame.departing.routeKey} className="public-transition-layer public-transition-outgoing" data-page-outgoing inert aria-hidden="true">{frame.departing.node}</div>}
