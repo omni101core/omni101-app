@@ -62,3 +62,7 @@ Migrazione additiva `0006_studio_operations.sql`: `campaigns`, `growth_plans`, `
 ## Centro operativo — 2026-10-22 notte
 
 `OperationsOverview`, `/api/operations`: priorità scadenza/urgenza/data, avanzamento progetti, notifiche non lette e riconoscimento lettura, approvazioni e run problematiche. Calcoli sui record, senza AI. Finanza solo OWNER/ADMIN/FINANCE: incassi, crediti, spese pagate, costo AI separato; differenza parziale per progetto, non utile fiscale. Limiti delle liste dichiarati. Nuove viste `operations`, `planning`, `milestones`, `finance-overview`. Verifica separata su branch remoto `verify-commercial` per evitare il blocco noto delle credenziali deploy: stessi typecheck/test/build/browser, nessuna pubblicazione o migrazione remota.
+
+## Continuità operativa — 2026-10-22 sera
+
+`server/operating-backlog.ts`: preparazione esplicita Owner via `POST /api/setup/operating-backlog`, pulsante nel Centro operativo. ID stabili per organizzazione, insert senza sovrascrittura, batch atomico, audit. Progetto interno OMNI101, 15 task TODO, 3 milestone senza data promessa e 3 workflow DRAFT. Dipendenze iniziali conservate alle ripetizioni, anche se archiviate dopo la prima preparazione. Nessun incarico assegnato a utenti inesistenti: solo suggerimento agente nel brief. Non avvia run o servizi. Test in `agency-pipeline.test.ts`; modifica in attesa di nuova CI. Percorso di ripresa aggiornato in `docs/operativo/ripresa.md`.

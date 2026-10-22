@@ -137,7 +137,10 @@ export default function DealWheel({active,onSelect}:{active:number;onSelect:(ind
   const s=state.current;if(s.suppress){s.suppress=false;return}
   const card=(event.target as HTMLElement).closest<HTMLElement>('.deal-card');if(!card||shell.current?.dataset.phase!=='idle')return;
   const slot=Number(card.dataset.slot),n=Math.round(s.target/STEP);
-  if(mod(n,SLOTS)===slot){navigate('/solutions/'+panels[mod(slot,COUNT)].slug);return}
+  // The cards below the top one overlap its edges in 3D, so the hit card is not always the top one: a click in the
+  // middle column of the stage is on the top card, whichever card the browser reports.
+  const box=event.currentTarget.getBoundingClientRect(),half=parseFloat(event.currentTarget.style.getPropertyValue('--cw'))/2||0;
+  if(mod(n,SLOTS)===slot||Math.abs(event.clientX-(box.left+box.width/2))<half*.9){navigate('/solutions/'+panels[mod(n,COUNT)].slug);return}
   const target=slot+SLOTS*Math.round((n-slot)/SLOTS);
   s.target=target*STEP;select.current(mod(target,COUNT));engine.current?.wake();
  };

@@ -205,3 +205,22 @@ describe('deterministic planning and dependencies',()=>{
   expect((await call(env,owner,'GET','/api/projects/foreign-project/planning')).status).toBe(404);
  });
 });
+
+describe('operating backlog continuity',()=>{
+ it('prepares real pending records once, preserves edits and never starts executions',async()=>{
+  const {sqlite,env}=database();const owner=await person(sqlite,'backlog-owner');
+  const first=await call(env,owner,'POST','/api/setup/operating-backlog',{});
+  expect(first.status).toBe(200);expect(first.body.executionsStarted).toBe(0);
+  const project=first.body.projectId;
+  expect(one(sqlite,'SELECT count(*) n FROM tasks WHERE project_id=?',project).n).toBe(15);
+  sqlite.prepare("UPDATE tasks SET name='Modifica collaboratore' WHERE project_id=? AND name='Verificare centro operativo e pianificazione'").run(project);
+  await call(env,owner,'POST','/api/setup/operating-backlog',{});
+  expect(one(sqlite,'SELECT count(*) n FROM tasks WHERE project_id=?',project).n).toBe(15);
+  expect(one(sqlite,"SELECT count(*) n FROM tasks WHERE name='Modifica collaboratore'").n).toBe(1);
+  expect(one(sqlite,"SELECT count(*) n FROM workflow_definitions WHERE status='DRAFT'").n).toBe(3);
+  expect(one(sqlite,'SELECT count(*) n FROM workflow_runs').n).toBe(0);
+  expect(one(sqlite,'SELECT count(*) n FROM agent_runs').n).toBe(0);
+  const developer=await person(sqlite,'backlog-dev','DEVELOPER');
+  expect((await call(env,developer,'POST','/api/setup/operating-backlog',{})).status).toBe(403);
+ });
+});

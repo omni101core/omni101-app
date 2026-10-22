@@ -37,3 +37,5 @@ Registro del 22 ottobre 2026. Le righe nascono dal mandato, dal contratto dei wo
 Decisioni precedenti del sito Astro (registro Calibro, prezzi nascosti fino ai piloti) restano in `src/` e in `docs/SEO-CHECK-free.md`. Non si applicano alle route di `apps/web`.
 
 - 2026-10-22 sera — Mandato successivo al lavoro Claude: pubblico light-first, workspace dark-first, preferenze indipendenti; scene immersive scure locali. Home ampliata con tutta la narrativa senza moltiplicare effetti. Growth/media/abbonamenti usano CRUD e audit esistenti con quattro tabelle additive; nessuna integrazione esterna simulata come attiva. CI browser seriale: workerd SQLite locale aveva conflitti SQLITE_BUSY fra test concorrenti. Nessun deploy produzione autorizzato in questa ripresa.
+
+- 2026-10-22 sera — Backlog operativo come preparazione Owner idempotente, non seed obbligatorio delle migrazioni: preserva organizzazioni vuote e dati esistenti. Template workflow solo DRAFT, nessun agente avviato; aggiornato il passaggio corrente in operativo/ripresa.md con prove, revisioni e blocchi distinti.
