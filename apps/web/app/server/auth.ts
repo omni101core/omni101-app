@@ -26,3 +26,5 @@ export async function authenticate(request:Request,env:Env):Promise<Identity>{
 export function requireRole(identity:Identity,roles:Role[]){if(!roles.includes(identity.role))throw new HttpError(403,'Il tuo ruolo non autorizza questa operazione.');}
 export function assertSameOrigin(request:Request){const origin=request.headers.get('origin');if(origin!==new URL(request.url).origin)throw new HttpError(403,'Origine della richiesta non valida.');}
 export async function digest(value:string){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');}
+
+export function decodePathId(value:string){try{return decodeURIComponent(value)}catch{throw new HttpError(400,'Identificativo non valido.')}}

@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
+import {decodePathId,HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 const staff:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','DEVELOPER','DESIGNER','SALES','FINANCE'];
 const managers:Role[]=['OWNER','ADMIN','PROJECT_MANAGER'];
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
@@ -18,7 +18,7 @@ export function criticalPath(tasks:Task[],edges:Edge[]){
 async function body(request:Request){const text=await request.text();if(text.length>20000)throw new HttpError(413,'Richiesta troppo grande.');try{return JSON.parse(text)}catch{throw new HttpError(400,'JSON non valido.')}}
 export async function handlePlanning(request:Request,env:Env,actor:Identity):Promise<Response|null>{
  const match=new URL(request.url).pathname.match(/^\/api\/projects\/([^/]+)\/planning(?:\/(dependencies|comments))?$/);if(!match)return null;
- requireRole(actor,staff);const projectId=match[1],action=match[2],org=actor.orgId;
+ requireRole(actor,staff);const projectId=decodePathId(match[1]),action=match[2],org=actor.orgId;
  const project=await env.DB.prepare('SELECT id,name,due_date,status FROM projects WHERE id=? AND organization_id=?').bind(projectId,org).first();if(!project)throw new HttpError(404,'Progetto non trovato.');
  if(request.method==='GET'&&!action){
   const [tasks,dependencies,milestones,comments,version]=await Promise.all([

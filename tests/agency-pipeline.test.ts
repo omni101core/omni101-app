@@ -212,6 +212,9 @@ describe('operating backlog continuity',()=>{
   const first=await call(env,owner,'POST','/api/setup/operating-backlog',{});
   expect(first.status).toBe(200);expect(first.body.executionsStarted).toBe(0);
   const project=first.body.projectId;
+  expect((await call(env,owner,'GET','/api/projects/'+encodeURIComponent(project)+'/planning')).status).toBe(200);
+  expect((await call(env,owner,'GET','/api/projects/'+encodeURIComponent(project)+'/pipeline')).status).toBe(200);
+  expect((await call(env,owner,'PATCH','/api/records/projects/'+encodeURIComponent(project),{description:'Piano aggiornato'})).status).toBe(200);
   expect(one(sqlite,'SELECT count(*) n FROM tasks WHERE project_id=?',project).n).toBe(15);
   sqlite.prepare("UPDATE tasks SET name='Modifica collaboratore' WHERE project_id=? AND name='Verificare centro operativo e pianificazione'").run(project);
   await call(env,owner,'POST','/api/setup/operating-backlog',{});
