@@ -6,7 +6,7 @@ export function meta(){
  return [{title},{name:'description',content:description},{property:'og:title',content:title},{property:'og:description',content:description},{property:'og:type',content:'website'},{property:'og:url',content:'https://omni101.app/explore'},{tagName:'link',rel:'canonical',href:'https://omni101.app/explore'}];
 }
 export default function Explore(){
- return <PublicShell>
+ return <PublicShell routeKey="explore">
   <section className="page-hero ex-hero">
    <span className="eyebrow">03 / THE PLAYGROUND</span>
    <h1>Le possibilità,<br/><em>lungo un percorso.</em></h1>

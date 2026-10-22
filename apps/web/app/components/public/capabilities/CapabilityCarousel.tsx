@@ -1,4 +1,4 @@
-import {useEffect,useRef,useState,type CSSProperties,type KeyboardEvent} from 'react';
+import {useEffect,useRef,useState,type CSSProperties,type KeyboardEvent,type MouseEvent} from 'react';
 import {Link} from 'react-router';
 import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
@@ -16,7 +16,7 @@ export default function CapabilityCarousel({active,scrollDriven,onSelect,linkSel
  useEffect(()=>{
   const element=root.current;if(!element||!enhanced||!scrollDriven)return;
   gsap.registerPlugin(ScrollTrigger);
-  const trigger=ScrollTrigger.create({trigger:element,start:'top top',end:'bottom bottom',onUpdate:self=>select.current(Math.round(self.progress*(panels.length-1)))});
+  const trigger=ScrollTrigger.create({trigger:element,start:'top top',end:'bottom bottom',onUpdate:self=>{if(self.isActive)select.current(Math.round(self.progress*(panels.length-1)))}});
   return()=>trigger.kill();
  },[enhanced,scrollDriven]);
  useEffect(()=>{
@@ -28,6 +28,11 @@ export default function CapabilityCarousel({active,scrollDriven,onSelect,linkSel
   const element=root.current;
   if(enhanced&&scrollDriven&&element){const range=element.offsetHeight-window.innerHeight;window.scrollTo({top:element.getBoundingClientRect().top+window.scrollY+range*index/(panels.length-1),behavior:'instant' as ScrollBehavior})}
   onSelect(index);
+ };
+ // An instant jump skips the ring, so the panel on screen when the visitor asks for the catalogue stays selected.
+ const toCatalog=(event:MouseEvent<HTMLAnchorElement>)=>{
+  const target=document.getElementById('catalogo');if(!target)return;
+  event.preventDefault();target.scrollIntoView({behavior:'instant' as ScrollBehavior,block:'start'});target.focus({preventScroll:true});
  };
  const onKey=(event:KeyboardEvent<HTMLDivElement>)=>{
   const last=panels.length-1,next=event.key==='ArrowRight'?(active+1)%panels.length:event.key==='ArrowLeft'?(active+last)%panels.length:event.key==='Home'?0:event.key==='End'?last:-1;
@@ -52,12 +57,12 @@ export default function CapabilityCarousel({active,scrollDriven,onSelect,linkSel
      </div>
      <ul className="cap-also" aria-label={'Altre soluzioni '+p.name}>{p.also.map(c=><li key={c.id}>{c.title}</li>)}<li>{p.count} soluzioni</li></ul>
      <div className="cap-actions">
-      {linkSelf?<Link className="button" to={'/solutions/'+p.slug}>Tutte le soluzioni {p.name} ↗</Link>:<a className="button" href="#catalogo">Vedi le soluzioni ↓</a>}
+      {linkSelf?<Link className="button" to={'/solutions/'+p.slug}>Tutte le soluzioni {p.name} ↗</Link>:<a className="button" href="#catalogo" onClick={toCatalog}>Vedi le soluzioni ↓</a>}
       {p.featured.demo&&<Link className="cap-link" to={p.featured.demo}>Provala nel Playground ↗</Link>}
      </div>
     </article>)}
    </div></div></div>
-   <a className="cap-skip" href="#catalogo">Vai al catalogo ↓</a>
+   <a className="cap-skip" href="#catalogo" onClick={toCatalog}>Vai al catalogo ↓</a>
   </div>
  </section>;
 }

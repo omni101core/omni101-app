@@ -6,7 +6,7 @@ import {ClosingCTA,PublicShell} from './PublicShell';
 import {familyFromSlug,panels} from './panels';
 
 /** /solutions turns the ring with the scroll; /solutions/:family opens the same ring on one family, and the tabs
- * navigate. The selected panel always decides which family the catalog below lists. */
+ * navigate. The transition key is shared by every family, so changing family keeps focus on the tab. The selected panel always decides which family the catalog below lists. */
 export default function SolutionsView({slug}:{slug?:string}){
  const family=familyFromSlug(slug),fixed=family?panels.findIndex(p=>p.family===family):-1,navigate=useNavigate(),[active,setActive]=useState(Math.max(0,fixed));
  useEffect(()=>{if(fixed>=0)setActive(fixed)},[fixed]);
@@ -15,7 +15,7 @@ export default function SolutionsView({slug}:{slug?:string}){
   if(index!==fixed)navigate('/solutions/'+panels[index].slug,{preventScrollReset:true});
  };
  const panel=panels[active];
- return <PublicShell>
+ return <PublicShell routeKey="solutions">
   <section className="page-hero cap-hero">
    <span className="eyebrow">{family?panel.name+' / SOLUZIONI':'02 / SOLUZIONI'}</span>
    <h1>{family?<>{panel.title}.<br/><em>{panel.headline}</em></>:<>Ogni idea,<br/><em>una possibilità concreta.</em></>}</h1>
