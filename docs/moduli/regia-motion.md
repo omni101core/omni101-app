@@ -57,3 +57,5 @@ SPEC-02b (home e `routes/public.tsx`), SPEC-17 (`/solutions`), SPEC-18 (`/work`,
 ## Correzione profondità — 2026-10-22 sera
 
 `SpatialGallery` usa track CSS stabile `560svh` e stage sticky nativo, senza pin-spacer GSAP. Fine scroll `bottom bottom`. Evita la variazione di altezza che faceva saltare «Studio successivo» da Essenza a OMNI Portal. Il test diagnostico che falliva deliberatamente è ora regressione: prossimo = Atelier, profondità tra 0.8 e 1.2. Un effetto per route e un canvas restano invariati.
+
+CI `39832545700`: 98 browser test passati; link Atelier sul piano 3D ancora fuori viewport durante l'auto-scroll del browser. Correzione UX: destinazione del progetto attivo nel footer stabile della galleria, fuori dai transform 3D. I link sui piani restano solo nel fallback statico; cleanup ripristina aria/tabindex al cambio di preferenza motion. I test di navigazione esistenti restano invariati.

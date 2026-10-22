@@ -4,3 +4,6 @@
 
 /* Native track: stable height before navigating between depth planes. */
 .sg-enhanced{height:560svh}.sg-enhanced .sg-stage{position:sticky;top:0}
+
+/* The destination stays in screen space; 3D planes never drag the navigation off-screen. */
+.sg-enhanced .sg-plane-caption a{display:none}.sg-open{display:inline-flex;align-items:center;min-height:44px;padding:10px 18px;border:1px solid var(--sg-accent);font-size:12px;white-space:nowrap}.sg-open:hover{background:#ffffff12}.sg-open:focus-visible{outline:2px solid var(--sg-accent);outline-offset:4px}
