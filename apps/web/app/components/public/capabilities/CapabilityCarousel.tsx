@@ -42,7 +42,7 @@ function Panel({p,i,active,inert,link,onCatalog}:{p:FamilyPanel;i:number;active:
 export default function CapabilityCarousel({active,scrollDriven,onSelect,linkSelf}:{active:number;scrollDriven:boolean;onSelect:(index:number)=>void;linkSelf:boolean}){
  const root=useRef<HTMLElement>(null),ring=useRef<HTMLDivElement>(null),tabs=useRef<(HTMLButtonElement|null)[]>([]),placed=useRef(false),select=useRef(onSelect),[enhanced,setEnhanced]=useState(false);
  select.current=onSelect;
- useEffect(()=>{const query=matchMedia('(prefers-reduced-motion: no-preference) and (min-height: 700px)'),sync=()=>setEnhanced(query.matches);sync();query.addEventListener('change',sync);return()=>query.removeEventListener('change',sync)},[]);
+ useEffect(()=>{const query=matchMedia('(prefers-reduced-motion: no-preference) and (min-height: 700px) and (min-width: 761px)'),sync=()=>setEnhanced(query.matches);sync();query.addEventListener('change',sync);return()=>query.removeEventListener('change',sync)},[]);
  useEffect(()=>{
   const element=root.current;if(!element||!enhanced||!scrollDriven)return;
   gsap.registerPlugin(ScrollTrigger);
