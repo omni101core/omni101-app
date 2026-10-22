@@ -4,7 +4,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import {handleApi} from '../apps/web/app/server/api';
 import {digest,type Env} from '../apps/web/app/server/auth';
 
-async function fixture(resource:'quotes'|'leads'|'agent_runs',synchronize=true){
+async function fixture(resource:'quotes'|'leads'|'agent_runs'|'workflow_runs',synchronize=true){
  const sqlite=new DatabaseSync(':memory:');for(const file of readdirSync('packages/db/migrations').sort())sqlite.exec(readFileSync('packages/db/migrations/'+file,'utf8'));
  const now=Date.now();
  for(const user of ['owner-a','owner-b']){
@@ -16,8 +16,9 @@ async function fixture(resource:'quotes'|'leads'|'agent_runs',synchronize=true){
  sqlite.prepare("INSERT INTO quotes(id,organization_id,name,status,created_at,updated_at) VALUES('quote','omni101','Synthetic proposal','DRAFT',?,?)").run(now,now);
  sqlite.prepare("INSERT INTO agent_runs(id,organization_id,name,input,status,created_at,updated_at) VALUES('run','omni101','Synthetic run','{}','AWAITING_APPROVAL',?,?)").run(now,now);
  sqlite.prepare("INSERT INTO workflow_executions(id,organization_id,name,lead_id,status,current_step,created_at,updated_at) VALUES('workflow','omni101','Synthetic workflow','lead','AWAITING_APPROVAL','WAITING',?,?)").run(now,now);
- const resourceId=resource==='quotes'?'quote':resource==='leads'?'lead':'run';
- sqlite.prepare("INSERT INTO approvals(id,organization_id,name,status,resource_type,resource_id,evidence,version,created_at,updated_at) VALUES('approval','omni101','Review','PENDING',?,?,?,1,?,?)").run(resource,resourceId,JSON.stringify({runId:'run',leadId:'lead'}),now,now);
+ sqlite.prepare("INSERT INTO workflow_runs(id,organization_id,version,graph,input,status,idempotency_key,created_at,updated_at) VALUES('workflow-run','omni101',1,'{}','{}','AWAITING_APPROVAL','synthetic-review',?,?)").run(now,now);
+ const resourceId=resource==='quotes'?'quote':resource==='leads'?'lead':resource==='workflow_runs'?'workflow-run':'run';
+ sqlite.prepare("INSERT INTO approvals(id,organization_id,name,status,resource_type,resource_id,evidence,version,created_at,updated_at) VALUES('approval','omni101','Review','PENDING',?,?,?,1,?,?)").run(resource,resourceId,JSON.stringify({runId:'run',leadId:'lead',quoteId:'quote',workflowRunId:'workflow-run'}),now,now);
  let reads=0,release:()=>void=()=>{};
  const barrier=new Promise<void>(resolve=>{release=resolve;});
  const wrap=(sql:string,params:unknown[]=[])=>({
@@ -37,7 +38,7 @@ function decide(env:Env,owner:string,decision:'APPROVED'|'REJECTED'){
  return handleApi(new Request('https://omni101.app/api/approvals/approval/decision',{method:'POST',headers:{Origin:'https://omni101.app',Cookie:'__Host-omni_session='+owner,'Content-Type':'application/json'},body:JSON.stringify({decision,reason:'Inspected actual evidence for concurrency test'})}),env);
 }
 describe('approval decisions claim one transactional winner',()=>{
- for(const resource of ['quotes','leads','agent_runs'] as const)it(`does not let stale opposite decisions overwrite ${resource} or produce a second audit`,async()=>{
+ for(const resource of ['quotes','leads','agent_runs','workflow_runs'] as const)it(`does not let stale opposite decisions overwrite ${resource} or produce a second audit`,async()=>{
   const {sqlite,env}=await fixture(resource);
   const results=await Promise.all([decide(env,'owner-a','APPROVED'),decide(env,'owner-b','REJECTED')]);
   expect(results.map(result=>result?.status).sort()).toEqual([200,409]);
@@ -46,9 +47,10 @@ describe('approval decisions claim one transactional winner',()=>{
   expect(approval.status).toBe(winner);expect(approval.decided_by).toBe(results[0]?.status===200?'owner-a':'owner-b');expect(approval.version).toBe(2);
   const audits=sqlite.prepare("SELECT user_id,action FROM audit_logs WHERE resource_type='approvals' AND resource_id='approval'").all();
   expect(audits).toHaveLength(1);expect(audits[0].user_id).toBe(approval.decided_by);expect(audits[0].action).toBe('APPROVAL_'+winner);
-  expect(sqlite.prepare("SELECT status FROM agent_runs WHERE id='run'").get()?.status).toBe(winner);
-  if(resource==='quotes')expect(sqlite.prepare("SELECT status FROM quotes WHERE id='quote'").get()?.status).toBe(winner);
-  if(resource!=='agent_runs')expect(sqlite.prepare("SELECT status FROM workflow_executions WHERE id='workflow'").get()?.status).toBe(winner==='APPROVED'?(resource==='quotes'?'READY_FOR_COMMERCIAL_DECISION':'READY_FOR_DISCOVERY'):'NEEDS_HUMAN_REVIEW');
+  expect(sqlite.prepare("SELECT status FROM agent_runs WHERE id='run'").get()?.status).toBe(resource==='workflow_runs'?'AWAITING_APPROVAL':winner);
+  if(resource==='quotes'||resource==='workflow_runs')expect(sqlite.prepare("SELECT status FROM quotes WHERE id='quote'").get()?.status).toBe(winner);
+  if(resource!=='agent_runs'&&resource!=='workflow_runs')expect(sqlite.prepare("SELECT status FROM workflow_executions WHERE id='workflow'").get()?.status).toBe(winner==='APPROVED'?(resource==='quotes'?'READY_FOR_COMMERCIAL_DECISION':'READY_FOR_DISCOVERY'):'NEEDS_HUMAN_REVIEW');
+  if(resource==='workflow_runs'){expect(sqlite.prepare("SELECT status FROM workflow_runs WHERE id='workflow-run'").get()?.status).toBe('AWAITING_APPROVAL');expect(sqlite.prepare('SELECT count(*) n FROM projects').get()?.n).toBe(0);expect(sqlite.prepare('SELECT count(*) n FROM tasks').get()?.n).toBe(0);}
  });
  it('claims only once for concurrent identical decisions from the same Owner',async()=>{
   const {sqlite,env}=await fixture('quotes');
