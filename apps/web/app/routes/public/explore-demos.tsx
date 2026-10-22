@@ -4,6 +4,7 @@ import {Visual} from '../../components/public/Visual';
 import {PageHero} from '../../components/public/shell/PageHero';
 import {Binario,PrimaDopo,TiPuoServire,Vetrina} from '../../components/showcase';
 import {aspettoDi,etichettaDi,messaggi} from '../../components/showcase/creativo';
+import {AvatarLab,SoftwareLab} from './product-labs';
 const VisionLab=lazy(()=>import('../../components/vision/VisionLab'));
 export function Commerce(){return <><PageHero kicker="PLAYGROUND / COMMERCE EXPERIENCE" title={<>Essenza.<br/><em>Objects for a slower life.</em></>} text="Un negozio dimostrativo realmente esplorabile. Catalogo, varianti e carrello; nessun pagamento o ordine reale."/><section className="section"><Vetrina/></section></>}
 export function WorkflowDemo(){return <><PageHero kicker="PLAYGROUND / AI WORKFLOW" title={<>Dalla richiesta.<br/><em>Alla prossima azione.</em></>} text="Una simulazione guidata del percorso di una richiesta. Il testo resta nel browser; questa demo non invoca modelli né crea dati produttivi."/><section className="section"><Binario campo nodi={6}/></section></>}
@@ -26,6 +27,8 @@ export function CreativeDemo(){
  </>;
 }
 export function ExploreDemo({slug}:{slug:string}){
+ if(slug==='avatar')return <AvatarLab/>;
+ if(slug==='software')return <SoftwareLab/>;
  if(slug==='commerce')return <Commerce/>;
  if(slug==='workflow')return <WorkflowDemo/>;
  if(slug==='vision')return <Suspense fallback={<section className="section">Caricamento Vision Lab…</section>}><VisionLab/></Suspense>;

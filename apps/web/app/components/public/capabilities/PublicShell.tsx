@@ -1,5 +1,5 @@
-import {Link,NavLink} from 'react-router';
-import * as Dialog from '@radix-ui/react-dialog';
+import {Link} from 'react-router';
+import {Header} from '../shell/Header';
 import {useEffect,useState,type ReactNode} from 'react';
 import {PublicTransition} from '../PublicTransition';
 import {panels} from './panels';
@@ -7,8 +7,6 @@ import '../../../styles/capabilities.css';
 
 /** Layout of the public site for the dedicated Explore and Solutions routes. `routes/public.tsx` owns the
  * original Header and Footer and does not export them, so the same structure and classes are repeated here. */
-const links=[['/solutions','Soluzioni'],['/work','Progetti'],['/explore','Playground'],['/studio','Studio']];
-function Header(){return <header className="site-header"><Link className="wordmark" to="/">OMNI<span>101</span></Link><nav className="site-nav" aria-label="Navigazione principale">{links.map(([to,label])=><NavLink key={to} to={to}>{label}</NavLink>)}</nav><Link className="header-action" to="/start-project">Parliamone <i aria-hidden="true">↗</i></Link><Dialog.Root><Dialog.Trigger className="menu-trigger" aria-label="Apri menu">☰</Dialog.Trigger><Dialog.Portal><Dialog.Overlay className="menu-overlay"/><Dialog.Content className="menu-content"><header><Dialog.Title className="wordmark">OMNI101</Dialog.Title><Dialog.Close aria-label="Chiudi menu">×</Dialog.Close></header><nav>{[...links,['/insights','Insights'],['/start-project','Parliamone ↗']].map(([to,label])=><Dialog.Close asChild key={to}><Link to={to}>{label}</Link></Dialog.Close>)}</nav><Dialog.Description className="menu-description">Digital Possibility Studio / Italia, e ovunque ci sia un’idea.</Dialog.Description></Dialog.Content></Dialog.Portal></Dialog.Root></header>}
 function Footer(){return <footer className="site-footer"><div className="footer-top"><div className="footer-brand"><Link className="wordmark" to="/">OMNI101</Link><p>Digital Possibility Studio.</p></div><div className="footer-links"><div><small>Possibilità</small>{panels.filter(p=>p.family!=='EMERGING').map(p=><Link key={p.slug} to={'/solutions/'+p.slug}>{p.name.charAt(0)+p.name.slice(1).toLowerCase()}</Link>)}</div><div><small>Esplora</small><Link to="/work">Progetti</Link><Link to="/explore">Playground</Link><Link to="/insights">Insights</Link><Link to="/login">Workspace ↗</Link></div><div><small>Una conversazione</small><a href="mailto:info@omni101.app">info@omni101.app ↗</a><span>Italia. Ovunque ci sia un’idea.</span></div></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} OMNI101</span><span>IDEAS INTO POSSIBILITIES.</span><div className="footer-legal"><Link to="/privacy">Privacy</Link><Link to="/terms">Termini</Link></div></div></footer>}
 
 export function PublicShell({routeKey,children}:{routeKey:string;children:ReactNode}){const [hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);return <div className="site" data-hydrated={hydrated}><a href="#main" className="skip-link">Vai al contenuto</a><Header/><main id="main"><PublicTransition routeKey={routeKey}>{children}</PublicTransition></main><Footer/></div>}

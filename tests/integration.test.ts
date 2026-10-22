@@ -19,3 +19,16 @@ describe('persistent business operations',()=>{
  it('revokes an individual collaborator session while retaining the deciding Owner',async()=>{const {sqlite,env}=database();const a=await owner(sqlite,'omni101','OWNER','revoke-owner-a'),b=await owner(sqlite,'omni101','OWNER','revoke-owner-b');const self=await handleApi(req('/api/team/revoke-owner-a/revoke',a,'POST',{reason:'Owner self protection'}),env);expect(self?.status).toBe(409);const response=await handleApi(req('/api/team/revoke-owner-b/revoke',a,'POST',{reason:'Synthetic access revocation verification'}),env);expect(response?.status).toBe(200);expect((await handleApi(req('/api/session',b),env))?.status).toBe(401);expect((await handleApi(req('/api/session',a),env))?.status).toBe(200)});
 
 });
+
+it('persists growth and creative plans, validates scope and protects studio costs',async()=>{
+ const {sqlite,env}=database();const cookie=await owner(sqlite);
+ for(const [resource,payload] of Object.entries({campaigns:{name:'Launch plan',status:'DRAFT',channel:'EMAIL'},'growth-plans':{name:'SEO plan',status:'BACKLOG',kind:'SEO'},'creative-jobs':{name:'Product film',status:'BRIEF',storyboard:'Opening, product detail, closing'},subscriptions:{name:'Provider register',status:'PLANNED',amount_cents:0,cadence:'MONTHLY'}})){
+  const created=await handleApi(req('/api/records/'+resource,cookie,'POST',payload),env);expect(created?.status).toBe(201);
+  const listed=await handleApi(req('/api/records/'+resource,cookie),env);expect((await listed?.json() as {records:unknown[]}).records).toHaveLength(1);
+ }
+ const t=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('other-studio','Other','other-studio',t,t);
+ const foreign=await owner(sqlite,'other-studio','OWNER','other-owner');expect((await (await handleApi(req('/api/records/campaigns',foreign),env))?.json() as {records:unknown[]}).records).toHaveLength(0);
+ const dev=await owner(sqlite,'omni101','DEVELOPER','studio-dev');expect((await handleApi(req('/api/records/subscriptions',dev),env))?.status).toBe(403);
+ expect((await handleApi(req('/api/records/campaigns',dev,'POST',{name:'Forbidden',status:'DRAFT'}),env))?.status).toBe(403);
+ expect((await handleApi(req('/api/records/campaigns',cookie,'POST',{name:'Wrong state',status:'SENT'}),env))?.status).toBe(400);
+});

@@ -55,3 +55,7 @@ La demo è lo spettacolo: niente effetto decorativo sopra (`REGIA-MOTION.md`). C
 ## Chi lo possiede ora
 
 SPEC-12 ha scritto Vision e voce il 22/10. Le demo commerce, workflow e creative seguono chi ha `routes/public.tsx` (SPEC-02) e explore (SPEC-05).
+
+## Sette laboratori — 2026-10-22 sera
+
+Aggiunti `/explore/avatar` e `/explore/software` nel catch-all e nelle stazioni. `routes/public/product-labs.tsx`: Avatar prepara script, lingua predefinita, direzione e storyboard; dichiara video/lip-sync non integrati. Software offre CRM a colonne con modifica stato e prenotazione simulata, solo memoria locale. Nessun provider o CRM produttivo invocato. Home collega tutti i sette lab. Test `realignment.spec.ts` copre storyboard e mini prodotti. Vision e voce esistenti preservati.

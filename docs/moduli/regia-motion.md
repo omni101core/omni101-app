@@ -53,3 +53,7 @@ SPEC-02b (home e `routes/public.tsx`), SPEC-17 (`/solutions`), SPEC-18 (`/work`,
 ## Grammatica e home, come sono nel codice (SPEC-26, 2026-10-22)
 
 `PublicTransition` unica; `RevealTitle` per i titoli (mai nascosto l'`h1` al primo caricamento); `.scroll-reveal` fade 8 px una volta; menu `site-menu` a clip in `shell/Header.tsx`; `.img-hover` 1.03 e velatura; niente tilt. Home: anello (formation → expansion) con loader saltabile, capitolo con quattro tappe, quattro porte. `tests/regia-signature.test.ts` fa fallire la CI se `ReelOrbit` o `CinematicExperience` compaiono fuori dalla home, o se la home rimonta gli effetti ritirati.
+
+## Correzione profondità — 2026-10-22 sera
+
+`SpatialGallery` usa track CSS stabile `560svh` e stage sticky nativo, senza pin-spacer GSAP. Fine scroll `bottom bottom`. Evita la variazione di altezza che faceva saltare «Studio successivo» da Essenza a OMNI Portal. Il test diagnostico che falliva deliberatamente è ora regressione: prossimo = Atelier, profondità tra 0.8 e 1.2. Un effetto per route e un canvas restano invariati.

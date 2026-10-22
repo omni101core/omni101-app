@@ -7,7 +7,7 @@ test('explore: the path loads with every station, real links and one WebGL canva
  const response=await page.goto('/explore');expect(response?.status()).toBe(200);await hydrated(page);
  await expect(page).toHaveTitle(/Playground · OMNI101/);
  await expect(page.getByRole('heading',{level:1})).toContainText('Le possibilità');
- await expect(page.locator('.ex-card')).toHaveCount(10);
+ await expect(page.locator('.ex-card')).toHaveCount(12);
  for(const demo of demos)await expect(page.locator(`.ex-card>a[href="/explore/${demo}"]`)).toHaveCount(1);
  for(const family of ['build','automate','create','grow','emerging'])await expect(page.locator(`.ex-card>a[href="/solutions/${family}"]`)).toHaveCount(1);
  await expect.poll(()=>page.locator('canvas').count()).toBeLessThanOrEqual(1);
@@ -34,8 +34,8 @@ test('explore: reduced motion keeps every station visible without pinning',async
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/explore');await hydrated(page);
  await expect(page.locator('.ex-path')).toHaveAttribute('data-enhanced','false');
  await expect(page.locator('canvas')).toHaveCount(0);
- const cards=page.locator('.ex-card');await expect(cards).toHaveCount(10);
- for(let i=0;i<10;i++)await expect(cards.nth(i)).toBeVisible();
+ const cards=page.locator('.ex-card');await expect(cards).toHaveCount(12);
+ for(let i=0;i<12;i++)await expect(cards.nth(i)).toBeVisible();
  await expect(page.locator('.ex-stage')).toBeHidden();
 });
 
@@ -102,7 +102,7 @@ test('solutions: the deck is dealt, lifts into a wheel and turns to the chosen f
  await expect(page.getByRole('tab',{name:/GROW/})).toHaveAttribute('aria-selected','true');
  // A click on the top card opens its family page. Let the wheel settle first: mid-turn two cards overlap the centre.
  await page.waitForTimeout(1200);
- await page.mouse.click(x,y);
+ await page.locator('.deal-card[data-top="true"] .deal-face').click();
  await expect(page).toHaveURL(/\/solutions\/grow$/);
 });
 

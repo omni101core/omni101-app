@@ -54,3 +54,7 @@ Kanban: lo stato si PATCH-a e, se la risposta fallisce, la UI rimette lo status 
 ## Chi lo possiede ora
 
 SPEC-06 ha la shell workspace. SPEC-13 (CRM tabella, timeline, filtri, drawer, collaborazione) è dopo SPEC-06, non risultava avviata alle 15:40 del 22/10.
+
+## Growth, Creative e Ops — 2026-10-22 sera
+
+Migrazione additiva `0006_studio_operations.sql`: `campaigns`, `growth_plans`, `creative_jobs`, `subscriptions`. Quattro risorse nel CRUD e nella navigazione, schema validato, organizzazione e audit ereditati dal server. Campagne e growth scrivibili dai ruoli sales; produzioni anche DESIGNER; abbonamenti visibili e modificabili solo finance. Campi per obiettivo/pubblico/canale, funnel/email/SEO/misura, storyboard/varianti/diritti, costo e periodicità. Sono registri operativi: non inviano email, non pubblicano, non generano asset e non attivano abbonamenti. Test integrazione su persistenza, isolamento, enum e permessi. Tema workspace scuro predefinito, toggle nell'account e preferenza distinta dal pubblico.

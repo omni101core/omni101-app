@@ -35,3 +35,5 @@ Registro del 22 ottobre 2026. Le righe nascono dal mandato, dal contratto dei wo
 | 2026-10-22 | `CinematicExperience` prende `stages` con la demo per tappa; le demo di `components/showcase` si caricano in lazy. PrimaDopo si monta solo se `coppiaMedia('bottega')` ha le due immagini. | REGIA-v2 «Integrazione SHOWCASE»: nessun rettangolo vuoto; nessun secondo WebGL. | SPEC-26, SPEC-25 |
 
 Decisioni precedenti del sito Astro (registro Calibro, prezzi nascosti fino ai piloti) restano in `src/` e in `docs/SEO-CHECK-free.md`. Non si applicano alle route di `apps/web`.
+
+- 2026-10-22 sera — Mandato successivo al lavoro Claude: pubblico light-first, workspace dark-first, preferenze indipendenti; scene immersive scure locali. Home ampliata con tutta la narrativa senza moltiplicare effetti. Growth/media/abbonamenti usano CRUD e audit esistenti con quattro tabelle additive; nessuna integrazione esterna simulata come attiva. CI browser seriale: workerd SQLite locale aveva conflitti SQLITE_BUSY fra test concorrenti. Nessun deploy produzione autorizzato in questa ripresa.

@@ -73,3 +73,7 @@ Vedi `docs/decisioni.md`: due grammatiche, catalogo con disponibilità, canonica
 ## Chi lo possiede ora
 
 SPEC-02, SPEC-02b, SPEC-05, SPEC-17, SPEC-18, SPEC-11, SPEC-22 nel run `run_9fb3449e1717`. Mappa in `esiti/omni101-codex-ripresa/MAPPA-MANDATO.md`. Chi modifica una pagina aggiorna questo file.
+
+## Riallineamento del mandato — 2026-10-22 sera
+
+Home estesa senza rimuovere ReelOrbit o il capitolo: apertura → possibilità → quattro famiglie → SEE/SPEAK/CREATE/ACT → demo cinematiche → sette lab → concept dichiarati → processo → conversione. Immagine proof dal manifest, lazy. Nessun secondo canvas. `themes.css` imposta pubblico avorio per default; il capitolo cinematico conserva palette scura locale. `ThemeToggle.tsx` salva preferenze separate `omni:theme:public` e `omni:theme:workspace`; bootstrap prima del body, sincronizzazione al cambio route. Header condiviso anche da Explore/Solutions (rimosso duplicato). Verifica richiesta in `tests/e2e/realignment.spec.ts`; non dichiarare online prima di CI verde.
