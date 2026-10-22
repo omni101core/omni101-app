@@ -101,7 +101,10 @@ export async function handleAssistant(request:Request,env:Env):Promise<Response>
  if(!response.ok)throw new HttpError(503,'Il provider AI è temporaneamente occupato. Riprova o usa il modulo di contatto.');
  const raw=await response.json() as {choices?:{message?:{content?:string}}[];usage?:{prompt_tokens?:number;completion_tokens?:number}};
  let result:AssistantOutput;try{result=validateAssistantOutput(JSON.parse((raw.choices?.[0]?.message?.content||'').replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,'')),mode,canTask);}catch{throw new HttpError(502,'Risposta AI non valida. Nessuna azione è stata eseguita.');}
- if(!raw.usage)throw new HttpError(502,'Consumo del provider non verificabile.');
+ // Preserve the visitor's actual requirements rather than a model-generated marketing CTA.
+ const collectedBrief=[...history.filter(m=>m.role==='user').slice(-3).map(m=>m.content),input.message].join('\n\n').slice(0,2000);
+ result.actions=result.actions.map(action=>action.type==='brief'?{...action,brief:collectedBrief}:action);
+if(!raw.usage)throw new HttpError(502,'Consumo del provider non verificabile.');
  const tokens=(raw.usage.prompt_tokens||0)+(raw.usage.completion_tokens||0),cid=conversation?.id||crypto.randomUUID();
  const policy=await env.DB.prepare("SELECT value FROM settings WHERE organization_id=? AND name='assistant_retention_days'").bind(org).first<{value:string}>();const configured=Number(policy?.value),days=Number.isFinite(configured)&&configured>=1?Math.min(configured,mode==='public'?7:30):(mode==='public'?7:30);
  const statements:D1PreparedStatement[]=[];
