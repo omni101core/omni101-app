@@ -94,6 +94,8 @@ test('solutions: the deck is dealt, lifts into a wheel and turns to the chosen f
  await expect(page.locator('.deal-caption')).toContainText('Immagini generative');
  await page.screenshot({path:'test-results/solutions-wheel.png'});
  // A drag to the left of about one card turns the wheel to the next family; the pointer is still before release so no flick.
+ // The stage is taller than the space under the hero on a 720px screen: bring it to the middle so the pointer is inside the viewport.
+ await page.locator('.deal-stage').evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant' as ScrollBehavior}));
  const box=(await page.locator('.deal-stage').boundingBox())!,x=box.x+box.width/2,y=box.y+box.height/2;
  await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x-190,y,{steps:14});await page.waitForTimeout(150);await page.mouse.up();
  await expect(page.locator('.deal-card[data-top="true"]')).toHaveAttribute('data-family','grow');

@@ -1,16 +1,18 @@
 import {test,expect} from '@playwright/test';
+// scroll-reveal cards stay visibility:hidden until near the viewport, so bring the card there before clicking
+const openFirstCard=async(page:import('@playwright/test').Page)=>{const card=page.locator('.work-grid .work-card').first();await card.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await card.click()};
 test('work grid card opens a full preview, then the case page continues from it',async({page})=>{
  await page.goto('/work');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
  await expect(page.locator('.work-kind')).toHaveCount(3);
- await page.locator('.work-grid .work-card').first().click();
+ await openFirstCard(page);
  const dialog=page.getByRole('dialog');
  await expect(dialog).toBeVisible();
  await expect(dialog.getByRole('heading',{name:'Essenza / Commerce'})).toBeVisible();
  await page.keyboard.press('Escape');
  await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page).toHaveURL(/\/work$/);
- await page.locator('.work-grid .work-card').first().click();
+ await openFirstCard(page);
  await page.getByRole('dialog').getByRole('link',{name:/Apri il caso/}).click();
  await expect(page).toHaveURL(/\/work\/essenza$/);
  await expect(page.locator('[data-public-transition]')).toHaveAttribute('data-phase','idle');
@@ -23,7 +25,7 @@ test('reduced motion: work cards are plain links to the case',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/work');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
- await page.locator('.work-grid .work-card').first().click();
+ await openFirstCard(page);
  await expect(page).toHaveURL(/\/work\/essenza$/);
  await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page.locator('.case-hero')).toBeVisible();
