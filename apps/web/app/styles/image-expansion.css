@@ -1,0 +1,7 @@
+/* ImageExpansionTypography: un titolo la cui immagine si apre dentro la frase, una volta (solo /work/:slug). */
+.ixt{font-weight:400;font-size:clamp(30px,3.3vw,52px);line-height:1.15;letter-spacing:-1px}
+.ixt-anim{display:inline-block}
+.ixt-img{display:inline-block;vertical-align:middle;width:0;height:1em;overflow:hidden;border-radius:1.2rem}
+.ixt-img-inner{display:block;width:100%;height:100%;background-color:#252629;background-size:cover;background-repeat:no-repeat}
+.ixt--open .ixt-anim{display:block}
+.ixt--open .ixt-img{display:block;width:100%;height:auto;aspect-ratio:16/9;margin:.35em 0;border-radius:1.4rem}

@@ -1,0 +1,1 @@
+INSERT INTO invitations(id,organization_id,email,role,token_hash,expires_at,created_at,updated_at) VALUES('test-owner-invite','omni101','owner-one@example.test','OWNER','49813c8228d870ccff68a430cbe635867d4ca20fe5dd655dbbc0ce2c497b2e72',9999999999999,1,1);

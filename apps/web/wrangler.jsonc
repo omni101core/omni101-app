@@ -1,0 +1,142 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "omni101-app",
+  "main": "workers/app.ts",
+  "compatibility_date": "2026-10-19",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "PUBLIC_ORIGIN": "https://omni101.app",
+    "ORGANIZATION_ID": "omni101",
+    "ACCESS_MFA_ENFORCED": "false",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFgSJI1-u08SQOIh",
+    "AI_PROVIDER": "nvidia",
+    "AI_MODEL": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "AI_INPUT_CENTS_PER_MILLION": "0",
+    "AI_OUTPUT_CENTS_PER_MILLION": "0"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "omni101-app",
+      "database_id": "1887a135-05be-4b2e-a764-8ab5b3018a00",
+      "migrations_dir": "../../packages/db/migrations"
+    }
+  ],
+  "account_id": "179e35741ac5e7a9e2c3be26f5a482b8",
+  "env": {
+    "staging": {
+      "name": "omni101-app-staging",
+      "vars": {
+        "PUBLIC_ORIGIN": "https://preview.omni101.app",
+        "ORGANIZATION_ID": "omni101",
+        "TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+        "AI_PROVIDER": "nvidia",
+        "AI_MODEL": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "AI_INPUT_CENTS_PER_MILLION": "0",
+        "AI_OUTPUT_CENTS_PER_MILLION": "0",
+        "ENVIRONMENT": "staging",
+        "TURNSTILE_TEST_MODE": "true"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "omni101-app-staging",
+          "database_id": "28dfa732-5f93-4b10-8c7d-542d8ccdb9e1",
+          "migrations_dir": "../../packages/db/migrations"
+        }
+      ],
+      "routes": [
+        {
+          "pattern": "preview.omni101.app",
+          "custom_domain": true
+        }
+      ],
+      "workflows": [
+        {
+          "name": "omni101-intake-staging",
+          "binding": "INTAKE_WORKFLOW",
+          "class_name": "LeadIntakeWorkflow"
+        },
+        {
+          "name": "omni101-agency-staging",
+          "binding": "AGENCY_WORKFLOW",
+          "class_name": "AgencyWorkflow"
+        }
+      ]
+    },
+    "test": {
+      "name": "omni101-app-test",
+      "vars": {
+        "PUBLIC_ORIGIN": "http://localhost:4174",
+        "ORGANIZATION_ID": "omni101"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "omni101-app-test",
+          "database_id": "00000000-0000-0000-0000-000000000002",
+          "migrations_dir": "../../packages/db/migrations"
+        }
+      ],
+      "workflows": []
+    },
+    "production": {
+      "name": "omni101-app",
+      "vars": {
+        "PUBLIC_ORIGIN": "https://omni101.app",
+        "ORGANIZATION_ID": "omni101",
+        "ACCESS_MFA_ENFORCED": "false",
+        "TURNSTILE_SITE_KEY": "0x4AAAAAAFgSJI1-u08SQOIh",
+        "AI_PROVIDER": "nvidia",
+        "AI_MODEL": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "AI_INPUT_CENTS_PER_MILLION": "0",
+        "AI_OUTPUT_CENTS_PER_MILLION": "0",
+        "ENVIRONMENT": "production"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "omni101-app",
+          "database_id": "1887a135-05be-4b2e-a764-8ab5b3018a00",
+          "migrations_dir": "../../packages/db/migrations"
+        }
+      ],
+      "workflows": [
+        {
+          "name": "omni101-intake",
+          "binding": "INTAKE_WORKFLOW",
+          "class_name": "LeadIntakeWorkflow"
+        },
+        {
+          "name": "omni101-agency",
+          "binding": "AGENCY_WORKFLOW",
+          "class_name": "AgencyWorkflow"
+        }
+      ],
+      "routes": [
+        {
+          "pattern": "omni101.app/*",
+          "zone_id": "11094ebab46e9709de7f10e2850ba768"
+        }
+      ]
+    }
+  },
+  "workflows": [
+    {
+      "name": "omni101-intake",
+      "binding": "INTAKE_WORKFLOW",
+      "class_name": "LeadIntakeWorkflow"
+    },
+    {
+      "name": "omni101-agency",
+      "binding": "AGENCY_WORKFLOW",
+      "class_name": "AgencyWorkflow"
+    }
+  ]
+}

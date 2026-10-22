@@ -1,0 +1,47 @@
+{
+  "name": "@omni101/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "typecheck": "react-router typegen && tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "7.18.4",
+    "isbot": "^5.1.32",
+    "zod": "^4.1.12",
+    "jose": "^6.1.2",
+    "gsap": "^3.13.0",
+    "lenis": "^1.2.0",
+    "motion": "^12.23.24",
+    "three": "^0.181.1",
+    "@react-three/fiber": "^9.4.0",
+    "@react-three/drei": "^10.7.7",
+    "react-hook-form": "^7.66.1",
+    "@hookform/resolvers": "^5.2.2",
+    "lucide-react": "^0.553.0",
+    "zustand": "^5.0.8",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@simplewebauthn/server": "14.0.3",
+    "@simplewebauthn/browser": "14.0.0",
+    "@xyflow/react": "^12.10.0",
+    "@mediapipe/tasks-vision": "1.1.1"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.64.0",
+    "@cloudflare/workers-types": "5.20261021.1",
+    "@react-router/dev": "7.18.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.181.0",
+    "typescript": "^5.9.3",
+    "vite": "7.3.7",
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "4.151.3"
+  }
+}

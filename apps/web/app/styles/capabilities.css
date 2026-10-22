@@ -1,0 +1,116 @@
+/* Solutions: deal wheel, family panels, segments, catalogue and the shell pieces shared with Explore. Tokens come from public.css. */
+@media(min-width:761px){.cap-hero[data-wheel]{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);column-gap:48px;align-items:end;padding-top:48px;padding-bottom:28px}.cap-hero[data-wheel] .eyebrow{grid-column:1/-1}.cap-hero[data-wheel] h1{font-size:clamp(44px,5.2vw,76px);margin:18px 0 0}.cap-hero[data-wheel]>p{margin:0 0 8px}}
+.cap-hero p,.ex-hero p{max-width:640px;color:var(--muted);font-size:15px;line-height:1.7}
+.cap-carousel :focus-visible,.cap-catalog :focus-visible,.cap-cta :focus-visible,.ex-path :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.cap-carousel{position:relative;border-bottom:1px solid var(--line)}
+.cap-sticky{padding:28px 4.8vw 36px;display:flex;flex-direction:column;gap:22px}
+.cap-tabs,.ex-index ol{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 0 4px;margin:0;list-style:none}
+.cap-tabs button,.ex-index button,.cap-filter button{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s,border-color .25s}
+.cap-tabs button span,.ex-index button span,.cap-filter button span{color:var(--gold);font-size:10px}
+.cap-tabs button:hover,.ex-index button:hover,.cap-filter button:hover{border-color:var(--gold);color:var(--ivory)}
+.cap-tabs button[aria-selected="true"],.ex-index button[aria-current="step"],.cap-filter button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#141516}
+.cap-tabs button[aria-selected="true"] span,.ex-index button[aria-current="step"] span,.cap-filter button[aria-pressed="true"] span{color:#141516}
+
+.cap-stage{width:100%;max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,7vw,96px)}
+.cap-panel{display:flex;flex-direction:column;gap:clamp(14px,1.8vw,24px);min-width:0}
+.cap-title{font-size:clamp(48px,5vw,80px);line-height:.98;letter-spacing:-.045em;font-weight:400;margin:0;max-width:16ch;text-wrap:balance}
+.cap-media{position:relative;margin:0;min-height:min(58svh,560px);aspect-ratio:16/9;border:1px solid var(--line);background:var(--surface);overflow:hidden;display:flex;align-items:flex-end}
+.cap-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background-repeat:no-repeat;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.cap-panel:hover .cap-art{transform:scale(1.03)}
+.cap-over{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px clamp(20px,3vw,48px);align-items:end;grid-template-areas:"claim case" "also case" "actions case";width:100%;box-sizing:border-box;padding:clamp(80px,9vw,140px) clamp(18px,2.4vw,36px) clamp(18px,2.4vw,36px);background:linear-gradient(0deg,#101112f5 0%,#101112e6 62%,#10111200 100%)}
+.cap-claim{grid-area:claim;margin:0;max-width:44ch;color:var(--ivory);font-size:15px;line-height:1.6}
+.cap-case{grid-area:case;align-self:end;display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-left:2px solid var(--gold);background:#101112d9;backdrop-filter:blur(6px)}
+.cap-case small,.cap-example small{color:var(--gold);font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.cap-case strong{font-size:18px;font-weight:400;letter-spacing:-.02em}
+.cap-case p{margin:0;font-size:13px;line-height:1.55;color:#d8d4cb}
+.cap-also{grid-area:also;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.cap-also li{padding:5px 10px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
+.cap-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;grid-area:actions}
+.cap-link{color:var(--ivory);font-size:12px;border-bottom:1px solid var(--gold);padding-bottom:2px}
+.cap-link:hover{color:var(--gold)}
+.cap-skip{align-self:flex-start;color:var(--muted);font-size:11px;letter-spacing:1.4px;text-transform:uppercase}
+.cap-skip:hover{color:var(--gold)}
+.cap-badge{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--line);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ivory)}
+.cap-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.cap-badge[data-availability="DISPONIBILE"]{border-color:var(--gold);color:var(--gold)}
+.cap-badge[data-availability="SU_MISURA"]::before{border-radius:0;transform:rotate(45deg)}
+.cap-badge[data-availability="SPERIMENTALE"]{border-style:dashed;color:var(--muted)}
+.cap-badge[data-availability="SPERIMENTALE"]::before{background:transparent;border:1px solid currentColor}
+
+/* Deal wheel: a deck opens from the centre and lifts into a wheel (DealWheel.tsx). Card pose is written by the script; this only gives the 3D context, the card faces and the caption. */
+.cap-carousel[data-enhanced="false"] .cap-panel[data-active="true"] .cap-media{border-color:var(--gold)}
+.deal{display:flex;flex-direction:column;gap:clamp(20px,2.6vw,36px)}
+.deal-stage{--ch:440px;--cw:326px;position:relative;height:clamp(520px,76svh,760px);overflow:hidden;perspective:2400px;perspective-origin:50% 30%;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;border:1px solid var(--line);background:radial-gradient(120% 90% at 50% 0%,#1f2022 0%,var(--bg) 70%)}
+.deal-stage[data-dragging="true"]{cursor:grabbing}
+.deal-stage::after{content:"";position:absolute;inset:auto 0 0;height:22%;background:linear-gradient(0deg,var(--bg) 0%,#10111200 100%);pointer-events:none}
+.deal-scene{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 100%}
+.deal-card{position:absolute;left:50%;top:50%;width:var(--cw);height:var(--ch);margin:calc(var(--ch)/-2) 0 0 calc(var(--cw)/-2);transform-style:preserve-3d;visibility:hidden;will-change:transform}
+.deal-face,.deal-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);overflow:hidden;background:var(--surface)}
+.deal-card[data-top="true"] .deal-face{border-color:var(--gold)}
+.deal-face .cap-art{transition:none}
+.deal-veil{position:absolute;inset:0;background:#101112;opacity:var(--veil,0);pointer-events:none}
+.deal-label{position:absolute;inset:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:18px 18px clamp(48px,8vh,84px);background:linear-gradient(180deg,#101112ee 0%,#10111200 100%)}
+.deal-label small{color:var(--gold);font-size:10px;letter-spacing:1.8px;text-transform:uppercase}
+.deal-label strong{font-size:clamp(28px,2.6vw,42px);line-height:1;font-weight:400;letter-spacing:-.04em}
+.deal-back{transform:rotateY(180deg);display:grid;place-items:center;background:#141516}
+.deal-back span{font-size:clamp(64px,7vw,110px);letter-spacing:-.05em;color:var(--gold);opacity:.8}
+.deal-caption{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px clamp(24px,4vw,64px);align-items:end;width:100%;max-width:1180px;margin:0 auto;animation:deal-in .5s cubic-bezier(.2,.7,.2,1)}
+.deal-head{display:flex;flex-direction:column;gap:14px}
+.deal-head .cap-title{font-size:clamp(40px,4.2vw,64px)}
+.deal-detail{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.deal-detail .cap-case{align-self:stretch;background:var(--surface)}
+@keyframes deal-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.cap-segments{padding:90px 4.8vw 10px;border-top:1px solid var(--line)}
+.cap-segments-head{display:flex;flex-direction:column;gap:14px;max-width:760px;margin-bottom:38px}
+.cap-segments-head h2{font-size:clamp(34px,4.5vw,64px);line-height:1;font-weight:400;letter-spacing:-.045em;margin:4px 0 0}
+.cap-segments-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.cap-segment-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px;margin:0;padding:0;list-style:none}
+.cap-segment{height:100%;display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid var(--line);background:var(--surface)}
+.cap-segment h3{margin:0;font-size:22px;font-weight:400;letter-spacing:-.03em}
+.cap-segment p{margin:0;font-size:14px;line-height:1.55;color:#d8d4cb}
+.cap-segment small{display:block;margin-bottom:3px;color:var(--gold);font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.cap-segment .cap-segment-who{color:var(--muted)}
+.cap-segment .cap-also{margin-top:auto}
+.cap-also li[data-availability="SPERIMENTALE"]{border-style:dashed}
+.cap-segment-demo{display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding:14px 16px;border-left:2px solid var(--gold);background:var(--elevated)}
+.cap-segment-demo strong{font-size:17px;font-weight:400;letter-spacing:-.02em}
+.cap-segment-demo p{font-size:13px}
+.cap-segment-grid>li[data-open="true"]{grid-column:1/-1}
+.cap-segment-live{width:100%;margin-top:10px}
+.cap-segment-live[hidden]{display:none}
+.cap-demo-toggle{padding:0 0 2px;border:0;border-bottom:1px solid var(--gold);background:none;color:var(--ivory);font:inherit;font-size:12px;cursor:pointer}
+.cap-demo-toggle:hover{color:var(--gold)}
+.cap-segments :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.cap-catalog{padding:90px 4.8vw 70px}
+.cap-catalog-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px 50px;flex-wrap:wrap;margin-bottom:38px}
+.cap-catalog-head h2{font-size:clamp(34px,4.5vw,64px);line-height:1;font-weight:400;letter-spacing:-.045em;margin:18px 0 14px}
+.cap-catalog-head p{margin:0;max-width:560px;color:var(--muted);font-size:15px;line-height:1.6}
+.cap-filter{display:flex;flex-wrap:wrap;gap:8px}
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin:0;padding:0;list-style:none}
+.cap-card{height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid var(--line);background:var(--surface);transition:border-color .3s,transform .3s}
+.cap-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.cap-card h3{margin:6px 0 0;font-size:22px;font-weight:400;letter-spacing:-.03em}
+.cap-card p{margin:0;font-size:14px;line-height:1.55;color:#d8d4cb}
+.cap-example{display:flex;flex-direction:column;gap:5px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted)!important;font-size:13px!important}
+.cap-note{color:var(--muted)!important;font-size:12px!important}
+.cap-families{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:46px;padding-top:24px;border-top:1px solid var(--line)}
+.cap-families a{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+.cap-families a:hover,.cap-families a[aria-current="page"]{color:var(--gold)}
+.cap-cta{padding:100px 4.8vw;text-align:center;border-top:1px solid var(--line)}
+.cap-cta h2{font-size:clamp(34px,5vw,72px);font-weight:400;letter-spacing:-.045em;margin:0 0 14px}
+.cap-cta p{margin:0 0 30px;color:var(--muted)}
+
+@media(max-width:700px){
+ .cap-sticky{padding:20px 6vw 28px}
+ .cap-segments{padding:64px 6vw 6px}
+ .deal-caption{grid-template-columns:1fr}
+ .cap-media{aspect-ratio:auto;min-height:0;flex-direction:column;align-items:stretch}
+ .cap-art{position:relative;aspect-ratio:4/3;height:auto}
+ .cap-over{grid-template-columns:1fr;grid-template-areas:"claim" "case" "also" "actions";padding:18px;background:none}
+ .cap-case{background:var(--elevated)}
+ .cap-catalog{padding:64px 6vw 50px}
+}
+@media(prefers-reduced-motion:reduce){.deal-caption{animation:none}.cap-card,.cap-card:hover,.cap-tabs button,.cap-art,.cap-panel:hover .cap-art{transition:none;transform:none}}
