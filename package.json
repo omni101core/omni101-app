@@ -1,0 +1,21 @@
+{
+  "name": "omni101-app",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "typecheck": "npm run typecheck -w apps/web",
+    "test": "vitest run",
+    "deploy": "npm run deploy -w apps/web"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4",
+    "@playwright/test": "^1.56.0",
+    "typescript": "^5.9.3",
+    "@types/node": "^24.10.1"
+  }
+}

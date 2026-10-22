@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://omni101.app/sitemap.xml

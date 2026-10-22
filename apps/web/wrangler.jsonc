@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "omni101-app",
+  "main": "workers/app.ts",
+  "compatibility_date": "2026-10-22",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "PUBLIC_ORIGIN": "https://omni101.app",
+    "ORGANIZATION_ID": "omni101",
+    "ACCESS_MFA_ENFORCED": "false"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "omni101-app",
+      "database_id": "00000000-0000-0000-0000-000000000001",
+      "migrations_dir": "../../packages/db/migrations"
+    }
+  ]
+}
