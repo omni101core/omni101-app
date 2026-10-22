@@ -100,7 +100,8 @@ test('solutions: the deck is dealt, lifts into a wheel and turns to the chosen f
  await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x-190,y,{steps:14});await page.waitForTimeout(150);await page.mouse.up();
  await expect(page.locator('.deal-card[data-top="true"]')).toHaveAttribute('data-family','grow');
  await expect(page.getByRole('tab',{name:/GROW/})).toHaveAttribute('aria-selected','true');
- // A click on the top card opens its family page.
+ // A click on the top card opens its family page. Let the wheel settle first: mid-turn two cards overlap the centre.
+ await page.waitForTimeout(1200);
  await page.mouse.click(x,y);
  await expect(page).toHaveURL(/\/solutions\/grow$/);
 });
