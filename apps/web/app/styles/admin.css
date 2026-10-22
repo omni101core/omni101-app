@@ -24,3 +24,5 @@
 .os-pipeline textarea,.os-pipeline select,.os-pipeline input{border:1px solid #393a3c;background:#121315;color:#eee;padding:10px 12px;border-radius:4px;font:13px/1.5 'Satoshi',sans-serif;width:100%}
 @media(max-width:900px){.os-stages{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.os-stages{grid-template-columns:1fr}}
+.os-button-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.os-button-row .os-button{margin:12px 0}
