@@ -29,7 +29,7 @@
     "staging": {
       "name": "omni101-app-staging",
       "vars": {
-        "PUBLIC_ORIGIN": "https://omni101-app-staging.omni101-core.workers.dev",
+        "PUBLIC_ORIGIN": "https://preview.omni101.app",
         "ORGANIZATION_ID": "omni101",
         "TURNSTILE_SITE_KEY": "0x4AAAAAAFgSJI1-u08SQOIh"
       },
@@ -39,6 +39,12 @@
           "database_name": "omni101-app-staging",
           "database_id": "28dfa732-5f93-4b10-8c7d-542d8ccdb9e1",
           "migrations_dir": "../../packages/db/migrations"
+        }
+      ],
+      "routes": [
+        {
+          "pattern": "preview.omni101.app",
+          "custom_domain": true
         }
       ]
     }
