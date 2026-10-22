@@ -50,7 +50,7 @@
 .deal-card[data-top="true"] .deal-face{border-color:var(--gold)}
 .deal-face .cap-art{transition:none}
 .deal-veil{position:absolute;inset:0;background:#101112;opacity:var(--veil,0);pointer-events:none}
-.deal-label{position:absolute;inset:auto 0 0;display:flex;flex-direction:column;gap:6px;padding:clamp(60px,9vh,96px) 18px 18px;background:linear-gradient(0deg,#101112ee 0%,#10111200 100%)}
+.deal-label{position:absolute;inset:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:18px 18px clamp(48px,8vh,84px);background:linear-gradient(180deg,#101112ee 0%,#10111200 100%)}
 .deal-label small{color:var(--gold);font-size:10px;letter-spacing:1.8px;text-transform:uppercase}
 .deal-label strong{font-size:clamp(28px,2.6vw,42px);line-height:1;font-weight:400;letter-spacing:-.04em}
 .deal-back{transform:rotateY(180deg);display:grid;place-items:center;background:#141516}
