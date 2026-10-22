@@ -5,9 +5,16 @@ import {resolve} from 'node:path';
 async function authenticator(page:Page){const cdp=await page.context().newCDPSession(page);await cdp.send('WebAuthn.enable');await cdp.send('WebAuthn.addVirtualAuthenticator',{options:{protocol:'ctap2',transport:'internal',hasResidentKey:true,hasUserVerification:true,isUserVerified:true,automaticPresenceSimulation:true}})}
 test('two independent Owners use verified passkeys, invite and persist projects',async({page,browser},testInfo)=>{test.skip(testInfo.project.name!=='desktop','Shared invitation fixture is used once in isolated Chromium test');await authenticator(page);await page.goto('/portal/invite?token=local-test-invitation-owner-only-0000000000000000');await page.getByRole('button',{name:'Attiva il tuo account'}).click();await expect(page).toHaveURL(/\/admin$/,{timeout:20000});await expect(page.getByRole('heading',{name:'Una visione chiara.'})).toBeVisible();await page.getByRole('link',{name:'Progetti',exact:true}).click();await page.getByRole('button',{name:'Nuovo',exact:true}).click();await page.getByRole('dialog').getByLabel('Progetto').fill('Cloud delivery verification');await page.getByRole('button',{name:'Salva nel workspace'}).click();await expect(page.getByRole('table')).toContainText('Cloud delivery verification');await page.getByRole('link',{name:'Impostazioni',exact:true}).click();await page.getByLabel('Email',{exact:true}).fill('owner-two@example.test');await page.getByRole('button',{name:'Crea invito sicuro'}).click();const notice=page.locator('.os-panel .os-notice');const inviteLink=notice.getByRole('link',{name:'Apri invito personale'});await expect(inviteLink).toBeVisible();const link=await inviteLink.getAttribute('href');if(!link)throw new Error('Invito personale non disponibile');const context=await browser.newContext();const second=await context.newPage();await authenticator(second);await second.goto(link);await second.getByRole('button',{name:'Attiva il tuo account'}).click();await expect(second).toHaveURL(/\/admin$/,{timeout:20000});await second.getByRole('link',{name:'Progetti',exact:true}).click();await expect(second.getByRole('table')).toContainText('Cloud delivery verification');await second.getByRole('button',{name:'Nuovo',exact:true}).click();await second.getByRole('dialog').getByLabel('Progetto').fill('Second Owner delivery');await second.getByRole('button',{name:'Salva nel workspace'}).click();await expect(second.getByRole('table')).toContainText('Second Owner delivery');await second.screenshot({path:'test-results/two-owner-workspace.png',fullPage:true});await context.close()});
 
+function d1(sql:string){
+ // Concurrent wrangler/workerd access to the local D1 file can answer SQLITE_BUSY: retry the fixture, never the assertions.
+ for(let attempt=0;;attempt++){
+  try{execFileSync(resolve('node_modules/.bin/wrangler'),['d1','execute','DB','--local','--config','wrangler.jsonc','--env','test','--command',sql],{cwd:resolve('apps/web'),stdio:'pipe',timeout:30000});return}
+  catch(error){const text=String((error as {stderr?:unknown}).stderr||'')+String((error as Error).message);if(attempt>=8||!/SQLITE_BUSY|database is locked/.test(text))throw error;Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,400+attempt*400)}
+ }
+}
+
 // Infrastructure fixtures only (localhost D1): a unique individual Owner and individual CLIENT invitations.
 // Everything the test asserts goes through real passkey sign-in and the HTTP API.
-function d1(sql:string){execFileSync(resolve('node_modules/.bin/wrangler'),['d1','execute','DB','--local','--config','wrangler.jsonc','--env','test','--command',sql],{cwd:resolve('apps/web'),stdio:'pipe',timeout:20000})}
 function invitation(role:'OWNER'|'CLIENT',clientId?:string){const token=randomBytes(32).toString('hex'),hash=createHash('sha256').update(token).digest('hex'),now=Date.now();d1(`INSERT INTO invitations(id,organization_id,email,role,client_id,token_hash,expires_at,created_at,updated_at) VALUES('${randomUUID()}','omni101','${role.toLowerCase()}-${randomUUID()}@example.test','${role}',${clientId?`'${clientId}'`:'NULL'},'${hash}',${now+600000},${now},${now});`);return token}
 async function api(page:Page,method:string,path:string,body?:unknown){return page.evaluate(async([method,path,body])=>{const response=await fetch(path as string,{method:method as string,headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});return {status:response.status,body:await response.json().catch(()=>null) as any}},[method,path,body] as [string,string,unknown])}
 async function delivered(page:Page,label:string){
@@ -37,8 +44,8 @@ test('client portal: each invited client sees only their own project and deliver
   await portal.getByRole('button',{name:'Attiva il tuo account'}).click();
   await expect(portal).toHaveURL(/\/portal$/,{timeout:20000});
   await expect(portal.getByRole('heading',{name:'I tuoi progetti'})).toBeVisible();
-  await expect(portal.getByText('Progetto '+own.label)).toBeVisible();
-  await expect(portal.getByText('Consegna '+own.label)).toBeVisible();
+  await expect(portal.locator('#portal-projects').getByText('Progetto '+own.label)).toBeVisible();
+  await expect(portal.locator('#portal-deliverables').getByText('Consegna '+own.label)).toBeVisible();
   const text=await portal.locator('main').innerText();
   expect(text).not.toContain(other.label);
   const mine=await api(portal,'GET','/api/portal');

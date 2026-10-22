@@ -19,6 +19,7 @@ class StageBoundary extends Component<{children:ReactNode;onFail:()=>void},{fail
 
 export default function VisionLab(){
  const generation=useRef(0);
+ const starting=useRef(false);
  const video=useRef<HTMLVideoElement>(null);
  const canvas=useRef<HTMLCanvasElement>(null);
  const stream=useRef<MediaStream|null>(null);
@@ -131,7 +132,8 @@ export default function VisionLab(){
  }
 
  async function start(){
-  if(loading||active)return;
+  if(loading||active||starting.current)return;
+  starting.current=true;
   const attempt=++generation.current;
   setLoading(true);
   setStatus('Caricamento del modello nel browser…');
@@ -212,7 +214,7 @@ export default function VisionLab(){
   }catch(error){
    stop();
    setStatus(error instanceof DOMException&&error.name==='NotAllowedError'?'Permesso videocamera negato. Usa i controlli manuali.':'Modello o videocamera non disponibili. Usa i controlli manuali.');
-  }finally{setLoading(false)}
+  }finally{starting.current=false;setLoading(false)}
  }
 
  function onStageMove(event:ReactPointerEvent<HTMLDivElement>){
@@ -262,7 +264,7 @@ export default function VisionLab(){
    </div>
    <div className="vision-stage" onPointerMove={onStageMove} onPointerDown={onStageDown} onPointerUp={onStageUp}>
     <div className={glReady?'vision-object is-backed':'vision-object'} style={{transform:`rotateY(${rotation}deg)`}} aria-hidden="true">OMNI<br/>PORTAL</div>
-    {mounted&&slot&&!glBlocked&&<StageBoundary onFail={()=>{setGlBlocked(true);setGlReady(false)}}><Suspense fallback={null}><ObjectStage rotation={rotation} reduced={reduced} onReady={()=>setGlReady(true)}/></Suspense></StageBoundary>}
+    {mounted&&slot&&!glBlocked&&<StageBoundary onFail={()=>{setGlBlocked(true);setGlReady(false)}}><Suspense fallback={null}><ObjectStage rotation={rotation} reduced={reduced} onReady={()=>setGlReady(true)} onLost={()=>{setGlReady(false);setGlBlocked(true)}}/></Suspense></StageBoundary>}
     <div className="vision-pointer" aria-hidden="true" style={{left:pointer.x*100+'%',top:pointer.y*100+'%'}}/>
     <div className="vision-options" role="group" aria-label="Carosello possibilità" onKeyDown={onCarouselKey}>{AREAS.map((label,index)=><button type="button" key={label} className={selection===index?'selected':''} onClick={()=>choose(index)} aria-pressed={selection===index}>{label}</button>)}</div>
    </div>

@@ -43,7 +43,7 @@ export default function ProjectPipeline() {
         void run('Deliverable preparato in bozza.', async () => { await post('/api/projects/' + encodeURIComponent(projectId) + '/deliverables', { name: values.name, body: values.body }); form.reset(); });
     }
     return <section className="os-pipeline"><div className="os-panel-title"><div><h2>Pipeline di progetto</h2><p className="os-hint">Esecuzione → QA → consegna → manutenzione. Ogni passaggio è registrato nel log di audit.</p></div></div>
-        <label className="os-field">Progetto<select value={projectId} onChange={e => setProjectId(e.target.value)}>{projects.map(p => <option key={String(p.id)} value={String(p.id)}>{text(p.name)}</option>)}</select></label>
+        <div className="os-field"><label htmlFor="pipeline-project">Progetto</label><select id="pipeline-project" value={projectId} onChange={e => setProjectId(e.target.value)}>{projects.map(p => <option key={String(p.id)} value={String(p.id)}>{text(p.name)}</option>)}</select></div>
         {notice && <p className="os-notice" role="status">{notice}</p>}{error && <p className="os-error" role="alert">{error}</p>}
         {!projects.length && <div className="os-empty"><h3>Nessun progetto.</h3><p>Crea un progetto o converti un lead approvato per avviare la pipeline.</p></div>}
         {data && <>
