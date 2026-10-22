@@ -23,5 +23,22 @@
       "migrations_dir": "../../packages/db/migrations"
     }
   ],
-  "account_id": "179e35741ac5e7a9e2c3be26f5a482b8"
+  "account_id": "179e35741ac5e7a9e2c3be26f5a482b8",
+  "env": {
+    "staging": {
+      "name": "omni101-app-staging",
+      "vars": {
+        "PUBLIC_ORIGIN": "https://omni101-app-staging.omni101-core.workers.dev",
+        "ORGANIZATION_ID": "omni101"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "omni101-app-staging",
+          "database_id": "28dfa732-5f93-4b10-8c7d-542d8ccdb9e1",
+          "migrations_dir": "../../packages/db/migrations"
+        }
+      ]
+    }
+  }
 }
