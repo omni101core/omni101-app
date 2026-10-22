@@ -167,8 +167,8 @@ test('Owner prepares a persistent operating backlog and leaves a project handoff
  test.skip(testInfo.project.name!=='desktop','Passkey fixture runs on desktop.');test.setTimeout(90000);await owner(page,baseURL!);
  await page.goto('/admin/operations');await expect(page.getByRole('heading',{name:'Centro operativo',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Prepara backlog operativo'}).click();
- await expect(page.locator('.os-project-progress')).toContainText('OMNI101 · Sviluppo piattaforma');
- const response=await page.request.post('/api/setup/operating-backlog',{data:{}});expect(response.ok()).toBeTruthy();const prepared=await response.json();expect(prepared.executionsStarted).toBe(0);
+ await expect(page.locator('.os-project-progress').filter({hasText:'OMNI101 · Sviluppo piattaforma'})).toBeVisible();
+ const response=await page.request.post('/api/setup/operating-backlog',{headers:{Origin:new URL(baseURL!).origin},data:{}});expect(response.ok()).toBeTruthy();const prepared=await response.json();expect(prepared.executionsStarted).toBe(0);
  await page.goto('/admin/planning?project='+encodeURIComponent(prepared.projectId));
  await expect(page.locator('.os-table').getByText('Sbloccare deploy CI Cloudflare',{exact:true})).toBeVisible();
  const comment='Passaggio di consegne verificato '+randomUUID();
