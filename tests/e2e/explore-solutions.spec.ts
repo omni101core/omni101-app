@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 const hydrated=async(page:Page)=>{await expect(page.locator('[data-hydrated="true"]')).toBeVisible()};
 const noSideScroll=async(page:Page)=>{expect(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)).toBeLessThanOrEqual(1)};
-const demos=['voice','commerce','workflow','creative','vision'];
+const demos=['voice','commerce','workflow','creative','vision','avatar','software'];
 
 test('explore: the path loads with every station, real links and one WebGL canvas at most',async({page,isMobile})=>{
  const response=await page.goto('/explore');expect(response?.status()).toBe(200);await hydrated(page);

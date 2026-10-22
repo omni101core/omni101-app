@@ -10,8 +10,6 @@ const family=(slug:string,visual:number):Station=>{
 };
 
 export const stations:Station[]=[
- {id:'avatar',kind:'demo',kicker:'PLAYGROUND / AVATAR',title:'Uno script, una presenza.',text:'Prepara uno storyboard multilingua. Anteprima simulata: video e lip sync richiedono un provider.',to:'/explore/avatar',label:'Apri Avatar Studio ↗',visual:4},
- {id:'software',kind:'demo',kicker:'PLAYGROUND / SOFTWARE',title:'Prova il tuo prossimo strumento.',text:'Mini CRM e prenotazioni interattive, con dati locali dimostrativi.',to:'/explore/software',label:'Apri Software Lab ↗',visual:1},
  {id:'voice',kind:'demo',scena:'voce',kicker:'PLAYGROUND / VOCE',title:'Una voce che risponde.',text:'Scegli una scena e una lingua, premi Ascolta: la voce è quella del tuo browser, la richiesta è simulata. Il microfono non serve.',to:'/explore/voice',label:'Apri il banco voce ↗',visual:3},
  family('build',1),
  {id:'commerce',kind:'demo',scena:'vetrina',kicker:'PLAYGROUND / COMMERCE',title:'Un negozio da provare.',text:'Catalogo, varianti e carrello dimostrativo: un acquisto simulato, senza pagamenti reali.',to:'/explore/commerce',label:'Apri la demo Commerce ↗',visual:2},
@@ -22,4 +20,6 @@ export const stations:Station[]=[
  family('grow',1),
  family('emerging',5),
  {id:'vision',kind:'demo',scena:'vision',kicker:'PLAYGROUND / VISION',title:'Il browser che ti guarda, se vuoi.',text:'Un esperimento con webcam e gesti della mano, elaborato nel tuo browser.',to:'/explore/vision',label:'Apri la demo Vision ↗',visual:5},
+ {id:'avatar',kind:'demo',kicker:'PLAYGROUND / AVATAR',title:'Uno script, una presenza.',text:'Prepara uno storyboard multilingua. Anteprima simulata: video e lip sync richiedono un provider.',to:'/explore/avatar',label:'Apri Avatar Studio ↗',visual:4},
+ {id:'software',kind:'demo',kicker:'PLAYGROUND / SOFTWARE',title:'Prova il tuo prossimo strumento.',text:'Mini CRM e prenotazioni interattive, con dati locali dimostrativi.',to:'/explore/software',label:'Apri Software Lab ↗',visual:1},
 ];

@@ -27,7 +27,7 @@ it('persists growth and creative plans, validates scope and protects studio cost
   const listed=await handleApi(req('/api/records/'+resource,cookie),env);expect((await listed?.json() as {records:unknown[]}).records).toHaveLength(1);
  }
  const t=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('other-studio','Other','other-studio',t,t);
- const foreign=await owner(sqlite,'other-studio','OWNER','other-owner');expect((await (await handleApi(req('/api/records/campaigns',foreign),env))?.json() as {records:unknown[]}).records).toHaveLength(0);
+ const foreign=await owner(sqlite,'other-studio','OWNER','other-owner');expect((await (await handleApi(req('/api/records/campaigns',foreign),{...env,ORGANIZATION_ID:'other-studio'}))?.json() as {records:unknown[]}).records).toHaveLength(0);
  const dev=await owner(sqlite,'omni101','DEVELOPER','studio-dev');expect((await handleApi(req('/api/records/subscriptions',dev),env))?.status).toBe(403);
  expect((await handleApi(req('/api/records/campaigns',dev,'POST',{name:'Forbidden',status:'DRAFT'}),env))?.status).toBe(403);
  expect((await handleApi(req('/api/records/campaigns',cookie,'POST',{name:'Wrong state',status:'SENT'}),env))?.status).toBe(400);

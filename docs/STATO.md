@@ -30,3 +30,7 @@ Staging misurato nel pomeriggio: `https://preview.omni101.app`, revisione `b6e61
 ## Cosa non è questa app
 
 `src/**/*.astro` e `worker/` restano sul disco. `package.json` di root ha un solo workspace: `apps/web`. Il deploy di CI usa `apps/web`.
+
+## Aggiornamento riallineamento successivo a Claude — 2026-10-22 sera
+
+Health letto prima delle modifiche: preview e produzione rispondono entrambe `24ac9b74ac99faa1072f9842c5048845635fb908`, database vero, storage falso. Questo dato sostituisce la misura pomeridiana sopra per il live. Codice locale esteso con temi distinti, narrativa home completa, Avatar/Software Lab e quattro registri Growth/Creative/Ops; migrazione 0006 ancora da verificare/applicare attraverso CI staging. Test nuovi per temi/demo e persistenza/isolamento/permessi. Ultima CI preesistente `39808455672` rossa (diagnostica volutamente fallente, galleria che saltava, hit target ruota, SQLITE_BUSY). Correzioni preparate. Produzione non modificata da questa ripresa; completamento globale del mandato non dichiarato.
