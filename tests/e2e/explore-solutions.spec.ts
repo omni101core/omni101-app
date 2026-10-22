@@ -8,12 +8,12 @@ test('explore: the path loads with every station, real links and one WebGL canva
  await expect(page).toHaveTitle(/Playground · OMNI101/);
  await expect(page.getByRole('heading',{level:1})).toContainText('Le possibilità');
  await expect(page.locator('.ex-card')).toHaveCount(10);
- for(const demo of demos)await expect(page.locator(`.ex-card a[href="/explore/${demo}"]`)).toHaveCount(1);
- for(const family of ['build','automate','create','grow','emerging'])await expect(page.locator(`.ex-card a[href="/solutions/${family}"]`)).toHaveCount(1);
+ for(const demo of demos)await expect(page.locator(`.ex-card>a[href="/explore/${demo}"]`)).toHaveCount(1);
+ for(const family of ['build','automate','create','grow','emerging'])await expect(page.locator(`.ex-card>a[href="/solutions/${family}"]`)).toHaveCount(1);
  await expect.poll(()=>page.locator('canvas').count()).toBeLessThanOrEqual(1);
  await noSideScroll(page);
  if(isMobile){await expect(page.locator('.ex-path')).toHaveAttribute('data-enhanced','false');await expect(page.locator('.ex-card').first()).toBeVisible()}
- await page.locator('.ex-card a[href="/explore/workflow"]').click();
+ await page.locator('.ex-card>a[href="/explore/workflow"]').click();
  await expect(page).toHaveURL(/\/explore\/workflow$/);
 });
 

@@ -19,10 +19,10 @@ export default function SolutionsView({slug}:{slug?:string}){
  };
  const panel=panels[active];
  return <PublicShell routeKey="solutions">
-  <section className="page-hero cap-hero">
+  <section className="page-hero cap-hero" data-wheel={family?undefined:true}>
    <span className="eyebrow">{family?panel.name+' / SOLUZIONI':'02 / SOLUZIONI'}</span>
    <h1>{family?<>{panel.title}.<br/><em>{panel.headline}</em></>:<>Ogni idea,<br/><em>una possibilità concreta.</em></>}</h1>
-   <p>{family?panel.claim:'Quattro famiglie e un’area sperimentale: il mazzo si apre e si alza in una ruota, una carta per famiglia. Scegline una, con il mouse, la tastiera o un gesto; sotto trovi il catalogo, con ciò che realizziamo oggi e ciò che progettiamo su misura.'}</p>
+   <p>{family?panel.claim:'Quattro famiglie e un’area sperimentale, una carta ciascuna. Scegline una con il mouse, la tastiera o un gesto: sotto trovi il catalogo, con ciò che realizziamo oggi e ciò che progettiamo su misura.'}</p>
   </section>
   <CapabilityCarousel active={active} fixed={fixed>=0} onSelect={select}/>
   {family&&<SegmentGrid family={family} name={panel.name}/>}

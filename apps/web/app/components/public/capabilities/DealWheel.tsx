@@ -76,7 +76,7 @@ export default function DealWheel({active,onSelect}:{active:number;onSelect:(ind
   measure();paint();
   const resize=new ResizeObserver(()=>{measure();wake()});resize.observe(area);
   // The entrance starts when the stage is in view, so a visitor who lands lower still sees it.
-  const watcher=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){watcher.disconnect();timeline.play();wake()}},{threshold:.25});watcher.observe(area);
+  const watcher=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){watcher.disconnect();timeline.play();wake()}},{threshold:.15});watcher.observe(area);
   const skip=(event:KeyboardEvent)=>{if(event.key==='Escape'&&timeline.progress()<1){timeline.progress(1);wake()}};window.addEventListener('keydown',skip);
   // Only a horizontal gesture turns the wheel; a vertical wheel keeps scrolling the page.
   const onWheel=(event:WheelEvent)=>{

@@ -1,9 +1,9 @@
 /* Home hero: the reel ring and its loader are one scene (ReelOrbit + reel-ring.ts). Overrides the older .reel-* rules of public.css. */
 .home-hero{position:relative;display:flex;flex-direction:column;min-height:calc(100svh - 100px);padding:0 4.8vw 28px;overflow:clip;isolation:isolate}
-.omni-reel .reel-stage{position:relative;flex:1 1 auto;min-height:340px;height:auto;margin:0 -4.8vw;overflow:hidden;perspective:1150px;touch-action:pan-y;cursor:grab;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.omni-reel .reel-stage{position:relative;flex:1 1 auto;min-height:380px;height:auto;margin:0 -4.8vw;overflow:hidden;perspective:1150px;touch-action:pan-y;cursor:grab;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
 .omni-reel .reel-stage:active{cursor:grabbing}
 .omni-reel .reel-stage:focus-visible{outline:2px solid #d2b77b;outline-offset:-6px}
-.omni-reel .reel-wheel{position:absolute;top:44%;left:50%;width:0;height:0;margin:0;transform-style:preserve-3d;transition:none;will-change:transform}
+.omni-reel .reel-wheel{position:absolute;top:41%;left:50%;width:0;height:0;margin:0;transform-style:preserve-3d;transition:none;will-change:transform}
 .omni-reel .reel-card,.omni-reel.expanded .reel-card{position:absolute;inset:auto;left:0;top:0;width:180px;height:318px;margin:-159px 0 0 -90px;display:flex;flex-direction:column;transition:none;will-change:transform,opacity;opacity:0;border:1px solid #ffffff30;border-radius:3px;background:#151618;box-shadow:0 20px 40px #0007;overflow:hidden}
 .omni-reel .reel-card>.reel-campaign{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#1d1e20}
 .reel-campaign>.visual{position:absolute;inset:0;height:auto}

@@ -1,4 +1,5 @@
 /* Solutions: deal wheel, family panels, segments, catalogue and the shell pieces shared with Explore. Tokens come from public.css. */
+@media(min-width:761px){.cap-hero[data-wheel]{padding-top:48px;padding-bottom:28px}.cap-hero[data-wheel] h1{font-size:clamp(44px,5.2vw,76px);margin:18px 0 14px}}
 .cap-hero p,.ex-hero p{max-width:640px;color:var(--muted);font-size:15px;line-height:1.7}
 .cap-carousel :focus-visible,.cap-catalog :focus-visible,.cap-cta :focus-visible,.ex-path :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 
