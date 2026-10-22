@@ -17,11 +17,21 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
       - run: npm test
-      - run: npm run build
+      - name: Build isolated test environment
+        run: npm run build
         env:
-          CLOUDFLARE_ENV: staging
+          CLOUDFLARE_ENV: test
+      - name: Prepare isolated test database
+        run: |
+          npx wrangler d1 migrations apply DB --local --config wrangler.jsonc --env test
+          npx wrangler d1 execute DB --local --config wrangler.jsonc --env test --file ../../tests/owner-fixture.sql
+        working-directory: apps/web
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
+      - name: Build verified staging
+        run: npm run build
+        env:
+          CLOUDFLARE_ENV: staging
       - name: Apply staging migrations
         run: npx wrangler d1 migrations apply DB --remote --config wrangler.jsonc --env staging
         working-directory: apps/web

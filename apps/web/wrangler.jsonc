@@ -62,6 +62,22 @@
           "class_name": "LeadIntakeWorkflow"
         }
       ]
+    },
+    "test": {
+      "name": "omni101-app-test",
+      "vars": {
+        "PUBLIC_ORIGIN": "http://localhost:4174",
+        "ORGANIZATION_ID": "omni101"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "omni101-app-test",
+          "database_id": "00000000-0000-0000-0000-000000000002",
+          "migrations_dir": "../../packages/db/migrations"
+        }
+      ],
+      "workflows": []
     }
   },
   "workflows": [
