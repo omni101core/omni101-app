@@ -4,17 +4,15 @@ Aggiornato: 2026-10-23, push release in questo commit. Coordinatore: Grok. Altra
 
 ## SHA e CI
 
-- LIVE `3101815c9aee44ce6679f0e4fec6e01bda217258`. Run `39984184634` verify e production verdi. Health `https://omni101.app/api/health` ha quello SHA, `database` true, `storage` false. Rollback al Worker `01805108595ba1bc21866bcc84825fae829792ff`.
+- LIVE `80a5165f59e92de927fad8775a6f71e43511221d`. Run `39989548616` verify e production verdi. Health ha quello SHA, `database` true, `storage` false. Rollback al Worker `3101815c9aee44ce6679f0e4fec6e01bda217258`.
 - STAGING verde: `d64de4b858f5e383dd945b36fca628a7bede23ba`, run `39988347856`. 148 test, Playwright 105/13, smoke intero. Dentro: menu soci U4, confronto listino P2, h1 `Oggi nello studio`, comando listino che va a capo.
-- Questo `--release` porta quei byte più questo checkpoint. Lo SHA di release è l'output di cloud-verify, non `d64de4b`. LIVE precedente da sostituire: `3101815`.
+- RELEASE `80a5165f59e92de927fad8775a6f71e43511221d` su `release-commercial`, 9 file rispetto a `3101815`. CI in corso. Questa riga è locale, non è nel commit.
 
 ## Locali non pubblicati
 
 Nel push di staging dopo il live `3101815`: U4 (`admin.tsx`, regole `os-nav-*` aggiunte in coda a `admin.css` senza sostituire il file) e P2 (confronto prezzo vs listino). Il `role` del preventivo resta `session.membership.role`, non `session.role`. CSS drag (`user-select:none`, `.os-card-body`, `.os-card-open`) tenuto.
 
-Ancora fuori:
-
-- UX1–UX5: copy su file disgiunti. UX6 si sovrappone a U4 su `admin.tsx`/`admin.css`: non copiare UX6 sopra U4.
+Staging fix UX `d08d9a6fc43f4b6870eabdc651a133758062496a`, run `39992571933` in corso. Porte home: `/work`, `/explore`, `/start-project`. Escape duplicato su `/work` rimosso. Non live. UX6 non copiato. Riga locale.
 - W-email: esito presente, non in `docs/operativo/`.
 
 ## Ownership
@@ -38,8 +36,4 @@ Codice live precedente: `01805108595ba1bc21866bcc84825fae829792ff`. Migrazioni a
 
 ## Prossimo comando
 
-Staging `d64de4b` già verde. Questo commit è il `--release`. Poi:
-
-`python3 -I ~/.omni101/bin/omni-delega/omni-delega.py ci <sha> --branch release-commercial`
-
-Verde: `curl -s https://omni101.app/api/health` deve mostrare quello SHA. Poi UX1–UX5, non UX6 sopra U4.
+LIVE è `80a5165`. Prossimo è lo staging UX1–UX5 (non UX6), poi CI su `rebuild-commercial`. `--release` solo se verify è verde.

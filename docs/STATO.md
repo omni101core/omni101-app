@@ -4,7 +4,7 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 ## Revisioni e ambienti
 
-- **LIVE ora:** `3101815c9aee44ce6679f0e4fec6e01bda217258`, run `39984184634` verify+production verdi, health allo stesso SHA. Rollback: `01805108595ba1bc21866bcc84825fae829792ff`.
+- **LIVE ora:** `80a5165f59e92de927fad8775a6f71e43511221d`, run `39989548616` verify+production verdi, health allo stesso SHA. Rollback: `3101815c9aee44ce6679f0e4fec6e01bda217258`.
 - **Staging verde:** `d64de4b858f5e383dd945b36fca628a7bede23ba`, run `39988347856`. Menu soci, confronto listino, drag mouse tenuto. Release in corso. Dettaglio: `docs/operativo/checkpoint-opus-per-codex.md`.
 - **Rollback:** tornare al Worker `01805108`. Migrazioni additive. Non cancellare tabelle. Nessun servizio a pagamento nuovo.
 

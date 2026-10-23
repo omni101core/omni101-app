@@ -1,3 +1,3 @@
-import {StartProject} from './start';
-/** `/contact` shows the same intake as `/start-project`. */
-export function Contact(){return <StartProject/>}
+import {Navigate} from 'react-router';
+/** `/contact` porta a `/start-project`: una sola porta per scrivere allo studio. */
+export function Contact(){return <Navigate to="/start-project" replace/>}

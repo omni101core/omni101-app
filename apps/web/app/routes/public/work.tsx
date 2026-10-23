@@ -15,7 +15,7 @@ import '../../styles/work-studio.css';
  * Clicking a grid card grows its thumbnail into a full preview; from there "Apri il caso" lands on
  * the case page, whose hero continues from the preview frame. Reduced motion: cards are plain links.
  */
-export function WorkIndex(){return <><PageHero kicker="02 / SELECTED POSSIBILITIES" title={<>Idee da vedere.<br/><em>E da esplorare.</em></>} text="Ospitalità, ristorazione, studi e commercio: idee concrete per collegare un sito al lavoro di ogni giorno. Concept e strumenti interni, sempre dichiarati."/><WorkGallery/><WorkKinds/><SpatialGallery variant="work"/></>}
+export function WorkIndex(){return <><PageHero kicker="02 / IDEE POSSIBILI" title={<>Idee da vedere.<br/><em>E da esplorare.</em></>} text="Ospitalità, ristorazione, studi e commercio: idee concrete per collegare un sito al lavoro di ogni giorno. Concept e strumenti interni, sempre dichiarati."/><WorkGallery/><WorkKinds/><SpatialGallery variant="work"/></>}
 
 function WorkKinds(){
  const ids=Object.keys(KINDS) as KindId[];
@@ -40,7 +40,7 @@ export function WorkCase({pathname}:{pathname:string}){
   else{scope.addEventListener('omni:public-transition-end',later);timer=window.setTimeout(run,2600)}
   return()=>{scope?.removeEventListener('omni:public-transition-end',later);window.clearTimeout(timer);tween?.kill();gsap.set(el,{clearProps:'all'})};
  },[p.slug]);
- return <><div className="case-hero case-flip" ref={hero} data-kind={kindOf(p.type)}><WorkMedia index={index} kind={p.kind} eager/></div><PageHero kicker={p.type+' / '+p.category} title={<>{p.name.split(' / ')[0]}<br/><em>{p.name.split(' / ')[1]}</em></>} text={p.description}/><section className="section case-detail"><div className="case-facts"><div><small>TIPO</small>{KINDS[kindOf(p.type)].label}</div><div><small>AMBITO</small>{p.category}</div><div><small>CLIENTE</small>Nessun cliente commerciale dichiarato</div><Link className="text-link" to="/work">← Tutti i progetti</Link></div><div><h2 className="section-heading">Un’idea.<br/><em>Una possibilità concreta.</em></h2><p>{p.challenge||p.description}</p>{p.scope&&<ul className="case-scope">{p.scope.map(item=><li key={item}>{item}</li>)}</ul>}<p>Questo progetto esplora un approccio di design e interazione. Non rappresenta un risultato commerciale di un cliente e non attribuisce metriche o performance non misurate.</p><Link className="text-link" to={p.category==='Commerce'?'/explore/commerce':p.category==='Automazioni'?'/explore/workflow':'/explore'}>Esplora il laboratorio ↗</Link><br/><Link className="text-link" to="/start-project">Progettiamolo per la tua attività ↗</Link></div></section></>;
+ return <><div className="case-hero case-flip" ref={hero} data-kind={kindOf(p.type)}><WorkMedia index={index} kind={p.kind} eager/></div><PageHero kicker={p.type+' / '+p.category} title={<>{p.name.split(' / ')[0]}<br/><em>{p.name.split(' / ')[1]}</em></>} text={'Concept dello studio: '+p.description}/><section className="section case-detail"><div className="case-facts"><div><small>TIPO</small>{KINDS[kindOf(p.type)].label}</div><div><small>AMBITO</small>{p.category}</div><div><small>CLIENTE</small>Nessun cliente commerciale dichiarato</div><Link className="text-link" to="/work">← Tutti i progetti</Link></div><div><h2 className="section-heading">Un’idea.<br/><em>Una possibilità concreta.</em></h2><p>{p.challenge||p.description}</p>{p.scope&&<ul className="case-scope">{p.scope.map(item=><li key={item}>{item}</li>)}</ul>}<p>Questo progetto esplora un approccio di design e interazione. Non rappresenta un risultato commerciale di un cliente e non attribuisce metriche o performance non misurate.</p><Link className="text-link" to={p.category==='Commerce'?'/explore/commerce':p.category==='Automazioni'?'/explore/workflow':'/explore'}>Esplora il laboratorio ↗</Link><br/><Link className="text-link" to="/start-project">Progettiamolo per la tua attività ↗</Link></div></section></>;
 }
 
 export function WorkCard({project:p,index,onOpen}:{project:typeof projects[number];index:number;onOpen?:(event:MouseEvent<HTMLAnchorElement>,project:typeof projects[number])=>void}){
@@ -49,7 +49,7 @@ export function WorkCard({project:p,index,onOpen}:{project:typeof projects[numbe
 }
 
 export function WorkGallery(){
- const [sector,setSector]=useState('Tutti'),[category,setCategory]=useState('Tutti'),[query,setQuery]=useState(''),[open,setOpen]=useState<{project:typeof projects[number];box:Box}|null>(null);
+ const [sector,setSector]=useState('Tutti'),[category,setCategory]=useState('Tutti'),[query,setQuery]=useState(''),[open,setOpen]=useState<{project:typeof projects[number];box:Box;card:HTMLAnchorElement}|null>(null);
  const filtered=[...projects].sort((a,b)=>Number(!!b.sector)-Number(!!a.sector)).filter(p=>(sector==='Tutti'||p.sector===sector)&&(category==='Tutti'||category===p.category)&&(p.name+p.description+(p.sector||'')).toLowerCase().includes(query.toLowerCase()));
  const select=(event:MouseEvent<HTMLAnchorElement>,project:typeof projects[number])=>{
   if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
@@ -57,7 +57,7 @@ export function WorkGallery(){
   const thumb=event.currentTarget.querySelector('.work-preview');
   if(!thumb)return;
   event.preventDefault();
-  setOpen({project,box:boxOf(thumb)});
+  setOpen({project,box:boxOf(thumb),card:event.currentTarget});
  };
- return <section className="section"><label className="work-sector">Settore <select aria-label="Settore" value={sector} onChange={event=>setSector(event.target.value)}>{['Tutti',...new Set(projects.flatMap(p=>p.sector?[p.sector]:[]))].map(value=><option key={value}>{value}</option>)}</select></label><Filters values={['Tutti','Software','Commerce','Automazioni','Creative']} active={category} setActive={setCategory} query={query} setQuery={setQuery}/><div className="work-grid">{filtered.map((p,i)=><WorkCard key={p.slug} project={p} index={i} onOpen={select}/>)}</div>{!filtered.length&&<p className="empty-results">Nessun progetto corrisponde alla ricerca.</p>}{open&&<WorkPreview project={open.project} index={projects.indexOf(open.project)} from={open.box} onClose={()=>setOpen(null)}/>}</section>;
+ return <section className="section"><label className="work-sector">Settore <select aria-label="Settore" value={sector} onChange={event=>setSector(event.target.value)}>{['Tutti',...new Set(projects.flatMap(p=>p.sector?[p.sector]:[]))].map(value=><option key={value}>{value}</option>)}</select></label><Filters values={['Tutti','Software','Commerce','Automazioni','Creative']} active={category} setActive={setCategory} query={query} setQuery={setQuery}/><div className="work-grid">{filtered.map((p,i)=><WorkCard key={p.slug} project={p} index={i} onOpen={select}/>)}</div>{!filtered.length&&<p className="empty-results">Nessun esempio con questi filtri. <button className="text-link" type="button" onClick={()=>{setSector('Tutti');setCategory('Tutti');setQuery('')}}>Azzera la ricerca.</button></p>}{open&&<WorkPreview project={open.project} index={projects.indexOf(open.project)} from={open.box} onClose={()=>setOpen(null)}/>}</section>;
 }

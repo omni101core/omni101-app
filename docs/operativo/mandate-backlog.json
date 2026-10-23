@@ -262,7 +262,7 @@
     "status": "PLANNED",
     "priority": "HIGH",
     "acceptance": "Hero fullscreen con svh/dvh e CTA immediata, scroll storytelling cinematica con fallback e motion saltabile, capitoli BUILD/SPEAK/SEE/CREATE/ACT/GROW, showcase con player audio, avatar video, comparatore media, workflow animato e preview software; reel orbit, OMNI PORTAL R3F, page transitions, gallery e typography motion verificati con reduced motion, skip, fallback statico e regole performance §5.10; nessun risultato inventato, demo etichettate.",
-    "remaining": "Home e portfolio esistono; Explore, narrazione cinematica e showcase media non risultano fatti. Prestazioni mobile da verificare prima del rilascio. Dal mandato rebuild: transizioni parallele, skip dell'intro e loader su asset reali da verificare o realizzare.",
+    "remaining": "Home e portfolio esistono; Explore, narrazione cinematica e showcase media non risultano fatti. Prestazioni mobile da verificare prima del rilascio. Dal mandato rebuild: transizioni parallele, skip dell'intro e loader su asset reali da verificare o realizzare. Priorità del richiamo Codex: adattamento motion durante la sessione, stop/resume fuori viewport, viewport mobile e assenza di sovrapposizioni sui comandi. Prove CI separate da prove su dispositivo reale.",
     "source": "product-excellence-2026-10-23"
   },
   {
@@ -408,5 +408,25 @@
     "source": "adaptive-agent-engineering-2026-10-23",
     "acceptance": "Verificare la coerenza tra CONTEXT/STATO/moduli, AGENTS.md, CLAUDE.md, regole, skill, PRD, test, CI e release rispetto al codice, identificando la fonte canonica nei conflitti.",
     "remaining": "Fonte unica = costituzione OMNI101: link ai documenti canonici senza copie, controllo su richiesta o su PR significativa."
+  },
+  {
+    "key": "prospect-research-preparation",
+    "name": "Prospect: ricerca documentata e preparazione commerciale",
+    "source": "master-takeover-2026-10-23",
+    "origin": "docs/operativo/coordinamento-codex-2026-10-23.md",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Schede prospect con fonte, data, ipotesi esplicite e prossima azione; deduplica e revisione prima di ogni contatto. Nessun invio o scraping vietato.",
+    "remaining": "Implementare ricerca e revisione interna; un contatto pubblico non prova consenso marketing. Non inventare budget, fatturato o intenzione di acquisto."
+  },
+  {
+    "key": "commercial-campaign-draft-pack",
+    "name": "Prima campagna: proposta, contenuti e asset pronti per revisione",
+    "source": "master-takeover-2026-10-23",
+    "origin": "docs/operativo/coordinamento-codex-2026-10-23.md",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Pacchetto interno collegato a offerta verificata: landing, email e social in bozza, asset, calendario, metriche e responsabile revisione.",
+    "remaining": "Preparare e verificare anteprime e collegamenti tra moduli; provider assente deve consentire bozza ed export, senza simulare invii o pubblicazioni."
   }
 ]
