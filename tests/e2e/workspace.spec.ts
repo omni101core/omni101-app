@@ -221,3 +221,40 @@ test('pricing saves a calculated version and requests a real approval without se
  const session=await (await page.request.get('/api/session')).json();d1("UPDATE memberships SET role='SALES' WHERE user_id='"+String(session.user.id).replaceAll("'","''")+"' AND organization_id='omni101'");
  await page.goto('/admin/approvals');await page.getByRole('row').filter({hasText:name}).filter({hasText:'PENDING'}).getByRole('button',{name:'Revisiona'}).click();await expect(page.getByRole('dialog').getByRole('button',{name:'Approva questa versione'})).toHaveCount(0);await expect(page.getByRole('dialog').getByRole('button',{name:'Richiedi revisione'})).toHaveCount(0);
 });
+
+test('email draft reopens after reload, isolates preview and export, and keeps local text on a delayed save and a 409',async({page,baseURL},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Isolated email draft composer runs once on desktop.');test.setTimeout(90000);await owner(page,baseURL!);
+ let releaseOverview=()=>{};const overviewHeld=new Promise<void>(resolve=>{releaseOverview=resolve});
+ await page.route('**/api/growth/overview',async route=>{await overviewHeld;await route.continue()});
+ await page.goto('/admin/growth');
+ await expect(page.getByRole('heading',{name:'Marketing, ricerca e fiducia'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Bozze email'})).toHaveCount(0);
+ releaseOverview();await page.unroute('**/api/growth/overview');
+ await expect(page.getByRole('heading',{name:'Bozze email'})).toBeVisible();
+ const suffix=randomUUID().slice(0,8),subject='Bozza sintetica '+suffix,body='Testo locale della bozza '+suffix;
+ await page.getByLabel('Oggetto',{exact:true}).fill(subject);await page.getByLabel('Testo',{exact:true}).fill(body);await page.getByLabel('Etichetta del pulsante',{exact:true}).fill('Apri');await page.getByLabel('Indirizzo https del pulsante',{exact:true}).fill('https://omni101.app/start-project');
+ await page.getByRole('button',{name:'Salva bozza',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Bozza salvata'})).toBeVisible();
+ await page.reload();await page.getByRole('button',{name:new RegExp(subject)}).click();
+ await expect(page.getByLabel('Oggetto',{exact:true})).toHaveValue(subject);await expect(page.getByLabel('Testo',{exact:true})).toHaveValue(body);
+ const frame=page.locator('iframe[title="Anteprima isolata della bozza"]');await expect(frame).toHaveAttribute('sandbox','');
+ const srcdoc=await frame.getAttribute('srcdoc');expect(srcdoc||'').toContain(body);expect(srcdoc||'').not.toContain('<script');expect(srcdoc||'').not.toContain('<img');
+ const href=await page.getByRole('link',{name:'Scarica HTML'}).getAttribute('href');expect(href).toBeTruthy();
+ const exported=await page.request.get(href!);expect(exported.ok()).toBeTruthy();const html=await exported.text();expect(html).toContain(body);expect(html).not.toContain('<script');expect(html).not.toContain('<img');
+ const draftId=decodeURIComponent(href!.split('/')[3]);
+ const other=await api(page,'POST','/api/email-drafts',{subject:'Altra bozza '+suffix,body:'Corpo separato '+suffix,preheader:'',ctaLabel:'',ctaUrl:''});expect(other.status).toBe(201);
+ let releaseSave=()=>{};const saveHeld=new Promise<void>(resolve=>{releaseSave=resolve});
+ await page.route('**/api/email-drafts/*',async route=>{if(route.request().method()==='PATCH')await saveHeld;await route.continue()});
+ const typed=body+' ancora nel modulo';await page.getByLabel('Testo',{exact:true}).fill(typed);
+ const pendingSave=page.getByRole('button',{name:'Salva bozza',exact:true}).click();
+ await expect(page.getByLabel('Testo',{exact:true})).toBeDisabled();await expect(page.getByLabel('Oggetto',{exact:true})).toBeDisabled();
+ await expect(page.getByRole('button',{name:'Nuova bozza'})).toBeDisabled();await expect(page.getByRole('button',{name:new RegExp(subject)})).toBeDisabled();
+ releaseSave();await pendingSave;await expect(page.getByRole('status').filter({hasText:'Bozza salvata'})).toBeVisible();await expect(page.getByLabel('Testo',{exact:true})).toHaveValue(typed);await page.unroute('**/api/email-drafts/*');
+ const serverBody='Testo salvato sul server '+suffix;
+ await page.route('**/api/email-drafts/*',async route=>{if(route.request().method()!=='PATCH')return route.continue();await route.fulfill({status:409,contentType:'application/json',body:JSON.stringify({error:'Versione superata o bozza non modificabile. Il testo nel modulo resta quello che stai scrivendo.',localKept:true,draft:{id:draftId,version:9,status:'DRAFT',subject,preheader:'',body:serverBody,ctaLabel:'Apri',ctaUrl:'https://omni101.app/start-project',campaignId:null,provider:null,sendingEnabled:false,account:null,savedIsApproval:false}})})});
+ const kept=typed+' e non sostituito';await page.getByLabel('Testo',{exact:true}).fill(kept);await page.getByRole('button',{name:'Salva bozza',exact:true}).click();
+ await expect(page.getByRole('alert')).toContainText('Il testo nel modulo resta quello che stai scrivendo.');await expect(page.getByLabel('Testo',{exact:true})).toHaveValue(kept);
+ async function refuse(name:string|RegExp){const messages:string[]=[];page.once('dialog',async dialog=>{messages.push(dialog.message());await dialog.dismiss()});await page.getByRole('button',{name}).click();expect(messages[0]||'').toContain('non salvate');await expect(page.getByLabel('Testo',{exact:true})).toHaveValue(kept)}
+ await refuse('Carica la versione salvata');await refuse('Nuova bozza');await page.unroute('**/api/email-drafts/*');
+ await page.reload();await page.getByRole('button',{name:new RegExp(subject)}).click();await expect(page.getByLabel('Testo',{exact:true})).toHaveValue(typed);
+ await page.getByLabel('Testo',{exact:true}).fill(kept);await refuse(new RegExp('Altra bozza '+suffix));await expect(page.getByLabel('Oggetto',{exact:true})).toHaveValue(subject);
+});

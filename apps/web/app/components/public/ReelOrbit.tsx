@@ -33,7 +33,6 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
  useEffect(()=>{
   const mq=matchMedia('(prefers-reduced-motion: reduce)'),el=root.current,world=ring.current,view=stage.current,veil=loader.current;
   if(!el||!world||!view)return;
-  setReduced(mq.matches);
   const scene=model.current,written=new Map<string,string>();
   const links=Array.from(world.querySelectorAll<HTMLElement>('.reel-card'));
   let alive=true,last=performance.now(),lastActive=0,lastCount=-1,visible=true,loaded=0,formed=false,ready=coverUrls.length===0,opening=false,frame=0;
@@ -85,6 +84,7 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
   const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;wake()},{rootMargin:'100px'});
   const motionChange=()=>{setReduced(mq.matches);if(mq.matches)finish();else wake()};
   mq.addEventListener('change',motionChange);
+  motionChange();
   document.addEventListener('visibilitychange',wake);
   observer.observe(el);
   coverUrls.forEach(src=>{const image=new Image();image.onload=image.onerror=settle;image.src=src});

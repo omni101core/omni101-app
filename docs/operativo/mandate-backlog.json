@@ -423,10 +423,11 @@
     "key": "commercial-campaign-draft-pack",
     "name": "Prima campagna: proposta, contenuti e asset pronti per revisione",
     "source": "master-takeover-2026-10-23",
-    "origin": "docs/operativo/coordinamento-codex-2026-10-23.md",
-    "status": "PLANNED",
+    "origin": "docs/operativo/campagna-pilota-bozza.md",
+    "status": "IN_PROGRESS",
     "priority": "HIGH",
     "acceptance": "Pacchetto interno collegato a offerta verificata: landing, email e social in bozza, asset, calendario, metriche e responsabile revisione.",
-    "remaining": "Preparare e verificare anteprime e collegamenti tra moduli; provider assente deve consentire bozza ed export, senza simulare invii o pubblicazioni."
+    "remaining": "Collegare contenuti a campagna interna e composer, produrre formati asset e revisionare segmento/offerta/fornitori prima di qualsiasi attivazione.",
+    "evidence": "Bozza v1 con proposta, email completa, tre contenuti social, preparazione SEM/SEO/GEO e checklist; nessun invio o pubblicazione."
   }
 ]

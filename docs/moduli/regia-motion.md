@@ -1,5 +1,15 @@
 # Regia motion
 
+Aggiornamento locale successivo: il secondo tentativo di 0b8fc25 non è passato (race di inizializzazione nella prova reduced-motion desktop). Registrazione listener ora precede sincronizzazione dello stato; il test attende un’azione tastiera effettiva sul reel prima del cambio preferenza. Nessuna asserzione eliminata. Inoltre riprodotto in browser staging il rientro nella scena 3D che restava poster: il listener context-lost viene ora rimosso prima del teardown intenzionale R3F. Regressione dedicata `tests/e2e/cinematic-reentry.spec.ts`, ancora da eseguire in CI. Il codice nuovo non è dichiarato live.
+
+
+## Aggiornamento verificato — 23 ottobre, coordinamento Codex
+
+Home conserva identità, geometria e intro. `ReelOrbit` ascolta i cambi di `prefers-reduced-motion` nella sessione, termina l’intro e aggiorna i link accessibili; conserva pausa manuale. Il ciclo RAF si cancella quando il componente esce dalla viewport o il documento è nascosto e riparte con timestamp aggiornato. Cleanup rimuove listener, frame e callback immagine tardive. Nessuna dipendenza nuova o disattivazione generale su mobile.
+
+CI isolata `1c7ecab`, run `39995312269`: 148 test server, 107 browser, 13 skip; nuova regressione `tests/e2e/motion-lifecycle.spec.ts` verde su desktop e viewport mobile emulato. Nessuna prova su dispositivo fisico dichiarata. Release `0b8fc25` / run `39996221347` ancora da confermare. La home attuale ha tre porte `/work`, `/explore`, `/start-project`; i riferimenti a quattro porte nelle sezioni datate sotto descrivono lo storico.
+
+
 ## Scopo
 
 Dire dove sta ogni animazione. Il testo vincolante del coordinatore è `esiti/omni101-codex-ripresa/REGIA-MOTION.md` (22/10, dopo la correzione del founder). Questo file dice come il codice ci sta rispetto a quel testo.

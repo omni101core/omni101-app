@@ -4,8 +4,11 @@ test('home adapts to reduced-motion changes without reload or lost navigation',a
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.goto('/');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
- await page.emulateMedia({reducedMotion:'reduce'});
  const hero=page.locator('.omni-reel');
+ // Exercise a preference change after the reel accepts a real keyboard action, independently of root hydration.
+ await page.keyboard.press('Escape');
+ await expect(hero).toHaveAttribute('data-reel-phase','expanded');
+ await page.emulateMedia({reducedMotion:'reduce'});
  await expect(hero).toHaveClass(/reel-reduced/);
  await expect(hero).toHaveAttribute('data-reel-phase','expanded');
  await expect(page.locator('.reel-loader')).toBeHidden();
