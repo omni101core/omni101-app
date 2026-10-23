@@ -39,7 +39,7 @@ Tabelle `contacts`, `companies`, `leads`, `deals`, `clients`, `interactions`, `n
 
 ## Stato
 
-Parziale, 2026-10-22. Il CRUD e il kanban ci sono. Non ci sono, nel file `admin.tsx` letto oggi: Gantt, timeline del contatto, filtri salvati, commenti, menzioni, presenza. Sono SPEC-13, in coda dopo SPEC-06. Inbox e calendario sono risorse (`notifications`, `activities`), non una casella di posta esterna.
+Parziale, 2026-10-23. Il CRUD e il kanban ci sono. Il centro della card è un `div.os-card-body` trascinabile; «Apri» è un button piccolo. Così il drop arriva a `onMove`. Non ci sono, nel file `admin.tsx`: Gantt, commenti, menzioni, presenza. Inbox e calendario operativo restano risorse (`notifications`, `activities`). Vista unica date: `GET /api/calendar` (modulo revenue).
 
 `settings`, `automations` e `pipeline` in `load()` non chiamano `/api/records`: azzerano l'elenco. Pipeline e automazioni hanno pannelli propri (moduli progetti e workflow).
 

@@ -28,8 +28,17 @@ export function calculatePricing(input:PricingInput){
  });
  return {method:'cost-margin-v1',currency:input.currency,rounding:'Arrotondamento al centesimo per riga; prezzo obiettivo arrotondato per eccesso.',formula:'(diretto + overhead + contingency) / (1 - margine). Sconto applicato dopo il prezzo obiettivo.',lines,groups,oneTimeNetCents:groups.find(g=>g.cadence==='ONE_TIME')?.netCents||0,combinedTotal:null,taxStatus:input.taxBp===null?'NOT_CONFIGURED':'USER_DECLARED',warning:'Stima interna: tariffe, margini, imposte e condizioni richiedono revisione umana. Cadenze diverse non vengono sommate.'};
 }
-async function body(request:Request){const raw=await request.text();if(raw.length>32000)throw new HttpError(413,'Richiesta troppo grande.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'JSON non valido.')}}
+async function body(request:Request,maxLength=32000){const raw=await request.text();if(raw.length>maxLength)throw new HttpError(413,'Richiesta troppo grande.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'JSON non valido.')}}
 type Version={id:string;organization_id:string;quote_id:string;version:number;lead_id:string|null;input:string;calculation:string;created_by:string;created_at:number};
+const catalogInput=z.object({
+ generatoIl:z.string().trim().min(1).max(64),fonte:z.literal('motore prezzi'),
+ voci:z.array(z.object({
+  id:z.string().trim().min(1).max(80),nome:z.string().trim().min(1).max(160),
+  unaTantumCents:money,mensileCents:money,tempiGiorni:z.number().int().min(0).max(3650),
+  senzaAnticipo:z.object({canoneMensileCents:money,durataMinimaMesi:z.number().int().min(1).max(120),totaleCents:money,nota:z.string().trim().max(500)}).strict().nullable()
+ }).strict()).max(200)
+}).strict();
+type CatalogRow={version:number;generated_at:string;imported_by:string;created_at:number;payload:string};
 export async function handlePricing(request:Request,env:Env,actor:Identity):Promise<Response|null>{
  const path=new URL(request.url).pathname;if(!path.startsWith('/api/pricing'))return null;requireRole(actor,roles);const org=actor.orgId,stamp=Date.now();
  const stmt=(sql:string,...params:(string|number|null)[])=>env.DB.prepare(sql).bind(...params);
@@ -50,6 +59,29 @@ export async function handlePricing(request:Request,env:Env,actor:Identity):Prom
   statements.push(audit('PRICING_VERSION_SAVED',data.quoteId,{version:data.version+1,snapshotId:data.requestId}));
   await env.DB.batch(statements);if(!same(await version()))throw new HttpError(409,'Conflitto concorrente: nessuna versione sovrascritta.');return json({quoteId:data.quoteId,version:data.version+1},201);
  }
+ if(path==='/api/pricing/catalog'&&request.method==='GET'){
+  const row=await stmt('SELECT version,generated_at,imported_by,created_at,payload FROM pricing_catalog_versions WHERE organization_id=? ORDER BY version DESC LIMIT 1',org).first<CatalogRow>();
+  if(!row)return json({version:null,voci:[]});
+  const stored=JSON.parse(row.payload) as {voci:z.infer<typeof catalogInput>['voci']};
+  return json({version:row.version,generatoIl:row.generated_at,importedAt:row.created_at,importedBy:row.imported_by,voci:stored.voci});
+ }
+ if(path==='/api/pricing/catalog'&&request.method==='POST'){
+  requireRole(actor,['OWNER','ADMIN']);
+  const data=catalogInput.parse(await body(request,600000));
+  const duplicate=await stmt('SELECT version FROM pricing_catalog_versions WHERE organization_id=? AND generated_at=?',org,data.generatoIl).first<{version:number}>();
+  if(duplicate)return json({version:duplicate.version,duplicate:true});
+  const id=crypto.randomUUID();
+  try{
+   await env.DB.batch([
+    stmt('INSERT INTO pricing_catalog_versions(id,organization_id,version,generated_at,payload,imported_by,created_at) SELECT ?,?,(SELECT COALESCE(MAX(version),0)+1 FROM pricing_catalog_versions WHERE organization_id=?),?,?,?,?',id,org,org,data.generatoIl,JSON.stringify(data),actor.id,stamp),
+    stmt("INSERT INTO audit_logs(id,organization_id,user_id,action,resource_type,resource_id,details,created_at,updated_at) VALUES(?,?,?,'PRICING_CATALOG_IMPORTED','pricing_catalog',?,?,?,?)",crypto.randomUUID(),org,actor.id,id,JSON.stringify({generatoIl:data.generatoIl,voci:data.voci.length}),stamp,stamp)
+   ]);
+  }catch{throw new HttpError(409,'Importazione concorrente dello stesso listino: ricarica prima di riprovare.')}
+  const saved=await stmt('SELECT version FROM pricing_catalog_versions WHERE id=? AND organization_id=?',id,org).first<{version:number}>();
+  if(!saved)throw new HttpError(409,'Importazione concorrente dello stesso listino: ricarica prima di riprovare.');
+  return json({version:saved.version,voci:data.voci.length},201);
+ }
+ if(path==='/api/pricing/catalog')throw new HttpError(405,'Operazione non supportata.');
  const match=path.match(/^\/api\/pricing\/([0-9a-f-]{36})(\/review)?$/i);if(!match)throw new HttpError(404,'Percorso non disponibile.');const quoteId=match[1];
  const quote=await stmt('SELECT id,name,status,pricing_version FROM quotes WHERE id=? AND organization_id=? AND pricing_version IS NOT NULL',quoteId,org).first<{id:string;name:string;status:string;pricing_version:number}>();if(!quote)throw new HttpError(404,'Preventivo non disponibile.');
  if(!match[2]&&request.method==='GET'){
