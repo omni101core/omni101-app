@@ -5,7 +5,7 @@ Aggiornato: 2026-10-23 17:20. Coordinatore: Grok (staffetta da Opus). Mandato co
 ## Produzione
 - LIVE `01805108` (run 39962720977), health OK. Nessuna release nuova riuscita oggi, finché la run di questa staffetta non è verde.
 - Repo locale avanti rispetto al live: S1, S3, S4, S4k (card trascinabile: corpo `div`, «Apri» piccolo), `GET /api/calendar`, listino 0012 + UI catalogo con `role` da admin. Non ancora pubblicati.
-- 089914e run 39976638937 typecheck calendar. 7b85595 run 39977100259 test calendar: HttpError lanciato, il test leggeva `.status` sulla Response. Fix solo nel test, in push successivo. Produzione non toccata. Prossimo: CI verde, poi `--release`.
+- 9de100e run 39977577570: test verdi, e2e drag ancora rosso (nessun dragstart, nessun PATCH). S4l: mouse down/up al posto di HTML5. Push `6e5c491a538f0b61881174dfe0d4f39928a9496d`. Produzione non toccata. Prossimo: CI verde, poi `--release`. UX1–UX6 hanno esito, non integrati (admin.css in mano a S4l).
 
 ## Lavori (registro `/tmp/omni101-deleghe/registro.jsonl`)
 | Task | Esecutore | Stato | Azione dopo |

@@ -31,6 +31,8 @@ for(const source of sources){
  if(source.record_id&&source.record_id!==uid(source.id))throw new Error('Source identity mismatch.');
  record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body:original.toString('utf8'),source:source.source+' · '+source.file+' · sha256:'+source.sha256,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null});
 }
+const origins=new Map();
+for(const o of new Set(backlog.filter(i=>!sources.some(s=>s.id===i.source)).map(i=>i.origin)))origins.set(o,record('reference:'+o,{name:o.replace(/^docs\/operativo\//,''),kind:'REFERENCE',status:'CAPTURED',body:readFileSync(o,'utf8'),source:o,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null}));
 for(const item of backlog){
  const task='mandate:'+org+':'+item.key,known=sources.some(s=>s.id===item.source);
  if(!known&&!/^docs\/operativo\/[a-z0-9-]+\.md$/.test(item.origin||''))throw new Error('Backlog item without mandate source needs a docs/operativo origin.');
@@ -38,7 +40,7 @@ for(const item of backlog){
  batches.push(insert('tasks',taskRow));
  // tasks have no updated_by: every writer (API PATCH, pipeline) bumps updated_at, so updated_at=created_at means untouched by humans. The sync keeps it that way.
  syncs.push(`UPDATE tasks SET name=${value(taskRow.name)},priority=${value(taskRow.priority)},description=${value(taskRow.description)},status=${value(taskRow.status)} WHERE id=${value(task)} AND organization_id=${value(org)} AND updated_at=created_at AND NOT EXISTS(SELECT 1 FROM task_dependencies d WHERE d.task_id=tasks.id AND d.active=1) AND (name IS NOT ${value(taskRow.name)} OR priority IS NOT ${value(taskRow.priority)} OR description IS NOT ${value(taskRow.description)} OR status IS NOT ${value(taskRow.status)});`);
- record('requirement:'+item.key,{name:item.name,kind:'REQUIREMENT',status:item.status,body:item.acceptance+'\nLimiti e prossima azione: '+item.remaining,source:known?'Founder mandate · docs/mandati/'+item.source+'.md':'Review backend · '+item.origin,acceptance:item.acceptance,evidence:item.evidence||(item.status==='IMPLEMENTED'?'Codice e test in CI (revisione nel registro audit). Revisione umana e limiti residui ancora aperti.':''),source_id:known?uid(item.source):null,task_id:task});
+ record('requirement:'+item.key,{name:item.name,kind:'REQUIREMENT',status:item.status,body:item.acceptance+'\nLimiti e prossima azione: '+item.remaining,source:known?'Founder mandate · docs/mandati/'+item.source+'.md':'Review backend · '+item.origin,acceptance:item.acceptance,evidence:item.evidence||(item.status==='IMPLEMENTED'?'Codice e test in CI (revisione nel registro audit). Revisione umana e limiti residui ancora aperti.':''),source_id:known?uid(item.source):origins.get(item.origin),task_id:task});
 }
 for(const [key,name,url,note] of [
  ['codrops','Codrops Cinematic 3D Scroll','https://tympanus.net/Tutorials/Cinematic3DScroll/','Reference esplicita del founder: narrativa cinematica, mobile e reduced motion; verificare licenza e differenze prima del riuso.'],
@@ -46,9 +48,9 @@ for(const [key,name,url,note] of [
  ['sandbox','Cloudflare Agent Sandboxes','https://developers.cloudflare.com/agents/tools/sandbox/','Reference del founder da valutare per isolamento, rete, credenziali, persistenza e costi. Non attivare servizi a pagamento.']])record('reference:'+key,{name,kind:'REFERENCE',status:'CAPTURED',body:note,source:url,acceptance:'Verifica tecnica, licenza e costi prima di collegare una implementazione.',evidence:'',source_id:null,task_id:'mandate:'+org+':'+(key==='codrops'?'brand':'coding-agents')});
 batches.push(...syncs);
 if(target==='--sql'){writeFileSync(1,batches.join('\n'));process.exit(0)}
-if(target==='--dry-run'){console.log(JSON.stringify({sources:sources.length,requirements:backlog.length,references:3,tasks:backlog.length,syncStatements:{knowledgeRecords:backlog.length+sources.length+3,tasks:backlog.length},syncNote:'upper bound; each UPDATE is conditional on importer-owned and changed rows',batches:batches.length,originalHashesVerified:true,mutations:false}));process.exit(0)}
+if(target==='--dry-run'){console.log(JSON.stringify({sources:sources.length,requirements:backlog.length,references:3+origins.size,tasks:backlog.length,syncStatements:{knowledgeRecords:backlog.length+sources.length+3+origins.size,tasks:backlog.length},syncNote:'upper bound; each UPDATE is conditional on importer-owned and changed rows',batches:batches.length,originalHashesVerified:true,mutations:false}));process.exit(0)}
 const token=process.env.CLOUDFLARE_API_TOKEN;if(!token)throw new Error('CI secret unavailable.');
 const database=target==='staging'?'28dfa732-5f93-4b10-8c7d-542d8ccdb9e1':'1887a135-05be-4b2e-a764-8ab5b3018a00';
 const endpoint=`https://api.cloudflare.com/client/v4/accounts/179e35741ac5e7a9e2c3be26f5a482b8/d1/database/${database}/query`;
 for(const sql of batches){const response=await fetch(endpoint,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({sql}),signal:AbortSignal.timeout(45000)});const result=await response.json();if(!response.ok||!result.success||result.result.some(row=>!row.success))throw new Error('Context import not confirmed; no credential or response body printed. Rerun safely after diagnosis.');}
-console.log(JSON.stringify({target,originalSources:sources.length,requirements:backlog.length,references:3,insertOrIgnore:true,conservativeSync:true,executionsStarted:0}));
+console.log(JSON.stringify({target,originalSources:sources.length,requirements:backlog.length,references:3+origins.size,insertOrIgnore:true,conservativeSync:true,executionsStarted:0}));
