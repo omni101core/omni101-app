@@ -81,12 +81,12 @@ describe('persistent knowledge and provenance',()=>{
  it('isolates tenants, excludes clients and requires proof for VERIFIED',async()=>{
   const {sqlite,env}=database(),cookie=await owner(sqlite),client=await owner(sqlite,'omni101','CLIENT','memory-client');
   expect((await handleApi(req('/api/knowledge',client),env))?.status).toBe(403);
-  const stamp=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('memory-other','Other','memory-other',stamp,stamp);const foreign=await owner(sqlite,'memory-other','OWNER','foreign-memory');
+  const stamp=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('memory-other','Other','memory-other',stamp,stamp);const foreign=await owner(sqlite,'memory-other','OWNER','foreign-memory');const foreignEnv={...env,ORGANIZATION_ID:'memory-other'};
   const id=crypto.randomUUID(),record={name:'Requirement',kind:'REQUIREMENT',status:'VERIFIED',body:'A real requirement',source:'Founder request',acceptance:'Pass a test',evidence:'',source_id:null,task_id:null};
   expect((await handleApi(req('/api/knowledge',cookie,'POST',{id,version:0,record}),env))?.status).toBe(400);
   expect((await handleApi(req('/api/knowledge',cookie,'POST',{id,version:0,record:{...record,status:'PLANNED'}}),env))?.status).toBe(201);
-  expect((await handleApi(req('/api/knowledge/'+id,foreign),env))?.status).toBe(404);
-  expect((await handleApi(req('/api/knowledge',foreign,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',source_id:id}}),env))?.status).toBe(400);
+  expect((await handleApi(req('/api/knowledge/'+id,foreign),foreignEnv))?.status).toBe(404);
+  expect((await handleApi(req('/api/knowledge',foreign,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',source_id:id}}),foreignEnv))?.status).toBe(400);
   expect((await handleApi(req('/api/knowledge',cookie,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',task_id:'missing-task'}}),env))?.status).toBe(400);
  });
 });
