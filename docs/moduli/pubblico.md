@@ -93,3 +93,13 @@ Regressione CI `39831065315`: 96 browser test verdi, tre fallimenti. Risolti nel
 ## Portfolio per settore — 2026-10-22 sera
 
 `/work` presenta prima la griglia utile e filtrabile per settore, poi la galleria spaziale esistente. Aggiunti Casa Luce (B&B), Tavola (ristorazione), Studio Forma (professionisti): concept dichiarati, problema e perimetro concreto, nessun cliente o risultato inventato. Tre immagini originali generate per questi casi, esportate JPEG in `public/media/originali/work-07..09`; originali conservati fuori dal repo. Vecchi slug mantenuti. Nuovi asset e ordine in attesa CI e aggiornamento artefatto locale.
+
+## Revisione UX 24/10
+
+Pagine: `/start-project`, `/work` (griglia e scheda). Voce invariata: niente claim commerciali, i lavori restano concept.
+
+`/start-project`: hero e colonna laterale dicono il passo successivo (il modulo) e che Express e racconto completo sono lo stesso invio, senza ordine. Nel modulo il modo attivo è il pulsante pieno; l’altro è ghost. Una riga sotto il titolo dice cosa comprende il modo. Azienda, ambiti e budget sono marcati facoltativi. Schema, submit e `observedAttribution` non sono stati toccati.
+
+`/work`: sotto l’h1, un h2 spiega che la griglia è di concept, che il clic (con animazioni) apre l’anteprima e che tipi e galleria sotto sono la stessa raccolta. Ogni card porta la parola Concept. La scheda apre con il disclaimer e chiude con «Vuoi un’idea simile? Scrivici», non con una promessa di progetto già fatto.
+
+Accessibilità in coda a `public.css`: testo guida in ivory su graphite, focus oro già globale più offset sui chip, target 44px sotto i 760px su campi, chip, consenso, filtri, link di scheda e mailto. Etichette già usate dai test (`La tua email`, `Come ti chiami`, `Raccontaci la tua idea`, `Il tuo messaggio`, `Azienda o progetto`, `Budget indicativo`, `Settore`, pulsanti Express / Racconto completo / Inizia la conversazione) restano sottostringhe valide.

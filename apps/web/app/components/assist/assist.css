@@ -9,3 +9,6 @@
 .omni-assist-lead form>div:last-child{display:flex;gap:8px;margin-top:4px}
 .omni-assist-lead button:disabled{opacity:.5;cursor:not-allowed}
 .omni-assist-turnstile{min-height:65px}
+@media(max-width:700px){.omni-assist-launch{right:10px;bottom:14px;padding:7px 11px;font-size:11px;line-height:14px;white-space:nowrap}.omni-assist-launch span{font-size:12px;line-height:1;margin-right:6px}}
+@media(max-width:700px){body:has(.cinema-experience) .omni-assist-launch{bottom:72px;box-shadow:none}}
+.omni-assist-launch:focus-visible{outline:2px solid #d2b77b;outline-offset:3px}

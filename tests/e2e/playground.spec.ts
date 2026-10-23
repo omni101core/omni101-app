@@ -72,3 +72,20 @@ test('permissions policy opens the microphone only on voice and the camera only 
  expect(await policy('/explore/vision')).toBe('camera=(self), microphone=(), geolocation=()');
  for(const path of ['/','/explore','/explore/commerce','/solutions'])expect(await policy(path)).toBe('camera=(), microphone=(), geolocation=()');
 });
+
+test('every lab page shows exactly one reality label among the four',async({page})=>{
+ const labs:[string,string][]=[
+  ['/explore/avatar','RAPPRESENTATIVA'],
+  ['/explore/software','SIMULATA'],
+  ['/explore/vision','PARZIALE'],
+  ['/explore/voice','PARZIALE'],
+ ];
+ for(const [path,kind] of labs){
+  await page.goto(path);
+  const badge=page.locator('[data-lab-status]');
+  await expect(badge).toHaveCount(1);
+  await expect(badge).toHaveAttribute('data-lab-status',kind);
+  await expect(badge.locator('.lab-status-kind')).toHaveText(/^(Reale|Simulata|Parziale|Rappresentativa)$/);
+  await expect(badge.locator('.lab-status-limit')).not.toBeEmpty();
+ }
+});

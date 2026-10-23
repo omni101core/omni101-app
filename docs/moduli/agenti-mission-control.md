@@ -56,3 +56,9 @@ Scope solo brief. Nessun tool nel registro, così il modello non ha un'azione da
 ## Chi lo possiede ora
 
 SPEC-06 (Mission Control, agenti, portale). Handoff automatici tra agenti: SPEC-14.
+
+## REC-MISSION-01 — 2026-10-23, corretti nel codice, in attesa di release (codice locale, non pubblicato)
+
+Audit workflow-dashboard punti4–5: `canResume` in attesa umana è true solo per l'approvazione `runId:current_node` APPROVED, stessa organizzazione, `resource_type=workflow_runs` e `resource_id=runId`. Overview e dettaglio espongono anche `approvalId`/`approvalStatus`. In attesa/rifiutata la UI mostra il link alla decisione specifica; la route POST mantiene il controllo server già esistente. FAILED/QUEUED/DISPATCH_FAILED restano recuperabili. Nessuna ripresa automatica.
+
+Gli artefatti risolti nel tenant hanno `?record=` con ID codificato; record di altre organizzazioni non sono restituiti. Il polling ricarica il dettaglio aperto anche quando cambia soltanto l'approvazione e non il timestamp del workflow. Test aggiunti: `tests/mission-control.test.ts` (decisione/node/run/tipo/tenant, retry e URL), `tests/e2e/mission-controls.spec.ts` (azioni, conferma, polling e deep link). Nessuna esecuzione locale sotto soglia disco; verifica e rilascio spettano alla CI del coordinatore. Non dichiarato online.

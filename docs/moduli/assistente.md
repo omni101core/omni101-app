@@ -28,11 +28,11 @@ Chiamata modello: NVIDIA, `response_format` json_schema, timeout 25 s, `max_toke
 
 ## Test
 
-`tests/assistant.test.ts` (confini dei tool, persistenza, privacy). `tests/assistant-lead.test.ts` (`submit_lead` passa da `/api/intake`). `public.spec.ts` ultimo test: il brief arriva su `/start-project` e il POST intake intercettato non parte da solo.
+`tests/assistant.test.ts` (confini dei tool, persistenza, privacy). `tests/assistant-lead.test.ts` (`submit_lead` passa da `/api/intake`). `public.spec.ts` ultimo test: il brief arriva su `/start-project` e il POST intake intercettato non parte da solo. `tests/e2e/assist-mobile.spec.ts`: su viewport stretto il trigger non interseca i comandi cinema visibili, nemmeno col focus da tastiera o con movimento ridotto, e lo screenshot finisce in `test-results`.
 
 ## Stato
 
-Parziale, 2026-10-22. Il copilot interno con UI generativa ampia è SPEC-15, dopo SPEC-06. Oggi ci sono lettura di record, navigazione e task confermato. Non c'è un agente che clicca il workspace al posto della persona.
+Parziale, 2026-10-22. L'assistente interno con UI generativa ampia è SPEC-15, dopo SPEC-06. Oggi ci sono lettura di record, navigazione e task confermato. Non c'è un agente che clicca il workspace al posto della persona. 2026-10-23: su viewport fino a 700px il trigger pubblico è più compatto. Se in pagina c'è l'esperienza cinema e il movimento è consentito, sale sopra la barra dei capitoli; con movimento ridotto quella barra non è in pagina e il trigger resta basso. Il nome accessibile resta «OMNI ASSIST».
 
 ## Decisioni
 
@@ -44,6 +44,7 @@ Il messaggio del cliente è dato non fidato: il prompt di intake lo dice esplici
 - Scrivere un lead dalla chat, senza `/api/intake`, salta Turnstile e consenso.
 - Il cookie assistente non è la sessione. Non usarlo per autorizzare un CRUD.
 - Cronologia pubblica e interna sono isolate per `owner_hash` e `mode`.
+- Non abbassare di nuovo `.omni-assist-launch` sotto i 700px quando in pagina c'è `.cinema-experience`: la barra capitoli occupa il fondo dello stage e il trigger la copre. La posizione alta vale solo con `prefers-reduced-motion: no-preference`. Il foglio è `apps/web/app/components/assist/assist.css`, dell'assistente, non un foglio condiviso del sito.
 
 ## Chi lo possiede ora
 

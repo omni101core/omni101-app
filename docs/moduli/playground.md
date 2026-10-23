@@ -61,3 +61,17 @@ SPEC-12 ha scritto Vision e voce il 22/10. Le demo commerce, workflow e creative
 Aggiunti `/explore/avatar` e `/explore/software` nel catch-all e nelle stazioni. `routes/public/product-labs.tsx`: Avatar prepara script, lingua predefinita, direzione e storyboard; dichiara video/lip-sync non integrati. Software offre CRM a colonne con modifica stato e prenotazione simulata, solo memoria locale. Nessun provider o CRM produttivo invocato. Home collega tutti i sette lab. Test `realignment.spec.ts` copre storyboard e mini prodotti. Vision e voce esistenti preservati.
 
 Avatar include ascolto dello script con SpeechSynthesis, scelta fra voci disponibili per lingua e arresto audio; cancella playback all'uscita. Ritratto originale fisso dichiarato concept. Nessun microfono o video generativo. I servizi vocali dipendono dal browser/dispositivo.
+
+## Lab → etichetta → limiti
+
+Etichette (`LabStatus`: REALE | SIMULATA | PARZIALE | RAPPRESENTATIVA) allineate a questo documento, non a ipotesi. Badge visibile vicino al titolo su avatar, software, vision, voice.
+
+| Lab | Etichetta | Limiti |
+| --- | --- | --- |
+| Avatar (`/explore/avatar`) | RAPPRESENTATIVA | Nessun avatar video, nessun lip-sync, nessuna clonazione vocale. Ritratto concept fisso; storyboard simulato; TTS solo voci del browser. |
+| Voice (`/explore/voice`) | PARZIALE | Nessun provider vocale a pagamento; microfono solo su richiesta. Testo e sintesi restano; waveform non è registrazione dell'audio del browser. |
+| Vision (`/explore/vision`) | PARZIALE | Frame non salvati (né D1 né R2); gesti non garantiti su ogni computer; webcam reale non assunta. Controlli manuali sì. |
+| Agent Workflow (`/explore/workflow`) | SIMULATA | Nessuna scrittura sul CRM reale; non chiama `/api/workflows`. |
+| Commerce (`/explore/commerce`) | SIMULATA | Carrello di pagina; nessun pagamento. |
+| Creative AI (`/explore/creative`) | SIMULATA | Showcase/primitivi in pagina; nessun job media né provider creativo live. |
+| Software (`/explore/software`) | SIMULATA | CRM e prenotazioni solo in memoria di pagina; nessun CRM produttivo. |

@@ -466,5 +466,67 @@
       "esecuzione reale di hermes, goose, cursor-agent",
       "policy dati poolside e NVIDIA oltre il perimetro 'pubblici'"
     ]
+  },
+  "private_sources": [
+    {
+      "id": "codex-master-command-2026-10-23",
+      "artifact_id": "art_20261023T171046_db81159128bc",
+      "sha256": "ddf1ba7fa179ca4f3d43d2e5497a21cf0f7c2a1b12bf2994a24665688d84d5c5",
+      "size_bytes": 34138,
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "priority": "P0",
+      "coverage": "CAPTURED; clause reconciliation pending; original private in MemPalace",
+      "title": "codex-master-command-2026-10-23",
+      "require_app_import": true
+    },
+    {
+      "id": "master-reconciliation-2026-10-23",
+      "artifact_id": "art_20261023T200842_8a070813a607",
+      "sha256": "c72c144ed2f8a4a6da0c635b083201d42305287d6e892f728f9c2dbd212a7221",
+      "size_bytes": 29794,
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "priority": "P0",
+      "version": 1,
+      "source": "Founder message Codex App session01a16100-836b-7c31-845b-9cb04879cffb",
+      "predecessor": "codex-master-command-2026-10-23",
+      "coverage": "CAPTURED; original stored and exact retrieval verified; implementation ongoing",
+      "title": "master-reconciliation-2026-10-23",
+      "require_app_import": true
+    },
+    {
+      "id": "product-excellence-delivery-2026-10-24",
+      "artifact_id": "art_20261023T230859_221775a8e380",
+      "sha256": "a3f1feb16844cfdd2e035cf7ce4c42046d440dea403bed852c4748fdaffaf848",
+      "size_bytes": 33229,
+      "title": "Product Excellence · qualità e completamento24ott",
+      "source": "Founder attachment3f931ce5/pasted-text-1.txt",
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "priority": "P0",
+      "version": 1,
+      "predecessor": "master-reconciliation-2026-10-23",
+      "coverage": "CAPTURED; originale in memoria, riconciliazione e attuazione in corso",
+      "require_app_import": true
+    },
+    {
+      "id": "commerce-engine-2026-10-24",
+      "artifact_id": "art_20261023T230859_6d78167f95d3",
+      "sha256": "f4b91dd2e7d204478e6e093c8f46e48750e63211b7522afa6ce3dea81cf416d1",
+      "size_bytes": 34560,
+      "title": "Commerce Engine · prodotti, vendita sandbox e fulfillment",
+      "source": "Founder attachment3f931ce5/pasted-text-2.txt",
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "priority": "P0",
+      "version": 1,
+      "predecessor": "product-excellence-delivery-2026-10-24",
+      "coverage": "CAPTURED; percorso sandbox da costruire, pagamenti live non autorizzati",
+      "require_app_import": true
+    }
+  ],
+  "coverage": {
+    "matrix": "docs/operativo/requirement-coverage.json",
+    "evidence": "docs/operativo/requirement-evidence.json",
+    "findings": "docs/operativo/mandate-reconciliation-findings.json",
+    "generator": "scripts/reconcile-requirements.mjs",
+    "rule": "Source capture is not semantic review; implementation and operational status remain separate. No automatic VERIFIED from file or matching title."
   }
 }

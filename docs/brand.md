@@ -43,3 +43,13 @@ Il sito Astro in `src/` usava un altro registro («Calibro») e `MOSTRA_PREZZI=f
 La motion vincolante è `docs/moduli/regia-motion.md`, che rimanda al testo del coordinatore `esiti/omni101-codex-ripresa/REGIA-MOTION.md`. Un effetto firma per pagina. Il workspace non usa quella grammatica.
 
 I segmenti di pubblico stanno in `esiti/omni101-codex-ripresa/PUBBLICO.md` (SPEC-22, 2026-10-22): proposta, nessuna pagina aggiunta al sito. I testi nel codice stanno in `apps/web/app/components/public/shell/site-data.ts` e in `apps/web/app/content/capabilities.ts` (75 schede: 16 BUILD, 16 AUTOMATE, 16 CREATE, 12 GROW, 15 EMERGING; disponibilità 53 DISPONIBILE, 7 SU_MISURA, 15 SPERIMENTALE).
+
+## Primitive e stati
+
+Workspace (`ProductUI` in `apps/web/app/components/workspace/ProductUI.tsx`):
+
+- **Feedback** — stati: `loading`, `empty`, `error`, `success`, `pending`, `unauthorized`, `read-only`, `offline`. `error`/`unauthorized` → `role="alert"`; gli altri → `role="status"`. Retry opzionale con `onRetry`.
+- **ActionButton** — `busy`/`pending` disabilitano e impostano `aria-busy`; azioni distruttive con `confirm` (due passi inline, niente `window.confirm`).
+- **useUnsavedChanges(dirty)** — `beforeunload` + blocco navigazione React Router con dialog accessibile in italiano.
+
+**Overlay vs pagina dedicata:** overlay per interruzioni su flusso già aperto (conferma distruttiva, leave-guard). Pagina o pannello dedicato quando lo stato è il contenuto principale (empty, unauthorized, offline a pieno spazio di lavoro). Non usare overlay per empty di lista.

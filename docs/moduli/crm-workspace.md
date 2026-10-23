@@ -75,3 +75,46 @@ Export CSV: celle testuali che iniziano con formule (`=`, `+`, `-`, `@`, anche d
 23 ottobre: preparazione eseguita anche sul D1 staging dopo migrazioni, conteggi 15 task/3 milestone/3 workflow DRAFT. Tre task chiusi con prove e audit di verifica, nessuna sovrascrittura di dati cliente. Collaboratore Owner attivo con passkey solo in produzione, verificato via metadati: nessun nuovo invito duplicato. Ambiente staging distinto.
 
 23 ottobre: il trace del test due Owner rilevava il secondo invito fermo con pulsante normale, nessun errore e nessuna verifica in corso: clic possibile sull'HTML SSR prima del collegamento degli eventi. AuthGate ora parte disabilitato con «Preparazione accesso…» e abilita login/registrazione soltanto dopo mount client. Nessun bypass della passkey, nessun retry del login e nessuna modifica alle identità. Il test con due Owner indipendenti rimane obbligatorio.
+
+## Intake Express e attribuzione osservata
+
+`/start-project` ha due percorsi sullo stesso `POST /api/intake`: racconto completo (messaggio ≥ 20 caratteri) ed Express (nome, email, messaggio ≥ 5, consenso; `express:true`). Turnstile, consenso e rate limit valgono per entrambi. Express è marcato in `leads.classification.intake` e nell'audit `INTAKE_RECEIVED`. Al submit il client manda `attribution` (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, dominio del referrer esterno); il server tiene solo valori ≤ 200 caratteri con caratteri sicuri (altri scartati, il lead passa) e li salva in `leads.attribution` (JSON compatto, migrazione `0014_lead_attribution.sql`, additiva). È attribuzione osservata: dice da dove arriva la richiesta, non cosa l'ha causata. Cattura solo sulla pagina del form: UTM persi se l'utente naviga prima. Test: `tests/lead-attribution.test.ts`, `tests/e2e/intake-express.spec.ts`.
+
+## Ruoli e template — 2026-10-24
+
+`ROLE_TEMPLATES` e `templateScope` in `apps/web/app/server/auth.ts` (REC-018): 18 template (Owner, Admin, Sales, Marketing, PM, Developer, Creative, Finance, Support, Client Owner/Admin/Member, Reviewer, Partner/Reseller, Contractor, Service Account, AI Agent, Workflow Identity) sopra i nove ruoli base. Restringono, non aggiungono; matrice completa in `docs/sicurezza.md`. Nessuna migrazione, `invite` e `api.ts` invariati: il workspace continua a ragionare sul ruolo base. Test `tests/role-templates.test.ts`: AI Agent e Workflow Identity sono strettamente dentro lo scope dell'Owner che li avvia; i template cliente non vedono risorse interne né spese e abbonamenti. Trappola: `CAPABILITIES` copia i `requireRole` esistenti; se ne cambi uno, cambia anche la tabella (il test ne controlla due).
+
+## Command palette
+
+Ctrl+K o ⌘K, o il pulsante «Cerca ovunque» (`Ricerca globale`) nella barra. File: `apps/web/app/components/workspace/CommandPalette.tsx`. Stili in coda a `apps/web/app/styles/admin.css`. Test: `tests/e2e/command-palette.spec.ts`. Nessun endpoint nuovo.
+
+Cerca, in quest'ordine: azioni, pagine admin (nav già passata da `admin.tsx`), poi i record. Pagine e azioni restano tutte. I record sono al massimo 40: il resto si raggiunge stringendo la parola.
+
+| Sezione | Lettura | Apertura |
+| --- | --- | --- |
+| Pagine | nav del workspace | path della voce, es. `/admin/leads` |
+| Lead | `GET /api/records/leads` | `/admin/leads?record=<id>` |
+| Progetti | `GET /api/records/projects` | `/admin/projects?record=<id>` |
+| Clienti | `GET /api/records/clients` | `/admin/clients?record=<id>` |
+| Workflow | `GET /api/workflows` | `/admin/automations?record=<id>` |
+| Agenti | `GET /api/agents` (`agents` o `records`) | `/admin/agents?record=<id>` |
+
+Azioni vere, solo navigazione: «Nuovo lead» → Richieste, «Nuovo progetto» → Progetti, «Nuovo cliente» → Clienti, «Nuovo workflow» → Automazioni. La scheda si crea col pulsante Nuovo già sulla pagina (il workflow si salva nel builder). «Nuovo agente» e «Tool MCP» stanno in lista con la scritta «non disponibile»: nella shell non c'è creazione agente né un endpoint MCP. Non partono.
+
+Permessi: li applica l'endpoint. 401 o 403 → quella sezione dice «non autorizzato». Altro fallo (rete o status diverso) → «errore» e «Riprova», senza mescolarlo al divieto.
+
+Stati: «Ricerca in corso…»; «Nessun risultato per …» solo a caricamento finito e lista vuota; errore con Riprova. Tastiera: frecce, Invio, Esc (chiude e rimette il focus dov'era). `<dialog>.showModal()` fa il focus trap. Ruoli: `dialog` + `aria-modal`, combobox sull'input, listbox/option sulle righe. Il bottone della riga ha `tabIndex={-1}` così Tab non entra nei risultati; il clic resta un bottone, come in `tests/e2e/workspace.spec.ts`.
+
+Trappola: `automations` in `load()` di `admin.tsx` azzera `records`. `?record=` su un workflow arriva all'URL ma questa shell non apre il grafo. Lead, progetti, clienti e agenti sì: l'effetto `record` in `admin.tsx` apre il dialog della scheda.
+
+## Centro operativo — UX 24/10
+
+`OperationsOverview.tsx`, stili in coda a `admin.css` (solo `.os-operations`). Nessun endpoint nuovo. Nessun numero previsto: conteggi e importi restano quelli di `GET /api/operations`.
+
+Chi entra vede prima «Da affrontare adesso»: una frase con la prossima azione (prima attività, altrimenti prima approvazione, esecuzione da verificare, notifica, oppure il backlog). Poi la lista. Code, numeri e progetti stanno sotto.
+
+Pulsanti con verbo e oggetto. «Prepara backlog operativo» è invariato (test `workspace.spec.ts`). «Ricarica il centro» ricarica `/api/operations`. Le righe: «Apri attività», «Apri approvazione», «Apri elenco esecuzioni» (l'elenco è `/admin/agent-runs`, non la scheda del run), «Apri pianificazione», «Segna come letta» con il nome. Il backlog resta 15 attività, 3 traguardi, 3 workflow in bozza, nessun agente avviato.
+
+Stati pagina con `Feedback` (`ProductUI`): `loading` al primo carico, `pending` se un aggiornamento arriva con dati già visibili, `empty` se non arriva un payload, `error` con «Riprova» sull'ultima azione fallita (carica, prepara, segna letta). Liste vuote: `empty`. Vista finance senza permesso: `unauthorized`. I conteggi in lista dicono il tetto già noto (20 approvazioni, 30 notifiche), non uno storico.
+
+Sotto i 480px la pagina è a colonna, la tabella va a capo, pulsanti e link del centro sono alti almeno 44px. `overflow-x: clip` sulla section, così a 375px non si allarga la pagina.

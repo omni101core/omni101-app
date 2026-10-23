@@ -6,10 +6,10 @@ type Message={role:'user'|'assistant';content:string;output?:AssistantOutput};
 type Conversation={id:string;title:string;updated_at:number};
 export function OmniAssist({mode='public'}:{mode?:'public'|'internal'}){
  const [open,setOpen]=useState(false),[draft,setDraft]=useState(''),[messages,setMessages]=useState<Message[]>([]),[conversation,setConversation]=useState<string>(),[history,setHistory]=useState<Conversation[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(''),[confirmation,setConfirmation]=useState<{name:string;description:string}|null>(null),[taskDone,setTaskDone]=useState(''),[forget,setForget]=useState(false);
- const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null),input=useRef<HTMLTextAreaElement>(null),end=useRef<HTMLDivElement>(null),location=useLocation();
+ const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null),input=useRef<HTMLTextAreaElement>(null),end=useRef<HTMLDivElement>(null),location=useLocation(),wasOpen=useRef(false);
  async function api(path:string,options?:RequestInit){const response=await fetch(path,{...options,headers:{'Content-Type':'application/json',...options?.headers}});const value=await response.json() as Record<string,unknown>;if(!response.ok)throw new Error(String(value.error||'Operazione non riuscita.'));return value;}
  async function listHistory(){try{const result=await api('/api/assistant/conversations?mode='+mode);setHistory(result.conversations as Conversation[]);}catch(e){setError(e instanceof Error?e.message:'Storico non disponibile.');}}
- useEffect(()=>{if(open){dialog.current?.showModal();void listHistory();input.current?.focus();}else{dialog.current?.close();trigger.current?.focus();}},[open,mode]);
+ useEffect(()=>{if(open){dialog.current?.showModal();void listHistory();wasOpen.current=true;input.current?.focus();}else{dialog.current?.close();if(wasOpen.current){trigger.current?.focus();wasOpen.current=false;}}},[open,mode]);
  useEffect(()=>{setConversation(undefined);setMessages([]);setHistory([]);setError('');setConfirmation(null);setTaskDone('');setDraft('');},[mode]);
  useEffect(()=>{const clear=()=>{setConversation(undefined);setMessages([]);setHistory([]);setOpen(false);};window.addEventListener('omni:session-changed',clear);return()=>window.removeEventListener('omni:session-changed',clear);},[]);
  useEffect(()=>{end.current?.scrollIntoView({block:'nearest',behavior:'instant'});},[messages,busy]);

@@ -28,3 +28,49 @@ export function assertSameOrigin(request:Request){const origin=request.headers.g
 export async function digest(value:string){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');}
 
 export function decodePathId(value:string){try{return decodeURIComponent(value)}catch{throw new HttpError(400,'Identificativo non valido.')}}
+
+// Template di ruolo (REC-018): restringono un ruolo base esistente, non aggiungono permessi.
+// Le capacità rispecchiano i requireRole già presenti in api.ts, pricing.ts, workflow-runtime.ts, operating-backlog.ts.
+export const INTERNAL_ROLES:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','DEVELOPER','DESIGNER','SALES','FINANCE'];
+export const CAPABILITIES={invite:['OWNER'],revoke:['OWNER'],budget:['OWNER'],backlog:['OWNER'],'agent-run':['OWNER','ADMIN','PROJECT_MANAGER'],'agent-approve':['OWNER','ADMIN'],workflow:['OWNER','ADMIN','PROJECT_MANAGER'],'finance-approve':['OWNER','FINANCE'],pricing:['OWNER','ADMIN'],money:['OWNER','ADMIN','FINANCE']} as const satisfies Record<string,readonly Role[]>;
+export type Capability=keyof typeof CAPABILITIES;
+export type ScopeResource={write:Role[];read?:Role[];client?:boolean};
+export type RoleTemplate={label:string;base:Role;read:string[]|'*';write:string[]|'*';caps:Capability[]};
+const allCaps=Object.keys(CAPABILITIES) as Capability[];
+const clientDocs=['projects','issues'];
+export const ROLE_TEMPLATES={
+ owner:{label:'Owner',base:'OWNER',read:'*',write:'*',caps:allCaps},
+ admin:{label:'Admin',base:'ADMIN',read:'*',write:'*',caps:allCaps},
+ sales:{label:'Sales',base:'SALES',read:['contacts','companies','leads','deals','proposals','campaigns','growth-plans','clients','calendar','inbox'],write:['contacts','companies','leads','deals','proposals','campaigns','growth-plans'],caps:[]},
+ marketing:{label:'Marketing',base:'SALES',read:['campaigns','growth-plans','contacts','companies','calendar'],write:['campaigns','growth-plans'],caps:[]},
+ pm:{label:'PM',base:'PROJECT_MANAGER',read:'*',write:'*',caps:['agent-run','workflow']},
+ developer:{label:'Developer',base:'DEVELOPER',read:['projects','milestones','tasks','issues','deliverables','calendar'],write:['tasks','issues'],caps:[]},
+ creative:{label:'Creative',base:'DESIGNER',read:['projects','tasks','issues','creative-jobs','content','media','deliverables'],write:['tasks','issues','creative-jobs'],caps:[]},
+ finance:{label:'Finance',base:'FINANCE',read:['clients','projects','proposals','contracts','invoices','expenses','subscriptions'],write:['contracts','invoices','expenses','subscriptions'],caps:['finance-approve','money']},
+ support:{label:'Support',base:'DEVELOPER',read:['issues','clients','projects','contacts','companies','inbox','deliverables'],write:['issues'],caps:[]},
+ clientOwner:{label:'Client Owner',base:'CLIENT',read:[...clientDocs,'proposals','contracts','invoices'],write:[],caps:[]},
+ clientAdmin:{label:'Client Admin',base:'CLIENT',read:[...clientDocs,'proposals'],write:[],caps:[]},
+ clientMember:{label:'Client Member',base:'CLIENT',read:clientDocs,write:[],caps:[]},
+ reviewer:{label:'Reviewer',base:'CLIENT',read:['projects','proposals'],write:[],caps:[]},
+ partner:{label:'Partner/Reseller',base:'CLIENT',read:clientDocs,write:[],caps:[]},
+ contractor:{label:'Contractor',base:'DEVELOPER',read:['projects','tasks','issues'],write:['tasks'],caps:[]},
+ serviceAccount:{label:'Service Account',base:'AGENT_SERVICE_ACCOUNT',read:[],write:[],caps:[]},
+ aiAgent:{label:'AI Agent',base:'AGENT_SERVICE_ACCOUNT',read:['projects','milestones','tasks','issues','contacts','companies','leads','deals','content'],write:[],caps:[]},
+ workflowIdentity:{label:'Workflow Identity',base:'AGENT_SERVICE_ACCOUNT',read:['projects','tasks','leads'],write:['tasks'],caps:[]},
+} satisfies Record<string,RoleTemplate>;
+export type TemplateName=keyof typeof ROLE_TEMPLATES;
+const pick=(list:readonly string[]|'*',key:string)=>list==='*'||list.includes(key);
+// Scope effettivo = ruolo base ∩ elenco del template. AI Agent e Workflow Identity (base AGENT_SERVICE_ACCOUNT) ereditano solo da chi li avvia: senza avviante, scope vuoto, mai capacità.
+export function templateScope(t:RoleTemplate,resources:Record<string,ScopeResource>,starter?:RoleTemplate):string[]{
+ const delegated=t.base==='AGENT_SERVICE_ACCOUNT';
+ const parent=delegated?(starter&&starter.base!=='AGENT_SERVICE_ACCOUNT'?templateScope(starter,resources):[]):null;
+ const out:string[]=[];
+ for(const [key,r] of Object.entries(resources)){
+  const read=parent?parent.includes('read:'+key):t.base==='CLIENT'?!!r.client:(r.read||INTERNAL_ROLES).includes(t.base);
+  const write=parent?parent.includes('write:'+key):r.write.includes(t.base);
+  if(read&&pick(t.read,key))out.push('read:'+key);
+  if(write&&pick(t.write,key))out.push('write:'+key);
+ }
+ if(!delegated)for(const c of t.caps)if((CAPABILITIES[c] as readonly Role[]).includes(t.base))out.push('cap:'+c);
+ return out;
+}

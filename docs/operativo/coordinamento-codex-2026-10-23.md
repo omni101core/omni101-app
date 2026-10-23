@@ -2,17 +2,14 @@
 
 ## Ripresa corrente (prevale sullo storico sotto)
 
-- NUOVO LIVE VERIFICATO: c7e70e62eb050d6dc02da4c69cfdd1beceb91b1f, run40005444493 SUCCESS.154server,110browser/14skip; staging canary e produzione verdi. Health entrambi stesso SHA/database true/storage false. Workerproduzione bb4338d6-d189-4c1d-b437-bf6ccb968a09. Import11fonti48task6reference completato. Email/motion/campagna ora online.
-- Prossimo pacchetto: Grok ownership WorkflowBuilder.tsx e tests/e2e/workflow-builder.spec.ts; atteso esito /tmp/omni101-deleghe/grok-workflow-builder-fix.md, punti1–3 audit docs/operativo/workflow-dashboard-audit-2026-10-23.md. Nessun publish di sorgente parziale. Punti4–5 ancora aperti.
-
-- Precedente stabile:3adf682/run39994191429, mantenuto per storico/rollback.
-- Diagnostica baseline 0aad6de/run40003777704: 11/12 pass. MQL Reel mantiene listener (zero remove) ma non riceve change; cinema lo riceve. Nessun errore React. Ipotesi verificata con A/B: lettura mq.matches nel RAF interferisce con notifica; preferenza ora memorizzata dagli eventi, nessuna lettura nel loop.
-- A/B isolato 6a2925923fb6ed05a0d0a78530764f3d4a6d442b, run40004459176: 40/40 browser pass. Correzione minima integrata nel Reel principale. Nessuna sonda diagnostica isolata copiata nel prodotto.
-- Verifica mirata principale VERDE: f7f299e85eb168edb1c5bb5bc09743df7e86ac72, run40004937242. 154server,15browser pass/3skip (solo email mobile esclusa per progetto). Tre regressioni ripetute: reduced-motion dinamico, cinematic teardown/reentry, email create/reload/conflitto. Include label textarea htmlFor/useId e test approvazione concorrente (154server già passati nella run4f).
-- Workflow filtro browser consentito SOLO verify-commercial. Release/rebuild sempre suite completa. Mirata verde; prossimo release con suite completa, poi staging/smoke/produzione e health SHA esatto. Mai dichiarare verify-only come online.
-- Grok ha restituito ownership motion/email; audit dashboard consegnato, ora solo fix builder1–3. Niente altri worker o push. Opus reviewer fermo, vecchio monitor bv10c9qc0 terminato: nessun coordinatore concorrente. Codex unico publisher.
-- Email0013: bozze persistenti, CAS, preview sandbox/export e revisione; nessun invio/provider. Campagna preparata, backlog48, import atteso11fonti48task6reference. Pubblicato e verificato nella release c7e70e6.
-- Gratuiti: NVIDIA nemotron-3.5-bolt-e4b ha prodotto3oggetti/3CTA revisionati; GLM NIM timeout90s; OpenCode/Kilo bloccati, errori o segnalazioni scartate. Nessuna loro patch non verificata integrata. Dati classeA mai delegati ai gratuiti.
+- LIVE verificato:5808a6ef1f9eafe8deabadbde63b81317ed5aeeb, run40007650626 SUCCESS. Health stesso SHA/database true/storage false. Worker produzione6ec03776-8508-424b-88ed-69fdb09f3330. Typecheck,154server,114browser/18skip, staging canary AI→approvazioni→pipeline e production cutover passati. Nessun servizio a pagamento attivato.
+- Include email0013 (persistenza/CAS/preview isolata/export/revisione, nessun invio), motion dinamica/offscreen e scene GPU teardown/reentry; builder workflow corretto: Nuovo azzera identità, conferma dirty, Valida/Avvia su versione salvata,409 conserva locale/caricamento remoto esplicito, controlli bloccati durante richieste.
+- Import11fonti48task6reference completato. Backlog connected-runtime/public-experience riallineato al codice, senza ricostruire moduli esistenti. Campagna bozza importata, nessun outreach o ads.
+- Grok consegna completata e ownership restituita. Esiti /tmp/omni101-deleghe/grok-email-drafts-esito.md, grok-dashboard-next-audit.md, grok-workflow-builder-fix.md. Opus revisore indipendente, vecchio monitor concorrente terminato. Codex unico coordinatore/publisher. Nessun task sorgente in corso o nuovo worker da riattivare autonomamente.
+- Gratuiti: NVIDIA nemotron-3.5-bolt-e4b ha prodotto3oggetti/3CTA revisionati. OpenCode/Kilo hanno incontrato limiti/errori o falsi allarmi; nessuna patch non verificata integrata. GLM NIM diagnosi timeout90s. ClasseA mai ai gratuiti.
+- Prove: A/B motion6a29259/run40004459176 40/40pass; regressioni email/motion f7f299e/run40004937242 154server15browser3skip; builder348ff1c/run40007301264 154server12browser12skip. Prima releasec7e70e6/run40005444493 completamente verde, seconda5808a6e confermata sopra. I mobile sono viewport emulati, nessuna prova su dispositivo fisico.
+- Residui concreti: audit mission punti4–5 (Riprendi proposto prima della decisione e artefatti senza deep link record); OMNIASSIST fisso copre parte delle tab cinema mobile. Riferimento docs/operativo/workflow-dashboard-audit-2026-10-23.md e screenshot /tmp/omni101-evidence-f7f299e/cinematic-reentry-mobile.png. Non dichiarare completato l'intero mandato48gruppi.
+- Prossimo: affrontare residui mission con RBAC/tenant e test mirati, rifinire ingombro assistente mobile, continuare backlog senza invii/spese/provider impliciti. Nessuna modifica ceo-os o vault.
 
 ## Storico operativo del passaggio
 

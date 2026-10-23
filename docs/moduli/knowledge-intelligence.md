@@ -1,5 +1,20 @@
 # Knowledge & Intelligence
 
+## Riconciliazione requisiti — 24 ottobre 2026
+
+La copertura persistente è `docs/operativo/requirement-coverage.json`, generata con `node scripts/reconcile-requirements.mjs`; `--check` ricalcola e rifiuta output obsoleto/modificato, originali con hash diverso, riferimenti fuori dal repository, file di prova assenti, dipendenze sconosciute e `VERIFIED` senza criteri, implementazione, test, release e motivazione. Nessun accesso di rete o modifica D1 nel generatore. Test regressione in `tests/requirement-coverage.test.ts`, da eseguire in CI; il solo check Node locale non sostituisce quei test.
+
+Input canonici: `docs/mandati/sources.json` (originali pubblici), `agent-context.json.private_sources` (solo puntatori/hash privati), `mandate-backlog.json` (macrogruppi), `requirement-evidence.json` (prove revisionate delle slice) e `mandate-reconciliation-findings.json` (clausole/gap estratti). Il formato reale Opus `findings[]` usa `startLine/endLine`, criterio scalare, `gap/severity/dependencies`: viene normalizzato in requisiti consultabili. Anche i precedenti formati `requirements[]` e `semanticRequirements[]` sono riconosciuti. Formati sconosciuti sono errori, non zero requisiti silenziosi. Gli hash di `reviewedSources` devono coincidere con gli originali; `complete:true` attesta soltanto la lettura dichiarata, mai completezza semantica o funzionale.
+
+La prima rigenerazione del 24/10 contiene 11 fonti pubbliche, 4 private, 8.392 blocchi originali, 51 clausole estratte e 60 macrogruppi. Restano 8.392 blocchi da revisione semantica: collegare una clausola non approva automaticamente i blocchi circostanti. Le prove dei macrogruppi non vengono ereditate dalle clausole; un test su una slice non dimostra tutto il gruppo. I 12 gruppi aggiunti senza prova specifica sono elencati in `summary.missingEvidenceGroups`, non promossi dallo stato del backlog. Conteggi aggiornati sempre nel JSON, non derivati dallo storico sotto.
+
+Per restare sotto il limite publisher di 1 MB, i candidati conservano ID stabile basato su fonte+contenuto+occorrenza, alias fonte e intervallo righe; ereditano `candidateDefaults` (CAPTURED, UNKNOWN, reviewNeeded). I corpi originali non sono duplicati. `sources[].originalId` risolve gli alias pubblici. Le fonti private conservano esclusivamente artifact/hash: non vengono lette né copiate nel repository. Clausole e macrogruppi hanno campi espliciti. Gap: prima vincoli obbligatori CRITICAL/P0, poi gravità dichiarata; solo dimensioni numeriche revisionate producono `confidence*(value+dependency)`. Nessun punteggio inferito automaticamente.
+
+La vista prodotto è in Knowledge (`RequirementCoverage`), tramite GET autenticato `/api/requirement-coverage`: soli ruoli interni, organizzazione autorizzata, pagine da 25 e filtri kind/source/q. L'API espande i default e normalizza alias/path; nessuna autorevisione o avvio agente. Controlli endpoint e browser sono del coordinatore, separati dai test del generatore. Finché la relativa release non è verificata, codice locale e matrice non equivalgono a pubblicazione.
+
+Le sezioni successive preservano lo storico delle vertical slice.
+
+
 23 ottobre 2026. Prima vertical slice online su omni101.app, revisione 3fa90a5, run 39889662855 interamente verde. Le sezioni seguenti preservano anche le tappe di costruzione; l’esito finale è in fondo.
 
 ## Confine e stato reale
