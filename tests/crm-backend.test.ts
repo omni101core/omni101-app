@@ -17,7 +17,7 @@ describe('crm backend contract',()=>{
   const post=(data:object)=>handleApi(req('/api/records/contacts',cookie,'POST',data),env);
   const first=await post({name:'Mario Rossi',email:'Mario@Example.TEST',phone:'333 123 4567'});expect(first?.status).toBe(201);const firstId=(await json(first)).record.id;
   const byEmail=await post({name:'Altro Mario',email:'mario@example.test'});expect(byEmail?.status).toBe(409);expect(await json(byEmail)).toEqual({error:'Possibile duplicato',duplicateId:firstId,resource:'contacts',overridable:false});
-  const byPhone=await post({name:'Altro',email:'altro@example.test',phone:'333-123-4567'});expect(byPhone?.status).toBe(409);expect((await json(byPhone)).duplicateId).toBe(firstId);expect((await json(byPhone)).overridable).toBe(true);
+  const byPhone=await post({name:'Altro',email:'altro@example.test',phone:'333-123-4567'});expect(byPhone?.status).toBe(409);const phoneBody=await json(byPhone);expect(phoneBody.duplicateId).toBe(firstId);expect(phoneBody.overridable).toBe(true);
   expect((await post({name:'Corto uno',email:'c1@example.test',phone:'123'}))?.status).toBe(201);expect((await post({name:'Corto due',email:'c2@example.test',phone:'123'}))?.status).toBe(201);
   expect(sqlite.prepare('SELECT count(*) n FROM contacts').get()?.n).toBe(3);
  });
