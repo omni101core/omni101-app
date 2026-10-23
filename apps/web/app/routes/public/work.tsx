@@ -1,4 +1,4 @@
-import {useLayoutEffect,useRef,useState,useEffect,type MouseEvent} from 'react';
+import {useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {Link} from 'react-router';
 import {gsap} from 'gsap';
 import {PageHero} from '../../components/public/shell/PageHero';
@@ -59,11 +59,5 @@ export function WorkGallery(){
   event.preventDefault();
   setOpen({project,box:boxOf(thumb),card:event.currentTarget});
  };
- useEffect(()=>{
-  if(!open)return;
-  const card=open.card,onKey=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();setOpen(null);card.focus()}};
-  window.addEventListener('keydown',onKey);
-  return()=>window.removeEventListener('keydown',onKey);
- },[open]);
  return <section className="section"><label className="work-sector">Settore <select aria-label="Settore" value={sector} onChange={event=>setSector(event.target.value)}>{['Tutti',...new Set(projects.flatMap(p=>p.sector?[p.sector]:[]))].map(value=><option key={value}>{value}</option>)}</select></label><Filters values={['Tutti','Software','Commerce','Automazioni','Creative']} active={category} setActive={setCategory} query={query} setQuery={setQuery}/><div className="work-grid">{filtered.map((p,i)=><WorkCard key={p.slug} project={p} index={i} onOpen={select}/>)}</div>{!filtered.length&&<p className="empty-results">Nessun esempio con questi filtri. <button className="text-link" type="button" onClick={()=>{setSector('Tutti');setCategory('Tutti');setQuery('')}}>Azzera la ricerca.</button></p>}{open&&<WorkPreview project={open.project} index={projects.indexOf(open.project)} from={open.box} onClose={()=>setOpen(null)}/>}</section>;
 }

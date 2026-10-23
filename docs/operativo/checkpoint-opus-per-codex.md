@@ -12,7 +12,7 @@ Aggiornato: 2026-10-23, push release in questo commit. Coordinatore: Grok. Altra
 
 Nel push di staging dopo il live `3101815`: U4 (`admin.tsx`, regole `os-nav-*` aggiunte in coda a `admin.css` senza sostituire il file) e P2 (confronto prezzo vs listino). Il `role` del preventivo resta `session.membership.role`, non `session.role`. CSS drag (`user-select:none`, `.os-card-body`, `.os-card-open`) tenuto.
 
-Nel prossimo staging, non ancora live: UX1 portale, UX2 home, UX3 contrasto, UX4 `/contact` → `/start-project`, UX5 kicker italiani. UX6 non si copia: si sovrappone a U4 su `admin.tsx`/`admin.css`.
+Staging `03acdc7` run `39991329575` rosso: porte home senza `/solutions` (test aggiornato) e click «Apri il caso» bloccato da un listener Escape duplicato (rimosso). Nuovo SHA nello output di cloud-verify. UX6 non copiato.
 - W-email: esito presente, non in `docs/operativo/`.
 
 ## Ownership
