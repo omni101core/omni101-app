@@ -4,10 +4,11 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 ## Revisioni e ambienti
 
-- **Produzione**: `dbfb3be57967a2e280dee0a5d0f1549a34f4a442`, run **39887173011** verde (verify + production). Health del dominio conferma revisione, database true, storage false. Nessun account/invito ricreato.
-- **Base verificata del rilascio**: tree `441fc300644e03083cdc49395ff657f76c73f6d3`, run 39886325515 interamente verde, 93 test server + 102 browser, 10 skip.
-- **Nuova verifica intermedia**: run 39888873562, SHA a2cf057d76b0b6742da0c29ce2e19052467d9735. Run interamente verde, incluso import dei tre mandati nuovi e copilot. Catalogo esteso a sei originali e recupero v1 successivi, verificati di nuovo dalla pipeline release prima della produzione.
-- **Locale**: porta 4176, artefatto 25ecd29929eb34d49b1e851b867b5bae20244010; D1 persistente separato. Da aggiornare soltanto con un artefatto verificato, senza install/build sul Mac.
+- **Produzione e staging**: `3fa90a5d323cd8273da6e1553b3816f97a35552d`, run **39889662855** interamente verde (verify + production). Health del dominio conferma revisione, database true, storage false.
+- **Prove**: 102 test server e 103 browser superati, 11 skip espliciti; canary cloud completo, hash dei sei originali v1, collegamenti requisiti/task, clienti esclusi dalla memoria, marketing disattivato. Screenshot privati staging con account sintetici poi revocati; nessun account QA in produzione.
+- **Importazione produzione**: job CI conferma 6 mandati originali + 12 requisiti con task + 3 reference, insert-or-ignore, zero esecuzioni. Gli elementi implementati restano IN REVIEW/IMPLEMENTED fino a revisione umana, quelli futuri TODO/PLANNED.
+- **Locale**: porta 4176, medesimo build verificato 3fa90a5; server in `/tmp/omni101-preview-3fa90a5`, processo Wrangler 22813, D1 persistente separato. Migrazioni 0008/0009 applicate, 21 elementi di memoria e 12 nuovi task, zero utenti creati. Hash locali dei sei originali v1 verificati.
+- **Rilascio precedente recuperabile**: dbfb3be57967a2e280dee0a5d0f1549a34f4a442, run 39887173011. Migrazioni aggiuntive compatibili; non cancellare tabelle o dati per fare rollback del Worker.
 
 ## Matrice unica
 
@@ -22,11 +23,11 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 | Workflow e agenti | Grafo/versioni, runtime durevole, approvazione e cancellazione | Loop/subflow/pausa manuale e tutti i provider non disponibili; nessun agente parte dal backlog |
 | Finanza | Registri e aggregati solo ruoli autorizzati | Incassi meno spese registrate non sono utile fiscale; niente fatturazione fiscale automatica |
 | Growth e creatività | Registri campagne, piani, brief, storyboard, varianti e abbonamenti | Nessun account Ads/email/social collegato; niente invii, pubblicazioni o addebiti |
-| SEO / SEM / GEO | Robot/sitemap di base nella revisione di produzione sopra | Nuovi meta/canonical/JSON-LD/sitemap completa/noindex staging e UTM builder in verifica; niente ranking/citazioni garantiti |
-| Privacy tecnica | Passkey, RBAC, audit e protezioni server | 0008: blocchi marketing, evidenze idempotenti e registro diritti Owner/Admin in verifica. Titolare/DPA/retention/procedure non verificati; nessuna certificazione GDPR |
-| Knowledge & Intelligence | Non ancora presente nella revisione di produzione sopra | 0009: cattura, ricerca filtrata, versioni attribuite, conflitti, fonte/task, restore e export in verifica. Solo TEAM_INTERNAL; niente documenti privati clienti |
-| Persistenza dei mandati | Documentazione nel repo | Sei originali preservati con hash; import CI preparato per 6 mandati + 12 requisiti/task + 3 reference. Applicazione D1 da confermare |
-| Copilot e memoria | Assistente NVIDIA esistente con limiti e zero pricing autorizzato | Lettura interna di 12 estratti attribuiti preparata, mai nella chat pubblica. Nessun embedding o nuova piattaforma |
+| SEO / SEM / GEO | Meta/canonical, JSON-LD, sitemap completa e robots verificati | Meta/canonical/JSON-LD/sitemap completa/noindex staging e UTM builder pubblicati e verificati; niente ranking/citazioni garantiti |
+| Privacy tecnica | Passkey, RBAC, audit e protezioni server | 0008 applicata: blocchi marketing, evidenze idempotenti e registro diritti Owner/Admin verificati. Titolare/DPA/retention/procedure non verificati; nessuna certificazione GDPR |
+| Knowledge & Intelligence | Prima vertical slice online e verificata | 0009 applicata: cattura, ricerca filtrata, versioni attribuite, conflitti, fonte/task, recupero v1, restore e export verificati. Solo TEAM_INTERNAL; niente documenti privati clienti |
+| Persistenza dei mandati | Documentazione nel repo | Sei originali preservati con hash; import CI preparato per 6 mandati + 12 requisiti/task + 3 reference. Importazione CI riuscita in entrambi gli ambienti |
+| Copilot e memoria | Assistente NVIDIA esistente con limiti e zero pricing autorizzato | Lettura interna di 12 estratti attribuiti pubblicata e testata, mai nella chat pubblica. Nessun embedding o nuova piattaforma |
 | Brand Studio, intake adattivo, team UX | Funzioni di base esistenti | Draft/preview/version/publish brand, autosave/resume intake, ricerca/stati inviti ancora da completare |
 | Social, Ads, calendario e asset | Registri parziali | Pipeline complete, scheduler, adapter autorizzati, metriche da fonti vere e storage restano backlog |
 | Coding condiviso | Repo/CI/release e preview reali | Branch protetti, review obbligatorie, adapter multiprovider e contesti agent-ready completi da verificare/implementare |
@@ -35,6 +36,6 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 ## Prossimo passaggio verificabile
 
-Finire la CI dell’intera nuova vertical slice, controllare UI autenticata e canary live, poi pubblicare solo la revisione verde. Confermare conteggi dell’import in staging e produzione; aggiornare qui SHA/run e stato effettivo. Non dichiarare completato l’intero mandato.
+Rivedere i 12 requisiti con i soci e scomporre il resto dei mandati in criteri verificabili, mantenendo fonti e storia. Completare ACL per progetto e importazione guidata prima di acquisire materiali privati dei clienti; poi calendario/social/brand/collaborazione coding secondo il backlog. La memoria iniziale è operativa, il mandato complessivo non è completato. Identità legale, DPA, retention e fornitori restano da verificare, nessuna certificazione GDPR dichiarata.
 
-Fonti: `docs/mandati/sources.json`, `docs/operativo/mandate-backlog.json`. File e contratti nei moduli; handoff dettagliato in `docs/operativo/ripresa.md`. `src/` e `worker/` restano il sito Astro precedente e non fanno parte del deploy. ceo-os non si tocca.
+Fonti: `docs/mandati/sources.json`, `docs/operativo/mandate-backlog.json`. File e contratti nei moduli; handoff dettagliato in `docs/operativo/ripresa.md`. `src/` e `worker/` restano il sito Astro precedente e non fanno parte del deploy. ceo-os non è stato toccato.
