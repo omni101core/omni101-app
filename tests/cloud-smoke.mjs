@@ -70,7 +70,7 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
  const {readFileSync}=await import('node:fs');const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8'));
  const memory=await owner('GET','/api/knowledge?kind=MANDATE');assert.equal(memory.status,200);
  for(const source of sources){const record=memory.body.records.find(r=>r.id===source.record_id);assert(record,'Imported founder source missing');const detail=await owner('GET','/api/knowledge/'+record.id+'?version=1');assert.equal(detail.status,200);assert.equal(createHash('sha256').update(JSON.parse(detail.body.revisions[0].snapshot).body).digest('hex'),source.sha256,'Original mandate must survive import byte-for-byte');assert(detail.body.revisions.length>=1,'Original revision required');}
- const requirements=await owner('GET','/api/knowledge?kind=REQUIREMENT');assert.equal(requirements.status,200);assert(requirements.body.records.filter(r=>r.source_id&&r.task_id).length>=12,'Reviewed requirements must retain source and task links');
+ const requirements=await owner('GET','/api/knowledge?kind=REQUIREMENT');assert.equal(requirements.status,200);assert(requirements.body.records.filter(r=>r.source_id&&r.task_id).length>=JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8')).length,'Reviewed requirements must retain source and task links');
  const marketing=await owner('GET','/api/growth/overview');assert.equal(marketing.status,200);assert.equal(marketing.body.sendingEnabled,false);assert.equal(marketing.body.measurementEnabled,false);assert.deepEqual(marketing.body.channelsConnected,[]);
  assert.equal((await a('GET','/api/knowledge')).status,403);assert.equal((await a('GET','/api/growth/overview')).status,403);
  const revenue=await owner('GET','/api/revenue/overview');assert.equal(revenue.status,200);assert.equal(revenue.body.sendingEnabled,false);assert.equal(revenue.body.trackingEnabled,false);assert.equal(revenue.body.channels.email,'NOT_CONNECTED');assert.equal((await a('GET','/api/revenue/overview')).status,403);
@@ -78,6 +78,22 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
  console.log('Live staging: revenue, transparent qualification and source calendar available; client blocked and channels disconnected');
  const robots=await readWithRetry(origin+'/robots.txt');assert((await robots.text()).includes('Disallow: /'));assert(robots.headers.get('x-robots-tag').includes('noindex'));
  console.log('Live staging: original mandate hashes, requirement/source/task coverage, private memory and disabled marketing verified');
+}
+// Real staging-only pricing persistence, concurrency boundary and central approval.
+const pricingQuoteId=randomUUID();
+{
+ const input={name:'SYNTHETIC staging calculated quote '+key.slice(0,8),leadId:null,clientId:clientA,currency:'EUR',scope:'A documented synthetic delivery scope used only by the staging canary.',terms:'Synthetic internal terms requiring human review.',assumptions:'No approved rates, taxes or commercial offer are implied.',lines:[{name:'Synthetic delivery work',category:'LABOR',cadence:'ONE_TIME',unit:'hours',quantityMilli:2000,unitCostCents:5000}],overheadBp:1000,contingencyBp:0,marginBp:5000,discountBp:0,taxBp:null,taxNote:''};
+ const payload={quoteId:pricingQuoteId,requestId:randomUUID(),version:0,input};
+ assert.equal((await owner('POST','/api/pricing',payload)).status,201);
+ assert.equal((await owner('POST','/api/pricing',payload)).status,200);
+ const detail=await owner('GET','/api/pricing/'+pricingQuoteId);assert.equal(detail.status,200);assert.equal(detail.body.versions[0].calculation.groups[0].netCents,22000);assert.equal(detail.body.versions[0].calculation.groups[0].taxCents,null);
+ assert.equal((await a('GET','/api/pricing/'+pricingQuoteId)).status,403);
+ const review=await owner('POST','/api/pricing/'+pricingQuoteId+'/review',{version:1});assert.equal(review.status,201);
+ assert.equal((await owner('POST','/api/pricing',{...payload,requestId:randomUUID(),version:1})).status,409);
+ assert.equal((await owner('POST','/api/approvals/'+encodeURIComponent(review.body.approval.id)+'/decision',{decision:'APPROVED',reason:'Synthetic staging review of persisted pricing snapshot.'})).status,200);
+ assert.equal((await owner('GET','/api/pricing/'+pricingQuoteId)).body.quote.status,'APPROVED');
+ const visible=(await a('GET','/api/portal')).body.proposals.find(q=>q.id===pricingQuoteId);assert(visible,'Approved pricing proposal must reach its actual client portal');assert.equal(visible.pricing_version,1);assert.equal(visible.amount_cents,22000);assert(visible.summary.includes('Una tantum'));assert(!JSON.stringify(visible).includes('unitCostCents'));assert(!(await b('GET','/api/portal')).body.proposals.some(q=>q.id===pricingQuoteId),'Other client must not see the quote');
+ console.log('Live staging: pricing snapshot, cents calculation, safe retry, locked review and central approval verified; client forbidden, no sends');
 }
 // Evidence: screenshots of /admin and /portal with the synthetic sessions, then the sessions are revoked.
 {
@@ -87,6 +103,7 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
  for(const [name,viewport] of [['desktop',{width:1440,height:900}],['mobile',{width:390,height:844}]]){
   await shot(ownerRaw,viewport,'/admin','staging-admin-'+name+'.png','Una visione chiara.');
   await shot(ownerRaw,viewport,'/admin/knowledge','staging-knowledge-'+name+'.png','Knowledge & Intelligence');
+  await shot(ownerRaw,viewport,'/admin/estimates?quote='+pricingQuoteId,'staging-pricing-'+name+'.png','Preventivatore');
   await shot(ownerRaw,viewport,'/admin/revenue','staging-revenue-'+name+'.png','Revenue & Growth');
   await shot(ownerRaw,viewport,'/admin/growth','staging-growth-'+name+'.png','Marketing, ricerca e fiducia');
   await shot(ownerRaw,viewport,'/admin/agent-runs','staging-mission-control-'+name+'.png','Mission Control');

@@ -42,3 +42,7 @@ Rivedere i 15 gruppi requisito con i soci e scomporre il resto dei mandati in cr
 
 Fonti: `docs/mandati/sources.json`, `docs/operativo/mandate-backlog.json`. File e contratti nei moduli; handoff dettagliato in `docs/operativo/ripresa.md`. `src/` e `worker/` restano il sito Astro precedente e non fanno parte del deploy. ceo-os non è stato toccato.
 
+
+## Checkpoint più recente — handoff esecutivo a Claude
+
+23 ottobre: staging eafa5aff312f04123fcfa9df9bd3a0de87df4aee verificato run39960583760 SUCCESS,107server+105browser/13skip, migrazione0011, canary pricing/approvazione/isolamento portale reali. Produzione ancora f53. Screenshot pricing desktop/mobile controllati. Ultimi delta summary/terms/portale e ultimo mandato CLI ancora da rilasciare; locale ripristinato f53. Fonti locali11/gruppi22/reference3; stageimport10/21/3. Review Claude/Grok tramite CLI Orca effettuate, OpenCode gratuito sul solo registry/startup. Fonte di ripresa più recente `docs/operativo/continuazione-claude-2026-10-23.md`; le sezioni precedenti descrivono produzione f53 e restano storico, non sovrascrivere la distinzione.

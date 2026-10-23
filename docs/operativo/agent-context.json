@@ -14,12 +14,15 @@
       "risk": "STANDARD",
       "docs": [
         "docs/moduli/analytics-seo.md",
-        "docs/moduli/revenue.md"
+        "docs/moduli/revenue.md",
+        "docs/moduli/preventivatore.md"
       ],
       "code": [
         "apps/web/app/server/revenue.ts",
         "apps/web/app/server/growth.ts",
-        "apps/web/app/components/workspace/RevenueWorkspace.tsx"
+        "apps/web/app/components/workspace/RevenueWorkspace.tsx",
+        "apps/web/app/server/pricing.ts",
+        "apps/web/app/components/workspace/PricingWorkspace.tsx"
       ],
       "tests": [
         "tests/integration.test.ts",
