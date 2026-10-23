@@ -12,7 +12,13 @@ Aggiornato: 2026-10-24. Coordinatore e publisher: Opus. Mandato in corso: "Maste
 - Disco Mac 3% libero: niente build/Playwright locali; D1 in corso.
 - `omni-delega.py staffetta` è citato nelle istruzioni ma NON esiste nello script (sottocomandi: quote, lancia, ci, integra, chiudi, consumi). Staffetta = leggere `coordinatore-staffetta.md` a mano.
 - Grok in tab Orca chiede "Do you trust the contents of this directory?" sulla copia: rispondere `y` a quel tab, altrimenti resta fermo.
-- Prossimo: CI 277b856 → se verde con F14 integrato, release; poi integrare R7/K3/K4.
+- Staging `2bc96cb` verde (run 40034044412: 183 server, 126 browser, canary approvazione). Release `9caaf82` ROSSA (run 40035238330): solo `intake-express.spec.ts:14` desktop+mobile, `aria-pressed` resta false dopo Enter; produzione saltata, live `5808a6e` sano. Evidenza `/tmp/omni101-deleghe/ci-40035238330/`. Diagnosi F15 a Sonnet su copia.
+- Integrati dopo la release: G2 command palette (+ `workspace.spec.ts:27` combobox), K5 `docs/operativo/scenari-a-g.md`, G3 UX `/work` e `public.css`. G3 `start.tsx` NON integrato: merge a 3 vie con F15, base in `/tmp/omni101-deleghe/base-start-20261024/` (`git merge-file repo base g3`).
+- K3 (`responsive-widths.spec.ts`, soglie CLS/LCP) pronto in copia, integrare solo DOPO una release verde: può rendere rosso il gate.
+- `regole.md` (Control Plane) era stub 111 B: ripristinata versione 10/10 con intestazione; versione 27bf persa (vedi lezioni).
+- Attivi: F15 Sonnet, G4 Grok UX `OperationsOverview`, D1 Hermes disco. Quote: sessione coordinatore 85%, Grok sett. 50%.
+- Ripetitivo da mettere in `omni-delega lancia`: rispondere `y` al prompt trust di Grok; spostare in `in/` i file nuovi che Kilo scrive nella cartella del task.
+- Prossimo: F15 → merge start.tsx → staging → release → health SHA; poi K3.
 
 ## Stato (23/10 22:45, storico)
 

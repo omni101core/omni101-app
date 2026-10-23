@@ -77,3 +77,19 @@
 .pui-feedback[data-busy=true] .pui-feedback-text::before{animation:none;border-color:var(--os-gold)}
 .pui-unsaved-overlay,.pui-unsaved-dialog{transition:none}
 }
+
+/* G2 command palette — append only */
+.os-command-note{margin:8px 0;font-size:12px;color:var(--os-muted)}
+.os-command-alert{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:8px 0;color:#d9b1a8;font-size:12px}
+.os-command-alert .os-button{min-height:44px;margin:0}
+.os-command-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.os-command-hit{display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%;text-align:left;padding:10px 12px;border:0;border-radius:4px;background:transparent;color:var(--os-text);font:13px/1.35 Satoshi,sans-serif;min-height:44px;cursor:pointer}
+.os-command-hit:disabled{cursor:not-allowed;opacity:.6}
+.os-command-hit span{display:grid;gap:2px;min-width:0}
+.os-command-hit em{font-style:normal;font-size:11px;color:var(--os-muted)}
+.os-command-hit small{color:var(--os-muted);font-size:10px;flex-shrink:0}
+.os-command-results [aria-selected=true] .os-command-hit{background:#d2b77b17;box-shadow:inset 3px 0 0 var(--os-gold)}
+dialog.os-command.os-dialog{position:fixed;inset:0;top:0;left:0;transform:none;margin:auto;height:fit-content;max-height:min(85vh,720px);width:min(650px,92vw)}
+dialog.os-command::backdrop{background:#000b;backdrop-filter:blur(5px)}
+@media(prefers-reduced-motion:reduce){dialog.os-command::backdrop{backdrop-filter:none}}
+

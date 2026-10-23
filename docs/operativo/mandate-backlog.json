@@ -197,7 +197,7 @@
     "name": "Eventi, approvazioni e runtime condivisi",
     "source": "connected-ecosystem-2026-10-23",
     "status": "IN_PROGRESS",
-    "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G verificati.",
+    "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G → docs/operativo/scenari-a-g.md (A IN_PROGRESS, B PLANNED, C PLANNED, D IN_PROGRESS, E PLANNED, F PLANNED, G PLANNED).",
     "remaining": "Workflow persistenti, retry, approvazioni, registry, mission control, budget e costi per run sono presenti: non ricostruirli. Audit23ott: editor Nuovo conserva id precedente; esecuzione/valida non distinguono modifiche locali da snapshot salvato; recupero409 da completare senza perdere locale. Inoltre Riprendi in attesa approvazione è proposto prima della decisione e artefatti workflow aprono la lista senza record. Bus commerciale trasversale, loop/subflow e scenari A–G completi restano da verificare. Fonte audit: docs/operativo/workflow-dashboard-audit-2026-10-23.md."
   },
   {

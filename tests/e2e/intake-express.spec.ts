@@ -6,6 +6,8 @@ async function open(page:Page){
  await page.route('**/api/intake',route=>route.abort());
  await page.goto('/start-project');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
+ // OmniAssist monta in ritardo (chunk lazy) e sposta il focus sul suo lancio: aspettarlo prima di usare la tastiera.
+ await expect(page.locator('.omni-assist-launch')).toBeVisible();
 }
 
 test.describe('intake Express',()=>{
@@ -14,6 +16,7 @@ test.describe('intake Express',()=>{
  test('si compila da tastiera a 320px e gli errori sono leggibili',async({page})=>{
   await open(page);
   await page.getByRole('button',{name:/Express/}).focus();
+  await expect(page.getByRole('button',{name:/Express/})).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('button',{name:/Express/})).toHaveAttribute('aria-pressed','true');
   await expect(page.getByLabel(/Azienda o progetto/)).toHaveCount(0);
