@@ -1,49 +1,27 @@
-# Analytics e SEO
+# SEO, SEM, GEO e fiducia
 
-## Scopo
+23 ottobre 2026. Nuovo codice locale da verificare in CI, distinto dalla revisione già verificata 441fc300.
 
-Farsi trovare sulle pagine pubbliche e non far indicizzare workspace e portale. Capire i numeri dello studio senza un tracker di terza parte acceso di nascosto.
+## SEO e GEO
 
-## File
+`app/content/seo.ts` centralizza pagine pubbliche reali, meta/canonical/OG e JSON-LD derivato dai contenuti visibili: Organization come brand, WebSite, WebPage, Article, CreativeWork per i concept, Service e breadcrumb. Nessun cliente, recensione, risultato o identità legale inventati. JSON serializzato con escape di `<`.
 
-- `robots.txt` e `sitemap.xml` generati in `handleApi` (`apps/web/app/server/api.ts`). Non sono file in `public/`.
-- Meta title, description, `og:*`, canonical: `routes/public.tsx`, `routes/explore.tsx`, `routes/solutions.tsx`, `routes/playground-vision.tsx`, `routes/playground-voice.tsx`.
-- `noindex` admin: `routes/admin.tsx` `meta()`.
-- Tabella `analytics_events` in `0001_initial.sql`.
-- Nav `/admin/analytics`: in `load()` usa `GET /api/dashboard`, gli stessi quattro indicatori della panoramica (lead, pipeline, progetti, approvazioni). Non legge `analytics_events`.
-- Controllo vecchio: `docs/SEO-CHECK-free.md` (Astro, 2026-10-02, 19 URL). Non descrive il Worker.
+`server/public-seo.ts` genera sitemap anche per casi/articoli/lab, robots e favicon SVG. Redirect 308 solo degli alias pubblici conosciuti. Worker applica X-Robots-Tag noindex su staging, pagine private ed errori. La canonical punta al dominio principale. Non introdurre hreflang senza traduzioni reali.
 
-Path nella sitemap, tutti sotto `https://omni101.app`: home, solutions, le quattro famiglie, explore, commerce, workflow, creative, work, studio, start-project, contact, insights. Non ci sono i singoli casi, gli articoli, vision, voice, privacy, termini.
+GEO significa qui contenuti SSR chiari, fonti e descrizioni verificabili per motori generativi. Non promette citazioni, ranking o presenza nelle risposte. Local SEO è una categoria operativa distinta, senza sedi o schede locali inventate.
 
-## API
+## Workspace marketing
 
-`GET /robots.txt`, `GET /sitemap.xml`. Nessun `POST /api/analytics` trovato. `analytics_events` non ha una risorsa in `resources`.
+`/admin/growth`: iniziative reali, stato canali dichiarato, UTM builder locale (solo HTTPS, niente credenziali/query riservate), registro esclusioni e verifica destinatario. `/admin/growth-plans` distingue SEO, SEM, GEO, LOCAL_SEO, PRIVACY e altri piani. Campagne sono registri di pianificazione: nessun account Ads collegato, nessuna spesa, nessuna pubblicazione o email reale, nessun ROAS/CPA inventato. Analytics riusa ancora i dati gestionali; non è analytics di traffico.
 
-## Dati
+## Controlli privacy tecnici
 
-`analytics_events`: `name`, `path`, `source`, `occurred_at`, più `organization_id`. Senza una scrittura nel server, la tabella resta vuota.
+Migrazione 0008: esclusioni marketing pseudonimizzate e isolate per organizzazione; evidenze di consenso con UUID idempotente e audit; ritiro aggiunge un blocco. Un nuovo consenso documentato non rimuove il blocco. `canSend` resta false, nessun canale collegato. Il modulo registra una prova già acquisita: non acquisisce consenso dall'interessato.
 
-## Test
+Registro `/admin/privacy-requests`, solo Owner/Admin: richieste diritti, stato, responsabile e scadenza da verificare. Chiusura richiede una descrizione dell'intervento. Nessuna esportazione/cancellazione automatica o termine legale inventato. Il registro contiene email dell'interessato, quindi accesso ristretto. Hash delle esclusioni = pseudonimizzazione, non anonimizzazione.
 
-Nessun test Vitest dedicato al sitemap. La misura esterna è `ESITO-07-QA.md`: Lighthouse SEO 100 sulle pubbliche, 54 su `/admin` per il noindex (va tenuto). Best practices 93 anche per `/favicon.ico` 404. Canonical di preview punta a `omni101.app`.
+Identità del titolare, P.IVA, contatti, fornitori/DPA, trasferimenti, retention e procedura di verifica identità richiedono dati verificati. Questi controlli non certificano conformità GDPR. Nessun tracker opzionale acceso e nessun banner finto. Testi pubblici da riallineare ai trattamenti effettivi prima dell'attivazione dei canali.
 
-JSON-LD: nessuna occorrenza di `application/ld+json` sotto `apps/web` il 22/10.
+## Verifica
 
-## Stato
-
-Parziale, 2026-10-22. Robot e sitemap minimi ci sono. Mancano favicon, JSON-LD, hreflang (l'inglese è predisposizione di SPEC-16, non una route), eventi analytics, Web Vitals in app. SPEC-16 (code, osservabilità, backup D1, SEO completo) è in coda dopo SPEC-06. SPEC-07 ha misurato e non ha patchato.
-
-## Decisioni
-
-Admin e portale restano fuori dall'indice. Il noindex vale più di uno SEO 100 sulla login. Lo staging può canonicalizzare verso la produzione finché preview non deve essere indicizzato: lo score di laboratorio era già 100. Un tracker nuovo è una decisione di privacy, non uno script incollato.
-
-## Trappole
-
-- Aggiungere una pagina pubblica e dimenticare l'array `paths` in `sitemap.xml` la lascia fuori. Il canonical nella `meta()` è un secondo punto da aggiornare.
-- Coprire il noindex dell'admin per «aggiustare il 54» indicizza la login.
-- `docs/SEO-CHECK-free.md` parla di `sitemap-index.xml` e di un manifest. Quei file sono del build Astro. Il Worker risponde con un sitemap unico.
-- INP di campo non è stato raccolto il 22/10 (`inpMs` null). Non citarlo come numero.
-
-## Chi lo possiede ora
-
-SPEC-16 quando parte. Fino ad allora chi tocca title, canonical o sitemap aggiorna questo file.
+`tests/seo.test.ts`, `tests/growth-tools.test.ts`, integrazioni marketing/privacy in `tests/integration.test.ts`. Aggiungere prova browser autenticata e verifica live dopo CI. Niente claim di pubblicazione prima della revisione confermata dall'health.

@@ -52,3 +52,7 @@ SPEC-06 per l'assistente pubblico che crea il lead. SPEC-15 per il copilot inter
 ## Collegamento al riallineamento — 2026-10-22 sera
 
 Catalogo navigabile esteso a voce, Avatar Studio e Software Lab, con limiti espliciti. Assistente interno e palette comandi includono campagne, growth plan, produzioni creative e abbonamenti. Contesto sempre da query fisse con organization_id; costi abbonamenti soltanto OWNER/ADMIN/FINANCE. Nessuna nuova azione automatica di pubblicazione o spesa.
+
+### Memoria operativa — 23 ottobre, codice da verificare
+
+Contesto interno esteso a knowledge_records (12 estratti limitati, ID/fonte/stato/versione e collegamenti); solo su richieste relative a mandati/reference/decisioni/memoria. Nessuna esposizione al pubblico. Prompt richiede citazioni e distinzione tra catturato/pianificato/implementato/verificato. Route autorizzate estese a Knowledge e Growth. Test provider mock controlla separazione pubblico/interno; nessuna nuova scrittura autonoma.

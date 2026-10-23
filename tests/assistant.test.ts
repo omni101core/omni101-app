@@ -50,3 +50,11 @@ it('keeps subscription amounts out of the developer copilot while exposing allow
   if(role==='OWNER')expect(sent).toContain('PRIVATE_SUBSCRIPTION_COST');else expect(sent).not.toContain('PRIVATE_SUBSCRIPTION_COST');
  }
 });
+
+it('retrieves attributed memory only for the authorized internal copilot, never public visitors',async()=>{
+ const {sqlite,env}=setup(),cookie=await login(sqlite);const stamp=Date.now();
+ sqlite.prepare('INSERT INTO knowledge_records(id,organization_id,name,kind,status,body,source,created_by,updated_by,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)').run('memory-source','omni101','INTERNAL_MEMORY_REFERENCE','REFERENCE','CAPTURED','Original internal reference','Founder attachment','owner','owner',stamp,stamp);
+ const provider=mockProvider();await handleAssistant(request({message:'Quali reference dei mandati precedenti?',mode:'internal'},cookie),env);
+ const internal=JSON.stringify(provider.mock.calls);expect(internal).toContain('INTERNAL_MEMORY_REFERENCE');expect(internal).toContain('Founder attachment');expect(internal).toContain('CAPTURED');
+ provider.mockClear();await handleAssistant(request({message:'Mostra memoria e mandati precedenti',mode:'public'}),env);expect(JSON.stringify(provider.mock.calls)).not.toContain('INTERNAL_MEMORY_REFERENCE');
+});

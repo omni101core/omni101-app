@@ -1,0 +1,98 @@
+[
+  {
+    "key": "memory",
+    "name": "Memoria persistente e passaggio tra agenti",
+    "source": "persistent-intelligence-2026-10-23",
+    "status": "IMPLEMENTED",
+    "acceptance": "Cattura, ricerca, originali e versioni attribuite; collegamenti fonte/task, export JSON e conflitti 409.",
+    "remaining": "Import completo, ACL per progetto, cronologia oltre 50 versioni, retention e copertura aggregata da completare."
+  },
+  {
+    "key": "seo",
+    "name": "SEO tecnico e contenuti verificabili",
+    "source": "product-excellence-2026-10-23",
+    "status": "IMPLEMENTED",
+    "acceptance": "Sitemap pubblica completa, canonical/meta, JSON-LD senza dati inventati, staging e privati noindex.",
+    "remaining": "Verificare Search Console con account autorizzato; nessuna promessa di ranking."
+  },
+  {
+    "key": "growth-privacy",
+    "name": "SEM, GEO e salvaguardie marketing/privacy",
+    "source": "product-excellence-2026-10-23",
+    "status": "IMPLEMENTED",
+    "acceptance": "Piani reali SEM/GEO/local SEO, UTM locale, blocchi e consenso idempotente, registro diritti con RBAC.",
+    "remaining": "Fornitori, titolare, retention e procedure da verificare. Nessun invio o budget ads attivato."
+  },
+  {
+    "key": "calendar",
+    "name": "Calendario operativo unificato",
+    "source": "persistent-intelligence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Unire date originali di task, milestone, campagne e revisioni con timezone, filtri e agenda senza duplicarle.",
+    "remaining": "Il registro eventi esiste; aggregazione e scheduling ricorrente da realizzare."
+  },
+  {
+    "key": "social",
+    "name": "Pipeline social e calendario contenuti",
+    "source": "persistent-intelligence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Brief→asset→revisione→approvazione→coda con stati reali e adapter autorizzati.",
+    "remaining": "Nessuna pubblicazione simulata; verificare capacità e permessi per ogni piattaforma."
+  },
+  {
+    "key": "ads",
+    "name": "Pianificazione e controllo campagne Ads",
+    "source": "persistent-intelligence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Brief, target, varianti, budget pianificato, approvazione e metriche solo da fonti reali.",
+    "remaining": "Nessuna spesa né modifica live prima di connessione e autorizzazione esplicita."
+  },
+  {
+    "key": "brand",
+    "name": "Brand Studio e primitive condivise",
+    "source": "product-excellence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Token condivisi, contrasto, bozza/preview/versione/pubblicazione/ripristino su schermate reali.",
+    "remaining": "Riutilizzare primitive esistenti; evitare librerie di componenti inutilizzati."
+  },
+  {
+    "key": "team",
+    "name": "Collaborazione e gestione inviti",
+    "source": "product-excellence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Ricerca, stati invito, permessi, revoca/resend sicuri e due Owner distinti con audit.",
+    "remaining": "Account Owner esistente da preservare; non ricreare credenziali o inviti."
+  },
+  {
+    "key": "intake",
+    "name": "Intake adattivo, autosalvataggio e ripresa",
+    "source": "product-excellence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Tre ingressi, modello condiviso, logica deterministica, revisione e recupero bozza.",
+    "remaining": "Usare AI solo per trasformazioni semantiche con conferma."
+  },
+  {
+    "key": "coding-agents",
+    "name": "Collaborazione coding indipendente dal provider",
+    "source": "product-excellence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Task→branch isolato→test→PR→review→preview→rilascio approvato; adapter solo dove supportati.",
+    "remaining": "OpenHands è una reference da valutare. Sandbox cloud richiede valutazione costi; non attivare."
+  },
+  {
+    "key": "assets",
+    "name": "Archivio asset con diritti e versioni",
+    "source": "persistent-intelligence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Metadata fonte/licenza/autore/modello/consenso/versione, preview e relazioni ai progetti.",
+    "remaining": "Storage binario non disponibile: R2 e costi richiedono autorizzazione."
+  },
+  {
+    "key": "coverage",
+    "name": "Copertura completa e recupero fonti precedenti",
+    "source": "persistent-intelligence-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Mandato→requisito→task→implementazione→test; inventario fonti lette e chat da importare.",
+    "remaining": "Importati solo i tre originali del 23/10; non dichiarare recuperate chat non lette."
+  }
+]

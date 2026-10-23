@@ -52,3 +52,7 @@ Ogni SELECT di record filtra `organization_id`. Il ruolo CLIENT aggiunge `client
 - Bootstrap Owner del backlog è un'azione separata dalle migrazioni: ID stabili per organizzazione, nessuna sovrascrittura di edit. Lo snapshot locale non è un seed automatico live e non crea identità.
 
 Applicazione: migrazioni 0001–0007 presenti nel D1 isolato della preview locale. Per staging/produzione leggere STATO; non dedurre l'applicazione dal solo schema nel repository.
+
+## Migrazioni locali successive: 0008 e 0009
+
+0008 introduce suppression marketing con hash per organizzazione, evidenze di consenso attribuite/idempotenti e registro richieste privacy Owner/Admin. 0009 introduce knowledge_records e knowledge_revisions: testo/versioni/provenienza/riferimenti a fonte e task, visibilità team interno. Sono additive; applicazione remota da confermare con run CI. Nessuna tabella media binaria o servizio a pagamento.

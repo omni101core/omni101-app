@@ -57,3 +57,7 @@ OMNI101 qui è la piattaforma commerciale di [omni101.app](https://omni101.app):
 Chi cambia un'area aggiorna nello stesso lavoro il suo `docs/moduli/<area>.md` e, se la scelta non è ovvia, una riga in `docs/decisioni.md`. Un lavoro senza quel aggiornamento non è finito.
 
 `scripts/cloud-verify.py` pubblica `apps/web`, `packages`, `.github/workflows`, `tests`, `docs/` (i file sopra 1 MB restano fuori) lo script `scripts/cloud-verify.py` e i file di root `package.json`, `vitest.config.ts`, `playwright.config.ts`, `README.md`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`. Prima di ogni push scansiona tutti i file di testo cercando segreti (chiavi, token, IBAN, URL con credenziali): se ne trova uno si ferma e stampa file, riga e regola, mai il valore. `--check` esegue solo la scansione, senza pubblicare. `src/` e `worker/` restano fuori.
+
+## Mandati integrativi del 23 ottobre
+
+Originali e provenienza: `docs/mandati/sources.json`. Product Excellence, integrazione qualità e Persistent Intelligence sono aggiunte al mandato storico, senza sovrascriverlo. Memoria prodotto: `docs/moduli/knowledge-intelligence.md`; acquisizione/privacy: `docs/moduli/analytics-seo.md`. Stato di pubblicazione sempre distinto da codice locale.
