@@ -5,7 +5,7 @@ Aggiornato: 2026-10-23, push release in questo commit. Coordinatore: Grok. Altra
 ## SHA e CI
 
 - LIVE `3101815c9aee44ce6679f0e4fec6e01bda217258`. Run `39984184634` verify e production verdi. Health `https://omni101.app/api/health` ha quello SHA, `database` true, `storage` false. Rollback al Worker `01805108595ba1bc21866bcc84825fae829792ff`.
-- STAGING verde: `735174da12821ea6b0891f898e8a7f8921e8c78e`, run `39980811933` attempt 2, verify verde, production saltato. 148 test, Playwright 105 pass / 13 skip, smoke a slice verticale completa. Il 503 sul workflow dell'attempt 1 non si è ripetuto.
+- STAGING `6e2502f` run `39986184746` rosso: 8 e2e cercavano l'h1 `Una visione chiara.`. U4 l'ha cambiato in `Oggi nello studio`. Test e smoke allineati. Nuovo SHA staging nello output di cloud-verify.
 - RELEASE push: `3101815c9aee44ce6679f0e4fec6e01bda217258` su `release-commercial`, 21 file diversi dal live precedente. CI in corso. Questa riga è locale, non è nel commit `3101815`.
 
 ## Locali non pubblicati

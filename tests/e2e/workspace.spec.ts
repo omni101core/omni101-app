@@ -11,7 +11,7 @@ async function owner(page:Page,baseURL:string){
  const sql=`INSERT INTO invitations(id,organization_id,email,role,token_hash,expires_at,created_at,updated_at) VALUES('${randomUUID()}','${org}','${fixtureId}@example.test','OWNER','${hash}',${now+600000},${now},${now});`;
  d1(sql);
  const cdp=await page.context().newCDPSession(page);await cdp.send('WebAuthn.enable');await cdp.send('WebAuthn.addVirtualAuthenticator',{options:{protocol:'ctap2',transport:'internal',hasResidentKey:true,hasUserVerification:true,isUserVerified:true,automaticPresenceSimulation:true}});
- await page.goto('/portal/invite?token='+token);await page.getByRole('button',{name:'Attiva il tuo account'}).click();await expect(page).toHaveURL(/\/admin$/,{timeout:20000});await expect(page.getByRole('heading',{name:'Una visione chiara.'})).toBeVisible();
+ await page.goto('/portal/invite?token='+token);await page.getByRole('button',{name:'Attiva il tuo account'}).click();await expect(page).toHaveURL(/\/admin$/,{timeout:20000});await expect(page.getByRole('heading',{name:'Oggi nello studio'})).toBeVisible();
 }
 
 test('workspace persists board changes, rolls back failures, finds records and validates versioned workflows',async({page,baseURL},testInfo)=>{
