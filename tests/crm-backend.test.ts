@@ -16,18 +16,20 @@ describe('crm backend contract',()=>{
   const {sqlite,env}=database(),cookie=await owner(sqlite);
   const post=(data:object)=>handleApi(req('/api/records/contacts',cookie,'POST',data),env);
   const first=await post({name:'Mario Rossi',email:'Mario@Example.TEST',phone:'333 123 4567'});expect(first?.status).toBe(201);const firstId=(await json(first)).record.id;
-  const byEmail=await post({name:'Altro Mario',email:'mario@example.test'});expect(byEmail?.status).toBe(409);expect(await json(byEmail)).toEqual({error:'Possibile duplicato',duplicateId:firstId,resource:'contacts'});
-  const byPhone=await post({name:'Altro',email:'altro@example.test',phone:'333-123-4567'});expect(byPhone?.status).toBe(409);expect((await json(byPhone)).duplicateId).toBe(firstId);
+  const byEmail=await post({name:'Altro Mario',email:'mario@example.test'});expect(byEmail?.status).toBe(409);expect(await json(byEmail)).toEqual({error:'Possibile duplicato',duplicateId:firstId,resource:'contacts',overridable:false});
+  const byPhone=await post({name:'Altro',email:'altro@example.test',phone:'333-123-4567'});expect(byPhone?.status).toBe(409);expect((await json(byPhone)).duplicateId).toBe(firstId);expect((await json(byPhone)).overridable).toBe(true);
   expect((await post({name:'Corto uno',email:'c1@example.test',phone:'123'}))?.status).toBe(201);expect((await post({name:'Corto due',email:'c2@example.test',phone:'123'}))?.status).toBe(201);
   expect(sqlite.prepare('SELECT count(*) n FROM contacts').get()?.n).toBe(3);
  });
 
- it('lets an explicit confirmDuplicate create the contact and records it in the audit',async()=>{
+ it('lets an explicit confirmDuplicate create a same-phone contact, never a same-email one, and audits it',async()=>{
   const {sqlite,env}=database(),cookie=await owner(sqlite);const post=(data:object)=>handleApi(req('/api/records/contacts',cookie,'POST',data),env);
-  const first=await post({name:'Primo',email:'dup@example.test'});expect(first?.status).toBe(201);
-  expect((await post({name:'Secondo',email:'dup@example.test'}))?.status).toBe(409);
-  expect((await post({name:'Secondo',email:'dup@example.test',confirmDuplicate:'yes'}))?.status).toBe(400);
-  const forced=await post({name:'Secondo',email:'dup@example.test',confirmDuplicate:true});expect(forced?.status).toBe(201);const id=(await json(forced)).record.id;
+  expect((await post({name:'Primo',email:'a@example.test',phone:'333 111 2222'}))?.status).toBe(201);
+  const same={name:'Secondo',email:'b@example.test',phone:'3331112222'};
+  const refused=await post(same);expect(refused?.status).toBe(409);expect((await json(refused)).overridable).toBe(true);
+  expect((await post({...same,confirmDuplicate:'yes'}))?.status).toBe(400);
+  const forced=await post({...same,confirmDuplicate:true});expect(forced?.status).toBe(201);const id=(await json(forced)).record.id;
+  const mail=await post({name:'Stessa email',email:'A@example.test',confirmDuplicate:true});expect(mail?.status).toBe(409);expect((await json(mail)).overridable).toBe(false);
   expect(sqlite.prepare('SELECT count(*) n FROM contacts').get()?.n).toBe(2);expect(JSON.parse(sqlite.prepare("SELECT details FROM audit_logs WHERE action='CREATE' AND resource_id=?").get(id)?.details as string)).toMatchObject({confirmDuplicate:true});
   const plain=await json(await post({name:'Terzo',email:'terzo@example.test'}));expect(JSON.parse(sqlite.prepare("SELECT details FROM audit_logs WHERE action='CREATE' AND resource_id=?").get(plain.record.id)?.details as string)).not.toHaveProperty('confirmDuplicate');
  });
