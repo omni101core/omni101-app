@@ -41,11 +41,11 @@ Grafo di partenza: trigger «Brief acquisito» → `AI_INTAKE` → `CREATE_PROPO
 
 ## Test
 
-`tests/workflow.test.ts`: validazione, esecuzione persistita, conversione dopo approvazione, resume. `tests/approval-concurrency.test.ts`: una sola decisione vince. `tests/e2e/workspace.spec.ts`: builder versionato. Il canary `tests/cloud-smoke.mjs` percorre il grafo sullo staging quando il job CI ci arriva.
+`tests/workflow.test.ts`: validazione, esecuzione persistita, conversione dopo approvazione, resume. `tests/approval-concurrency.test.ts`: una sola decisione vince. `tests/e2e/workspace.spec.ts`: builder versionato sul D1 di test. `tests/e2e/workflow-builder.spec.ts`: bozza nuova, valida/avvia sulla versione salvata, conflitto 409 e blocco dei controlli, con API mock. Il canary `tests/cloud-smoke.mjs` percorre il grafo sullo staging quando il job CI ci arriva.
 
 ## Stato
 
-Parziale, 2026-10-22. Nove nodi, grafo aciclico, dry run, attesa umana, retry di dispatch. Il mandato chiede 18 nodi, branch/merge già in parte coperti da `CONDITION`, più loop, delay, error, subflow, email e HTTP esterni. Quegli ultimi il README di root li dichiara non disponibili, non simulati. SPEC-14 non era partita alle 15:40.
+Parziale, 2026-10-22. Nove nodi, grafo aciclico, dry run, attesa umana, retry di dispatch. 2026-10-23: il builder distingue bozza nuova e versione salvata, blocca valida/avvia se la tela non coincide col salvataggio, e su 409 non sostituisce la bozza da solo. Il mandato chiede 18 nodi, branch/merge già in parte coperti da `CONDITION`, più loop, delay, error, subflow, email e HTTP esterni. Quegli ultimi il README di root li dichiara non disponibili, non simulati. SPEC-14 non era partita alle 15:40.
 
 ## Decisioni
 
@@ -54,13 +54,13 @@ Niente ciclo: il messaggio è «Cicli non supportati: usare un grafo aciclico.»
 ## Trappole
 
 - Senza `AGENCY_WORKFLOW` e con `PUBLIC_ORIGIN` non locale la run resta `QUEUED` e l'HTTP è 503 «Runtime workflow non configurato.». `DISPATCH_FAILED` arriva se il binding c'è e l'avvio cloud fallisce. Il resume è `POST /api/workflow-runs/:id/resume`, non un secondo insert.
-- Due salvataggi concorrenti: il secondo prende 409. La UI deve ricaricare la versione.
+- Due salvataggi concorrenti: il secondo prende 409. Il builder tiene nome, grafo e stato attivo locali. «Carica ultima versione» chiede conferma e solo allora sostituisce la bozza. Non ricarica da solo. «Nuovo workflow» e un altro salvato, se la bozza è sporca, chiedono conferma prima di scartarla. «Valida senza eseguire» parte solo se la tela coincide con la versione salvata. «Avvia esecuzione reale» in più richiede `selected.status===ACTIVE`. Durante la richiesta i controlli restano disabilitati.
 - Convertire il lead due volte: `lead_project_links` restituisce il progetto già creato (`alreadyCreated`).
 - Non collegare il demo pubblico a queste API.
 
 ## Chi lo possiede ora
 
-Il runtime è nel tree. SPEC-14 (18 nodi, loop, subflow, handoff) è il prossimo proprietario, dopo SPEC-06.
+Il runtime è nel tree. La correzione del 23 ottobre sul builder (bozza nuova, valida/avvia sulla versione salvata, 409 con conferma) è nel working tree e non fa parte della release corrente. SPEC-14 (18 nodi, loop, subflow, handoff) resta il seguito.
 
 ## Bozze iniziali — 2026-10-22 sera
 

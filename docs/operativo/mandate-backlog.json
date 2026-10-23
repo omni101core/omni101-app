@@ -166,9 +166,9 @@
     "key": "connected-runtime",
     "name": "Eventi, approvazioni e runtime condivisi",
     "source": "connected-ecosystem-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G verificati.",
-    "remaining": "Workflows/approvazioni durevoli già presenti; bus commerciale, tool agenti e scenari completi ancora parziali. Non coperti: editor canvas a nodi con diagnosi, runtime persistente retriable, Approval Center trasversale, team di agenti con supervisore/handoff/anti-loop, agent registry, mission control, budget, costo per run, log e retry."
+    "remaining": "Workflow persistenti, retry, approvazioni, registry, mission control, budget e costi per run sono presenti: non ricostruirli. Audit23ott: editor Nuovo conserva id precedente; esecuzione/valida non distinguono modifiche locali da snapshot salvato; recupero409 da completare senza perdere locale. Inoltre Riprendi in attesa approvazione è proposto prima della decisione e artefatti workflow aprono la lista senza record. Bus commerciale trasversale, loop/subflow e scenari A–G completi restano da verificare. Fonte audit: docs/operativo/workflow-dashboard-audit-2026-10-23.md."
   },
   {
     "key": "commercial-catalog",
@@ -267,7 +267,7 @@
     "status": "IN_PROGRESS",
     "priority": "HIGH",
     "acceptance": "Hero fullscreen con svh/dvh e CTA immediata, scroll storytelling cinematica con fallback e motion saltabile, capitoli BUILD/SPEAK/SEE/CREATE/ACT/GROW, showcase con player audio, avatar video, comparatore media, workflow animato e preview software; reel orbit, OMNI PORTAL R3F, page transitions, gallery e typography motion verificati con reduced motion, skip, fallback statico e regole performance §5.10; nessun risultato inventato, demo etichettate.",
-    "remaining": "Home e portfolio esistono; Explore, narrazione cinematica e showcase media non risultano fatti. Prestazioni mobile da verificare prima del rilascio. Dal mandato rebuild: transizioni parallele, skip dell'intro e loader su asset reali da verificare o realizzare. Priorità del richiamo Codex: adattamento motion durante la sessione, stop/resume fuori viewport, viewport mobile e assenza di sovrapposizioni sui comandi. Prove CI separate da prove su dispositivo reale.",
+    "remaining": "Home, Explore, portfolio, reel orbit, capitoli e demo cinematiche presenti; non ricostruirli. Riduzione movimento dinamica e teardown/reentry GPU verificati su CI desktop/mobile emulato: run40004937242, 154server e15browser/3skip. Release corrente da confermare prima di dichiararli live. Screenshot mobile: OMNIASSIST fisso copre parte delle tab cinematiche, correggere ingombro. Qualità media/immagini concept, prestazioni su dispositivi reali, transizioni e copertura completa §5.10 restano da verificare; nessun avatar/video esterno operativo dichiarato.",
     "source": "product-excellence-2026-10-23"
   },
   {
