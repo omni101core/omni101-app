@@ -68,4 +68,22 @@ describe('requirement coverage reconciliation',()=>{
   expect(matrix.summary.semanticRequirements).toBe(1);expect(matrix.summary.unreviewedBlocks).toBe(5);
   expect(matrix.gapQueue[0].mandatory).toBe(true);expect(matrix.gapQueue[0].score).toBe(5);expect(run(root,true)).toContain('"mode":"check"');
  });
+ it('ingests the real findings schema with scalar criteria and never inherits macro VERIFIED',()=>{
+  const root=fixture(),sources=get(root,'docs/mandati/sources.json');
+  put(root,'docs/operativo/requirement-evidence.json',{baseline:{revision:'a'.repeat(40),run:'123'},requirements:[{key:'sample',implementationStatus:'IMPLEMENTED',operationalStatus:'VERIFIED',implementation:['apps/slice.ts'],tests:['tests/slice.test.ts'],release:{revision:'a'.repeat(40),run:'123'},verification:{status:'VERIFIED',reason:'Atomic macro slice proven'}}]});
+  put(root,'docs/operativo/mandate-reconciliation-findings.json',{reviewedSources:[{id:'source-one',sha256:sources[0].sha256,complete:true}],findings:[{id:'REC-001',sourceId:'source-one',startLine:6,endLine:7,kind:'omission',requirement:'Deeper capability',acceptance:'Persist and connect provider',backlogKeys:['sample'],gap:'Provider missing',severity:'high',confidence:0.9,dependencies:[]}]});
+  run(root);const matrix=get(root),row=matrix.requirements.find((r:any)=>r.id==='REC-001');
+  expect(matrix.summary.semanticRequirements).toBe(1);expect(row.source.startLine).toBe(6);expect(row.acceptance).toEqual(['Persist and connect provider']);
+  expect(row.implementationStatus).toBe('CAPTURED');expect(row.verification.status).toBe('UNKNOWN');expect(row.release).toBeNull();
+  expect(row.findingKind).toBe('omission');expect(row.gaps[0].description).toBe('Provider missing');
+  expect(matrix.summary.unreviewedBlocks).toBe(5);expect(matrix.sources[0].originalRead).toBe(true);
+  const review=get(root,'docs/operativo/mandate-reconciliation-findings.json');review.reviewedSources[0].sha256='b'.repeat(64);put(root,'docs/operativo/mandate-reconciliation-findings.json',review);expect(()=>run(root)).toThrow();
+ });
+ it('rejects unsupported findings schemas, dangling dependencies and invalid original ranges',()=>{
+  const root=fixture();put(root,'docs/operativo/mandate-reconciliation-findings.json',{unknown:[]});expect(()=>run(root)).toThrow();
+  const finding={id:'REC-001',sourceId:'source-one',startLine:6,endLine:7,requirement:'Capability',acceptance:'Criterion',backlogKeys:['sample'],dependencies:['REC-missing']};
+  put(root,'docs/operativo/mandate-reconciliation-findings.json',{findings:[finding]});expect(()=>run(root)).toThrow();
+  finding.dependencies=[];finding.endLine=100;put(root,'docs/operativo/mandate-reconciliation-findings.json',{findings:[finding]});expect(()=>run(root)).toThrow();
+ });
+
 });

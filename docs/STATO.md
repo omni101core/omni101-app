@@ -1,5 +1,15 @@
 # OMNI101 — stato corrente
 
+## Ripresa24ott — stato del nuovo giro (prevale sullo storico)
+
+- Produzione confermata ancora5808a6ef; staging3af1af4/run40037582017 SUCCESS. Il workingtree include anche calendarioC1 e import privato nuovo: non confonderli con quel rilascio.
+- Verify-onlyf5f4a3f/run40038811187 SUCCESS:192server/3TODO e12browser/12skip (filtro mirato). Non è una suite completa né un deploy.
+- Mandati24ott ProductExcellence eCommerce preservati byte-per-byte in MemPalace, metadati in agent-context.private_sources. Import nell'app di4originali privati via secretCI pronto, da confermare nei job staging/produzione e negli hash v1 Knowledge; non dichiarato online finché non passa.
+- Matrice:11fonti pubbliche+4private,64macrogruppi con evidenze,51clausole riconciliate,176gap.8392blocchi ancora da classificare semanticamente: nessuna percentuale di completamento inventata. Check di freschezza ora obbligatorio inCI.
+- Preview locale http://127.0.0.1:4177/ revisione f5f4a3f, DBisolato in /tmp/omni101-preview-3af1af4/state, nessun binding workflow remoto. È una previewvisiva con runtime locale diverso daCI, non una prova release. Port4176 precedente preservato.
+- Owner: Codex publisher; Claude revisione readonly importprivato; Grok G6rendereremail in copia isolata. G5kanban consegnato in copia, da integrare dopo revisione; nessun publisher concorrente. Pagamenti/provider/invii live non attivati.
+
+
 Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedente è preservato in `docs/operativo/stato-storico-prima-matrice-2026-10-23.md`. Non dedurre il live dal working tree.
 
 ## Revisioni e ambienti

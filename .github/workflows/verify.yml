@@ -18,6 +18,8 @@ jobs:
       - name: Verify context references
         run: |
           for domain in growth knowledge frontend security release; do node scripts/project-context.mjs "$domain" > /dev/null; done
+      - name: Verify requirement coverage freshness
+        run: node scripts/reconcile-requirements.mjs --check
       - run: npm run typecheck
       - run: npm test
       - name: Build isolated test environment
@@ -74,6 +76,8 @@ jobs:
         run: node scripts/seed-reviewed-context.mjs staging
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          OMNI101_PRIVATE_MANDATES_GZIP_1: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_1 }}
+          OMNI101_PRIVATE_MANDATES_GZIP_2: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_2 }}
       - name: Verify live visitor to AI to approval chain
         if: github.ref_name != 'verify-commercial'
         run: node tests/cloud-smoke.mjs
@@ -104,6 +108,11 @@ jobs:
       - run: npm run build
         env:
           CLOUDFLARE_ENV: production
+      - name: Preflight required private founder originals
+        run: node scripts/seed-reviewed-context.mjs --preflight
+        env:
+          OMNI101_PRIVATE_MANDATES_GZIP_1: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_1 }}
+          OMNI101_PRIVATE_MANDATES_GZIP_2: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_2 }}
       - name: Apply production migrations
         run: npx wrangler d1 migrations apply DB --remote --config wrangler.jsonc --env production
         working-directory: apps/web
@@ -120,6 +129,8 @@ jobs:
         run: node scripts/seed-reviewed-context.mjs production
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          OMNI101_PRIVATE_MANDATES_GZIP_1: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_1 }}
+          OMNI101_PRIVATE_MANDATES_GZIP_2: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_2 }}
       - name: Verify public cutover
         run: |
           curl --retry 4 --retry-delay 3 --fail --silent https://omni101.app/api/health | python3 -c 'import sys,json,os; d=json.load(sys.stdin); assert d["application"]=="omni101-app" and d["database"] and d["revision"]==os.environ["GITHUB_SHA"]'

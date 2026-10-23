@@ -197,7 +197,7 @@
     "name": "Eventi, approvazioni e runtime condivisi",
     "source": "connected-ecosystem-2026-10-23",
     "status": "IN_PROGRESS",
-    "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G verificati.",
+    "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G → docs/operativo/scenari-a-g.md (A IN_PROGRESS, B PLANNED, C PLANNED, D IN_PROGRESS, E PLANNED, F PLANNED, G PLANNED).",
     "remaining": "Workflow persistenti, retry, approvazioni, registry, mission control, budget e costi per run sono presenti: non ricostruirli. Audit23ott: editor Nuovo conserva id precedente; esecuzione/valida non distinguono modifiche locali da snapshot salvato; recupero409 da completare senza perdere locale. Inoltre Riprendi in attesa approvazione è proposto prima della decisione e artefatti workflow aprono la lista senza record. Bus commerciale trasversale, loop/subflow e scenari A–G completi restano da verificare. Fonte audit: docs/operativo/workflow-dashboard-audit-2026-10-23.md."
   },
   {
@@ -619,5 +619,41 @@
     "findings": [
       "REC-006"
     ]
+  },
+  {
+    "key": "commerce-offer-configurator",
+    "name": "Prima offerta concreta e configurazione persistente",
+    "source": "commerce-engine-2026-10-24",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Una prima offerta riutilizza catalogo e formule esistenti, mostra demo autentica/inclusioni/esclusioni/prerequisiti, salva configurazione e snapshot prezzo server, distingue READY_TO_DEMO e READY_TO_CONFIGURE da acquistabile. Fonte§2–5,19.",
+    "remaining": "Verificare capability riutilizzabili, definire offerta e regole approvate; storefront/configurazione persistente e demo da integrare. Non inventare prezzi né presentare mock come prodotto erogabile."
+  },
+  {
+    "key": "commerce-sandbox-order-fulfillment",
+    "name": "Checkout sandbox → ordine → cliente → progetto",
+    "source": "commerce-engine-2026-10-24",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Percorso test§7/19/20: importo server, provider sandbox verificato, webhook firmato/idempotente/fuoriordine, ordine persistente collegato al tenant, fulfillment ripetibile cliente/progetto/task/portale isolato e recovery. Nessun pagamento live.",
+    "remaining": "Provider sandbox non verificato; implementare contratto ordine/fulfillment e test completi prima di dichiarare READY_TO_BUY_IN_TEST. Attivazione live richiede readiness commerciale/fiscale/tecnica e approvazione."
+  },
+  {
+    "key": "commerce-entitlements-self-service",
+    "name": "Diritti abbonamento e self-service autorizzato",
+    "source": "commerce-engine-2026-10-24",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "acceptance": "Quote, accesso e revoca imposti dal server su entitlement verificato; portale ordini/servizi esclusivamente propri, cancellazioni/rinnovi coerenti e protezione costi. Fonte§8/16, dopo prima vendita sandbox.",
+    "remaining": "Dipende da ordine/pagamento sandbox e policy approvate. Non basta badgePro; nessuna tariffazione aconsumo senza misura affidabile."
+  },
+  {
+    "key": "product-excellence-evidence-gates-24",
+    "name": "Qualità prodotto: cinque dimensioni con prove",
+    "source": "product-excellence-delivery-2026-10-24",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH",
+    "acceptance": "Per ogni modulo separare qualità visiva, funzionalità, automazione, integrazione e readiness commerciale con evidenza o UNKNOWN. Browser e percorsi end-to-end, nessuna media nasconde sicurezza o blocchi. Fonti§2/18/23–24.",
+    "remaining": "Audit e matrice avviati; completare prove visuali/operazioni, prioritizzare gap certi. Nessun punteggio numerico dimostrativo usato come misura. Login/recovery richiede strategia e approvazione prima della migrazione."
   }
 ]

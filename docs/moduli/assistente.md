@@ -57,3 +57,7 @@ Catalogo navigabile esteso a voce, Avatar Studio e Software Lab, con limiti espl
 ### Memoria operativa — 23 ottobre, codice da verificare
 
 Contesto interno esteso a knowledge_records (12 estratti limitati, ID/fonte/stato/versione e collegamenti); solo su richieste relative a mandati/reference/decisioni/memoria. Nessuna esposizione al pubblico. Prompt richiede citazioni e distinzione tra catturato/pianificato/implementato/verificato. Route autorizzate estese a Knowledge e Growth. Test provider mock controlla separazione pubblico/interno; nessuna nuova scrittura autonoma.
+
+### Originali esclusi dal provider — 24 ottobre, codice da verificare in CI
+
+Il contesto `knowledge` dell'assistente interno legge solo record `access_scope='TEAM_INTERNAL'` e `kind<>'MANDATE'`, sempre nel tenant. Gli originali dei mandati, pubblici o privati, non vanno mai al provider (NVIDIA free), nemmeno per un Owner: requisiti, decisioni, reference e handoff derivati sì. Il testo integrale si legge solo in `/admin/knowledge`, con i permessi di Knowledge. Nessun corpo o hash degli originali nei log. Test: `tests/assistant.test.ts`, "never sends MANDATE originals or OWNER_ADMIN records to the provider".

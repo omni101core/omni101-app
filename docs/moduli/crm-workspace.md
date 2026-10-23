@@ -83,3 +83,52 @@ Export CSV: celle testuali che iniziano con formule (`=`, `+`, `-`, `@`, anche d
 ## Ruoli e template — 2026-10-24
 
 `ROLE_TEMPLATES` e `templateScope` in `apps/web/app/server/auth.ts` (REC-018): 18 template (Owner, Admin, Sales, Marketing, PM, Developer, Creative, Finance, Support, Client Owner/Admin/Member, Reviewer, Partner/Reseller, Contractor, Service Account, AI Agent, Workflow Identity) sopra i nove ruoli base. Restringono, non aggiungono; matrice completa in `docs/sicurezza.md`. Nessuna migrazione, `invite` e `api.ts` invariati: il workspace continua a ragionare sul ruolo base. Test `tests/role-templates.test.ts`: AI Agent e Workflow Identity sono strettamente dentro lo scope dell'Owner che li avvia; i template cliente non vedono risorse interne né spese e abbonamenti. Trappola: `CAPABILITIES` copia i `requireRole` esistenti; se ne cambi uno, cambia anche la tabella (il test ne controlla due).
+
+## Command palette
+
+Ctrl+K o ⌘K, o il pulsante «Cerca ovunque» (`Ricerca globale`) nella barra. File: `apps/web/app/components/workspace/CommandPalette.tsx`. Stili in coda a `apps/web/app/styles/admin.css`. Test: `tests/e2e/command-palette.spec.ts`. Nessun endpoint nuovo.
+
+Cerca, in quest'ordine: azioni, pagine admin (nav già passata da `admin.tsx`), poi i record. Pagine e azioni restano tutte. I record sono al massimo 40: il resto si raggiunge stringendo la parola.
+
+| Sezione | Lettura | Apertura |
+| --- | --- | --- |
+| Pagine | nav del workspace | path della voce, es. `/admin/leads` |
+| Lead | `GET /api/records/leads` | `/admin/leads?record=<id>` |
+| Progetti | `GET /api/records/projects` | `/admin/projects?record=<id>` |
+| Clienti | `GET /api/records/clients` | `/admin/clients?record=<id>` |
+| Workflow | `GET /api/workflows` | `/admin/automations?record=<id>` |
+| Agenti | `GET /api/agents` (`agents` o `records`) | `/admin/agents?record=<id>` |
+
+Azioni vere, solo navigazione: «Nuovo lead» → Richieste, «Nuovo progetto» → Progetti, «Nuovo cliente» → Clienti, «Nuovo workflow» → Automazioni. La scheda si crea col pulsante Nuovo già sulla pagina (il workflow si salva nel builder). «Nuovo agente» e «Tool MCP» stanno in lista con la scritta «non disponibile»: nella shell non c'è creazione agente né un endpoint MCP. Non partono.
+
+Permessi: li applica l'endpoint. 401 o 403 → quella sezione dice «non autorizzato». Altro fallo (rete o status diverso) → «errore» e «Riprova», senza mescolarlo al divieto.
+
+Stati: «Ricerca in corso…»; «Nessun risultato per …» solo a caricamento finito e lista vuota; errore con Riprova. Tastiera: frecce, Invio, Esc (chiude e rimette il focus dov'era). `<dialog>.showModal()` fa il focus trap. Ruoli: `dialog` + `aria-modal`, combobox sull'input, listbox/option sulle righe. Il bottone della riga ha `tabIndex={-1}` così Tab non entra nei risultati; il clic resta un bottone, come in `tests/e2e/workspace.spec.ts`.
+
+Trappola: `automations` in `load()` di `admin.tsx` azzera `records`. `?record=` su un workflow arriva all'URL ma questa shell non apre il grafo. Lead, progetti, clienti e agenti sì: l'effetto `record` in `admin.tsx` apre il dialog della scheda.
+
+## Centro operativo — UX 24/10
+
+`OperationsOverview.tsx`, stili in coda a `admin.css` (solo `.os-operations`). Nessun endpoint nuovo. Nessun numero previsto: conteggi e importi restano quelli di `GET /api/operations`.
+
+Chi entra vede prima «Da affrontare adesso»: una frase con la prossima azione (prima attività, altrimenti prima approvazione, esecuzione da verificare, notifica, oppure il backlog). Poi la lista. Code, numeri e progetti stanno sotto.
+
+Pulsanti con verbo e oggetto. «Prepara backlog operativo» è invariato (test `workspace.spec.ts`). «Ricarica il centro» ricarica `/api/operations`. Le righe: «Apri attività», «Apri approvazione», «Apri elenco esecuzioni» (l'elenco è `/admin/agent-runs`, non la scheda del run), «Apri pianificazione», «Segna come letta» con il nome. Il backlog resta 15 attività, 3 traguardi, 3 workflow in bozza, nessun agente avviato.
+
+Stati pagina con `Feedback` (`ProductUI`): `loading` al primo carico, `pending` se un aggiornamento arriva con dati già visibili, `empty` se non arriva un payload, `error` con «Riprova» sull'ultima azione fallita (carica, prepara, segna letta). Liste vuote: `empty`. Vista finance senza permesso: `unauthorized`. I conteggi in lista dicono il tetto già noto (20 approvazioni, 30 notifiche), non uno storico.
+
+Sotto i 480px la pagina è a colonna, la tabella va a capo, pulsanti e link del centro sono alti almeno 44px. `overflow-x: clip` sulla section, così a 375px non si allarga la pagina.
+
+## Pipeline — UX 24/10
+
+`KanbanBoard.tsx`. Stili in coda a `admin.css` (solo `.os-pipeline-board` / `.os-kanban`). Nessun endpoint nuovo. Nessun numero previsto: i conteggi sono i record già passati al board. Il nome accessibile della colonna resta il codice stato (`aria-label={status}`), così `tests/e2e/workspace.spec.ts` trova la region `ACTIVE` e `REVIEW`.
+
+Chi entra vede prima «Da fare ora»: la prima scheda della prima fase che ne ha una (ordine di `statuses`, poi stati presenti solo sui record). La frase dice nome e fase, e la mossa: aprire la scheda, poi «Sposta fase» o trascinare. Sola lettura: la stessa scheda si apre, lo spostamento dice «non disponibile». Pipeline vuota: la frase lo dice, senza un pulsante finto.
+
+Pulsanti con verbo e oggetto. «Apri scheda» apre la scheda (in cima porta il nome). «Sposta fase» è l'elenco a tendina, valore ancora il codice. Senza permesso di scrittura il pulsante è «Sposta non disponibile» e non parte. Il trascinamento resta il percorso col puntatore (Playwright `dragTo`).
+
+Stati con `Feedback` (`ProductUI`): `loading` mentre uno spostamento è in corso («Spostamento in corso.»), `empty` se non c'è nessuna scheda («Nessuna scheda in pipeline.»), `error` se `onMove` rifiuta, con «Riprova» sulla stessa mossa. Il testo dell'errore è il messaggio ricevuto, altrimenti «Spostamento non riuscito.». Una fase senza schede ha la riga «Nessuna scheda in questa fase.»: non è un `Feedback`, così non si aggiunge un `role="status"` per ogni colonna vuota. `empty` non ha Riprova: in questo componente non c'è un ricarica.
+
+Conteggi: stesso filtro delle card (`status` vuoto conta come `NEW`), con la parola «scheda/schede». Le etichette italiane coprono solo gli stati lead già scritti sopra in questo file. Gli altri codici (per esempio `ACTIVE`, `REVIEW`) restano il codice, anche nelle opzioni della tendina.
+
+Sotto i 480px le fasi vanno in colonna, `min-width` delle colonne a zero, `overflow-x: clip` sul board. Pulsanti, tendina e «Riprova» alti almeno 44px. A 375px il board non impone lo scroll orizzontale.

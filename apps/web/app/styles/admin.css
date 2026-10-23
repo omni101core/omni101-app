@@ -77,3 +77,62 @@
 .pui-feedback[data-busy=true] .pui-feedback-text::before{animation:none;border-color:var(--os-gold)}
 .pui-unsaved-overlay,.pui-unsaved-dialog{transition:none}
 }
+
+/* G2 command palette — append only */
+.os-command-note{margin:8px 0;font-size:12px;color:var(--os-muted)}
+.os-command-alert{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:8px 0;color:#d9b1a8;font-size:12px}
+.os-command-alert .os-button{min-height:44px;margin:0}
+.os-command-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.os-command-hit{display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%;text-align:left;padding:10px 12px;border:0;border-radius:4px;background:transparent;color:var(--os-text);font:13px/1.35 Satoshi,sans-serif;min-height:44px;cursor:pointer}
+.os-command-hit:disabled{cursor:not-allowed;opacity:.6}
+.os-command-hit span{display:grid;gap:2px;min-width:0}
+.os-command-hit em{font-style:normal;font-size:11px;color:var(--os-muted)}
+.os-command-hit small{color:var(--os-muted);font-size:10px;flex-shrink:0}
+.os-command-results [aria-selected=true] .os-command-hit{background:#d2b77b17;box-shadow:inset 3px 0 0 var(--os-gold)}
+dialog.os-command.os-dialog{position:fixed;inset:0;top:0;left:0;transform:none;margin:auto;height:fit-content;max-height:min(85vh,720px);width:min(650px,92vw)}
+dialog.os-command::backdrop{background:#000b;backdrop-filter:blur(5px)}
+@media(prefers-reduced-motion:reduce){dialog.os-command::backdrop{backdrop-filter:none}}
+
+/* G4 centro operativo UX 24/10: append, solo .os-operations */
+.os-operations{min-width:0;max-width:100%;overflow-x:clip;overflow-wrap:anywhere}
+.os-operations .os-panel-title{flex-wrap:wrap;align-items:flex-start}
+.os-operations .os-panel-title>div{min-width:0;flex:1 1 12rem}
+.os-operations h3{margin:0 0 8px;font-size:18px;font-weight:500;letter-spacing:-.02em;text-wrap:balance;color:var(--os-text,#f2eee6)}
+.os-operations .os-ops-now{margin:0 0 8px;font-size:16px;line-height:1.45;max-width:65ch;color:var(--os-text,#f2eee6);text-wrap:pretty}
+.os-operations .os-ops-now-panel{border-color:var(--os-gold)}
+.os-operations .os-hint,.os-operations .os-panel>p,.os-operations .os-priority-list small{max-width:65ch}
+.os-operations .os-button,.os-operations .os-text-button{min-height:44px;max-width:100%}
+.os-operations .os-text-button{padding:12px 0;font-size:13px;white-space:normal;text-align:left}
+.os-operations .os-priority-list a,.os-operations .os-project-progress a,.os-operations .os-panel a{display:flex;flex-direction:column;justify-content:center;min-height:44px;overflow-wrap:anywhere}
+.os-operations .os-metrics{grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr))}
+.os-operations .os-metric,.os-operations .os-table-wrap,.os-operations .os-activity{min-width:0}
+.os-operations .os-table-wrap{max-width:100%;overflow-x:clip}
+.os-operations .os-table{table-layout:fixed;width:100%}
+.os-operations .os-table,.os-operations .os-table th,.os-operations .os-table td{white-space:normal;overflow-wrap:anywhere;max-width:none;overflow:visible;text-overflow:clip}
+@media(max-width:480px){
+.os-operations .os-metrics{grid-template-columns:1fr}
+.os-operations .os-metric{padding:16px}
+.os-operations .os-table th,.os-operations .os-table td{padding:10px 8px}
+}
+
+/* G5 pipeline kanban UX 24/10 — append, solo .os-pipeline-board / .os-kanban */
+.os-pipeline-board{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.os-kanban-now{margin:0 0 16px;padding:16px;border:1px solid var(--os-gold);border-radius:6px;background:var(--os-panel);min-width:0}
+.os-kanban-now .os-eyebrow{display:block;margin:0 0 6px}
+.os-kanban-now .os-kanban-next{margin:0 0 12px;max-width:65ch;font-size:16px;line-height:1.45;color:var(--os-text,#f2eee6);text-wrap:pretty}
+.os-kanban-now .os-button{margin:0;max-width:100%}
+.os-kanban-column h3{font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--os-text,#f2eee6)}
+.os-kanban-column h3 span{color:var(--os-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.os-kanban-empty{margin:12px 0 0;font-size:13px;line-height:1.45;color:var(--os-muted)}
+.os-pipeline-board .pui-feedback{max-width:100%}
+@media(max-width:480px){
+.os-pipeline-board{overflow-x:clip}
+.os-kanban{flex-direction:column;overflow-x:clip;max-width:100%;min-width:0}
+.os-kanban-column{min-width:0;width:100%;flex:none}
+.os-kanban-card p{white-space:normal;overflow:visible;text-overflow:clip}
+.os-pipeline-board .os-button,.os-pipeline-board .os-card-open,.os-pipeline-board .os-status-control select,.os-pipeline-board .pui-feedback-retry{min-height:44px;min-width:44px}
+.os-pipeline-board .os-card-open{display:inline-flex;align-items:center;padding:10px 12px;font-size:13px}
+.os-pipeline-board .os-status-control{flex-wrap:wrap;font-size:13px}
+.os-pipeline-board .os-status-control select{max-width:100%;flex:1 1 8rem;font-size:13px;padding:10px}
+}
+

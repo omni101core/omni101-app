@@ -79,3 +79,7 @@ Il job CI esegue scripts/seed-reviewed-context.mjs dopo deploy, prima dello smok
 ### Diagnostica browser mirata (23 ottobre)
 
 Solo sul branch verify-commercial, tests/ci-browser-grep.txt limita le regressioni browser e le ripete tre volte. Typecheck, server e build restano completi. Su release-commercial e rebuild-commercial il filtro è ignorato: suite browser completa prima di ogni deploy. Guardia del workflow verificata con comando simulato per tutti e tre i branch.
+
+### Mandati privati nel prodotto — 24 ottobre
+
+Gli originali indicizzati in agent-context.private_sources con require_app_import richiedono un trasporto CI completo e verificato (due secret OMNI101_PRIVATE_MANDATES_GZIP_1/2). Il seeder controlla artifact, SHA256 e byte, importa tramite le stesse revisioni/audit Knowledge e verifica la v1 remota prima di confermare il job. Non stampa originali o SQL privato. Non sovrascrive record editati dai soci. Dry-run senza trasporto indica separatamente originali attesi/importabili; solo staging/production richiedono la presenza. Test e build non ricevono il secret. Nessuna passkey/token utente viene letto o aggirato.

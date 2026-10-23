@@ -47,3 +47,7 @@ Niente media di clienti veri senza `CLIENT_AUTHORIZED` e un permesso. I concept 
 ## Chi lo possiede ora
 
 SPEC-11 per i visual originali. SPEC-16 per SEO e favicon, in coda. Questo documento lo aggiorna chi cambia una pagina o un asset.
+
+## 24 ottobre — direzione social e email
+Tre asset originali generati in `apps/web/public/media/social-editorial-24/`, manifest con hash/provenienza e stato DRAFT_REQUIRES_REVIEW. `SocialArtDirection.tsx` in creative-jobs compone immagini e testo accessibile con formati4:5/1:1; BUILD ha fascia titolo dedicata. Lazy loading, dimensioni esplicite; nessun uso nel primo schermo pubblico. Non equivalgono a upload R2, record media D1 o post approvati/pubblicati.
+Email: renderer puro `packages/email/render.ts`, tre starter Studio/Update/Proposal nel compositore esistente, preview ed export coerenti. Layout selezionato solo nella sessione/query, non salvato né parte dell’approvazione; contenuti salvati con versioni e revisione esistenti. Provider assente, invii disabilitati. Test nuovi da CI; compatibilità client email reale ancora da verificare.

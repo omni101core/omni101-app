@@ -83,7 +83,8 @@ async function context(env:Env,org:string,actor:Identity|null,message:string){
  }
  if(/agent|bloccat|run|esecuz|errore/.test(wanted))groups.push({key:'runs',sql:'SELECT id,name,status,error,tokens_used,cost_cents FROM agent_runs WHERE organization_id=? ORDER BY updated_at DESC LIMIT 12'});
  if(/consum|budget|costi|speso/.test(wanted)&&['OWNER','ADMIN','FINANCE'].includes(actor.role))groups.push({key:'budget',sql:'SELECT period_start,period_end,limit_cents,used_cents,reserved_cents FROM agent_budgets WHERE organization_id=? AND period_start<=? AND period_end>? LIMIT 1'});
- if(/memori|mandat|requisit|decision|reference|riferiment|codrops|handoff|prompt|precedent|dimenticat/.test(wanted))groups.push({key:'knowledge',sql:'SELECT id,name,kind,status,source,source_id,task_id,version,substr(body,1,1000) AS excerpt,substr(acceptance,1,600) AS acceptance,substr(evidence,1,600) AS evidence FROM knowledge_records WHERE organization_id=? ORDER BY updated_at DESC,id LIMIT 12'});
+ // Originals (MANDATE, public or private) and OWNER_ADMIN records never reach the provider: /admin/knowledge is the place to read them in full.
+ if(/memori|mandat|requisit|decision|reference|riferiment|codrops|handoff|prompt|precedent|dimenticat/.test(wanted))groups.push({key:'knowledge',sql:'SELECT id,name,kind,status,source,source_id,task_id,version,substr(body,1,1000) AS excerpt,substr(acceptance,1,600) AS acceptance,substr(evidence,1,600) AS evidence FROM knowledge_records WHERE organization_id=? AND access_scope=\'TEAM_INTERNAL\' AND kind<>\'MANDATE\' ORDER BY updated_at DESC,id LIMIT 12'});
  const records:Record<string,unknown>={};for(const g of groups){const args=g.key==='budget'?[org,Date.now(),Date.now()]:[org];records[g.key]=(await env.DB.prepare(g.sql).bind(...args).all()).results;}
  return {role:actor.role,records,scope:'Solo record autorizzati dell’organizzazione corrente. Le liste sono limitate a 12 risultati recenti.',routes:internalDestinations};
 }

@@ -58,3 +58,14 @@ it('retrieves attributed memory only for the authorized internal copilot, never 
  const internal=JSON.stringify(provider.mock.calls);expect(internal).toContain('INTERNAL_MEMORY_REFERENCE');expect(internal).toContain('Founder attachment');expect(internal).toContain('CAPTURED');
  provider.mockClear();await handleAssistant(request({message:'Mostra memoria e mandati precedenti',mode:'public'}),env);expect(JSON.stringify(provider.mock.calls)).not.toContain('INTERNAL_MEMORY_REFERENCE');
 });
+it('never sends MANDATE originals or OWNER_ADMIN records to the provider, even for an Owner',async()=>{
+ const {sqlite,env}=setup(),cookie=await login(sqlite);const stamp=Date.now();
+ const insert=sqlite.prepare('INSERT INTO knowledge_records(id,organization_id,name,kind,status,body,source,created_by,updated_by,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)');
+ insert.run('private-original','omni101','Private original','MANDATE','CAPTURED','PRIVATE_MANDATE_MARKER body','Private founder original · art_test · sha256:PRIVATE_HASH_MARKER','importer','importer',stamp,stamp);
+ insert.run('public-original','omni101','Public original','MANDATE','CAPTURED','PUBLIC_MANDATE_MARKER body','Founder mandate · docs/mandati/x.md · sha256:PUBLIC_HASH_MARKER','importer','importer',stamp,stamp);
+ insert.run('team-requirement','omni101','TEAM_REQUIREMENT_MARKER','REQUIREMENT','PLANNED','Derived team requirement','Private founder mandate · art_test','importer','importer',stamp,stamp);
+ expect(sqlite.prepare("SELECT access_scope FROM knowledge_records WHERE id='private-original'").get()?.access_scope).toBe('OWNER_ADMIN');
+ const provider=mockProvider();await handleAssistant(request({message:'Riassumi mandati, memoria e requisiti precedenti',mode:'internal'},cookie),env);
+ const sent=JSON.stringify(provider.mock.calls);expect(sent).toContain('TEAM_REQUIREMENT_MARKER');
+ for(const marker of ['PRIVATE_MANDATE_MARKER','PRIVATE_HASH_MARKER','PUBLIC_MANDATE_MARKER','PUBLIC_HASH_MARKER','Private original','Public original'])expect(sent).not.toContain(marker);
+});

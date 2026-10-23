@@ -1653,6 +1653,543 @@
         "Nessun invio, pubblicazione o risultato commerciale misurato."
       ],
       "confidence": "high"
+    },
+    {
+      "key": "finance-operations",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/operations.ts",
+          "reason": "Aggregati incassi/spese, crediti registrati, costi AI e progetti visibili solo a ruoli finance."
+        },
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Registri contracts/invoices/expenses/subscriptions con read/write RBAC."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "serves real operational priorities while withholding finance from developers"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "protects financial writes from developer accounts"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "does not disclose finance or commercial proposals to developer accounts"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Test baseline provano dati registrati e confini dei ruoli; nessuna operazione fiscale o pagamento reale. Gruppo finanza non interamente completato."
+      },
+      "gaps": [
+        "Differenza incassi/spese non è utile fiscale né margine completo: lavoro interno e costi non registrati esclusi.",
+        "Fatturazione fiscale/provider pagamenti, export finanziario completo, riconciliazione e profittabilità per prodotto non provati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "attribution-events",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/revenue.ts",
+          "reason": "Eventi manuali attribuiti, idempotenti e collegati alla campagna/lead."
+        },
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Intake source website/assistant; non catena UTM fino al progetto."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "links a campaign to the CRM, records attributed events idempotently, and reads original calendar dates"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "La slice MANUAL è nel baseline; non prova attribution automatica né causalità. Stato IN_PROGRESS descrive requisito aggregato, non un nuovo evento operativo."
+      },
+      "gaps": [
+        "source/medium/campaign/content non propagati end-to-end form→deal→progetto.",
+        "Catalogo eventi canonico/versionato e convenzioni in conflitto ancora da decidere.",
+        "commercial-chain.test.ts contiene TODO attribuzione: non è prova passata."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "workflow-builder-editor",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/workspace/WorkflowBuilder.tsx",
+          "reason": "ReactFlow con canvas e strumenti undo/copy/paste nel working tree; salva versioni e distingue bozza."
+        },
+        {
+          "path": "apps/web/app/server/workflow-runtime.ts",
+          "reason": "Grafo versionato, validazione bounded, snapshot runtime."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/workflow-builder.spec.ts",
+          "name": "undo restores a deleted node and copy paste creates a new id"
+        },
+        {
+          "path": "tests/e2e/workflow-builder.spec.ts",
+          "name": "validate and start use only the saved active version"
+        }
+      ],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Test titoli/file esistenti ma nuova estensione editor inclusa staging3af1af4/run40037582017 in corso all’handoff: UNKNOWN finché esito verificato. Basic builder salvato era già online al baseline."
+      },
+      "gaps": [
+        "Nuovo undo/copy/paste non confermato in una CI conclusa da questa review.",
+        "Scenario D trigger CRM→publish→evento→debugger→effetto non provato integralmente.",
+        "Gruppi, debugger passo passo, multi-selezione e libreria12workflow da riconciliare."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "agent-studio",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "packages/agents/registry.ts",
+          "reason": "Registro16agenti predefiniti con tools vuoti, scope solo brief, limiti e revisione umana."
+        },
+        {
+          "path": "apps/web/app/components/workspace/MissionControl.tsx",
+          "reason": "Avvio e osservazione run reali, non builder agente completo."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/mission-control.test.ts",
+          "name": "records a provider failure on retry without hiding it as success"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Mission Control esistente testato, acceptance Agent Studio resta largamente mancante."
+      },
+      "gaps": [
+        "Nessuna creazione da template con tool/MCP, test e pubblicazione versionata.",
+        "Wizard12passi e configurazione knowledge/budget per agente non dimostrati.",
+        "Registro configurato e generazione LLM non equivalgono a tool execution."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "playground-labs",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/routes/public/product-labs.tsx",
+          "reason": "Avatar/storyboard, creative e software demo con limiti dichiarati."
+        },
+        {
+          "path": "apps/web/app/components/vision/VisionLab.tsx",
+          "reason": "Vision con fallback e permesso esplicito."
+        },
+        {
+          "path": "apps/web/app/routes/explore.tsx",
+          "reason": "Ingresso catalogo esperienze."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/realignment.spec.ts",
+          "name": "public theme persists, private scope defaults dark and all seven labs are reachable"
+        },
+        {
+          "path": "tests/e2e/realignment.spec.ts",
+          "name": "avatar prepares an honest storyboard; software lab changes local records"
+        },
+        {
+          "path": "tests/e2e/public.spec.ts",
+          "name": "workflow is explicitly a simulation and completes"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Raggiungibilità sette lab e onestà di alcune demo provate nel baseline; manca acceptance etichette completa."
+      },
+      "gaps": [
+        "Test esistenti non controllano etichetta/stato per ciascuno dei sette lab.",
+        "Nessuna telefonata, avatar video live, pagamento o generazione creativa esterna da inferire dalla demo."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "resource-planning",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/planning.ts",
+          "reason": "Critical path, slack, stime e dipendenze da task reali."
+        },
+        {
+          "path": "apps/web/app/components/workspace/ProjectPlanner.tsx",
+          "reason": "Piano progetto con milestone, date e dipendenze."
+        },
+        {
+          "path": "apps/web/app/server/operations.ts",
+          "reason": "Priorità e assegnatari originali, nessuna capacità personale inventata."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/planning-algorithms.test.ts",
+          "name": "computes remaining critical path and slack across parallel branches"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Base project planning testata; non resource planning completo."
+      },
+      "gaps": [
+        "Nessuna capacità/disponibilità staff o utilizzo soci/agent calcolati.",
+        "Stime vs consuntivi e timesheet reali non dimostrati; schema task ha estimate_minutes, non prova consuntivo."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "customer-feedback",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "UNKNOWN: nessuna implementazione/test specifico trovato nei moduli esaminati; non prova inesistenza di ogni possibile riferimento storico."
+      },
+      "gaps": [
+        "Survey/NPS/CSAT e richiesta feedback cliente salvata non individuati.",
+        "Motivo churn e client health non disponibili; approvazioni deliverable e ticket non equivalgono a survey."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "client-factory",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/workflow-runtime.ts",
+          "reason": "Conversione lead approvato e acquisito crea un progetto con task idempotenti."
+        },
+        {
+          "path": "apps/web/app/content/capabilities.ts",
+          "reason": "Catalogo capacità pubbliche, non blueprint/provisioning registry operativo."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/workflow.test.ts",
+          "name": "creates one project with planning tasks only after scoped approval and explicit acquisition"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Conversione controllata esistente testata nel baseline; nuove estensioni commercial-chain nel tree non considerate rilasciate/verificate."
+      },
+      "gaps": [
+        "Blueprint versionati e wizard provisioning cliente non implementati come factory completa.",
+        "Dominio/hosting/licenze/credenziali non si deducono dal template.",
+        "Commerce24 richiede ordine/autorizzazione→snapshot configurazione→fulfillment→QA→preview, non coperto dal solo lead-to-project."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "github-collaboration",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": ".github/workflows/verify.yml",
+          "reason": "Verify, staging e production reali su branch commerciali."
+        },
+        {
+          "path": "scripts/cloud-verify.py",
+          "reason": "Publisher unico; non gestione branch/PR degli utenti."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Baseline prova CI reale, non workflow collaborativo GitHub completo. Configurazioni remote non lette da questa review."
+      },
+      "gaps": [
+        "Branch protection, required reviews/checks e permessi soci non verificati.",
+        "Connect Tools/Connect Your Agent e sync issue/task non provati.",
+        "Sandbox cloud resta separato e soggetto a decisione costi."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "social-internal",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Registri content/campaigns/creative-jobs persistenti."
+        },
+        {
+          "path": "docs/operativo/campagna-pilota-bozza.md",
+          "reason": "Copy social in bozza, non libreria asset completa."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "persists growth and creative plans, validates scope and protects studio costs"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Solo registri e contenuti bozza esistenti; nessuna prova della pipeline editoriale completa. Nessuna pubblicazione."
+      },
+      "gaps": [
+        "Stati brief→asset→review→approval→coda con legami persistenti non provati.",
+        "Preview piattaforme, carousel/story/visual veri, repurposing e calendario editoriale collegato da completare.",
+        "Questa slice interna può avanzare senza account social; non marcarla BLOCKED dal provider."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "ads-internal",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Campagna/growth plan e creative job possono conservare pianificazione."
+        },
+        {
+          "path": "apps/web/app/server/growth.ts",
+          "reason": "UTM e readiness senza account Ads."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "persists growth and creative plans, validates scope and protects studio costs"
+        },
+        {
+          "path": "tests/growth-tools.test.ts",
+          "name": "builds a campaign link without retaining click identifiers or permitting credential destinations"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Pianificazione e UTM testati, nessuna campagna pronta/pubblicata. Lavoro interno non bloccato dal provider."
+      },
+      "gaps": [
+        "Lifecycle target/varianti/budget→preview→approvazione non provato integralmente.",
+        "Asset pubblicitari reali e report da provider assenti; budget pianificato non è spesa autorizzata."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "assets-internal",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Registro media read-only: nome/mime/dimensione/stato."
+        },
+        {
+          "path": "packages/db/migrations/0001_initial.sql",
+          "reason": "media_assets con sha256/r2_key/scan_result; non metadata di diritti completi."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "UNKNOWN: schema esistente non dimostra workflow metadata operante; nessun test specifico trovato."
+      },
+      "gaps": [
+        "Fonte/licenza/autore/modello/consenso/versioni/relazioni progetto e CRUD non provati completi.",
+        "Preview pubblico statico non dimostra archivio asset interno.",
+        "Metadati indipendenti da storage binario: R2 assente non blocca questa slice."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "commerce-offer-configurator",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Riutilizzabile come calcolo server deterministico, non configuratore pubblico."
+        },
+        {
+          "path": "apps/web/app/content/capabilities.ts",
+          "reason": "Catalogo servizi esistente: non catalogo offerte acquistabili."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Fonte Commerce24§2–5/19: UNKNOWN per nuova slice; codice riusabile non implementazione del requisito."
+      },
+      "gaps": [
+        "Mancano scheda offerta commercialmente approvata, configurazione persistente con snapshot e prezzo disponibile secondo autorizzazioni.",
+        "Nessuna prima offerta valutata READY TO CONFIGURE sulla sola base delle demo."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "commerce-sandbox-order-fulfillment",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/workflow-runtime.ts",
+          "reason": "Base conversione lead→progetto, non pagamento→ordine→provisioning."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Fonte Commerce24§7/19/20: percorso sandbox obbligatorio ancora UNKNOWN; non confondere catena commerciale manuale con fulfillment pagato."
+      },
+      "gaps": [
+        "Nessun checkout sandbox, ordine, firma webhook, replay/out-of-order e riconciliazione provati.",
+        "Test commercial-chain usa Owner approval e setup portale via SQL fixture: non prova ordine/pagamento/accettazione cliente.",
+        "Vendite live restano soggette ad approvazioni commerciale/fiscale/tecnica."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "commerce-entitlements-self-service",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Subscriptions come registro finance, non entitlement engine."
+        },
+        {
+          "path": "apps/web/app/routes/portal.tsx",
+          "reason": "Portale progetti/deliverable esistente, non gestione acquisti completa."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Fonte Commerce24§8/16: nessuna prova di entitlement acquistato e applicato; UNKNOWN."
+      },
+      "gaps": [
+        "Mancano quote/accesso/piani lato server, rinnovi/revoca da pagamento, dunning e self-service abbonamenti.",
+        "Budget agenti esistente non sostituisce quote commerciali del piano cliente."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "product-excellence-evidence-gates-24",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "docs/operativo/requirement-evidence.json",
+          "reason": "Matrice macrogruppi con stati e prove, non valutazione visuale completa."
+        },
+        {
+          "path": "tests/e2e/assist-focus.spec.ts",
+          "reason": "Nuova regressione focus nel working tree; non dichiarata live."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Fonte ProductExcellence24§2/23 e valutazione finale: UNKNOWN per copertura completa. Questa riconciliazione non sostituisce browser/profiling/device reali."
+      },
+      "gaps": [
+        "Cinque dimensioni (visuale/funzionalità/automazione/integrazione/commerciale) richiedono evidenze, non medie dimostrative.",
+        "QA visiva sistematica form/login/Enter the Possibility e artefatti social/email premium ancora incompleti.",
+        "Recovery/autenticazione alternativa Product24§7 richiede review e approvazione prima di migrazione."
+      ],
+      "confidence": "high"
     }
   ]
 }
