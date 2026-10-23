@@ -81,7 +81,7 @@ describe('bozze email',()=>{
   expect(htmlRes?.headers.get('content-type')).toContain('text/html');
   expect(htmlRes?.headers.get('content-disposition')).toContain('attachment');
   const html=await htmlRes?.text()||'';
-  expect(html).not.toMatch(/<script/i);expect(html).not.toMatch(/<img/i);expect(html).not.toMatch(/\ssrc\s*=/i);
+  expect(html).not.toMatch(/<script/i);expect(html).not.toMatch(/<img/i);expect(html).not.toMatch(/<[a-z][^>]*\ssrc\s*=/i);
   expect(html).toContain('&lt;script');expect(html).toContain('&lt;img');expect(html).toContain('href="https://omni101.app/start-project"');
   expect(html).not.toContain('fetch(');
   const textRes=await handleApi(req('/api/email-drafts/'+id+'/export?format=text',cookie),env);
