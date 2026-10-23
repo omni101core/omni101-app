@@ -34,6 +34,7 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
   const mq=matchMedia('(prefers-reduced-motion: reduce)'),el=root.current,world=ring.current,view=stage.current,veil=loader.current;
   if(!el||!world||!view)return;
   const scene=model.current,written=new Map<string,string>();
+  let motionReduced=mq.matches;
   const links=Array.from(world.querySelectorAll<HTMLElement>('.reel-card'));
   let alive=true,last=performance.now(),lastActive=0,lastCount=-1,visible=true,loaded=0,formed=false,ready=coverUrls.length===0,opening=false,frame=0;
   const write=(key:string,value:string,apply:()=>void)=>{if(written.get(key)===value)return;written.set(key,value);apply()};
@@ -82,20 +83,21 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
   window.addEventListener('wheel',blockScroll,{passive:false});
   window.addEventListener('touchmove',blockScroll,{passive:false});
   const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;wake()},{rootMargin:'100px'});
-  const motionChange=()=>{setReduced(mq.matches);if(mq.matches)finish();else wake()};
+  const motionChange=(event?:MediaQueryListEvent)=>{motionReduced=event?.matches??mq.matches;setReduced(motionReduced);if(motionReduced)finish();else wake()};
   mq.addEventListener('change',motionChange);
   motionChange();
   document.addEventListener('visibilitychange',wake);
   observer.observe(el);
   coverUrls.forEach(src=>{const image=new Image();image.onload=image.onerror=settle;image.src=src});
   const patience=window.setTimeout(()=>{ready=true;tryOpen()},6000);
-  if(mq.matches||introSeen()){finish()}
+  if(motionReduced||introSeen()){finish()}
   else{
    playing.current=true;
    gsap.to(scene,{formation:1,duration:2,ease:'none',onUpdate:draw,onComplete:()=>{formed=true;tryOpen()}});
   }
   draw();
-  function canAnimate(){return alive&&visible&&!document.hidden&&!mq.matches}
+  // Keep media query reads out of animation frames; media events own the cached preference.
+  function canAnimate(){return alive&&visible&&!document.hidden&&!motionReduced}
   function wake(){
    if(!canAnimate()){cancelAnimationFrame(frame);frame=0;return}
    if(!frame){last=performance.now();frame=requestAnimationFrame(tick)}

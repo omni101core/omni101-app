@@ -34,7 +34,14 @@ jobs:
         run: |
           sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
           npx playwright install --with-deps --only-shell chromium
-      - run: npx playwright test
+      - name: Run browser verification
+        run: |
+          if [ "$GITHUB_REF_NAME" = "verify-commercial" ] && [ -s tests/ci-browser-grep.txt ]; then
+            echo "Focused browser diagnostics only; no deployment."
+            npx playwright test --grep "$(cat tests/ci-browser-grep.txt)" --repeat-each=3
+          else
+            npx playwright test
+          fi
       - name: Upload Playwright evidence on failure
         if: failure()
         uses: actions/upload-artifact@v4

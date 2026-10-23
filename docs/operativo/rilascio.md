@@ -75,3 +75,7 @@ Run `39833548394`, SHA `7289881`: 87 test server, 99 browser passati e 9 skip; b
 ### Import contesto founder
 
 Il job CI esegue scripts/seed-reviewed-context.mjs dopo deploy, prima dello smoke. Solo tre originali con hash, 12 requisiti/task e tre reference revisionate; insert-or-ignore, nessun overwrite o esecuzione agente. CLI locale --dry-run/--sql non richiede secret. Lo script usa il secret CI esistente senza stamparlo; non dipende dalla clipboard o dal Mac. Un errore si diagnostica e poi si ripete l’import idempotente, senza cancellare record.
+
+### Diagnostica browser mirata (23 ottobre)
+
+Solo sul branch verify-commercial, tests/ci-browser-grep.txt limita le regressioni browser e le ripete tre volte. Typecheck, server e build restano completi. Su release-commercial e rebuild-commercial il filtro è ignorato: suite browser completa prima di ogni deploy. Guardia del workflow verificata con comando simulato per tutti e tre i branch.

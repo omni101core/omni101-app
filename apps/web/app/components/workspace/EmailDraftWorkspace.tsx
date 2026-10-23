@@ -1,4 +1,4 @@
-import {useEffect,useRef,useState,type FormEvent} from 'react';
+import {useEffect,useId,useRef,useState,type FormEvent} from 'react';
 import {Link} from 'react-router';
 import {ActionButton,TextField,Panel,Feedback} from './ProductUI';
 type Status='DRAFT'|'IN_REVIEW'|'APPROVED';
@@ -15,6 +15,7 @@ async function call<T>(path:string,init?:RequestInit){
 }
 export default function EmailDraftWorkspace({campaigns}:{campaigns:{id:string;name:string}[]}){
  const [rows,setRows]=useState<Listed[]>([]);
+ const bodyId=useId(),exportId=useId();
  const [id,setId]=useState(''),[version,setVersion]=useState(0),[status,setStatus]=useState<Status>('DRAFT');
  const [subject,setSubject]=useState(''),[preheader,setPreheader]=useState(''),[body,setBody]=useState(''),[ctaLabel,setCtaLabel]=useState(''),[ctaUrl,setCtaUrl]=useState(''),[campaignId,setCampaignId]=useState('');
  const [html,setHtml]=useState(''),[text,setText]=useState(''),[dirty,setDirty]=useState(false),[serverDraft,setServerDraft]=useState<Draft|null>(null);
@@ -48,7 +49,7 @@ export default function EmailDraftWorkspace({campaigns}:{campaigns:{id:string;na
   <form onSubmit={e=>void save(e)}>
    <TextField label="Oggetto" value={subject} onChange={e=>{setSubject(e.target.value);setDirty(true)}} required maxLength={200} disabled={frozen}/>
    <TextField label="Preheader" value={preheader} onChange={e=>{setPreheader(e.target.value);setDirty(true)}} maxLength={180} disabled={frozen}/>
-   <label className="os-field">Testo<textarea value={body} onChange={e=>{setBody(e.target.value);setDirty(true)}} required rows={8} maxLength={20000} disabled={frozen}/></label>
+   <div className="os-field"><label htmlFor={bodyId}>Testo</label><textarea id={bodyId} value={body} onChange={e=>{setBody(e.target.value);setDirty(true)}} required rows={8} maxLength={20000} disabled={frozen}/></div>
    <TextField label="Etichetta del pulsante" value={ctaLabel} onChange={e=>{setCtaLabel(e.target.value);setDirty(true)}} maxLength={80} disabled={frozen}/>
    <TextField label="Indirizzo https del pulsante" type="url" value={ctaUrl} onChange={e=>{setCtaUrl(e.target.value);setDirty(true)}} maxLength={2000} disabled={frozen} placeholder="https://"/>
    <label className="os-field">Campagna dello stesso workspace<select aria-label="Campagna collegata" value={campaignId} onChange={e=>{setCampaignId(e.target.value);setDirty(true)}} disabled={frozen}><option value="">Nessuna campagna</option>{campaigns.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
@@ -56,6 +57,6 @@ export default function EmailDraftWorkspace({campaigns}:{campaigns:{id:string;na
   </form>
   {serverDraft?<div role="status"><p>C’è una versione salvata più recente. Il testo qui sopra non è stato sostituito.</p><ActionButton variant="secondary" disabled={busy} onClick={()=>{if(busy||!askDiscard())return;void open(serverDraft.id,true)}}>Carica la versione salvata</ActionButton></div>:null}
   {dirty&&id?<p className="os-hint">Il testo nel modulo non è ancora quello salvato. L’anteprima mostra l’ultima versione registrata.</p>:null}
-  {html?<><h3>Anteprima isolata</h3><iframe title="Anteprima isolata della bozza" sandbox="" srcDoc={html} style={{width:'100%',minHeight:280,border:'1px solid #d2b77b55',background:'#fff'}}/><label className="os-field">Testo esportato<textarea readOnly value={text} rows={6}/></label></>:null}
+  {html?<><h3>Anteprima isolata</h3><iframe title="Anteprima isolata della bozza" sandbox="" srcDoc={html} style={{width:'100%',minHeight:280,border:'1px solid #d2b77b55',background:'#fff'}}/><div className="os-field"><label htmlFor={exportId}>Testo esportato</label><textarea id={exportId} readOnly value={text} rows={6}/></div></>:null}
  </Panel>;
 }
