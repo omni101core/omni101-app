@@ -70,3 +70,5 @@ Migrazione additiva `0006_studio_operations.sql`: `campaigns`, `growth_plans`, `
 Export CSV: celle testuali che iniziano con formule (`=`, `+`, `-`, `@`, anche dopo spazi) prefissate da apostrofo, per impedire esecuzione involontaria nei fogli di calcolo. Le esportazioni restano limitate ai record caricati e autorizzati.
 
 23 ottobre: preparazione eseguita anche sul D1 staging dopo migrazioni, conteggi 15 task/3 milestone/3 workflow DRAFT. Tre task chiusi con prove e audit di verifica, nessuna sovrascrittura di dati cliente. Collaboratore Owner attivo con passkey solo in produzione, verificato via metadati: nessun nuovo invito duplicato. Ambiente staging distinto.
+
+23 ottobre: il trace del test due Owner rilevava il secondo invito fermo con pulsante normale, nessun errore e nessuna verifica in corso: clic possibile sull'HTML SSR prima del collegamento degli eventi. AuthGate ora parte disabilitato con «Preparazione accesso…» e abilita login/registrazione soltanto dopo mount client. Nessun bypass della passkey, nessun retry del login e nessuna modifica alle identità. Il test con due Owner indipendenti rimane obbligatorio.

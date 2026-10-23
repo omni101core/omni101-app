@@ -13,11 +13,11 @@ Letto il 2026-10-22. Questo worker di documentazione non pubblica e non lancia l
 
 `cloud-verify.py` crea un commit sul branch remoto con l'albero dei file, parent il branch se esiste, altrimenti `main`. `production_changed` nel JSON di uscita è `false` anche quando il branch è `release-commercial`: il flag non è il deploy. Il deploy lo fa GitHub Actions.
 
-File che lo script carica: tutto `apps/web`, `packages`, `.github/workflows`, `tests`, più `package.json`, `vitest.config.ts`, `playwright.config.ts`, `README.md`. Esclude `node_modules`, `.wrangler`, `.react-router`, `build`, `.dev.vars`. Non carica `docs/`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `src/`, `worker/`, `scripts/`.
+File che lo script carica: `apps/web`, `packages`, `.github/workflows`, `tests`, `docs` (file fino a 1 MB), `scripts/cloud-verify.py` e i file root di configurazione/istruzioni elencati nello script. Scansione anti-segreti prima del push. Esclude dipendenze, build, `.env`, `.dev.vars`, vecchi `src/` e `worker/` e gli altri script operativi locali. Il verificatore include sé stesso perché un nuovo clone possa riprendere il lavoro.
 
 ## CI
 
-File: `.github/workflows/verify.yml`. Parte su push a `rebuild-commercial` e `release-commercial`, e su `workflow_dispatch`. Un job `verify` (20 minuti) e, solo se il ref è `release-commercial`, un job `production` (15 minuti).
+File: `.github/workflows/verify.yml`. Parte su push a `verify-commercial`, `rebuild-commercial` e `release-commercial`, e su `workflow_dispatch`. Un job `verify` (20 minuti) e, solo se il ref è `release-commercial`, un job `production` (15 minuti).
 
 Ordine di `verify`: checkout, Node 22, `npm install`, `npm run typecheck`, `npm test`, build con `CLOUDFLARE_ENV=test`, migrazioni D1 locali più `tests/owner-fixture.sql`, Playwright Chromium, build con `CLOUDFLARE_ENV=staging`, migrazioni remote staging, `wrangler deploy` con `BUILD_REVISION` = SHA, `node tests/cloud-smoke.mjs`. Artifact `omni101-verified-build` per 7 giorni.
 
@@ -54,3 +54,9 @@ Run `39829566938`: typecheck, 86 test server e build test passati; interrotta du
 Run `39833548394`, SHA `7289881`: 87 test server, 99 browser passati e 9 skip; build test/staging verdi. Fallimento autorizzazioni D1 7403, nessun deploy. Browser: token esistente limitato all'IP del Mac e privo di Workers Scripts. Nessuna modifica a quel token; proposta `omni101-app-github-ci` preparata ma NON creata, in attesa di conferma per nuova concessione di accesso. Nessun segreto copiato o rigenerato. Artifact esatto avviato da runtime Wrangler già in cache su `127.0.0.1:4176`, DB locale isolato in `/tmp/omni101-preview-7289881`, nessuna build/installazione sul Mac. Sessione runtime 33833; rollback = fermare soltanto quel processo.
 
 `cloud-verify.py --verify-only` pubblica solo su `verify-commercial`: esegue gli stessi test e build ma salta i quattro passi di staging che richiedono Cloudflare. Non dichiara online il risultato. Consente proseguire la dashboard senza reiterare 7403. `main`, release e produzione invariati.
+
+## Verifica senza deploy
+
+`python3 scripts/cloud-verify.py --verify-only` usa `verify-commercial`: typecheck, test, migrazioni locali e build, senza migrazioni/deploy/smoke remoti. `--check` scansiona soltanto. Non scambiare una verifica senza deploy per una pubblicazione.
+
+23 ottobre: aggiornato il secret permanente CI usando il token esistente fornito esplicitamente dal founder tramite clipboard macOS. Nessun token nuovo, OAuth o modifica DNS. Non stampare mai clipboard o header; valori solo in memoria e stdin verso il secret GitHub. Non eseguire `refresh-deploy-auth.py`.
