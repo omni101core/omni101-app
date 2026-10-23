@@ -27,3 +27,5 @@ Identità del titolare, P.IVA, contatti, fornitori/DPA, trasferimenti, retention
 `tests/seo.test.ts`, `tests/growth-tools.test.ts`, integrazioni marketing/privacy in `tests/integration.test.ts`. Aggiungere prova browser autenticata e verifica live dopo CI. Niente claim di pubblicazione prima della revisione confermata dall'health.
 
 Verifica conclusa: 0008 applicata in staging e produzione; 102 test server e 103 browser complessivi passati. Nessuna campagna o invio attivato. Testo privacy pubblico aggiornato ai trattamenti reali di OMNI ASSIST (NVIDIA), passkey e R2 assente; dati legali e policy da completare restano dichiarati.
+
+Revenue operativo dal rilascio f53fe2c / run 39950784094: riusa campagne e date originali, associazioni CRM ed eventi operativi manuali v1. Questo non abilita tracking di traffico, invii, social o account Ads. Canali esplicitamente NOT_CONNECTED, nessun READY_FOR_CONNECTION prematuro.
