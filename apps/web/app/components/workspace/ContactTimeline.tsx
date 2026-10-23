@@ -1,0 +1,8 @@
+import {useEffect,useState} from 'react';
+type Item={type:string;id:string;title:string;status:string|null;at:number};
+export default function ContactTimeline({resource,id}:{resource:'contacts'|'companies';id:string}){
+ const [items,setItems]=useState<Item[]>([]),[error,setError]=useState(''),[loading,setLoading]=useState(true);
+ useEffect(()=>{let active=true;setLoading(true);setError('');void fetch('/api/records/'+resource+'/'+encodeURIComponent(id)+'/timeline').then(async res=>{const data=await res.json() as {items?:Item[];error?:string};if(!active)return;if(!res.ok){setError(String(data.error||'Timeline non disponibile'));setItems([]);return}setItems(data.items||[])}).catch(()=>{if(active)setError('Timeline non disponibile')}).finally(()=>{if(active)setLoading(false)});return()=>{active=false}},[resource,id]);
+ const fmt=(ms:number)=>new Intl.DateTimeFormat('it-IT',{dateStyle:'medium',timeStyle:'short'}).format(new Date(ms));
+ return <section className="os-timeline" aria-labelledby="os-timeline-title"><h3 id="os-timeline-title">Attività collegate</h3>{loading&&<p role="status" className="os-hint">Caricamento timeline…</p>}{error&&<p role="alert" className="os-error">{error}</p>}{!loading&&!error&&(items.length?<ul>{items.map(it=><li key={it.type+'-'+it.id}><time dateTime={new Date(it.at).toISOString()}>{fmt(it.at)}</time><div><strong>{it.title}</strong><span className="os-badge">{it.type.replaceAll('_',' ')}</span>{it.status&&<span className="os-badge">{it.status.replaceAll('_',' ')}</span>}</div></li>)}</ul>:<p className="os-hint">Nessuna attività registrata</p>)}</section>
+}

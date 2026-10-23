@@ -22,6 +22,9 @@ Voci Workspace in `admin.tsx`: Panoramica `/admin`, Inbox, Lead, Contatti, Azien
 - `GET/POST/PATCH /api/records/:risorsa` e `GET /api/records/:risorsa/:id`
 - `GET /api/schema/:risorsa` — i campi tornano solo se il ruolo è in `write`.
 - `GET /api/team`, `POST /api/team/:id/revoke` (revoca: solo chi `canManage`, cioè OWNER; motivo richiesto dalla UI, almeno 5 caratteri).
+- `PATCH /api/records/:risorsa/:id` accetta `expectedUpdatedAt` (ms, opzionale). Se non coincide con `updated_at` corrente: 409 `{error:"Record modificato da un altro socio. Ricarica.", current:<record>}`, nessuna scrittura e nessun audit. Se coincide, la risposta contiene anche il nuovo `updated_at`. Senza il campo il comportamento non cambia.
+- `POST /api/records/contacts`: 409 `{error:"Possibile duplicato", duplicateId, resource:"contacts"}` se nella stessa organizzazione esiste un contatto con la stessa email (trim + minuscolo) o lo stesso telefono (solo cifre, almeno 6). Nessuna fusione. Aziende e lead non hanno email, telefono o partita IVA nello schema: nessun controllo finché non esiste una colonna (migrazione additiva da decidere).
+- `GET /api/records/contacts/:id/timeline` e `/api/records/companies/:id/timeline`: `{items:[{type,id,title,status,at}]}` per `at` decrescente, massimo 100, solo la stessa organizzazione. Tipi emessi: `interaction`, `lead`, `deal` (dai contatti, per l'azienda dai suoi contatti) e `note` (note con `resource_type` uguale alla risorsa). `activity` non viene emesso: `activities` non ha legame con contatti o aziende. 403 per ruoli senza lettura, 404 se il record non c'è.
 - Riferimenti nei form: `client_id`, `project_id`, `contact_id`, `company_id`, `lead_id` da `/api/records/...`; `owner_id` e `assignee_id` da `/api/team`.
 
 Status lead: `NEW`, `AI_TRIAGE`, `QUALIFICATION`, `DISCOVERY`, `PROPOSAL_DRAFT`, `PROPOSAL_SENT`, `NEGOTIATION`, `WON`, `LOST`, `ON_HOLD`. Le trattative partono da `QUALIFICATION` e non hanno `NEW`.
