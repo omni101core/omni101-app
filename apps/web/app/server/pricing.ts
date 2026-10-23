@@ -16,8 +16,8 @@ export function calculatePricing(input:PricingInput){
  const lines=input.lines.map(line=>({...line,costCents:Math.round(line.unitCostCents*line.quantityMilli/1000)}));
  const groups=(['ONE_TIME','MONTHLY','ANNUAL','USAGE'] as const).flatMap(cadence=>{
   const selected=lines.filter(l=>l.cadence===cadence);if(!selected.length)return [];
-  const directCents=selected.reduce((n,l)=>n+l.costCents,0),overheadCents=Math.round(directCents*input.overheadBp/10000),contingencyCents=Math.round((directCents+overheadCents)*input.contingencyBp/10000),adjustedCostCents=directCents+overheadCents+contingencyCents;
-  if(directCents>10000000000)throw new HttpError(400,'Costo aggregato oltre il limite per cadenza.');
+  const directCents=selected.reduce((n,l)=>n+l.costCents,0);if(directCents>10000000000)throw new HttpError(400,'Costo aggregato oltre il limite per cadenza.');
+  const overheadCents=Math.round(directCents*input.overheadBp/10000),contingencyCents=Math.round((directCents+overheadCents)*input.contingencyBp/10000),adjustedCostCents=directCents+overheadCents+contingencyCents;
   const targetCents=Math.ceil(adjustedCostCents*10000/(10000-input.marginBp)),discountCents=Math.round(targetCents*input.discountBp/10000),netCents=targetCents-discountCents,taxCents=input.taxBp===null?null:Math.round(netCents*input.taxBp/10000);
   if(netCents>1000000000000)throw new HttpError(400,'Importo oltre il limite del preventivatore.');
   return [{cadence,unit:cadence==='USAGE'?selected[0].unit:null,directCents,overheadCents,contingencyCents,adjustedCostCents,targetCents,discountCents,netCents,taxCents,totalCents:taxCents===null?null:netCents+taxCents,effectiveMarginBp:netCents?Math.round((netCents-adjustedCostCents)*10000/netCents):null,belowTarget:netCents<targetCents,belowCost:netCents<adjustedCostCents}];

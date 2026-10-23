@@ -101,186 +101,326 @@
       {
         "line": 1,
         "title": "OMNI101 — MANDATO DI CONSOLIDAMENTO, COMPLETAMENTO E POTENZIAMENTO OPERATIVO",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 8,
         "title": "0. Regola fondamentale",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 30,
         "title": "1. Punto di partenza verificato dal precedente handoff",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 63,
         "title": "2. Acquisizione immediata e recupero integrale dei mandati",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "memory",
+          "coverage"
+        ],
+        "task_ids": [
+          "mandate:omni101:memory",
+          "mandate:omni101:coverage"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 89,
         "title": "3. Audit di completamento, non audit infinito",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coverage"
+        ],
+        "task_ids": [
+          "mandate:omni101:coverage"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 117,
         "title": "4. CRM completo e realmente operativo",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "crm-completion"
+        ],
+        "task_ids": [
+          "mandate:omni101:crm-completion"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 144,
         "title": "5. Marketing Hub: email, landing, funnel e conversione",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "email-foundation",
+          "growth-privacy"
+        ],
+        "task_ids": [
+          "mandate:omni101:email-foundation",
+          "mandate:omni101:growth-privacy"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 148,
         "title": "Email marketing",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 179,
         "title": "Landing page builder",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 198,
         "title": "Funnel builder",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 208,
         "title": "Conversion rate optimization",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 212,
         "title": "6. Social Media Studio e advertising",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "social",
+          "ads",
+          "assets"
+        ],
+        "task_ids": [
+          "mandate:omni101:social",
+          "mandate:omni101:ads",
+          "mandate:omni101:assets"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 238,
         "title": "7. Preventivi, offerte e automazione economica",
-        "classification": "NEEDS_TRIAGE",
-        "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "requirement_keys": [
+          "pricing"
+        ],
+        "task_ids": [
+          "mandate:omni101:pricing"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "components": [
+          "apps/web/app/server/pricing.ts",
+          "apps/web/app/components/workspace/PricingWorkspace.tsx"
+        ],
+        "tests": [
+          "tests/integration.test.ts",
+          "tests/e2e/workspace.spec.ts"
+        ],
+        "release": null
       },
       {
         "line": 303,
         "title": "8. Dashboard: modernizzazione reale",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "brand"
+        ],
+        "task_ids": [
+          "mandate:omni101:brand"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 343,
         "title": "9. Agency OS completo",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 380,
         "title": "10. Client portal, ruoli e sicurezza",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "team",
+          "memory",
+          "growth-privacy"
+        ],
+        "task_ids": [
+          "mandate:omni101:team",
+          "mandate:omni101:memory",
+          "mandate:omni101:growth-privacy"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 423,
         "title": "11. Catalogo di soluzioni riutilizzabili",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "commercial-catalog"
+        ],
+        "task_ids": [
+          "mandate:omni101:commercial-catalog"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 453,
         "title": "12. SEO, GEO, accessibilità e crescita organica",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "seo"
+        ],
+        "task_ids": [
+          "mandate:omni101:seo"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 482,
         "title": "13. Referral, affiliazione, reseller e white-label",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "commercial-catalog"
+        ],
+        "task_ids": [
+          "mandate:omni101:commercial-catalog"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 504,
         "title": "14. Orchestrazione di Claude, Codex, Hermes e CLI",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "adaptive-execution",
+          "coding-agents"
+        ],
+        "task_ids": [
+          "mandate:omni101:adaptive-execution",
+          "mandate:omni101:coding-agents"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 535,
         "title": "15. Open source, GitHub e REA",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "commercial-catalog"
+        ],
+        "task_ids": [
+          "mandate:omni101:commercial-catalog"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 575,
         "title": "16. Automazioni AI realmente utili",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 603,
         "title": "17. Modalità di esecuzione",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 658,
         "title": "18. Verifica e criteri di accettazione",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coverage"
+        ],
+        "task_ids": [
+          "mandate:omni101:coverage"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 681,
         "title": "19. Limiti operativi",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 695,
         "title": "20. Risultato richiesto",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       }
-    ]
+    ],
+    "coverage_granularity": "section inventory; not exhaustive atomic acceptance coverage"
   },
   {
     "id": "connected-ecosystem-2026-10-23",
@@ -296,325 +436,575 @@
       {
         "line": 9,
         "title": "OMNI101 — MANDATO INTEGRATIVO: CONNECTED ECOSYSTEM, MCP, AUTOMATION, AGENT WORKFORCE & INTERACTIVE PRODUCT EXPERIENCE",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 15,
         "title": "0. Visione complessiva",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 39,
         "title": "1. INTEGRATION HUB — CENTRO INTEGRAZIONI COMPLETO",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 65,
         "title": "1.1 Categorie di integrazione",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 107,
         "title": "1.2 Connessione guidata",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 127,
         "title": "2. MCP HUB — MODEL CONTEXT PROTOCOL COME CAPACITÀ DI PRIMA CLASSE",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 133,
         "title": "2.1 Registro server MCP",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 153,
         "title": "2.2 MCP Tool Explorer",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 176,
         "title": "2.3 MCP Client e MCP Server OMNI101",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 201,
         "title": "2.4 Sicurezza MCP",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "integrations-mcp"
+        ],
+        "task_ids": [
+          "mandate:omni101:integrations-mcp"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 226,
         "title": "3. AUTOMATION STUDIO — WORKFLOW BUILDER VISUALE E REALE",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 234,
         "title": "3.1 Editor visuale",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 264,
         "title": "3.2 Tipi di nodi",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 301,
         "title": "3.3 Motore di esecuzione",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 333,
         "title": "3.4 Template di automazione",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 356,
         "title": "4. AGENT STUDIO — AGENTI CHE FANNO DAVVERO IL LAVORO",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coding-agents",
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:coding-agents",
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 388,
         "title": "4.1 Agent Builder guidato",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coding-agents",
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:coding-agents",
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 409,
         "title": "4.2 Mission Control reale",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coding-agents",
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:coding-agents",
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 448,
         "title": "4.3 Team di agenti",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coding-agents",
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:coding-agents",
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 472,
         "title": "4.4 Agenti di coding",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coding-agents",
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:coding-agents",
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 502,
         "title": "5. HUMAN APPROVAL CENTER — CONTROLLO UMANO CENTRALIZZATO",
-        "classification": "NEEDS_TRIAGE",
-        "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "requirement_keys": [
+          "connected-runtime",
+          "pricing"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime",
+          "mandate:omni101:pricing"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "components": [
+          "apps/web/app/server/pricing.ts",
+          "apps/web/app/components/workspace/PricingWorkspace.tsx"
+        ],
+        "tests": [
+          "tests/integration.test.ts",
+          "tests/e2e/workspace.spec.ts"
+        ],
+        "release": null
       },
       {
         "line": 544,
         "title": "6. TUTORIAL INTERATTIVI, GUIDED TOURS E PRODUCT EDUCATION",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "education"
+        ],
+        "task_ids": [
+          "mandate:omni101:education"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 550,
         "title": "6.1 Onboarding intelligente",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "education"
+        ],
+        "task_ids": [
+          "mandate:omni101:education"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 573,
         "title": "6.2 Tour interattivi animati",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "education"
+        ],
+        "task_ids": [
+          "mandate:omni101:education"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 599,
         "title": "6.3 Learn by doing",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "education"
+        ],
+        "task_ids": [
+          "mandate:omni101:education"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 618,
         "title": "6.4 Academy e Knowledge Center",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "education"
+        ],
+        "task_ids": [
+          "mandate:omni101:education"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 639,
         "title": "6.5 Assistente contestuale",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "education"
+        ],
+        "task_ids": [
+          "mandate:omni101:education"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 673,
         "title": "7. UNIVERSAL COMMAND BAR E AZIONI CONTESTUALI",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "crm-completion"
+        ],
+        "task_ids": [
+          "mandate:omni101:crm-completion"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 702,
         "title": "8. EVENT BUS E MODELLO DATI CONDIVISO",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 759,
         "title": "9. NOTIFICATION & UNIFIED INBOX",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 800,
         "title": "10. DATA, ANALYTICS E BUSINESS INTELLIGENCE",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "revenue-foundation"
+        ],
+        "task_ids": [
+          "mandate:omni101:revenue-foundation"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 839,
         "title": "11. BRAND STUDIO E DESIGN SYSTEM GLOBALE",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "brand"
+        ],
+        "task_ids": [
+          "mandate:omni101:brand"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 886,
         "title": "12. MARKETPLACE INTERNO DI CAPACITÀ",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "commercial-catalog"
+        ],
+        "task_ids": [
+          "mandate:omni101:commercial-catalog"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 929,
         "title": "13. OPERATIONS, AFFIDABILITÀ E COST CONTROL",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "connected-runtime"
+        ],
+        "task_ids": [
+          "mandate:omni101:connected-runtime"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 965,
         "title": "14. SCENARI END-TO-END OBBLIGATORI",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coverage"
+        ],
+        "task_ids": [
+          "mandate:omni101:coverage"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 969,
         "title": "Scenario A — Lead → vendita → progetto",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 973,
         "title": "Scenario B — Campagna marketing",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 977,
         "title": "Scenario C — Agente con MCP",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 981,
         "title": "Scenario D — Workflow visuale",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 985,
         "title": "Scenario E — Tutorial interattivo",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 989,
         "title": "Scenario F — Agente di coding",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 993,
         "title": "Scenario G — Integrazione non disponibile",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 999,
         "title": "15. CRITERI DI PRODOTTO NON NEGOZIABILI",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "REQUIREMENT_GROUP",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [
+          "coverage"
+        ],
+        "task_ids": [
+          "mandate:omni101:coverage"
+        ],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 1020,
         "title": "16. PIANO DI INTEGRAZIONE CON IL LAVORO GIÀ IN CORSO",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 1079,
         "title": "17. ISTRUZIONE ESECUTIVA FINALE",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       },
       {
         "line": 1110,
         "title": "Come dovrebbe apparire l'ecosistema",
-        "classification": "NEEDS_TRIAGE",
+        "classification": "CONTEXT_OR_EXECUTION_RULE",
         "implementation": "NOT_ASSESSED",
-        "requirement_keys": []
+        "requirement_keys": [],
+        "task_ids": [],
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION"
       }
-    ]
+    ],
+    "coverage_granularity": "section inventory; not exhaustive atomic acceptance coverage"
   }
 ]
