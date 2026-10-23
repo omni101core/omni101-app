@@ -41,3 +41,52 @@ it('serves real operational priorities while withholding finance from developers
  const d=await (await handleApi(req('/api/operations',dev),env))!.json() as any;expect(d.finance).toBeNull();
  expect((await handleApi(req('/api/notifications/notice/read',cookie,'POST',{}),env))?.status).toBe(200);expect(sqlite.prepare('SELECT status FROM notifications WHERE id=?').get('notice')?.status).toBe('READ');
 });
+
+describe('marketing safeguards and privacy register',()=>{
+ it('retains suppression after withdrawal and a later documented consent, with idempotent evidence',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite);const email='test-marketing@example.test';
+  const event={email,state:'WITHDRAWN',source:'Internal verified consent reference',policyVersion:'2026-10',requestId:crypto.randomUUID()};
+  expect((await handleApi(req('/api/growth/consents',cookie,'POST',event),env))?.status).toBe(201);
+  expect((await handleApi(req('/api/growth/consents',cookie,'POST',event),env))?.status).toBe(200);
+  expect((await handleApi(req('/api/growth/consents',cookie,'POST',{...event,state:'GRANTED',requestId:crypto.randomUUID()}),env))?.status).toBe(201);
+  const res=await handleApi(req('/api/growth/eligibility',cookie,'POST',{email}),env);expect(await res?.json()).toMatchObject({suppressed:true,consent:'GRANTED',canSend:false});
+  expect(sqlite.prepare('SELECT count(*) n FROM marketing_consent_records').get()?.n).toBe(2);expect(sqlite.prepare("SELECT count(*) n FROM audit_logs WHERE action='CONSENT_RECORDED'").get()?.n).toBe(2);
+  expect(JSON.stringify(sqlite.prepare('SELECT * FROM marketing_suppressions').all())).not.toContain(email);
+  expect((await handleApi(req('/api/growth/consents',cookie,'POST',{...event,source:'Different evidence'}),env))?.status).toBe(409);
+ });
+ it('limits privacy evidence to administrators and prevents unsupported closure',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite),sales=await owner(sqlite,'omni101','SALES','growth-sales');
+  expect((await handleApi(req('/api/growth/consents',sales,'POST',{email:'x@example.test',state:'GRANTED',source:'Verified source',policyVersion:'1',requestId:crypto.randomUUID()}),env))?.status).toBe(403);
+  expect((await handleApi(req('/api/records/privacy-requests',sales),env))?.status).toBe(403);
+  const data={name:'Access request',subject_email:'x@example.test',request_type:'ACCESS',status:'COMPLETED'};
+  expect((await handleApi(req('/api/records/privacy-requests',cookie,'POST',data),env))?.status).toBe(400);
+  expect((await handleApi(req('/api/records/privacy-requests',cookie,'POST',{...data,description:'Identity and scoped response reviewed by the responsible Owner.'}),env))?.status).toBe(201);
+  for(const kind of ['SEM','GEO','LOCAL_SEO','PRIVACY'])expect((await handleApi(req('/api/records/growth-plans',cookie,'POST',{name:kind+' initiative',kind,status:'BACKLOG'}),env))?.status).toBe(201);
+ });
+});
+
+describe('persistent knowledge and provenance',()=>{
+ it('shares attributed versions between Owners, rejects stale saves and preserves source history',async()=>{
+  const {sqlite,env}=database(),a=await owner(sqlite,'omni101','OWNER','memory-a'),b=await owner(sqlite,'omni101','OWNER','memory-b');
+  const id=crypto.randomUUID(),record={name:'Cinematic mandate',kind:'MANDATE',status:'CAPTURED',body:'Original founder request, preserve this text.',source:'Founder attachment 2026-10-23',acceptance:'',evidence:'',source_id:null,task_id:null};
+  const data={id,version:0,record};expect((await handleApi(req('/api/knowledge',a,'POST',data),env))?.status).toBe(201);
+  expect((await handleApi(req('/api/knowledge',a,'POST',data),env))?.status).toBe(200);
+  const updated={...record,body:'Revised context with a decision.'};expect((await handleApi(req('/api/knowledge/'+id,b,'PATCH',{id,version:1,record:updated}),env))?.status).toBe(200);
+  expect((await handleApi(req('/api/knowledge/'+id,a,'PATCH',{id,version:1,record}),env))?.status).toBe(409);
+  const response=await handleApi(req('/api/knowledge/'+id,a),env),detail=await response?.json() as {record:{version:number;updated_by:string};revisions:{snapshot:string;author_id:string}[]};
+  expect(detail.record).toMatchObject({version:2,updated_by:'memory-b'});expect(detail.revisions).toHaveLength(2);expect(detail.revisions[1].snapshot).toContain(record.body);expect(detail.revisions[1].author_id).toBe('memory-a');
+  expect(sqlite.prepare("SELECT count(*) n FROM audit_logs WHERE action='KNOWLEDGE_SAVED'").get()?.n).toBe(2);
+  const search=await handleApi(req('/api/knowledge?q=revised&kind=MANDATE',a),env);expect((await search?.json() as {records:unknown[]}).records).toHaveLength(1);
+ });
+ it('isolates tenants, excludes clients and requires proof for VERIFIED',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite),client=await owner(sqlite,'omni101','CLIENT','memory-client');
+  expect((await handleApi(req('/api/knowledge',client),env))?.status).toBe(403);
+  const stamp=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('memory-other','Other','memory-other',stamp,stamp);const foreign=await owner(sqlite,'memory-other','OWNER','foreign-memory');
+  const id=crypto.randomUUID(),record={name:'Requirement',kind:'REQUIREMENT',status:'VERIFIED',body:'A real requirement',source:'Founder request',acceptance:'Pass a test',evidence:'',source_id:null,task_id:null};
+  expect((await handleApi(req('/api/knowledge',cookie,'POST',{id,version:0,record}),env))?.status).toBe(400);
+  expect((await handleApi(req('/api/knowledge',cookie,'POST',{id,version:0,record:{...record,status:'PLANNED'}}),env))?.status).toBe(201);
+  expect((await handleApi(req('/api/knowledge/'+id,foreign),env))?.status).toBe(404);
+  expect((await handleApi(req('/api/knowledge',foreign,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',source_id:id}}),env))?.status).toBe(400);
+  expect((await handleApi(req('/api/knowledge',cookie,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',task_id:'missing-task'}}),env))?.status).toBe(400);
+ });
+});

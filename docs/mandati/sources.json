@@ -1,0 +1,29 @@
+[
+  {
+    "id": "product-excellence-2026-10-23",
+    "file": "docs/mandati/product-excellence-2026-10-23.md",
+    "source": "founder attachment 9be06d65-efdb-4db0-8b30-d4969a8376ee",
+    "imported_at": "2026-10-23",
+    "sha256": "5fad170106e602f3a894521b85972ae141a6b2a05966cb2e65527d73dd2873c8",
+    "original_preserved": true,
+    "coverage": "captured; implementation status must be verified per requirement"
+  },
+  {
+    "id": "product-quality-integrazione-2026-10-23",
+    "file": "docs/mandati/product-quality-integrazione-2026-10-23.md",
+    "source": "founder attachment 7da92f01-20ab-4ab9-a415-2aa4e8443a7a",
+    "imported_at": "2026-10-23",
+    "sha256": "d8d5fad6c563a0d514b1b63eaf206774ff335a8a92ebb3264b173fbbef621de1",
+    "original_preserved": true,
+    "coverage": "captured; implementation status must be verified per requirement"
+  },
+  {
+    "id": "persistent-intelligence-2026-10-23",
+    "file": "docs/mandati/persistent-intelligence-2026-10-23.md",
+    "source": "founder attachment 20ee0b17-e0d6-4040-8965-e84c08fb908e",
+    "imported_at": "2026-10-23",
+    "sha256": "b832840ef588e163de30e1777338a69512d501c50706e694a89eb457b65061e0",
+    "original_preserved": true,
+    "coverage": "captured; implementation status must be verified per requirement"
+  }
+]

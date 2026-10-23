@@ -17,3 +17,5 @@ Non leggere `~/.omni101/state/omni101-app/`. Non stampare token. Non eseguire `s
 Il mandato completo resta `docs/MASTER-CONTRACT.md` (non si modifica da SPEC-23). La nota dell'upgrade di stamattina resta `docs/UPGRADE-EXECUTION.md`.
 
 Ripresa corrente e dati locali/staging: ultime sezioni di `docs/operativo/ripresa.md`. Inventario funzionale e criteri di chiusura: `docs/operativo/dashboard-checklist.md`. Il backlog è stato popolato sul D1 locale e staging, non dedurlo per produzione.
+
+Mandati del 23/10 preservati in docs/mandati/ con hash. Vertical slice locali SEO/marketing/privacy (0008) e Knowledge (0009) in verifica; non confondere working tree e live. Dettagli nei rispettivi moduli.

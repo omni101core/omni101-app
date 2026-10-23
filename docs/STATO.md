@@ -51,3 +51,14 @@ Backlog ora popolato **nel solo D1 locale**: conteggi verificati 15 task, 3 mile
 - D1 staging popolato e contato: 15 task, 3 milestone, 3 workflow DRAFT, 3 task completati con prova (accesso CI, QA dashboard, portfolio). Preparazione non avvia agenti/workflow. Le attività sintetiche dei canary restano esplicitamente QA e appartengono solo allo staging.
 - Collaboratore indicato dal founder: metadati produzione confermano OWNER ACTIVE e una passkey registrata. Nessun account corrispondente nello staging; nessun nuovo invito generato in questa verifica. Non confondere i due accessi.
 - Nuovo portfolio settore e dashboard sono online su preview, non ancora dichiarati pubblicati sul dominio principale. Produzione non modificata da questa ripresa.
+
+## Stato corrente — 23 ottobre, estensioni in corso
+
+| Area | Stato effettivo | Evidenza / limite |
+|---|---|---|
+| Dashboard, pianificazione, portfolio settoriale, auth/motion | Verificati in staging | Run 39886325515 interamente verde, 93 server + 102 browser, 10 skip |
+| Rilascio della sola revisione già verificata | Avviato, esito da leggere | Run 39887173011, commit dbfb3be57967a2e280dee0a5d0f1549a34f4a442 |
+| SEO/SEM/GEO e controlli privacy | Implementazione locale da verificare | 0008, endpoint growth, UI, sitemap/JSON-LD/meta; nessun Ads/email connesso |
+| Knowledge & Intelligence | Prima vertical slice locale da verificare | 0009, cattura/ricerca/versioni/fonti/task/export; niente ACL progetto o semantica |
+| Mandati nuovi | Originali archiviati con hash | docs/mandati/sources.json; non ancora importati nel D1 |
+| OpenHands, sandbox cloud, branch protetti | Reference e requisiti da valutare | Nessuna integrazione o nuovo servizio attivato |
