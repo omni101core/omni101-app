@@ -82,7 +82,7 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
 // Real staging-only pricing persistence, concurrency boundary and central approval.
 const pricingQuoteId=randomUUID();
 {
- const input={name:'SYNTHETIC staging calculated quote '+key.slice(0,8),leadId:null,currency:'EUR',scope:'A documented synthetic delivery scope used only by the staging canary.',terms:'Synthetic internal terms requiring human review.',assumptions:'No approved rates, taxes or commercial offer are implied.',lines:[{name:'Synthetic delivery work',category:'LABOR',cadence:'ONE_TIME',unit:'hours',quantityMilli:2000,unitCostCents:5000}],overheadBp:1000,contingencyBp:0,marginBp:5000,discountBp:0,taxBp:null,taxNote:''};
+ const input={name:'SYNTHETIC staging calculated quote '+key.slice(0,8),leadId:null,clientId:null,currency:'EUR',scope:'A documented synthetic delivery scope used only by the staging canary.',terms:'Synthetic internal terms requiring human review.',assumptions:'No approved rates, taxes or commercial offer are implied.',lines:[{name:'Synthetic delivery work',category:'LABOR',cadence:'ONE_TIME',unit:'hours',quantityMilli:2000,unitCostCents:5000}],overheadBp:1000,contingencyBp:0,marginBp:5000,discountBp:0,taxBp:null,taxNote:''};
  const payload={quoteId:pricingQuoteId,requestId:randomUUID(),version:0,input};
  assert.equal((await owner('POST','/api/pricing',payload)).status,201);
  assert.equal((await owner('POST','/api/pricing',payload)).status,200);

@@ -52,19 +52,26 @@ if hits:
  print('Secret scan failed, nothing pushed. Remove or replace with a placeholder:');print('\n'.join(hits));sys.exit(1)
 if left_out:print('Left out of docs (over '+str(DOC_MAX_BYTES)+' bytes):',', '.join(left_out))
 if CHECK_ONLY:print(json.dumps({'check':'ok','files':len(set(paths)),'pushed':False}));sys.exit(0)
-known_blobs={item['sha'] for item in api(f'git/trees/{parent}?recursive=1')['tree'] if item['type']=='blob'}
+remote_tree=api(f'git/trees/{parent}?recursive=1')
+known_blobs={item['sha'] for item in remote_tree['tree'] if item['type']=='blob'}
+known_paths={item['path']:item['sha'] for item in remote_tree['tree'] if item['type']=='blob'}
 tree=[]
 for path in sorted(set(paths)):
- data=path.read_bytes();entry={'path':str(path.relative_to(ROOT)),'mode':'100644','type':'blob'}
- try:entry['content']=data.decode('utf-8')
- except UnicodeDecodeError:
-  blob_sha=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
-  entry['sha']=blob_sha if blob_sha in known_blobs else api('git/blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
+ data=path.read_bytes();relative=str(path.relative_to(ROOT));blob_sha=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+ if known_paths.get(relative)==blob_sha:continue
+ entry={'path':relative,'mode':'100644','type':'blob'}
+ if blob_sha in known_blobs:entry['sha']=blob_sha
+ else:
+  try:content=data.decode('utf-8')
+  except UnicodeDecodeError:content=None
+  if content is not None and len(data)<=65536:entry['content']=content
+  else:entry['sha']=api('git/blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
  tree.append(entry)
-created=api('git/trees',{'tree':tree})
+# Preserve the existing tree; reviewed additions/updates do not implicitly delete omitted files.
+created=api('git/trees',{'base_tree':remote_tree['sha'],'tree':tree})
 commit=api('git/commits',{'message':'Rebuild OMNI101 commercial application independently of ceo-os','tree':created['sha'],'parents':[parent]})
 if exists:
  result=subprocess.run(['gh','api',f'repos/{REPO}/git/refs/heads/{BRANCH}','--method','PATCH','--input','-'],input=json.dumps({'sha':commit['sha'],'force':False}),text=True,capture_output=True)
  if result.returncode:raise RuntimeError(result.stderr)
 else:api('git/refs',{'ref':'refs/heads/'+BRANCH,'sha':commit['sha']})
-print(json.dumps({'branch':BRANCH,'sha':commit['sha'],'files':len(tree),'production_changed':False}))
+print(json.dumps({'branch':BRANCH,'sha':commit['sha'],'files':len(set(paths)),'changed_files':len(tree),'production_changed':False}))
