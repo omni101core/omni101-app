@@ -20,7 +20,7 @@ export async function handleCalendar(request:Request,env:Env,actor:Identity):Pro
  const org=actor.orgId,role=actor.role;
  const readable=(key:string)=>{if(key==='revenue')return sales.includes(role);const r=resources[key];return !r.read||r.read.includes(role)};
  const link=(key:string,row:Row)=>key==='revenue'?(row.campaign_id?'/admin/campaigns?record='+encodeURIComponent(row.campaign_id):row.lead_id?'/admin/leads?record='+encodeURIComponent(row.lead_id):''):'/admin/'+key+'?record='+encodeURIComponent(row.id);
- const grouped=await Promise.all(sources.filter(s=>readable(s.key)).map(async s=>({key:s.key,rows:(await env.DB.prepare(s.base+' WHERE organization_id=? AND '+s.col+'>=? AND '+s.col+'<=? ORDER BY date,id LIMIT 501').bind(org,from,to)).results as Row[]})));
+ const grouped=await Promise.all(sources.filter(s=>readable(s.key)).map(async s=>({key:s.key,rows:(await env.DB.prepare(s.base+' WHERE organization_id=? AND '+s.col+'>=? AND '+s.col+'<=? ORDER BY date,id LIMIT 501').bind(org,from,to).all<Row>()).results})));
  const items:Item[]=grouped.flatMap(g=>g.rows.map(r=>({type:g.key,id:r.id,title:r.title,start:r.date,end:null,status:r.status,link:link(g.key,r)})));
  items.sort((a,b)=>a.start.localeCompare(b.start)||a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
  return json({items:items.slice(0,500),truncated:items.length>500});
