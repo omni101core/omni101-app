@@ -1,6 +1,6 @@
 # Revenue & Growth
 
-23 ottobre 2026. Nuova vertical slice locale, da verificare. Riusa CRM, campagne, task, iniziative, milestone, consensi e date già esistenti; nessuna seconda audience o copia del calendario.
+23 ottobre 2026. Online e verificata: f53fe2c, run 39950784094 verde. Riusa CRM, campagne, task, iniziative, milestone, consensi e date già esistenti; nessuna seconda audience o copia del calendario.
 
 ## Funzionamento
 
@@ -27,3 +27,7 @@ Restano builder landing/funnel, composer email, segmenti dinamici, calendario da
 ## Verifica
 
 Test integrazione: persistenza link/eventi, replay e collisioni, audit, completezza deterministica, date derivate, isolamento tenant/ruoli e intervalli validi. Browser autenticato: creare campagna, collegare lead, documentare attività, reload e agenda. Review indipendente read-only del nuovo handler/schema/UI: nessun finding azionabile; non sostituisce CI. Attendere una run verde e health revision prima di dichiararlo live.
+
+Verifica visiva canary della prima pubblicazione 76d17bd: lo stile legacy `.os-inline-actions button` rendeva trasparente lo sfondo del bottone primario mantenendo testo scuro. Corretto con contenitore azioni Revenue dedicato e header responsive; aggiunta asserzione browser del contrasto effettivo >=4.5, risalendo al background visibile degli antenati. Non basta che il click sia tecnicamente possibile. Patch CSS in verifica successiva, schema e dati invariati.
+
+Esito finale: 39950784094 verde, 208 test passati e 12 skip; migrazione/import in entrambi gli ambienti, letture reali di Revenue/calendario, client bloccato e canali disconnessi confermati dal canary. Health di produzione f53fe2c7b8870f08eec7b3d2226a0aab403c8244. Screenshot finali revenue-final-desktop/mobile.png controllati: CTA leggibile in entrambe le viewport.

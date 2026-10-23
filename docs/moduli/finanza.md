@@ -53,3 +53,5 @@ Fattura = registro. L'approvazione interna ≠ accettazione del cliente ≠ paga
 ## Chi lo possiede ora
 
 SPEC-13 per margini e costi. I permessi già nel server li tocca chiunque cambi `schema.ts`: aggiorna questo file.
+
+23 ottobre, nuova implementazione locale: preventivatore `/admin/estimates`, dettagli in `preventivatore.md`. Motore cost-margin-v1, snapshot per cadenza e approvazione backend; testata legacy conserva solo il netto una tantum. Verifica e pubblicazione non ancora concluse. Nessun valore fiscale o tariffario inventato.

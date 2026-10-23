@@ -116,3 +116,36 @@ describe('Revenue foundation uses the existing CRM and dated records',()=>{
   const visible=await (await handleApi(req('/api/revenue/overview',cookie),env))?.text();expect(visible).not.toContain('Private foreign campaign');expect(sqlite.prepare('SELECT count(*) n FROM revenue_events').get()?.n).toBe(0);
  });
 });
+
+const estimateInput={name:'SYNTHETIC scoped proposal',leadId:null as string|null,currency:'EUR',scope:'Website and delivery scope documented by the sales team.',terms:'Payment terms require commercial review.',assumptions:'Costs entered by a human, not an approved default rate card.',lines:[{name:'Delivery work',category:'LABOR',cadence:'ONE_TIME',unit:'hours',quantityMilli:10000,unitCostCents:5000},{name:'Support',category:'LABOR',cadence:'MONTHLY',unit:'hours',quantityMilli:1000,unitCostCents:5000}],overheadBp:1000,contingencyBp:1000,marginBp:5000,discountBp:0,taxBp:null,taxNote:''};
+describe('versioned pricing and applied review policy',()=>{
+ it('calculates margin rather than markup, separates cadences, persists immutable snapshots and locks approval versions',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite),second=await owner(sqlite,'omni101','OWNER','pricing-owner-b');
+  const preview=await handleApi(req('/api/pricing/preview',cookie,'POST',estimateInput),env);expect(preview?.status).toBe(200);const calculation=(await preview?.json() as any).calculation;
+  expect(calculation.groups[0]).toMatchObject({directCents:50000,overheadCents:5000,contingencyCents:5500,adjustedCostCents:60500,targetCents:121000,netCents:121000,taxCents:null,effectiveMarginBp:5000});expect(calculation.groups[1].netCents).toBe(12100);expect(calculation.combinedTotal).toBeNull();
+  const leadResponse=await handleApi(req('/api/records/leads',cookie,'POST',{name:'Synthetic pricing lead',status:'QUALIFICATION',brief:'Approved scope pending commercial agreement.'}),env);const leadId=(await leadResponse?.json() as any).record.id;
+  const quoteId=crypto.randomUUID(),payload={quoteId,requestId:crypto.randomUUID(),version:0,input:{...estimateInput,leadId}};
+  expect((await handleApi(req('/api/pricing',cookie,'POST',payload),env))?.status).toBe(201);expect((await handleApi(req('/api/pricing',cookie,'POST',payload),env))?.status).toBe(200);
+  expect(sqlite.prepare('SELECT amount_cents FROM quotes WHERE id=?').get(quoteId)?.amount_cents).toBe(121000);expect(sqlite.prepare('SELECT count(*) n FROM pricing_versions').get()?.n).toBe(1);expect(sqlite.prepare("SELECT count(*) n FROM audit_logs WHERE action='PRICING_VERSION_SAVED'").get()?.n).toBe(1);
+  expect((await handleApi(req('/api/pricing',cookie,'POST',{...payload,input:{...payload.input,name:'Changed request id reused'}}),env))?.status).toBe(409);
+  const next={...payload,requestId:crypto.randomUUID(),version:1,input:{...payload.input,discountBp:1000}};expect((await handleApi(req('/api/pricing',second,'POST',next),env))?.status).toBe(201);
+  expect((await handleApi(req('/api/pricing',cookie,'POST',{...next,requestId:crypto.randomUUID()}),env))?.status).toBe(409);
+  const detail=await (await handleApi(req('/api/pricing/'+quoteId,cookie),env))?.json() as any;expect(detail.versions.map((v:any)=>v.version)).toEqual([2,1]);expect(detail.versions[1].calculation.groups[0].netCents).toBe(121000);expect(detail.versions[0].calculation.groups[0].netCents).toBe(108900);
+  expect((await handleApi(req('/api/records/proposals/'+quoteId,cookie,'PATCH',{amount_cents:1}),env))?.status).toBe(409);
+  const review=await handleApi(req('/api/pricing/'+quoteId+'/review',cookie,'POST',{version:2}),env);expect(review?.status).toBe(201);const approvalId=(await review?.json() as any).approval.id;
+  expect((await handleApi(req('/api/pricing/'+quoteId+'/review',cookie,'POST',{version:2}),env))?.status).toBe(200);
+  expect((await handleApi(req('/api/pricing',second,'POST',{...next,version:2,requestId:crypto.randomUUID()}),env))?.status).toBe(409);
+  expect((await handleApi(req('/api/approvals/'+encodeURIComponent(approvalId)+'/decision',second,'POST',{decision:'APPROVED',reason:'Human inspected both cost cadence snapshots.'}),env))?.status).toBe(200);
+  expect(sqlite.prepare('SELECT status FROM quotes WHERE id=?').get(quoteId)?.status).toBe('APPROVED');
+  const converted=await handleApi(req('/api/lead-to-project',second,'POST',{leadId,approvalId,dealWon:true,name:'Approved pricing project'}),env);expect(converted?.status).toBe(201);expect(sqlite.prepare('SELECT quote_id FROM lead_project_links WHERE lead_id=?').get(leadId)?.quote_id).toBe(quoteId);
+ });
+ it('rejects unsafe inputs, tenant references and unauthorized clients, while exposing no internal costs in portal',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite),client=await owner(sqlite,'omni101','CLIENT','pricing-client'),dev=await owner(sqlite,'omni101','DEVELOPER','pricing-dev');
+  for(const c of [client,dev])for(const [path,method,data] of [['/api/pricing','GET',undefined],['/api/pricing/preview','POST',estimateInput]] as const)expect((await handleApi(req(path,c,method,data),env))?.status).toBe(403);
+  for(const input of [{...estimateInput,marginBp:10000},{...estimateInput,taxBp:2200},{...estimateInput,lines:[{...estimateInput.lines[0],quantityMilli:1.5}]},{...estimateInput,lines:[{...estimateInput.lines[0],cadence:'USAGE',quantityMilli:2000}]},{...estimateInput,lines:[{...estimateInput.lines[0],unitCostCents:100000000,quantityMilli:1000000}]}])expect((await handleApi(req('/api/pricing/preview',cookie,'POST',input),env))?.status).toBe(400);
+  const stamp=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('pricing-foreign','Other','pricing-foreign',stamp,stamp);sqlite.prepare('INSERT INTO leads(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('foreign-lead','pricing-foreign','Private',stamp,stamp);
+  const payload={quoteId:crypto.randomUUID(),requestId:crypto.randomUUID(),version:0,input:{...estimateInput,leadId:'foreign-lead'}};expect((await handleApi(req('/api/pricing',cookie,'POST',payload),env))?.status).toBe(404);expect(sqlite.prepare('SELECT count(*) n FROM pricing_versions').get()?.n).toBe(0);
+  const saved={...payload,input:estimateInput};expect((await handleApi(req('/api/pricing',cookie,'POST',saved),env))?.status).toBe(201);const foreign=await owner(sqlite,'pricing-foreign','OWNER','pricing-foreign-owner');expect((await handleApi(req('/api/pricing/'+saved.quoteId,foreign),{...env,ORGANIZATION_ID:'pricing-foreign'}))?.status).toBe(404);
+  const input={...estimateInput,discountBp:10000,taxBp:2200,taxNote:'Synthetic tax treatment for arithmetic test only.'};const p=await (await handleApi(req('/api/pricing/preview',cookie,'POST',input),env))?.json() as any;expect(p.calculation.groups[0]).toMatchObject({netCents:0,totalCents:0,effectiveMarginBp:null,belowCost:true});
+ });
+});

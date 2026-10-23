@@ -41,3 +41,7 @@ Il recupero GET /api/knowledge/:id?version=1 rende l’originale consultabile an
 ## Esito finale
 
 Run 39889662855 interamente verde: 102 server, 103 browser, 11 skip; staging e produzione pubblicati alla revisione 3fa90a5d323cd8273da6e1553b3816f97a35552d. Import CI in produzione confermato: 6 originali + 12 requisiti/task + 3 reference (21 elementi). Canary staging confronta gli hash degli originali v1, controlla fonti/task, esclude clienti e verifica marketing spento; sessioni QA revocate. UI cattura/salvataggio/ricaricamento/versione e UTM verificata con WebAuthn isolata. Immagini prova nella cartella visualizations della chat. Il triage dei 12 requisiti è iniziale, non una copertura completa di tutte le clausole: aggiornare contenuti storici tramite nuove revisioni attribuite, non sovrascrivendo snapshot o originali.
+
+### Aggiornamento Adaptive / Revenue — 23 ottobre
+
+Otto originali preservati, 15 requisiti/task e tre reference (26 elementi) importati in produzione e staging con CI 39950784094 verde. API/UI supportano originali fino a 60k caratteri; record e snapshot importati in query separate. Prova locale e canary cloud confermano hash degli otto originali, inclusa fonte Revenue da oltre40k, senza duplicati al replay. Script contestuale emette riferimenti per dominio e non modifica record o avvia agenti.

@@ -47,3 +47,7 @@ Decisioni precedenti del sito Astro (registro Calibro, prezzi nascosti fino ai p
 - 2026-10-23: marketing invii disattivati anche con evidenza di consenso. Ritiro crea blocco persistente; consenso successivo non lo annulla automaticamente. SEO e GEO derivati da contenuti reali, senza metriche/risultati inventati.
 
 - 2026-10-23: adattamento ai due nuovi mandati con routing contestuale leggero e modello Revenue su registri esistenti. KEEP_EXISTING per tracker/memoria/workflow; Serena non esposto tra i tool (installazione non verificata), Headroom non adottato senza benchmark, nessun proxy Caveman presunto. No installazioni di OpenSpec/Spec Kit/Beads/GSD duplicati. Date originali aggregate e scoring di completezza spiegabile, non LLM o attribuzione automatica.
+
+- 2026-10-23: QA visiva Revenue ha trovato stile legacy su os-inline-actions che annullava lo sfondo dei pulsanti primari. Contenitore azioni dedicato e test di contrasto effettivo (4.5) impediscono di considerare sufficiente un click automatizzato. Per nuove azioni primarie verificare contrasto nel contesto CSS reale, senza alterare globalmente i vecchi pulsanti testo.
+
+2026-10-23 — Preventivazione: estendere quotes/approvals/conversione esistenti, senza nuova piattaforma. Formule deterministiche e snapshot immutabili; cadenze distinte e imposte non presunte. I costi interni non vanno al portale cliente. Cataloghi open source del mandato restano candidati, non dipendenze installate: il calcolo richiesto usa aritmetica nativa e primitive già presenti.

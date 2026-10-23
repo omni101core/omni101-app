@@ -93,7 +93,7 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Mandato→requisito→task→implementazione→test; inventario fonti lette e chat da importare.",
-    "remaining": "Importati solo i tre originali del 23/10; non dichiarare recuperate chat non lette."
+    "remaining": "Dieci originali nel manifest. Triage per gruppi ancora incompleto: clausole non classificate restano esplicite nel manifest, senza dedurne completamento."
   },
   {
     "key": "adaptive-execution",
@@ -118,5 +118,53 @@
     "status": "PLANNED",
     "acceptance": "Template/preview/versione, canale e purpose del consenso, suppression/preference center e adapter di delivery verificati prima di chiamarlo READY_FOR_CONNECTION.",
     "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere."
+  },
+  {
+    "key": "pricing",
+    "name": "Preventivazione spiegabile, versionata e approvata",
+    "source": "consolidamento-operativo-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Costi per cadenza, formule esplicite, snapshot, conflitti, approvazione backend e collegamento al lead.",
+    "remaining": "Catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione e PDF ancora da completare."
+  },
+  {
+    "key": "crm-completion",
+    "name": "CRM completo e pipeline commerciale",
+    "source": "consolidamento-operativo-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Kanban persistente con audit, conflitti, timeline, opportunità, fasi configurabili e collegamenti offerte/progetti.",
+    "remaining": "Kanban e CRUD esistono; transizioni concorrenti, eventi condivisi, filtri salvati e deduplicazione avanzata da completare."
+  },
+  {
+    "key": "integrations-mcp",
+    "name": "Integrazioni riutilizzabili e MCP autorizzato",
+    "source": "connected-ecosystem-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Registry, connessioni guidate, tool con scope e test reali, revoca e audit.",
+    "remaining": "Nessun nuovo account o MCP remoto collegato; OAuth, SSRF, credenziali e capability negotiation da implementare/verificare."
+  },
+  {
+    "key": "education",
+    "name": "Onboarding per ruolo e tutorial interattivi",
+    "source": "connected-ecosystem-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Percorso reale riprendibile per ruolo, reduced motion, accessibilità e progresso persistente.",
+    "remaining": "Tour e Academy completi non realizzati; nessuna dimostrazione fittizia."
+  },
+  {
+    "key": "connected-runtime",
+    "name": "Eventi, approvazioni e runtime condivisi",
+    "source": "connected-ecosystem-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G verificati.",
+    "remaining": "Workflows/approvazioni durevoli già presenti; bus commerciale, tool agenti e scenari completi ancora parziali."
+  },
+  {
+    "key": "commercial-catalog",
+    "name": "Catalogo riuso, offerte partner e referral",
+    "source": "consolidamento-operativo-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Template e pacchetti versionati con prerequisiti, commissioni approvate e attribuzione verificabile.",
+    "remaining": "Catalogo modulare, reseller, referral e white label da costruire per priorità; nessun pagamento attivato."
   }
 ]
