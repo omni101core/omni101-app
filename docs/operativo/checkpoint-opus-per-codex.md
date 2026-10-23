@@ -5,7 +5,7 @@ Aggiornato: 2026-10-23 17:20. Coordinatore: Grok (staffetta da Opus). Mandato co
 ## Produzione
 - LIVE `01805108` (run 39962720977), health OK. Nessuna release nuova riuscita oggi, finché la run di questa staffetta non è verde.
 - Repo locale avanti rispetto al live: S1, S3, S4, S4k (card trascinabile: corpo `div`, «Apri» piccolo), `GET /api/calendar`, listino 0012 + UI catalogo con `role` da admin. Non ancora pubblicati.
-- Staging pushato: `089914e9549efb62043e137c5b7fef23d19b5106` su `rebuild-commercial` (20 file). Produzione non toccata. Prossimo comando: attendere CI verde, poi `cloud-verify.py --release` e health su omni101.app.
+- 089914e run 39976638937 typecheck calendar. 7b85595 run 39977100259 test calendar: HttpError lanciato, il test leggeva `.status` sulla Response. Fix solo nel test, in push successivo. Produzione non toccata. Prossimo: CI verde, poi `--release`.
 
 ## Lavori (registro `/tmp/omni101-deleghe/registro.jsonl`)
 | Task | Esecutore | Stato | Azione dopo |
