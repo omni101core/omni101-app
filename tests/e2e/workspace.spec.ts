@@ -229,8 +229,9 @@ test('email draft reopens after reload, isolates preview and export, and keeps l
  await page.goto('/admin/growth');
  await expect(page.getByRole('heading',{name:'Marketing, ricerca e fiducia'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'Bozze email'})).toHaveCount(0);
- releaseOverview();await page.unroute('**/api/growth/overview');
+ releaseOverview();
  await expect(page.getByRole('heading',{name:'Bozze email'})).toBeVisible();
+ await page.unroute('**/api/growth/overview');
  const suffix=randomUUID().slice(0,8),subject='Bozza sintetica '+suffix,body='Testo locale della bozza '+suffix;
  await page.getByLabel('Oggetto',{exact:true}).fill(subject);await page.getByLabel('Testo',{exact:true}).fill(body);await page.getByLabel('Etichetta del pulsante',{exact:true}).fill('Apri');await page.getByLabel('Indirizzo https del pulsante',{exact:true}).fill('https://omni101.app/start-project');
  await page.getByRole('button',{name:'Salva bozza',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Bozza salvata'})).toBeVisible();

@@ -191,11 +191,12 @@
     "key": "pricing-hardening-self-approval",
     "name": "Preventivi: vietare richiedente = decisore",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "decision() in apps/web/app/server/api.ts rifiuta l'approvazione quando richiedente e decisore coincidono (guardia di una riga) con test; il canary CI usa due utenti distinti.",
-    "remaining": "Guardia assente in decision(); verificare il canary CI a due utenti.",
+    "remaining": "Nessuna modifica di policy in questa revisione; conservare review e identità separate.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "decision() blocca con403 il richiedente; integrazione e browser a due Owner e canary già nel baseline3ad/run39994191429."
   },
   {
     "key": "pricing-hardening-recurring-total",
@@ -203,49 +204,53 @@
     "source": "consegna-sonnet-a-opus-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Un preventivo con sole voci ricorrenti riporta un amount_cents di testata coerente con le regole di cadenza, con test.",
-    "remaining": "Oggi amount_cents di testata = 0 per i preventivi solo ricorrenti. Soglie e policy economiche restano decisione del founder.",
-    "priority": "HIGH",
+    "remaining": "Policy attuale documentata e testata: testata solo ONE_TIME, zero se manca; canoni separati e totale combinato null. Eventuale semantica economica diversa richiede scelta esplicita, non sommare cadenze automaticamente.",
+    "priority": "NORMAL",
     "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
   },
   {
     "key": "pricing-hardening-tax-overflow",
     "name": "Pricing: overflow in netCents*taxBp",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "Il prodotto netCents*taxBp non supera Number.MAX_SAFE_INTEGER: il tetto 1e12 si applica prima del calcolo, con test ai limiti.",
-    "remaining": "In pricing.ts il prodotto è calcolato prima del tetto 1e12 e può superare MAX_SAFE_INTEGER. Tetti e soglie restano decisione del founder.",
+    "remaining": "Tetti e aliquote economiche non modificati; nessuna tariffa reale presunta.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Tetto prima dell’imposta e mulDiv BigInt; limiti sintetici in tests/integration.test.ts, baseline3ad/run39994191429."
   },
   {
     "key": "pricing-hardening-decision-guard",
     "name": "Preventivi: UPDATE di decision() condizionato",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "L'UPDATE del preventivo in decision() richiede status='IN_REVIEW' e il legame con la versione dell'evidenza approvata, con test di concorrenza.",
-    "remaining": "UPDATE attuale senza condizione di stato né legame con la versione dell'evidenza.",
+    "remaining": "Confermare la nuova regressione con due decisioni opposte sulla stessa versione; nessuna patch al calcolo o alla policy necessaria.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Guardia IN_REVIEW e pricing_version presente; test sequenziali e claim transazionale verificati. Aggiunto caso di concorrenza per review pricing versionata in approval-concurrency.test.ts, ancora da confermare in CI."
   },
   {
     "key": "pricing-hardening-request-scope",
     "name": "Ricerca requestId: filtro organizzazione",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "La ricerca per requestId è limitata alla organization_id del chiamante, con test cross-organizzazione.",
-    "remaining": "Ricerca attuale senza filtro organizzazione.",
+    "remaining": "Mantenere filtro tenant e conflitto409 senza esporre la riga altrui.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Ricerca requestId con organization_id; test cross-tenant does not match a request id of another tenant in integration.test.ts."
   },
   {
     "key": "pricing-hardening-portal-tests",
     "name": "Portale cliente: test su scope, terms, pricing_version",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "Test automatici sul portale coprono scope, terms e pricing_version del preventivo mostrato al cliente.",
-    "remaining": "Test mancanti sul portale per scope, terms e pricing_version.",
+    "remaining": "Copertura API presente; un’ulteriore verifica visuale della proposta nel portale può essere estesa senza cambiare il contratto.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Payload portale testato per scope,terms,pricing_version e assenza costi interni in integration.test.ts; baseline3ad verde."
   },
   {
     "key": "design-system",

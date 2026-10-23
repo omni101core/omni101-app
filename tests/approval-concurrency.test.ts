@@ -52,6 +52,19 @@ describe('approval decisions claim one transactional winner',()=>{
   if(resource!=='agent_runs'&&resource!=='workflow_runs')expect(sqlite.prepare("SELECT status FROM workflow_executions WHERE id='workflow'").get()?.status).toBe(winner==='APPROVED'?(resource==='quotes'?'READY_FOR_COMMERCIAL_DECISION':'READY_FOR_DISCOVERY'):'NEEDS_HUMAN_REVIEW');
   if(resource==='workflow_runs'){expect(sqlite.prepare("SELECT status FROM workflow_runs WHERE id='workflow-run'").get()?.status).toBe('AWAITING_APPROVAL');expect(sqlite.prepare('SELECT count(*) n FROM projects').get()?.n).toBe(0);expect(sqlite.prepare('SELECT count(*) n FROM tasks').get()?.n).toBe(0);}
  });
+ it('keeps a versioned pricing review tied to one concurrent decision and one audit',async()=>{
+  const {sqlite,env}=await fixture('quotes');
+  const stamp=Date.now();
+  sqlite.prepare('INSERT INTO users(id,email,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('pricing-requester','requester@example.test','Synthetic requester',stamp,stamp);
+  sqlite.prepare("UPDATE quotes SET status='IN_REVIEW',pricing_version=1 WHERE id='quote'").run();
+  sqlite.prepare("UPDATE approvals SET evidence=?,requested_by='pricing-requester' WHERE id='approval'").run(JSON.stringify({pricingVersion:1}));
+  const results=await Promise.all([decide(env,'owner-a','APPROVED'),decide(env,'owner-b','REJECTED')]);
+  expect(results.map(result=>result?.status).sort()).toEqual([200,409]);
+  const winner=results[0]?.status===200?'APPROVED':'REJECTED';
+  expect(sqlite.prepare("SELECT status,pricing_version FROM quotes WHERE id='quote'").get()).toEqual({status:winner,pricing_version:1});
+  expect(sqlite.prepare("SELECT status,version FROM approvals WHERE id='approval'").get()).toEqual({status:winner,version:2});
+  expect(sqlite.prepare("SELECT count(*) n FROM audit_logs WHERE resource_type='approvals' AND resource_id='approval'").get()?.n).toBe(1);
+ });
  it('claims only once for concurrent identical decisions from the same Owner',async()=>{
   const {sqlite,env}=await fixture('quotes');
   const results=await Promise.all([decide(env,'owner-a','APPROVED'),decide(env,'owner-a','APPROVED')]);

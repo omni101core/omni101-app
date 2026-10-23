@@ -54,3 +54,14 @@ Contenuti organici da collegare: problema, processo, limiti, esempio dichiarato,
 Misurare richieste reali, completamento del brief e richieste qualificate secondo criteri documentati; separare fonti osservate e dichiarate. Non attribuire conversioni senza evidenza. Nessun obiettivo numerico fissato senza baseline.
 
 Checklist: offerta e capacità di consegna verificate; segmento scelto; asset e diritti verificati; concept etichettati; link e modulo provati su mobile; preventivo con tariffe approvate; mittente/fornitore/consenso/esclusioni verificati; responsabile della revisione individuato; approvazione della specifica attivazione. Fino ad allora solo anteprime, export e lavoro interno.
+
+## Varianti di copy per revisione
+
+Proposte dal canale NVIDIA gratuito già configurato, modello `nvidia/nemotron-3.5-bolt-e4b`, su copia pubblica filtrata; riviste per assenza di tariffe, risultati o clienti inventati. Nessun invio.
+
+- OGGETTO: Percorso chiaro per le tue richieste
+- OGGETTO: Strumenti per il tuo processo operativo
+- OGGETTO: Esplora i nostri concept interni
+- CTA: Raccontaci il tuo problema
+- CTA: Valuta un progetto insieme
+- CTA: Scopri come lavoriamo
