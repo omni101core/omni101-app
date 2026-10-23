@@ -4,16 +4,16 @@ Aggiornato: 2026-10-23, push release in questo commit. Coordinatore: Grok. Altra
 
 ## SHA e CI
 
-- LIVE ancora `01805108595ba1bc21866bcc84825fae829792ff`, run `39962720977`. Health si ricontrolla dopo la CI di `release-commercial`.
-- STAGING verde: `735174da12821ea6b0891f898e8a7f8921e8c78e`, run `39980811933` attempt 2, verify verde, production saltato. 148 test, Playwright 105 pass / 13 skip, smoke a slice verticale completa. Il 503 sul workflow dell'attempt 1 non si è ripetuto.
-- Questo `--release` porta gli stessi byte di `735174d` più `docs/CONTEXT.md`, questo checkpoint, `docs/STATO.md`, `docs/decisioni.md`. Lo SHA di release è quello stampato da `cloud-verify.py`.
+- LIVE `3101815c9aee44ce6679f0e4fec6e01bda217258`. Run `39984184634` verify e production verdi. Health `https://omni101.app/api/health` ha quello SHA, `database` true, `storage` false. Rollback al Worker `01805108595ba1bc21866bcc84825fae829792ff`.
+- STAGING verde: `d64de4b858f5e383dd945b36fca628a7bede23ba`, run `39988347856`. 148 test, Playwright 105/13, smoke intero. Dentro: menu soci U4, confronto listino P2, h1 `Oggi nello studio`, comando listino che va a capo.
+- Questo `--release` porta quei byte più questo checkpoint. Lo SHA di release è l'output di cloud-verify, non `d64de4b`. LIVE precedente da sostituire: `3101815`.
 
 ## Locali non pubblicati
 
-Nessun codice fuori da questo push. Esiti pronti, non copiati (release successiva):
+Nel push di staging dopo il live `3101815`: U4 (`admin.tsx`, regole `os-nav-*` aggiunte in coda a `admin.css` senza sostituire il file) e P2 (confronto prezzo vs listino). Il `role` del preventivo resta `session.membership.role`, non `session.role`. CSS drag (`user-select:none`, `.os-card-body`, `.os-card-open`) tenuto.
 
-- U4 area soci: `admin.tsx` + solo regole `os-nav-*` in fondo a `admin.css`. Non toccare KanbanBoard né il CSS del drag.
-- P2 listino UI: `PricingCatalog.tsx`, `PricingWorkspace.tsx`. Confronto visivo, calcolo invariato.
+Ancora fuori:
+
 - UX1–UX5: copy su file disgiunti. UX6 si sovrappone a U4 su `admin.tsx`/`admin.css`: non copiare UX6 sopra U4.
 - W-email: esito presente, non in `docs/operativo/`.
 
@@ -38,8 +38,8 @@ Codice live precedente: `01805108595ba1bc21866bcc84825fae829792ff`. Migrazioni a
 
 ## Prossimo comando
 
-Dopo questo push, lo SHA è nell'output di cloud-verify. Poi:
+Staging `d64de4b` già verde. Questo commit è il `--release`. Poi:
 
 `python3 -I ~/.omni101/bin/omni-delega/omni-delega.py ci <sha> --branch release-commercial`
 
-Verde: `curl -s https://omni101.app/api/health` deve mostrare quello SHA. Poi integra U4 e P2 su una release nuova, dopo `--check`.
+Verde: `curl -s https://omni101.app/api/health` deve mostrare quello SHA. Poi UX1–UX5, non UX6 sopra U4.

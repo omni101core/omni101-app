@@ -102,7 +102,7 @@ const pricingQuoteId=randomUUID();
  const browser=await chromium.launch();
  const shot=async(raw,viewport,path,file,ready)=>{const context=await browser.newContext({viewport});await context.addCookies([{name:'__Host-omni_session',value:raw,url:origin,httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();await page.goto(origin+path,{waitUntil:'networkidle'});await page.getByText(ready).first().waitFor({timeout:20000});await page.screenshot({path:'test-results/'+file,fullPage:true});await context.close()};
  for(const [name,viewport] of [['desktop',{width:1440,height:900}],['mobile',{width:390,height:844}]]){
-  await shot(ownerRaw,viewport,'/admin','staging-admin-'+name+'.png','Una visione chiara.');
+  await shot(ownerRaw,viewport,'/admin','staging-admin-'+name+'.png','Oggi nello studio');
   await shot(ownerRaw,viewport,'/admin/knowledge','staging-knowledge-'+name+'.png','Knowledge & Intelligence');
   await shot(ownerRaw,viewport,'/admin/estimates?quote='+pricingQuoteId,'staging-pricing-'+name+'.png','Preventivatore');
   await shot(ownerRaw,viewport,'/admin/revenue','staging-revenue-'+name+'.png','Revenue & Growth');
