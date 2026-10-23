@@ -1,6 +1,6 @@
 # OMNI101 — indice per chi ci mette mano
 
-Aggiornato: 2026-10-22, sul working tree locale `~/omni101/01-Projects/active/omni101-app`, branch `reinvenzione-2026-10`, non committato.
+Aggiornato: 2026-10-23, sul working tree locale `~/omni101/01-Projects/active/omni101-app`, branch `reinvenzione-2026-10`, non committato.
 
 OMNI101 qui è la piattaforma commerciale di [omni101.app](https://omni101.app): sito pubblico per acquisire clienti e workspace privato per gestire l'agenzia. Non è OMNI101 OS, non è ceo-os, non è il Control Plane. Il runtime vivo è `apps/web`: React 19, React Router 7 in SSR, un Worker Cloudflare, D1, due Workflow. `src/` e `worker/` sono il sito Astro precedente e non entrano nella pubblicazione descritta in `scripts/cloud-verify.py`.
 
@@ -61,3 +61,5 @@ Chi cambia un'area aggiorna nello stesso lavoro il suo `docs/moduli/<area>.md` e
 ## Mandati integrativi del 23 ottobre
 
 Originali e provenienza: `docs/mandati/sources.json`. Product Excellence, integrazione qualità e Persistent Intelligence sono aggiunte al mandato storico, senza sovrascriverlo. Memoria prodotto: `docs/moduli/knowledge-intelligence.md`; acquisizione/privacy: `docs/moduli/analytics-seo.md`. Stato di pubblicazione sempre distinto da codice locale.
+
+Revenue: docs/moduli/revenue.md. Contesto per dominio: `node scripts/project-context.mjs growth` (knowledge/frontend/security/release). Registro unico docs/operativo/agent-context.json, nessun framework o proxy nuovo. Gli ultimi due mandati sono preservati in originale nel manifest: ora 8 allegati.

@@ -1,6 +1,6 @@
 # Knowledge & Intelligence
 
-23 ottobre 2026. Nuova implementazione locale, non ancora verificata né pubblicata.
+23 ottobre 2026. Prima vertical slice online su omni101.app, revisione 3fa90a5, run 39889662855 interamente verde. Le sezioni seguenti preservano anche le tappe di costruzione; l’esito finale è in fondo.
 
 ## Confine e stato reale
 
@@ -31,3 +31,13 @@ Nuovi test integrazione: due Owner e attribuzione; versioni e originali; conflit
 `scripts/seed-reviewed-context.mjs` verifica hash e importa in modo additivo tre mandati originali, 12 requisiti con task reali e 3 reference. Fonte del triage: `docs/operativo/mandate-backlog.json`. Attribuzione esplicita `system:founder-mandate-import`, audit con revisione CI; non attribuire l’import a un Owner umano. Record CAPTURED/PLANNED/IMPLEMENTED, mai VERIFIED per sola importazione. Insert-or-ignore preserva modifiche successive. Pipeline CI applica import in staging dopo deploy; produzione solo nel job release. `--dry-run` non muta dati; `--sql` consente revisione e verifica in memoria. Validato su SQLite con doppia applicazione: 18 record, 18 revisioni, 12 task, collegamenti coerenti. Questa prova non equivale all’applicazione remota.
 
 Il copilot interno recupera al massimo 12 estratti di memoria con ID/fonte/stato/criteri/prova quando la richiesta riguarda mandati, reference o handoff; tratta il testo come dati non attendibili e deve citare provenienza e limiti. Il copilot pubblico non legge la memoria. Nessun embedding o agente autonomo nuovo.
+
+### Inventario esteso prima del rilascio
+
+Recuperati anche i tre allegati precedenti ancora accessibili: rebuild originario, specifica continuazione, riallineamento. Ora sources.json preserva **sei originali**, con hash e origine. Le istruzioni storiche restano dati e possono essere superate da quelle successive; non autorizzano esecuzioni automatiche. Import completo verificato in memoria con due applicazioni: **21 record/versioni** (6 mandati, 12 requisiti, 3 reference), **12 task**. Run a2cf057 contiene ancora i primi tre originali; il rilascio successivo deve verificare e importare il catalogo esteso.
+
+Il recupero GET /api/knowledge/:id?version=1 rende l’originale consultabile anche oltre la finestra delle ultime 50 revisioni. UI: Recupera originale v1. Canary usa ID stabili del manifest e hash della prima revisione, così una modifica legittima del titolo/testo corrente non falsifica la prova di conservazione. La query versione è validata e mantiene il tenant. Gli export UI restano limitati alla cronologia recuperata, non sono backup completi del database.
+
+## Esito finale
+
+Run 39889662855 interamente verde: 102 server, 103 browser, 11 skip; staging e produzione pubblicati alla revisione 3fa90a5d323cd8273da6e1553b3816f97a35552d. Import CI in produzione confermato: 6 originali + 12 requisiti/task + 3 reference (21 elementi). Canary staging confronta gli hash degli originali v1, controlla fonti/task, esclude clienti e verifica marketing spento; sessioni QA revocate. UI cattura/salvataggio/ricaricamento/versione e UTM verificata con WebAuthn isolata. Immagini prova nella cartella visualizations della chat. Il triage dei 12 requisiti è iniziale, non una copertura completa di tutte le clausole: aggiornare contenuti storici tramite nuove revisioni attribuite, non sovrascrivendo snapshot o originali.

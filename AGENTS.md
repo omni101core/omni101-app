@@ -19,3 +19,7 @@ Leggi `docs/README.md` prima di lavorare. Poi `docs/STATO.md` e il file in `docs
 Solo in CI, e solo se la tua spec te lo permette. Sequenza in `docs/operativo/rilascio.md`. Senza un id di run verde non si dichiara il lavoro pubblicato. Lo staging si controlla dopo la propria run, sulle proprie pagine.
 
 `docs/` e questo file viaggiano con `scripts/cloud-verify.py` (dal 22/10, con scansione anti-segreti prima del push). Aggiornarli resta obbligatorio: sono la fonte per ogni AI che mette mano al repo.
+
+## Caricamento mirato e handoff
+
+Per selezionare solo i file pertinenti: `node scripts/project-context.mjs growth` (anche knowledge/frontend/security/release). È un indice, non un esecutore o una concessione di permessi. Fonte unica: docs/operativo/agent-context.json. Non caricare tutti i mandati o installare harness duplicati. Originali in docs/mandati/sources.json; task/decisioni/test vanno collegati alle fonti. Lo stato runtime si legge in docs/STATO.md e nell’health, non si deduce dall’esistenza di una skill. Caveman/Ponytail disponibili non dimostrano che un proxy sia acceso. Handoff nei campi del registro, senza segreti.

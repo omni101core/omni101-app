@@ -56,3 +56,5 @@ Applicazione: migrazioni 0001–0007 presenti nel D1 isolato della preview local
 ## Migrazioni locali successive: 0008 e 0009
 
 0008 introduce suppression marketing con hash per organizzazione, evidenze di consenso attribuite/idempotenti e registro richieste privacy Owner/Admin. 0009 introduce knowledge_records e knowledge_revisions: testo/versioni/provenienza/riferimenti a fonte e task, visibilità team interno. Sono additive; applicazione remota da confermare con run CI. Nessuna tabella media binaria o servizio a pagamento.
+
+0010 (locale da verificare): campaign_links con idempotenza su org/campagna/risorsa e revenue_events manuali v1 attribuiti. Nessun nuovo contatto duplicato o tabella date parallela. Originali Knowledge fino a 60k caratteri; seed divide record e snapshot in richieste limitate per non superare limiti SQL con il nuovo mandato lungo.

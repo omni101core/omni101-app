@@ -74,7 +74,7 @@ describe('persistent knowledge and provenance',()=>{
   const updated={...record,body:'Revised context with a decision.'};expect((await handleApi(req('/api/knowledge/'+id,b,'PATCH',{id,version:1,record:updated}),env))?.status).toBe(200);
   expect((await handleApi(req('/api/knowledge/'+id,a,'PATCH',{id,version:1,record}),env))?.status).toBe(409);
   const response=await handleApi(req('/api/knowledge/'+id,a),env),detail=await response?.json() as {record:{version:number;updated_by:string};revisions:{snapshot:string;author_id:string}[]};
-  expect(detail.record).toMatchObject({version:2,updated_by:'memory-b'});expect(detail.revisions).toHaveLength(2);expect(detail.revisions[1].snapshot).toContain(record.body);expect(detail.revisions[1].author_id).toBe('memory-a');
+  expect(detail.record).toMatchObject({version:2,updated_by:'memory-b'});expect(detail.revisions).toHaveLength(2);expect(detail.revisions[1].snapshot).toContain(record.body);expect(detail.revisions[1].author_id).toBe('memory-a');const original=await handleApi(req('/api/knowledge/'+id+'?version=1',a),env);const first=await original?.json() as {revisions:{snapshot:string}[]};expect(first.revisions).toHaveLength(1);expect(JSON.parse(first.revisions[0].snapshot).body).toBe(record.body);
   expect(sqlite.prepare("SELECT count(*) n FROM audit_logs WHERE action='KNOWLEDGE_SAVED'").get()?.n).toBe(2);
   const search=await handleApi(req('/api/knowledge?q=revised&kind=MANDATE',a),env);expect((await search?.json() as {records:unknown[]}).records).toHaveLength(1);
  });
@@ -88,5 +88,31 @@ describe('persistent knowledge and provenance',()=>{
   expect((await handleApi(req('/api/knowledge/'+id,foreign),foreignEnv))?.status).toBe(404);
   expect((await handleApi(req('/api/knowledge',foreign,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',source_id:id}}),foreignEnv))?.status).toBe(400);
   expect((await handleApi(req('/api/knowledge',cookie,'POST',{id:crypto.randomUUID(),version:0,record:{...record,status:'CAPTURED',task_id:'missing-task'}}),env))?.status).toBe(400);
+ });
+});
+
+describe('Revenue foundation uses the existing CRM and dated records',()=>{
+ it('links a campaign to the CRM, records attributed events idempotently, and reads original calendar dates',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite);
+  const create=async(resource:string,payload:unknown)=>{const result=await handleApi(req('/api/records/'+resource,cookie,'POST',payload),env);expect(result?.status).toBe(201);return (await result?.json() as {record:{id:string}}).record.id};
+  const campaign=await create('campaigns',{name:'SYNTHETIC revenue campaign',status:'DRAFT',due_date:'2026-11-10',channel:'CONTENT'});
+  const lead=await create('leads',{name:'SYNTHETIC qualified request',status:'QUALIFICATION',message:'A clear commercial request with enough context to document the customer objective.',next_action:'Review scope together',owner_id:'owner',estimated_value_cents:10000});
+  const link={campaignId:campaign,resourceType:'LEAD',resourceId:lead};for(let i=0;i<2;i++)expect((await handleApi(req('/api/revenue/links',cookie,'POST',link),env))?.status).toBe(200);
+  expect(sqlite.prepare('SELECT count(*) n FROM campaign_links').get()?.n).toBe(1);expect(sqlite.prepare("SELECT count(*) n FROM audit_logs WHERE action='CAMPAIGN_RECORD_LINKED'").get()?.n).toBe(1);
+  const event={id:crypto.randomUUID(),campaignId:campaign,leadId:lead,type:'QUALIFICATION_RECORDED',description:'Synthetic qualification reviewed; next action recorded.'};
+  expect((await handleApi(req('/api/revenue/events',cookie,'POST',event),env))?.status).toBe(201);expect((await handleApi(req('/api/revenue/events',cookie,'POST',event),env))?.status).toBe(200);expect((await handleApi(req('/api/revenue/events',cookie,'POST',{...event,description:'Different evidence cannot reuse an event identity.'}),env))?.status).toBe(409);
+  const overview=await (await handleApi(req('/api/revenue/overview',cookie),env))?.json() as {leads:{qualification:{score:number}}[];sendingEnabled:boolean;trackingEnabled:boolean};expect(overview.leads[0].qualification.score).toBe(100);expect(overview.sendingEnabled).toBe(false);expect(overview.trackingEnabled).toBe(false);
+  const calendar=async()=>await (await handleApi(req('/api/revenue/calendar?start=2026-11-01&end=2026-11-30',cookie),env))?.json() as {items:{id:string;date:string}[]};expect((await calendar()).items.find(x=>x.id===campaign)?.date).toBe('2026-11-10');
+  expect((await handleApi(req('/api/records/campaigns/'+campaign,cookie,'PATCH',{due_date:'2026-11-15'}),env))?.status).toBe(200);expect((await calendar()).items.find(x=>x.id===campaign)?.date).toBe('2026-11-15');
+ });
+ it('prevents cross-tenant campaign links/events and excludes client and developer accounts',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite),stamp=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('revenue-other','Other','revenue-other',stamp,stamp);
+  sqlite.prepare('INSERT INTO campaigns(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('foreign-campaign','revenue-other','Private foreign campaign',stamp,stamp);
+  const leadResponse=await handleApi(req('/api/records/leads',cookie,'POST',{name:'Local lead',status:'NEW'}),env),lead=(await leadResponse?.json() as {record:{id:string}}).record.id;
+  expect((await handleApi(req('/api/revenue/links',cookie,'POST',{campaignId:'foreign-campaign',resourceType:'LEAD',resourceId:lead}),env))?.status).toBe(404);
+  expect((await handleApi(req('/api/revenue/events',cookie,'POST',{id:crypto.randomUUID(),campaignId:'foreign-campaign',leadId:lead,type:'NOTE_ADDED',description:'Must not cross a workspace boundary.'}),env))?.status).toBe(404);
+  for(const role of ['CLIENT','DEVELOPER']){const other=await owner(sqlite,'omni101',role,'revenue-'+role);for(const path of ['/api/revenue/overview','/api/revenue/calendar?start=2026-11-01&end=2026-11-30'])expect((await handleApi(req(path,other),env))?.status).toBe(403);}
+  expect((await handleApi(req('/api/revenue/calendar?start=2026-12-01&end=2026-11-01',cookie),env))?.status).toBe(400);expect((await handleApi(req('/api/revenue/calendar?start=2026-01-01&end=2026-12-31',cookie),env))?.status).toBe(400);
+  const visible=await (await handleApi(req('/api/revenue/overview',cookie),env))?.text();expect(visible).not.toContain('Private foreign campaign');expect(sqlite.prepare('SELECT count(*) n FROM revenue_events').get()?.n).toBe(0);
  });
 });

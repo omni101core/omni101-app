@@ -6,7 +6,9 @@
     "imported_at": "2026-10-23",
     "sha256": "5fad170106e602f3a894521b85972ae141a6b2a05966cb2e65527d73dd2873c8",
     "original_preserved": true,
-    "coverage": "captured; implementation status must be verified per requirement"
+    "coverage": "captured; implementation status must be verified per requirement",
+    "record_id": "4a058d1e-07e9-4bb8-aca5-36ab4f2dfd38",
+    "title": "Product Excellence · 23 ottobre"
   },
   {
     "id": "product-quality-integrazione-2026-10-23",
@@ -15,7 +17,9 @@
     "imported_at": "2026-10-23",
     "sha256": "d8d5fad6c563a0d514b1b63eaf206774ff335a8a92ebb3264b173fbbef621de1",
     "original_preserved": true,
-    "coverage": "captured; implementation status must be verified per requirement"
+    "coverage": "captured; implementation status must be verified per requirement",
+    "record_id": "4f8a11a8-4941-40cd-ae7b-cf9832814d34",
+    "title": "Qualità del prodotto · integrazione"
   },
   {
     "id": "persistent-intelligence-2026-10-23",
@@ -24,6 +28,63 @@
     "imported_at": "2026-10-23",
     "sha256": "b832840ef588e163de30e1777338a69512d501c50706e694a89eb457b65061e0",
     "original_preserved": true,
-    "coverage": "captured; implementation status must be verified per requirement"
+    "coverage": "captured; implementation status must be verified per requirement",
+    "record_id": "f5e94c4b-5e62-46d3-acef-e8b0c6a69c4c",
+    "title": "Persistent Intelligence · memoria operativa"
+  },
+  {
+    "id": "rebuild-original-2026-10",
+    "file": "docs/mandati/rebuild-original-2026-10.md",
+    "source": "founder attachment 618e64e3-5729-45c8-98d2-abb7c0847ae8",
+    "imported_at": "2026-10-23",
+    "sha256": "b45455f2d283fb16de4b32b10113953da87457e3753600d9edd5d8e1a3f593c2",
+    "original_preserved": true,
+    "coverage": "archived original; earlier instructions may be superseded by later founder directions; no automatic execution",
+    "record_id": "0040b559-2df3-4030-a79d-8c5d908d2609",
+    "title": "Mandato rebuild originale · 22 ottobre"
+  },
+  {
+    "id": "continuation-original-2026-10",
+    "file": "docs/mandati/continuation-original-2026-10.md",
+    "source": "founder attachment db2b68f9-cb8f-4a29-bbca-aea86c56349f",
+    "imported_at": "2026-10-23",
+    "sha256": "b63d5674887f6c41701108cc581627e78305bdf906fe97702a2286c47bf4d238",
+    "original_preserved": true,
+    "coverage": "archived original; earlier instructions may be superseded by later founder directions; no automatic execution",
+    "record_id": "3010264e-7236-4a7e-a01e-db658468f385",
+    "title": "Specifica completa di continuazione"
+  },
+  {
+    "id": "realignment-original-2026-10",
+    "file": "docs/mandati/realignment-original-2026-10.md",
+    "source": "founder attachment f2b96d71-4edd-4b2c-97ac-a9c8ede07f62",
+    "imported_at": "2026-10-23",
+    "sha256": "5363f75d6f4b0dfa3a0696b0a404f830ae1bbb10d694c03f91c5a9cb3111308a",
+    "original_preserved": true,
+    "coverage": "archived original; earlier instructions may be superseded by later founder directions; no automatic execution",
+    "record_id": "8c412977-55f1-444b-a08d-f521d0418d8b",
+    "title": "Riallineamento prodotto e reference"
+  },
+  {
+    "id": "adaptive-agent-engineering-2026-10-23",
+    "file": "docs/mandati/adaptive-agent-engineering-2026-10-23.md",
+    "source": "founder attachment 296ffb30-4dde-453d-bd91-550ffc80487f",
+    "imported_at": "2026-10-23",
+    "sha256": "e3faf0b1cc00429a46787f4fa68838a7a59c074b7693a884d518d9c65ab35a5c",
+    "original_preserved": true,
+    "coverage": "captured; candidates are references, not authorization for installation or spending",
+    "record_id": "456e1de5-3d85-4512-a19e-bd905816ec39",
+    "title": "Adaptive Agent Engineering · ottimizzazione esecuzione"
+  },
+  {
+    "id": "revenue-growth-operating-system-2026-10-23",
+    "file": "docs/mandati/revenue-growth-operating-system-2026-10-23.md",
+    "source": "founder attachment 0f5f2fcf-f3fc-4c09-b521-803065a40a1b",
+    "imported_at": "2026-10-23",
+    "sha256": "ff95f7a5b90b8119d8bf3fe1162cc63cef273d311675c3adc2027a2d5b905f23",
+    "original_preserved": true,
+    "coverage": "captured; candidates are references, not authorization for installation or spending",
+    "record_id": "a0fc59bc-6b84-4271-a422-0cec72b8290b",
+    "title": "Revenue & Growth OS · acquisizione e delivery"
   }
 ]

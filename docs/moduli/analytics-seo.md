@@ -1,6 +1,6 @@
 # SEO, SEM, GEO e fiducia
 
-23 ottobre 2026. Nuovo codice locale da verificare in CI, distinto dalla revisione già verificata 441fc300.
+23 ottobre 2026. Online nella revisione 3fa90a5, run 39889662855 verde: test server, browser e canary cloud. Canonical/JSON-LD/robots confermati anche sul dominio principale.
 
 ## SEO e GEO
 
@@ -25,3 +25,5 @@ Identità del titolare, P.IVA, contatti, fornitori/DPA, trasferimenti, retention
 ## Verifica
 
 `tests/seo.test.ts`, `tests/growth-tools.test.ts`, integrazioni marketing/privacy in `tests/integration.test.ts`. Aggiungere prova browser autenticata e verifica live dopo CI. Niente claim di pubblicazione prima della revisione confermata dall'health.
+
+Verifica conclusa: 0008 applicata in staging e produzione; 102 test server e 103 browser complessivi passati. Nessuna campagna o invio attivato. Testo privacy pubblico aggiornato ai trattamenti reali di OMNI ASSIST (NVIDIA), passkey e R2 assente; dati legali e policy da completare restano dichiarati.

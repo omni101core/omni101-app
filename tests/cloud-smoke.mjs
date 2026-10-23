@@ -65,6 +65,17 @@ const mission=await owner('GET','/api/mission-control');assert.equal(mission.sta
 assert.equal(mission.body.capabilities.pause,false);assert.equal(mission.body.storage.r2,false);
 const missionDetail=await owner('GET','/api/mission-control/workflow/'+started.id);assert.equal(missionDetail.body.steps.filter(s=>s.status==='COMPLETED').length,3);assert(missionDetail.body.artifacts.some(x=>x.kind==='TASK'),'The run must expose the task it produced');
 console.log('Live staging: Mission Control lists the real Cloudflare Workflows run with 3 steps and its task artifact');
+// Read-only verification of reviewed memory and disabled marketing on real staging D1.
+{
+ const {readFileSync}=await import('node:fs');const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8'));
+ const memory=await owner('GET','/api/knowledge?kind=MANDATE');assert.equal(memory.status,200);
+ for(const source of sources){const record=memory.body.records.find(r=>r.id===source.record_id);assert(record,'Imported founder source missing');const detail=await owner('GET','/api/knowledge/'+record.id+'?version=1');assert.equal(detail.status,200);assert.equal(createHash('sha256').update(JSON.parse(detail.body.revisions[0].snapshot).body).digest('hex'),source.sha256,'Original mandate must survive import byte-for-byte');assert(detail.body.revisions.length>=1,'Original revision required');}
+ const requirements=await owner('GET','/api/knowledge?kind=REQUIREMENT');assert.equal(requirements.status,200);assert(requirements.body.records.filter(r=>r.source_id&&r.task_id).length>=12,'Reviewed requirements must retain source and task links');
+ const marketing=await owner('GET','/api/growth/overview');assert.equal(marketing.status,200);assert.equal(marketing.body.sendingEnabled,false);assert.equal(marketing.body.measurementEnabled,false);assert.deepEqual(marketing.body.channelsConnected,[]);
+ assert.equal((await a('GET','/api/knowledge')).status,403);assert.equal((await a('GET','/api/growth/overview')).status,403);
+ const robots=await readWithRetry(origin+'/robots.txt');assert((await robots.text()).includes('Disallow: /'));assert(robots.headers.get('x-robots-tag').includes('noindex'));
+ console.log('Live staging: original mandate hashes, requirement/source/task coverage, private memory and disabled marketing verified');
+}
 // Evidence: screenshots of /admin and /portal with the synthetic sessions, then the sessions are revoked.
 {
  const {chromium}=await import('@playwright/test');const {mkdirSync}=await import('node:fs');mkdirSync('test-results',{recursive:true});
@@ -72,6 +83,8 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
  const shot=async(raw,viewport,path,file,ready)=>{const context=await browser.newContext({viewport});await context.addCookies([{name:'__Host-omni_session',value:raw,url:origin,httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();await page.goto(origin+path,{waitUntil:'networkidle'});await page.getByText(ready).first().waitFor({timeout:20000});await page.screenshot({path:'test-results/'+file,fullPage:true});await context.close()};
  for(const [name,viewport] of [['desktop',{width:1440,height:900}],['mobile',{width:390,height:844}]]){
   await shot(ownerRaw,viewport,'/admin','staging-admin-'+name+'.png','Una visione chiara.');
+  await shot(ownerRaw,viewport,'/admin/knowledge','staging-knowledge-'+name+'.png','Knowledge & Intelligence');
+  await shot(ownerRaw,viewport,'/admin/growth','staging-growth-'+name+'.png','Marketing, ricerca e fiducia');
   await shot(ownerRaw,viewport,'/admin/agent-runs','staging-mission-control-'+name+'.png','Mission Control');
   await shot(ownerRaw,viewport,'/admin/pipeline?project='+projectA,'staging-pipeline-'+name+'.png','Pipeline di progetto');
   await shot(clientARaw,viewport,'/portal','staging-portal-'+name+'.png','I tuoi progetti');

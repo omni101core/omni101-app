@@ -94,5 +94,29 @@
     "status": "PLANNED",
     "acceptance": "Mandato→requisito→task→implementazione→test; inventario fonti lette e chat da importare.",
     "remaining": "Importati solo i tre originali del 23/10; non dichiarare recuperate chat non lette."
+  },
+  {
+    "key": "adaptive-execution",
+    "name": "Caricamento contestuale e governance adattiva",
+    "source": "adaptive-agent-engineering-2026-10-23",
+    "status": "IMPLEMENTED",
+    "acceptance": "Un comando locale produce solo riferimenti pertinenti per dominio, rischio, skill verificabili, fonti e campi handoff; CI rileva riferimenti rotti. Nessuna installazione o esecuzione agente.",
+    "remaining": "Benchmark comparativo e strumenti esterni solo quando esiste un problema misurato. Nessun risparmio token dichiarato senza misura."
+  },
+  {
+    "key": "revenue-foundation",
+    "name": "Campagne, qualificazione e agenda collegate",
+    "source": "revenue-growth-operating-system-2026-10-23",
+    "status": "IMPLEMENTED",
+    "acceptance": "Workspace con campagne persistenti, collegamenti CRM verificati per tenant, eventi manuali idempotenti attribuiti, qualificazione spiegabile e agenda derivata dalle date originali.",
+    "remaining": "Non è attribuzione automatica, previsione acquisto o pubblicazione: email/social/Ads restano non connessi. Calendario avanzato e automazioni restano nel requisito originale."
+  },
+  {
+    "key": "email-foundation",
+    "name": "Composer email e lifecycle con connessione autorizzata",
+    "source": "revenue-growth-operating-system-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Template/preview/versione, canale e purpose del consenso, suppression/preference center e adapter di delivery verificati prima di chiamarlo READY_FOR_CONNECTION.",
+    "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere."
   }
 ]

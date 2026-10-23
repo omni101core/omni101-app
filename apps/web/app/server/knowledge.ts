@@ -3,9 +3,9 @@ import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 const roles:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','DEVELOPER','DESIGNER','SALES','FINANCE'];
 const kinds=['REQUIREMENT','IDEA','DECISION','REFERENCE','PROMPT','HANDOFF','LEARNING','MANDATE','RISK'] as const;
 const statuses=['CAPTURED','NEEDS_CLARIFICATION','APPROVED','PLANNED','IN_PROGRESS','BLOCKED','IMPLEMENTED','VERIFIED','DEFERRED','REJECTED','SUPERSEDED','ARCHIVED'] as const;
-const fields=z.object({name:z.string().trim().min(2).max(180),kind:z.enum(kinds),status:z.enum(statuses),body:z.string().trim().min(1).max(40000),source:z.string().trim().min(3).max(1000),acceptance:z.string().max(4000).default(''),evidence:z.string().max(4000).default(''),source_id:z.string().max(160).nullable().default(null),task_id:z.string().max(160).nullable().default(null)}).strict();
+const fields=z.object({name:z.string().trim().min(2).max(180),kind:z.enum(kinds),status:z.enum(statuses),body:z.string().trim().min(1).max(60000),source:z.string().trim().min(3).max(1000),acceptance:z.string().max(4000).default(''),evidence:z.string().max(4000).default(''),source_id:z.string().max(160).nullable().default(null),task_id:z.string().max(160).nullable().default(null)}).strict();
 const json=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
-async function body(request:Request){const raw=await request.text();if(raw.length>60000)throw new HttpError(413,'Contenuto troppo grande.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'JSON non valido.')}}
+async function body(request:Request){const raw=await request.text();if(raw.length>90000)throw new HttpError(413,'Contenuto troppo grande.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'JSON non valido.')}}
 export async function handleKnowledge(request:Request,env:Env,actor:Identity):Promise<Response|null>{
  const url=new URL(request.url),match=url.pathname.match(/^\/api\/knowledge(?:\/([a-zA-Z0-9-]+))?$/);if(!match)return null;
  requireRole(actor,roles);const org=actor.orgId,rid=match[1],stamp=Date.now();
@@ -14,7 +14,7 @@ export async function handleKnowledge(request:Request,env:Env,actor:Identity):Pr
   const result=await env.DB.prepare("SELECT * FROM knowledge_records WHERE organization_id=? AND (?='' OR instr(lower(name||' '||body||' '||source),lower(?))>0) AND (?='' OR kind=?) AND (?='' OR status=?) ORDER BY updated_at DESC,id LIMIT 101").bind(org,q,q,kind,kind,status,status).all();
   return json({records:result.results.slice(0,100),hasMore:result.results.length>100,limit:100,policy:'TEAM_INTERNAL',semanticSearch:false,kinds,statuses});
  }
- if(request.method==='GET'&&rid){const record=await find(rid);if(!record)throw new HttpError(404,'Elemento non trovato.');const history=await env.DB.prepare('SELECT version,snapshot,author_id,created_at FROM knowledge_revisions WHERE record_id=? AND organization_id=? ORDER BY version DESC LIMIT 50').bind(rid,org).all();return json({record,revisions:history.results,historyLimit:50});}
+ if(request.method==='GET'&&rid){const record=await find(rid);if(!record)throw new HttpError(404,'Elemento non trovato.');const selected=url.searchParams.has('version')?z.coerce.number().int().min(1).max(1000000).parse(url.searchParams.get('version')):null;const history=await env.DB.prepare('SELECT version,snapshot,author_id,created_at FROM knowledge_revisions WHERE record_id=? AND organization_id=?'+(selected?' AND version=?':'')+' ORDER BY version DESC LIMIT 50').bind(rid,org,...(selected?[selected]:[])).all();if(selected&&!history.results.length)throw new HttpError(404,'Versione non trovata.');return json({record,revisions:history.results,historyLimit:50});}
  if(!['POST','PATCH'].includes(request.method)||request.method==='PATCH'&&!rid||request.method==='POST'&&rid)throw new HttpError(405,'Operazione non supportata.');
  const input=z.object({id:z.uuid(),version:z.number().int().min(0),record:fields}).strict().parse(await body(request));
  const data=input.record,id=rid||input.id;if(rid&&rid!==input.id)throw new HttpError(400,'Identificativo non coerente.');

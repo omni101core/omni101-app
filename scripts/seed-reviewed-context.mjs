@@ -14,14 +14,16 @@ function record(key,data){
  const id=uid(key),row={id,organization_id:org,...data,version:1,created_by:actor,updated_by:actor,created_at:stamp,updated_at:stamp};
  const revision=uid(key+':v1'),audit=uid(key+':audit');
  // Each insert is independently repeatable; a partial API failure can be resumed without overwriting edits.
- batches.push(insert('knowledge_records',row)+`INSERT OR IGNORE INTO knowledge_revisions(id,organization_id,record_id,version,snapshot,author_id,created_at) SELECT ${[revision,org,id,1,JSON.stringify({...data,id,version:1}),actor,stamp].map(value).join(',')} WHERE EXISTS(SELECT 1 FROM knowledge_records WHERE id=${value(id)} AND organization_id=${value(org)} AND created_by=${value(actor)});`+`INSERT OR IGNORE INTO audit_logs(id,organization_id,user_id,action,resource_type,resource_id,details,created_at,updated_at) SELECT ${[audit,org,null,'MANDATE_CONTEXT_IMPORTED','knowledge_records',id,JSON.stringify({source:data.source,revision:process.env.GITHUB_SHA||'local-dry-run'}),stamp,stamp].map(value).join(',')} WHERE EXISTS(SELECT 1 FROM knowledge_revisions WHERE id=${value(revision)});`);
+ batches.push(insert('knowledge_records',row));
+ batches.push(`INSERT OR IGNORE INTO knowledge_revisions(id,organization_id,record_id,version,snapshot,author_id,created_at) SELECT ${[revision,org,id,1,JSON.stringify({...data,id,version:1}),actor,stamp].map(value).join(',')} WHERE EXISTS(SELECT 1 FROM knowledge_records WHERE id=${value(id)} AND organization_id=${value(org)} AND created_by=${value(actor)});`+`INSERT OR IGNORE INTO audit_logs(id,organization_id,user_id,action,resource_type,resource_id,details,created_at,updated_at) SELECT ${[audit,org,null,'MANDATE_CONTEXT_IMPORTED','knowledge_records',id,JSON.stringify({source:data.source,revision:process.env.GITHUB_SHA||'local-dry-run'}),stamp,stamp].map(value).join(',')} WHERE EXISTS(SELECT 1 FROM knowledge_revisions WHERE id=${value(revision)});`);
  return id;
 }
 batches.push(insert('projects',{id:project,organization_id:org,name:'OMNI101 · Sviluppo piattaforma',description:'Backlog interno da mandati founder. Nessuna esecuzione automatica.',status:'PLANNING',visibility:'TEAM',created_at:stamp,updated_at:stamp}));
 for(const source of sources){
  if(!/^docs\/mandati\/[a-z0-9-]+\.md$/.test(source.file))throw new Error('Unrecognized source path.');
  const original=readFileSync(source.file);if(hash(original)!==source.sha256)throw new Error('Original source hash changed.');
- record(source.id,{name:source.id,kind:'MANDATE',status:'CAPTURED',body:original.toString('utf8'),source:source.source+' · '+source.file+' · sha256:'+source.sha256,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null});
+ if(source.record_id&&source.record_id!==uid(source.id))throw new Error('Source identity mismatch.');
+ record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body:original.toString('utf8'),source:source.source+' · '+source.file+' · sha256:'+source.sha256,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null});
 }
 for(const item of backlog){
  const task='mandate:'+org+':'+item.key;
