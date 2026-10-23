@@ -69,7 +69,7 @@ export default function DealWheel({active,onSelect}:{active:number;onSelect:(ind
    raf=settling||s.drag||timeline.isActive()?requestAnimationFrame(frame):0;
   };
   const wake=()=>{if(!raf){last=performance.now();raf=requestAnimationFrame(frame)}};
-  const goTo=(n:number)=>{s.target=n*STEP;select.current(mod(n,COUNT));wake()};
+  const goTo=(n:number,notify=true)=>{s.target=n*STEP;if(notify)select.current(mod(n,COUNT));wake()};
   const timeline=gsap.timeline({paused:true,onUpdate:wake})
    .to(v,{deal:1,duration:1.9,ease:'none'})
    .to(v,{lift:1,duration:1.5,ease:'power4.inOut'},'+=.05');
@@ -93,7 +93,7 @@ export default function DealWheel({active,onSelect}:{active:number;onSelect:(ind
    sync:index=>{
     const n=Math.round(s.target/STEP);
     if(mod(n,COUNT)===index||s.drag)return;
-    goTo(n+mod(index-n+2,COUNT)-2);
+    goTo(n+mod(index-n+2,COUNT)-2,false);
    },
    wake,
    stop:()=>{timeline.progress(1);wake()},

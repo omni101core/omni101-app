@@ -42,3 +42,12 @@ CI `39833548394`, SHA `7289881681d00cad1bfe109e9d187a379691f555`: 87 test server
 Nuovi centro operativo, aggregati finanziari, pianificazione/percorso critico/dipendenze/commenti e bootstrap backlog sono successivi a quella prova. CI `39836488222` ha rilevato errori di tipo nelle nuove viste; corretti localmente, nuova verifica necessaria. Migrazione 0007 e backlog **non applicati al live**. Preparazione Owner disponibile nel codice: 15 task, 3 milestone e 3 workflow DRAFT, nessuna esecuzione automatica. Dettagli e prossime azioni in `docs/operativo/ripresa.md`.
 
 Backlog ora popolato **nel solo D1 locale**: conteggi verificati 15 task, 3 milestone, 3 workflow DRAFT, 0 esecuzioni agenti/workflow. Nuovi casi portfolio Casa Luce/Tavola/Studio Forma con immagini originali e filtro settore preparati nel codice, in verifica CI.
+
+## Aggiornamento verificato — 23 ottobre
+
+- Token esistente fornito dal founder tramite clipboard macOS: salvato in sicurezza nel secret CI. D1 e Worker accessibili, nessun nuovo token creato.
+- Run `39884379497`, SHA `a4a84028fed40dddcc57dc8abf1a810f6d9b7e36`: typecheck, **93 test server e 102 browser passati**, 10 skip; migrazioni 0006/0007 e deploy staging riusciti. Health preview conferma la stessa revisione.
+- Smoke reale ha verificato assistente con token misurati, intake/Turnstile, classificazione AI, artefatto e approvazione, conversione in progetto e workflow durevole. Primo tentativo interrotto da `ECONNRESET` su una lettura; secondo tentativo della stessa run avviato, leggere conclusione prima di dichiarare CI interamente verde.
+- D1 staging popolato e contato: 15 task, 3 milestone, 3 workflow DRAFT, 3 task completati con prova (accesso CI, QA dashboard, portfolio). Preparazione non avvia agenti/workflow. Le attività sintetiche dei canary restano esplicitamente QA e appartengono solo allo staging.
+- Collaboratore indicato dal founder: metadati produzione confermano OWNER ACTIVE e una passkey registrata. Nessun account corrispondente nello staging; nessun nuovo invito generato in questa verifica. Non confondere i due accessi.
+- Nuovo portfolio settore e dashboard sono online su preview, non ancora dichiarati pubblicati sul dominio principale. Produzione non modificata da questa ripresa.

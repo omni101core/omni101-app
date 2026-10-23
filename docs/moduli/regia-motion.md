@@ -61,3 +61,5 @@ SPEC-02b (home e `routes/public.tsx`), SPEC-17 (`/solutions`), SPEC-18 (`/work`,
 CI `39832545700`: 98 browser test passati; link Atelier sul piano 3D ancora fuori viewport durante l'auto-scroll del browser. Correzione UX: destinazione del progetto attivo nel footer stabile della galleria, fuori dai transform 3D. I link sui piani restano solo nel fallback statico; cleanup ripristina aria/tabindex al cambio di preferenza motion. I test di navigazione esistenti restano invariati.
 
 2026-10-22 sera: CI `39837035528` ha passato typecheck/server ma rilevato 2 errori galleria: «successivo» si fermava a profondità 0,707 anziché 1. Corretto il comando: usa start/end effettivi del track dopo refresh, non una lunghezza ipotizzata da innerHeight. Nuova CI necessaria; nessun indebolimento dell'asserzione.
+
+23 ottobre: sync della ruota alle tab non riecheggia onSelect verso il genitore (evita aggiornamenti tardivi che sovrascrivono tastiera). La conclusione della transizione non sposta il focus se il visitatore sta già usando un controllo della pagina entrante. Suite tastiera esistente mantenuta con Home/End e controllo focus. In verifica successiva ad a4a8402.
