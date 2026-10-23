@@ -38,7 +38,7 @@ function CatalogTable({catalog,canImport}:{catalog:Catalog;canImport:boolean}){
  if(catalog.version===null)return <div>
   <p>Nessun listino in questa organizzazione.</p>
   <p className="os-hint">Per generare il file in locale (fuori dal repo):</p>
-  <pre><code>node scripts/catalogo-listino.mjs &gt; listino.json</code></pre>
+  <p className="os-hint"><code>node scripts/catalogo-listino.mjs &gt; listino.json</code></p>
   {canImport?<p className="os-hint">Poi carica qui il JSON con «Importa file JSON del listino».</p>:<p className="os-hint">Chiedi a OWNER o ADMIN di importare il file generato.</p>}
  </div>;
  return <>
