@@ -2,15 +2,17 @@
 
 ## Ripresa corrente (prevale sullo storico sotto)
 
-- Live stabile verificato:3adf682, run39994191429. Nessuna release successiva è andata in produzione.
-- Ultima release4f240ad/run40000867374:154server verdi,108browser verdi/14skip,2fallimenti (label textarea dopo reload; reduced-motionmobile intermittente). Prima65f6be9 aveva109browser verdi ma route-test email gestita due volte. Nessun controllo rimosso.
-- Label email corretta con label esterne/htmlFor/useId: valore della textarea non entra nel testo della label. Route-test sincronizzato prima dell’unroute. Non ancora verificati in nuova CI.
-- Diagnostica attiva solo verify-commercial:0aad6de46bb5bc1ebc51f0d19b4b0c17036ea08f, run40003777704. Snapshot isolato con sorgente pubblico4f, sonde plain/instrumented MQL e3ripetizioni. Nessun deploy o modifica dati remoti. Workflow consente filtro browser SOLO su verify-commercial; release/rebuild restano suite completa, guardia verificata con comando simulato.
-- Grok ha restituito ReelOrbit invariato e test motion con sonda; causa non ancora dimostrata. Opus ha dato revisione indipendente, nessuna patch. Sua supervisione precedente stava inviando direttive concorrenti a Grok: monitor fermato, conferma /tmp/omni101-deleghe/opus-supervision-handoff.md. Codex resta unico coordinatore/publisher. Non ripristinare vecchia staffetta Grok/Opus.
-- Artifatti privati di diagnosi /tmp/omni101-debug-40000867374; non stampare cookie/token/header nei trace. Dati pubblici estratti: cinema aggiorna is-reduced50ms dopoemulateMedia, Reel non aggiorna dopo5s; hashblob locale eCI coincidono.
-- Campagna v1 con3oggetti/3CTA prodotte da NVIDIA NIM gratuito già nel pacchetto4f; modello nemotron-3.5-bolt-e4b verificato, tracing disattivato. GLM5.3-flash viaNIM per diagnosi ha superato90s ed è stato terminato, nessun esito integrato. OpenCode/Kilo tentativi falliti o rifiutati non hanno prodotto patch integrate.
-- Backlog48:4safeguardpricing riallineati IMPLEMENTED; guardia stato/versione presente e nuova concorrenza versionata ora passa nei154test; canoni restano decisione. Composer0013 implementato con CAS concorrente, draft/preview/export e revisione; nessun invio/account provider.
-- Prossimo: leggere MEDIA_PROBE della run40003777704, provare causa e minimo fix; verifica mirata delle3regressioni, poi suite completa + staging/smoke + produzione ehealthSHA esatto. Nessun nuovo coordinatore/worker autonomo.
+- NUOVO LIVE VERIFICATO: c7e70e62eb050d6dc02da4c69cfdd1beceb91b1f, run40005444493 SUCCESS.154server,110browser/14skip; staging canary e produzione verdi. Health entrambi stesso SHA/database true/storage false. Workerproduzione bb4338d6-d189-4c1d-b437-bf6ccb968a09. Import11fonti48task6reference completato. Email/motion/campagna ora online.
+- Prossimo pacchetto: Grok ownership WorkflowBuilder.tsx e tests/e2e/workflow-builder.spec.ts; atteso esito /tmp/omni101-deleghe/grok-workflow-builder-fix.md, punti1–3 audit docs/operativo/workflow-dashboard-audit-2026-10-23.md. Nessun publish di sorgente parziale. Punti4–5 ancora aperti.
+
+- Precedente stabile:3adf682/run39994191429, mantenuto per storico/rollback.
+- Diagnostica baseline 0aad6de/run40003777704: 11/12 pass. MQL Reel mantiene listener (zero remove) ma non riceve change; cinema lo riceve. Nessun errore React. Ipotesi verificata con A/B: lettura mq.matches nel RAF interferisce con notifica; preferenza ora memorizzata dagli eventi, nessuna lettura nel loop.
+- A/B isolato 6a2925923fb6ed05a0d0a78530764f3d4a6d442b, run40004459176: 40/40 browser pass. Correzione minima integrata nel Reel principale. Nessuna sonda diagnostica isolata copiata nel prodotto.
+- Verifica mirata principale VERDE: f7f299e85eb168edb1c5bb5bc09743df7e86ac72, run40004937242. 154server,15browser pass/3skip (solo email mobile esclusa per progetto). Tre regressioni ripetute: reduced-motion dinamico, cinematic teardown/reentry, email create/reload/conflitto. Include label textarea htmlFor/useId e test approvazione concorrente (154server già passati nella run4f).
+- Workflow filtro browser consentito SOLO verify-commercial. Release/rebuild sempre suite completa. Mirata verde; prossimo release con suite completa, poi staging/smoke/produzione e health SHA esatto. Mai dichiarare verify-only come online.
+- Grok ha restituito ownership motion/email; audit dashboard consegnato, ora solo fix builder1–3. Niente altri worker o push. Opus reviewer fermo, vecchio monitor bv10c9qc0 terminato: nessun coordinatore concorrente. Codex unico publisher.
+- Email0013: bozze persistenti, CAS, preview sandbox/export e revisione; nessun invio/provider. Campagna preparata, backlog48, import atteso11fonti48task6reference. Pubblicato e verificato nella release c7e70e6.
+- Gratuiti: NVIDIA nemotron-3.5-bolt-e4b ha prodotto3oggetti/3CTA revisionati; GLM NIM timeout90s; OpenCode/Kilo bloccati, errori o segnalazioni scartate. Nessuna loro patch non verificata integrata. Dati classeA mai delegati ai gratuiti.
 
 ## Storico operativo del passaggio
 
