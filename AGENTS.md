@@ -23,3 +23,13 @@ Solo in CI, e solo se la tua spec te lo permette. Sequenza in `docs/operativo/ri
 ## Caricamento mirato e handoff
 
 Per selezionare solo i file pertinenti: `node scripts/project-context.mjs growth` (anche knowledge/frontend/security/release). È un indice, non un esecutore o una concessione di permessi. Fonte unica: docs/operativo/agent-context.json. Non caricare tutti i mandati o installare harness duplicati. Originali in docs/mandati/sources.json; task/decisioni/test vanno collegati alle fonti. Lo stato runtime si legge in docs/STATO.md e nell’health, non si deduce dall’esistenza di una skill. Caveman/Ponytail disponibili non dimostrano che un proxy sia acceso. Handoff nei campi del registro, senza segreti.
+
+## Avvio sessione per CLI
+
+1. Leggi `docs/CONTEXT.md`, `docs/STATO.md` e il checkpoint corrente (campo `handoff` del registro) prima di toccare file.
+2. `omni-delega quote` prima di aprire worker; se il pool è saturo cambi motore, non classe dati.
+3. Dichiara la classe dati (C pubblici / B anonimizzati / A cliente-segreti) e passa il gate: `delega-gate.sh` + `rizzo-gate.py`.
+4. Lancia con `omni-delega lancia` su file disgiunti: una CLI per insieme di file, nessuna scrittura condivisa.
+5. Il coordinatore verifica e ricalcola i numeri chiave; nessun worker si autodichiara finito.
+6. Handoff su file nei `handoff_fields`, senza segreti, non in chat.
+7. Tool, modelli, classi e routing stanno solo in `docs/operativo/agent-context.json` (`tool_capabilities`, `delegation_plan`): non duplicarli qui.

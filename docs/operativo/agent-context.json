@@ -242,5 +242,229 @@
       "confidence": "availability must be checked; runtime/proxy activation not inferred",
       "alternative": "native tooling and project instructions"
     }
+  },
+  "tool_capabilities": {
+    "opencode": {
+      "kind": "CLI",
+      "version": "opencode v2.0.31",
+      "scopo": "Lavoro meccanico su file non sensibili; free zero-retention dichiarati.",
+      "modelli": [
+        "opencode/glm-5.3-flash-free",
+        "opencode/deepseek-v4.1-flash-free",
+        "opencode/nemotron-3-ultra-free (trial NVIDIA con log: solo dati pubblici)"
+      ],
+      "effort": "NOT_VERIFIED (suffisso #variant non provato sui modelli free)",
+      "dati_ammessi": "C; B solo dopo pseudo.py e solo glm/deepseek (zero-retention dichiarati); nemotron-* solo C per i log NVIDIA; A MAI",
+      "pool": "free opencode (fuori POOL_XAI)",
+      "esempio_comando": "NOT_VERIFIED (nessun comando documentato; in CONTEXT.md solo: terminale Orca term_5fe6a232-b07c-4e32-a453-90a40d1750ff)",
+      "limiti": [
+        "nessuna prova di idoneita' su dati B/C",
+        "i nemotron-* sono trial con log"
+      ],
+      "status": "INSTALLED_NOT_EXECUTION_VERIFIED",
+      "verified_at": "2026-10-23",
+      "fonte": "capabilities-observed.json; fatti-verificati-oggi.md; docs/CONTEXT.md"
+    },
+    "kilo": {
+      "kind": "CLI",
+      "version": "CONFLITTO: 7.8.12 (capabilities-observed.json) vs 7.8.17 (fatti-verificati-oggi.md) - da riverificare",
+      "scopo": "Lavoro meccanico su dati pubblici.",
+      "modelli": [
+        "kilo/poolside/laguna-s-2.1:free"
+      ],
+      "effort": "NOT_VERIFIED",
+      "dati_ammessi": "C (policy dati poolside sconosciuta: mai A/B)",
+      "pool": "free kilo (fuori POOL_XAI)",
+      "esempio_comando": "kilo run --pure --model kilo/poolside/laguna-s-2.1:free",
+      "limiti": [
+        "beam-free e altri modelli falliscono con 'maximum number of items is 128' (tool)",
+        "policy poolside sconosciuta: nessun dato B/C"
+      ],
+      "status": "ESECUZIONE_VERIFICATA su laguna-s-2.1 (capabilities-observed.json riporta INSTALLED_NOT_EXECUTION_VERIFIED: vale la prova del comando)",
+      "verified_at": "2026-10-23",
+      "fonte": "fatti-verificati-oggi.md; capabilities-observed.json"
+    },
+    "goose": {
+      "kind": "CLI",
+      "version": "1.54.0",
+      "scopo": "Lavoro meccanico su dati pubblici, da file di input.",
+      "modelli": [
+        "nvidia/nemotron-3.5-super-vl"
+      ],
+      "effort": "NOT_VERIFIED",
+      "dati_ammessi": "C (trial con log NVIDIA: mai A/B)",
+      "pool": "free NVIDIA (fuori POOL_XAI)",
+      "esempio_comando": "goose run --no-session -i <file>",
+      "limiti": [
+        "trial con log: nessun dato cliente",
+        "solo input da file, nessuna sessione interattiva"
+      ],
+      "status": "INSTALLED_NOT_EXECUTION_VERIFIED",
+      "verified_at": "2026-10-23",
+      "fonte": "fatti-verificati-oggi.md"
+    },
+    "cursor-agent": {
+      "kind": "CLI (agent interattivo)",
+      "version": "2026.10.22",
+      "scopo": "Lavoro su copia isolata del repo, sandbox attiva.",
+      "modelli": [
+        "composer-2.5"
+      ],
+      "effort": "NOT_VERIFIED",
+      "dati_ammessi": "C; B solo su copia pseudonimizzata (policy dati NOT_VERIFIED); mai A",
+      "pool": "POOL_XAI (stesso abbonamento di grok e hermes)",
+      "esempio_comando": "cursor-agent interattivo con --sandbox enabled --workspace <copia> --trust (non --print)",
+      "limiti": [
+        "interattivo obbligatorio, --print non usabile",
+        "un lavoro alla volta nel POOL_XAI",
+        "quota mese 0% al 2026-10-23"
+      ],
+      "status": "LOGGED_IN, esecuzione non verificata",
+      "verified_at": "2026-10-23",
+      "fonte": "fatti-verificati-oggi.md"
+    },
+    "grok": {
+      "kind": "CLI",
+      "version": "grok 1.0.67 (2fe064390d07) [stable]",
+      "scopo": "Lavoro e review su dati pubblici/anonimizzati.",
+      "modelli": [
+        "grok-4.7"
+      ],
+      "effort": "medium (banner confermato)",
+      "dati_ammessi": "C; B solo su copia pseudonimizzata (policy xai-oauth NOT_VERIFIED); mai A",
+      "pool": "POOL_XAI (stesso abbonamento di cursor-agent e hermes)",
+      "esempio_comando": "NOT_VERIFIED (banner 'grok4.7 medium' confermato; selezione modello nativa in Orca non supportata, fallback su terminale)",
+      "limiti": [
+        "quota settimana 29% al 2026-10-23",
+        "un lavoro alla volta nel POOL_XAI"
+      ],
+      "status": "ESECUZIONE_OSSERVATA (banner + report ispezionato)",
+      "verified_at": "2026-10-23",
+      "fonte": "capabilities-observed.json; fatti-verificati-oggi.md"
+    },
+    "hermes": {
+      "kind": "CLI",
+      "version": "Hermes Agent v0.22.4 (2026.9.24) · stable · local 4d04303818b6",
+      "scopo": "Ordinamento e lavoro delegato via provider xai-oauth.",
+      "modelli": [
+        "grok-4.7 (provider xai-oauth, default)"
+      ],
+      "effort": "NOT_VERIFIED",
+      "dati_ammessi": "C con provider xai-oauth; con LLM locale (127.0.0.1) anche B; mai segreti",
+      "pool": "POOL_XAI (stesso abbonamento di grok e cursor-agent)",
+      "esempio_comando": "NOT_VERIFIED (~/.local/bin/hermes)",
+      "limiti": [
+        "solo versione verificata: nessuna esecuzione registrata",
+        "un lavoro alla volta nel POOL_XAI"
+      ],
+      "status": "INSTALLED_NOT_EXECUTION_VERIFIED",
+      "verified_at": "2026-10-23",
+      "fonte": "capabilities-observed.json; fatti-verificati-oggi.md"
+    },
+    "rizzo-flow": {
+      "kind": "servizio locale HTTP",
+      "version": "NOT_VERIFIED (Spark-X2.5-4B q8_0)",
+      "scopo": "Classificazione A/B/C del gate di delega.",
+      "modelli": [
+        "Spark-X2.5-4B q8_0"
+      ],
+      "effort": "NOT_VERIFIED",
+      "dati_ammessi": "A/B/C: servizio locale 127.0.0.1, nessun invio esterno documentato; policy scritta assente",
+      "pool": "locale (fuori POOL_XAI)",
+      "esempio_comando": "POST http://127.0.0.1:8017/v1/decisions",
+      "limiti": [
+        "~0,2 s per decisione",
+        "usato solo per il gate, non per eseguire lavoro"
+      ],
+      "status": "OSSERVATO_ATTIVO su 127.0.0.1:8017",
+      "verified_at": "2026-10-23",
+      "fonte": "fatti-verificati-oggi.md"
+    },
+    "orca": {
+      "kind": "orchestratore (terminale/worker)",
+      "version": "Orca1.4.237 ready",
+      "scopo": "Quote degli abbonamenti, worker su copie, terminali leggibili.",
+      "modelli": "NOT_VERIFIED (modello ed effort scelti a mano per worker)",
+      "effort": "NOT_VERIFIED",
+      "dati_ammessi": "n/a: non elabora dati, ospita i worker",
+      "pool": "n/a",
+      "esempio_comando": "orca account list --json -> result.rateLimits; orca terminal create + cd <copia>",
+      "limiti": [
+        "--worktree path:/tmp/... rifiutato: worker solo su copie",
+        "selezione modello nativa non supportata per grok"
+      ],
+      "status": "OPERATIVO (Orca1.4.237 ready)",
+      "verified_at": "2026-10-23",
+      "fonte": "capabilities-observed.json; fatti-verificati-oggi.md"
+    },
+    "cloud-verify": {
+      "kind": "script Python (publisher)",
+      "version": "NOT_VERIFIED",
+      "scopo": "Pubblica docs/ e AGENTS.md con scansione anti-segreti prima del push.",
+      "modelli": "n/a",
+      "effort": "n/a",
+      "dati_ammessi": "n/a; repo remoto PUBBLICO: nessun segreto nei documenti",
+      "pool": "n/a",
+      "esempio_comando": "NOT_VERIFIED (sequenza in docs/operativo/rilascio.md)",
+      "limiti": [
+        "nessun [skip ci]",
+        "repo remoto pubblico",
+        "run 39960583760 in corso: non dichiarare live"
+      ],
+      "status": "IN_USO_IN_CI",
+      "verified_at": "2026-10-23",
+      "fonte": "fatti-verificati-oggi.md; capabilities-observed.json"
+    }
+  },
+  "delegation_plan": {
+    "version": 1,
+    "verified_at": "2026-10-23",
+    "principi": [
+      "Classe dati prima del motore: C pubblici/liberi, B interni anonimizzati, A cliente/segreti.",
+      "Quote controllate prima di aprire worker (orca account list --json).",
+      "Un solo lavoro alla volta nel POOL_XAI: grok, cursor-agent, hermes condividono l'abbonamento.",
+      "File disgiunti per worker; nessuna sovrapposizione di scritture.",
+      "Il coordinatore verifica e ricalcola i numeri chiave; il worker non si autodichiara finito."
+    ],
+    "routing": [
+      {
+        "classe": "A",
+        "dati": "segreti, dati clienti reali, DB, finanza, codice di sicurezza (auth, api.ts guardie, publisher), git: MAI ai motori gratuiti",
+        "cli": "coordinatore / modello a pagamento autorizzato o founder",
+        "modello": "nessun motore gratuito remoto",
+        "gate": "gate A/B/C + regole repo (divieti AGENTS.md, verifica solo in CI)",
+        "ausilio": "rizzo-flow locale solo per classificare la classe",
+        "fonte": "docs/operativo/piano-delega-sicura-2026-10-23.md; AGENTS.md"
+      },
+      {
+        "classe": "B",
+        "dati": "prezzi/tariffe, nomi clienti, bozze commerciali: SOLO dopo pseudonimizzazione (pseudo.py)",
+        "cli": "opencode",
+        "modello": "free zero-retention dichiarati (glm-5.3-flash-free, deepseek-v4.1-flash-free) o LLM locale",
+        "esclusi": "kilo, goose (policy dati sconosciuta: solo C); nemotron-* (log)",
+        "gate": "quote + pseudo.py + conferma del coordinatore",
+        "stato": "NOT_VERIFIED: nessuna prova di conformita' B nei file",
+        "fonte": "stato-sessione.md; fatti-verificati-oggi.md"
+      },
+      {
+        "classe": "C",
+        "dati": "liberi (passano comunque il gate): codice UI non di sicurezza, test sintetici, docs tecnici, materiale gia' pubblico",
+        "cli": "opencode, kilo, goose",
+        "modello": "opencode/deepseek-v4.1-flash-free o opencode/glm-5.3-flash-free; kilo/poolside/laguna-s-2.1:free; goose nvidia/nemotron-3.5-super-vl; nemotron-*",
+        "fallback": "kilo (kilo/poolside/laguna-s-2.1:free) su rate limit; goose solo C pubblico, nemotron-* solo C (log)",
+        "gate": "quote + gate A/B/C automatico",
+        "fonte": "fatti-verificati-oggi.md; docs/operativo/piano-delega-sicura-2026-10-23.md"
+      }
+    ],
+    "escalation": [
+      "Rate limit raggiunto: il lavoro passa al motore successivo della stessa classe (staffetta), non si declassa la classe dati.",
+      "Dubbio sulla classe: trattare come A finche' il coordinatore non conferma.",
+      "Worker bloccato o 504: handoff su file nei handoff_fields, nessun lavoro perso."
+    ],
+    "non_verificato": [
+      "effort/#variant sui modelli free (opencode, kilo, goose, hermes)",
+      "esecuzione reale di hermes, goose, cursor-agent",
+      "policy dati poolside e NVIDIA oltre il perimetro 'pubblici'"
+    ]
   }
 }

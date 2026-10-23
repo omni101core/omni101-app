@@ -5,7 +5,7 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "IMPLEMENTED",
     "acceptance": "Cattura, ricerca, originali e versioni attribuite; collegamenti fonte/task, export JSON e conflitti 409.",
-    "remaining": "Import completo, ACL per progetto, cronologia oltre 50 versioni, retention e copertura aggregata da completare."
+    "remaining": "Import completo, ACL per progetto, cronologia oltre 50 versioni, retention e copertura aggregata da completare. Manca inoltre: decision log versionato e catena provenance fino a commit/release; ricerca semantica, contenuti correlati e suggerimento duplicati."
   },
   {
     "key": "seo",
@@ -13,7 +13,7 @@
     "source": "product-excellence-2026-10-23",
     "status": "IMPLEMENTED",
     "acceptance": "Sitemap pubblica completa, canonical/meta, JSON-LD senza dati inventati, staging e privati noindex.",
-    "remaining": "Verificare Search Console con account autorizzato; nessuna promessa di ranking."
+    "remaining": "Verificare Search Console con account autorizzato; nessuna promessa di ranking. Non coperti: robots per crawler AI (OAI-SearchBot/GPTBot) e llms.txt; multilingua/hreflang, Core Web Vitals, redirect e internal linking da verificare."
   },
   {
     "key": "growth-privacy",
@@ -21,7 +21,7 @@
     "source": "product-excellence-2026-10-23",
     "status": "IMPLEMENTED",
     "acceptance": "Piani reali SEM/GEO/local SEO, UTM locale, blocchi e consenso idempotente, registro diritti con RBAC.",
-    "remaining": "Fornitori, titolare, retention e procedure da verificare. Nessun invio o budget ads attivato."
+    "remaining": "Fornitori, titolare, retention e procedure da verificare. Nessun invio o budget ads attivato. Non coperti: cifratura, gestione dei segreti, permessi degli agenti e audit degli accessi."
   },
   {
     "key": "calendar",
@@ -29,7 +29,7 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Unire date originali di task, milestone, campagne e revisioni con timezone, filtri e agenda senza duplicarle.",
-    "remaining": "Il registro eventi esiste; aggregazione e scheduling ricorrente da realizzare.",
+    "remaining": "Il registro eventi esiste; aggregazione e scheduling ricorrente da realizzare. Non coperti: drag&drop, multi-calendario, vista team, fusi orari e gestione dei conflitti.",
     "priority": "NORMAL"
   },
   {
@@ -38,7 +38,7 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "BLOCKED",
     "acceptance": "Brief→asset→revisione→approvazione→coda con stati reali e adapter autorizzati.",
-    "remaining": "Bloccato da causa esterna: nessun account social connesso. Nessuna pubblicazione simulata; verificare capacità e permessi per ogni piattaforma.",
+    "remaining": "Bloccato da causa esterna: nessun account social connesso. Nessuna pubblicazione simulata; verificare capacità e permessi per ogni piattaforma. Non coperti oggi: preview multi-piattaforma, template, repurposing e retry policy. Bozze, approvazioni e calendario interni si costruiscono anche senza connessione; resta bloccata solo la pubblicazione.",
     "priority": "LOW"
   },
   {
@@ -47,7 +47,7 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "BLOCKED",
     "acceptance": "Brief, target, varianti, budget pianificato, approvazione e metriche solo da fonti reali.",
-    "remaining": "Bloccato da causa esterna: nessun account Ads connesso né autorizzazione esplicita. Nessuna spesa né modifica live prima di connessione e autorizzazione esplicita.",
+    "remaining": "Bloccato da causa esterna: nessun account Ads connesso né autorizzazione esplicita. Nessuna spesa né modifica live prima di connessione e autorizzazione esplicita. Bozze, approvazioni e calendario interni si costruiscono anche senza connessione; resta bloccata solo la pubblicazione.",
     "priority": "LOW"
   },
   {
@@ -56,7 +56,7 @@
     "source": "product-excellence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Token condivisi, contrasto, bozza/preview/versione/pubblicazione/ripristino su schermate reali.",
-    "remaining": "Riutilizzare primitive esistenti; evitare librerie di componenti inutilizzati."
+    "remaining": "Riutilizzare primitive esistenti; evitare librerie di componenti inutilizzati. Non coperto: strategia light-first pubblico e dark-first workspace con toggle e persistenza, contrasto da verificare."
   },
   {
     "key": "team",
@@ -64,7 +64,7 @@
     "source": "product-excellence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Ricerca, stati invito, permessi, revoca/resend sicuri e due Owner distinti con audit.",
-    "remaining": "Account Owner esistente da preservare; non ricreare credenziali o inviti."
+    "remaining": "Account Owner esistente da preservare; non ricreare credenziali o inviti. Non coperti: link sicuro, reinvio, revoca, ultimo accesso, stati invito DRAFT→FAILED, MFA/passkey, scadenza e revoca delle sessioni, scadenza inviti."
   },
   {
     "key": "intake",
@@ -72,7 +72,7 @@
     "source": "product-excellence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Tre ingressi, modello condiviso, logica deterministica, revisione e recupero bozza.",
-    "remaining": "Usare AI solo per trasformazioni semantiche con conferma.",
+    "remaining": "Usare AI solo per trasformazioni semantiche con conferma. Non coperta la catena agentica del mandato (lingua, brief, dedup, complessità e urgenza, prossima azione, 15 passi) né duplicati, follow-up, allegati e voce opzionale.",
     "priority": "NORMAL"
   },
   {
@@ -81,7 +81,7 @@
     "source": "product-excellence-2026-10-23",
     "status": "BLOCKED",
     "acceptance": "Task→branch isolato→test→PR→review→preview→rilascio approvato; adapter solo dove supportati.",
-    "remaining": "Bloccato da causa esterna: sandbox cloud richiede valutazione costi e autorizzazione. OpenHands è una reference da valutare. Sandbox cloud richiede valutazione costi; non attivare.",
+    "remaining": "Bloccato da causa esterna: sandbox cloud richiede valutazione costi e autorizzazione. OpenHands è una reference da valutare. Sandbox cloud richiede valutazione costi; non attivare. Non coperti e non dipendenti dal sandbox: branch protection, required checks, preview deploy, approvazione del deploy e \"Connetti i tuoi strumenti\".",
     "priority": "LOW"
   },
   {
@@ -99,7 +99,7 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Mandato→requisito→task→implementazione→test; inventario fonti lette e chat da importare.",
-    "remaining": "Dieci originali nel manifest. Triage per gruppi ancora incompleto: clausole non classificate restano esplicite nel manifest, senza dedurne completamento."
+    "remaining": "Dieci originali nel manifest. Triage per gruppi ancora incompleto: clausole non classificate restano esplicite nel manifest, senza dedurne completamento. Non coperti: normalizzazione dei 16 tipi, fonti/chat non lette, soft delete, backup e integrity check."
   },
   {
     "key": "adaptive-execution",
@@ -107,7 +107,7 @@
     "source": "adaptive-agent-engineering-2026-10-23",
     "status": "IMPLEMENTED",
     "acceptance": "Un comando locale produce solo riferimenti pertinenti per dominio, rischio, skill verificabili, fonti e campi handoff; CI rileva riferimenti rotti. Nessuna installazione o esecuzione agente.",
-    "remaining": "Benchmark comparativo e strumenti esterni solo quando esiste un problema misurato. Nessun risparmio token dichiarato senza misura."
+    "remaining": "Benchmark comparativo e strumenti esterni solo quando esiste un problema misurato. Nessun risparmio token dichiarato senza misura. Non verificato: uso reale di Caveman/Ponytail in ogni CLI, non solo installati."
   },
   {
     "key": "revenue-foundation",
@@ -123,7 +123,7 @@
     "source": "revenue-growth-operating-system-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Template/preview/versione, canale e purpose del consenso, suppression/preference center e adapter di delivery verificati prima di chiamarlo READY_FOR_CONNECTION.",
-    "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere.",
+    "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere. Non coperti: editor visuale, drip, A/B, bounce/complaint, SPF/DKIM/DMARC e report. Scadenza Garante 29 ottobre 2026 su pixel/tracking nelle email: oggi nessun invio ne' pixel (conforme per assenza); al collegamento tracking disattivato di default e base giuridica documentata.",
     "priority": "NORMAL"
   },
   {
@@ -132,7 +132,7 @@
     "source": "consolidamento-operativo-2026-10-23",
     "status": "IN_PROGRESS",
     "acceptance": "Costi per cadenza, formule esplicite, snapshot, conflitti, approvazione backend e collegamento al lead.",
-    "remaining": "Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*.",
+    "remaining": "Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*. Non coperti: contratti, spese e margini come modulo Operations; preventivo accettato→contratto/ordine→progetto e task; opzioni/varianti, imposte, valuta e condizioni di pagamento.",
     "priority": "HIGH",
     "evidence": "Produzione LIVE 01805108595ba1bc21866bcc84825fae829792ff, run CI 39962720977 verde (verify e production, health a SHA esatto). Fonte: docs/operativo/consegna-sonnet-a-opus-2026-10-23.md."
   },
@@ -142,7 +142,7 @@
     "source": "consolidamento-operativo-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Kanban persistente con audit, conflitti, timeline, opportunità, fasi configurabili e collegamenti offerte/progetti.",
-    "remaining": "Kanban e CRUD esistono; transizioni concorrenti, eventi condivisi, filtri salvati e deduplicazione avanzata da completare.",
+    "remaining": "Kanban e CRUD esistono; transizioni concorrenti, eventi condivisi, filtri salvati e deduplicazione avanzata da completare. Non coperti: SLA, forecast, motivi perdita, automazioni di stato, promemoria, allegati, import/export contatti e aziende, conversione lead→cliente→progetto e collegamenti a contratti/fatture.",
     "priority": "HIGH"
   },
   {
@@ -151,7 +151,7 @@
     "source": "connected-ecosystem-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Registry, connessioni guidate, tool con scope e test reali, revoca e audit.",
-    "remaining": "Nessun nuovo account o MCP remoto collegato; OAuth, SSRF, credenziali e capability negotiation da implementare/verificare."
+    "remaining": "Nessun nuovo account o MCP remoto collegato; OAuth, SSRF, credenziali e capability negotiation da implementare/verificare. Direzione server non coperta: esporre OMNI101 come server MCP a client esterni autorizzati."
   },
   {
     "key": "education",
@@ -168,7 +168,7 @@
     "source": "connected-ecosystem-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G verificati.",
-    "remaining": "Workflows/approvazioni durevoli già presenti; bus commerciale, tool agenti e scenari completi ancora parziali."
+    "remaining": "Workflows/approvazioni durevoli già presenti; bus commerciale, tool agenti e scenari completi ancora parziali. Non coperti: editor canvas a nodi con diagnosi, runtime persistente retriable, Approval Center trasversale, team di agenti con supervisore/handoff/anti-loop, agent registry, mission control, budget, costo per run, log e retry."
   },
   {
     "key": "commercial-catalog",
@@ -176,7 +176,7 @@
     "source": "consolidamento-operativo-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Template e pacchetti versionati con prerequisiti, commissioni approvate e attribuzione verificabile.",
-    "remaining": "Catalogo modulare, reseller, referral e white label da costruire per priorità; nessun pagamento attivato.",
+    "remaining": "Catalogo modulare, reseller, referral e white label da costruire per priorità; nessun pagamento attivato. Non coperti: blueprint registry con 10 verticali e provisioning idempotente del nuovo cliente; antifrode referral, rendicontazione e pagamento delle commissioni.",
     "priority": "LOW"
   },
   {
@@ -185,7 +185,7 @@
     "source": "cli-native-orchestration-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Capability registry verificato, startup persistente, contratti di delega con ownership/modello/effort/budget, esiti realmente controllati e cross-review prima del rilascio.",
-    "remaining": "Review Claude/Grok tramite Orca eseguite; registry e startup in consolidamento. Costi non misurati, coding adapter nel prodotto e controllo sessioni cloud restano da realizzare; nessun agente fittizio."
+    "remaining": "Review Claude/Grok tramite Orca eseguite; registry e startup in consolidamento. Costi non misurati, coding adapter nel prodotto e controllo sessioni cloud restano da realizzare; nessun agente fittizio. Non coperti: campi del registry (modelli, effort, permessi, data di verifica, motivo di non-uso, routing A–D); contratto con acceptance/verification/escalation e handoff a inizio sessione."
   },
   {
     "key": "pricing-hardening-self-approval",
@@ -246,5 +246,167 @@
     "remaining": "Test mancanti sul portale per scope, terms e pricing_version.",
     "priority": "HIGH",
     "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+  },
+  {
+    "key": "design-system",
+    "name": "Sistema componenti, token e tema centralizzato",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Libreria interna per famiglie (azioni, form, overlay, dati, collaborazione, AI, media) con stati default/loading/empty/error/disabled, token semantici CSS+TS, tema public/workspace light-dark con persistenza, registry con varianti/api/test e quality gate visuale, interazione, responsive, a11y, regressione; nessuna variante duplicata per pagina.",
+    "remaining": "Da costruire su primitive già presenti; niente librerie importate senza necessità. Gli stati esistenti vanno censiti prima di riscrivere componenti funzionanti.",
+    "source": "product-excellence-2026-10-23"
+  },
+  {
+    "key": "public-experience",
+    "name": "Esperienza pubblica immersiva, motion e showcase",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Hero fullscreen con svh/dvh e CTA immediata, scroll storytelling cinematica con fallback e motion saltabile, capitoli BUILD/SPEAK/SEE/CREATE/ACT/GROW, showcase con player audio, avatar video, comparatore media, workflow animato e preview software; reel orbit, OMNI PORTAL R3F, page transitions, gallery e typography motion verificati con reduced motion, skip, fallback statico e regole performance §5.10; nessun risultato inventato, demo etichettate.",
+    "remaining": "Home e portfolio esistono; Explore, narrazione cinematica e showcase media non risultano fatti. Prestazioni mobile da verificare prima del rilascio. Dal mandato rebuild: transizioni parallele, skip dell'intro e loader su asset reali da verificare o realizzare.",
+    "source": "product-excellence-2026-10-23"
+  },
+  {
+    "key": "ai-assist",
+    "name": "OMNI Assist: assistente pubblico e copilot interno",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Tre livelli (routing deterministico, interpretazione, azioni autorizzate); generative UI solo da registry di componenti con schema validato; risposte su memoria con fonti e distinzione approvato/ipotesi; lead creato con conferma; handoff umano; azioni interne solo con permessi e approvazione; tool tipizzati validati lato server con i permessi dell'utente.",
+    "remaining": "Assistente NVIDIA esistente con limiti resta la base; nessuna azione autorizzata né generative UI verificata. Nessun codice arbitrario generato dai modelli. Inbox unificata e command palette restano nei gruppi dedicati.",
+    "source": "product-quality-integrazione-2026-10-23"
+  },
+  {
+    "key": "analytics-kpi",
+    "name": "Analytics interno, KPI, BI e briefing operativi",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Eventi tipizzati persistenti con filtri temporali e per progetto; KPI pipeline, win rate, margini, costi agentici e QA failure da dati reali; pipeline Marketing→Lead→Opportunità→Preventivo→Vendita→Costi→Margine→Rinnovo con ogni metrica definita da fonte e periodo; dashboard per ruolo con drill-down; daily brief e weekly review con frequenza configurabile e nessuna azione esterna automatica; nessuna PII non necessaria.",
+    "remaining": "growth-privacy copre solo SEM/GEO e consenso. Solo dati reali: nessun ROI o risparmio inventato; collegare eventi e costi già persistiti. Il generatore di briefing non esiste e dipende da calendario, agent run e costi reali.",
+    "source": "rebuild-original-2026-10"
+  },
+  {
+    "key": "security-baseline",
+    "name": "Baseline sicurezza, hardening ASVS e compliance verificata",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Test su tenant isolation, object-level authorization, webhook verification, replay protection, rate limiting e input validation; difese CSRF/XSS/SSRF, confini tool AI e prompt injection; audit OWASP ASVS L2, WCAG 2.2 AA, retention e procedure DSAR, incident response, backup/restore testati; scadenza e revoca delle sessioni; gate CI selettivi per rischio (secret scanning, license check, visual regression, accessibilità, API contract, validazione migrazioni); agenti trattano input clienti come dati, non istruzioni.",
+    "remaining": "Reference: OWASP ASVS, OWASP API Security, OWASP GenAI. Nessun audit esterno o nuova dipendenza senza autorizzazione. CI verde su typecheck e test ma i gate di sicurezza, licenza, visual e accessibilità non risultano attivi; nessuna certificazione dichiarata.",
+    "source": "consolidamento-operativo-2026-10-23"
+  },
+  {
+    "key": "landing-funnel-builder",
+    "name": "Landing, funnel e CRO versionati",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Builder a blocchi su componenti approvati del design system con template, preview, versioni/rollback, custom domains, A/B e funnel multi-step sorgente→landing→form→lead→offerta→contratto→pagamento misurabile per stage con ramificazioni; esperimenti con obiettivi, eventi, guardrails e storico (heatmap solo privacy-aware); l'AI compone solo componenti autorizzati, mai JS generato pubblicato.",
+    "remaining": "Nessun builder o funnel in produzione. Valutare Puck come candidato; valutare PostHog, GrowthBook e Formbricks prima di duplicare infrastruttura sperimentale. Nessun dominio, pubblico o invio attivato senza autorizzazione.",
+    "source": "consolidamento-operativo-2026-10-23"
+  },
+  {
+    "key": "dashboard-ux",
+    "name": "Dashboard verificata, comandi rapidi e command palette",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Ogni schermata chiave verificata a browser su leggibilità, stati vuoti/loading/errore, responsive, tema chiaro/scuro e accessibilità; ogni pulsante visibile funziona o dichiara l'indisponibilità; palette globale che cerca pagine, lead, progetti, clienti, workflow, tool MCP, agenti e azioni, con comandi contestuali per schermata che rispettano i permessi.",
+    "remaining": "Solo QA visiva puntuale su pricing e CTA; nessun presidio continuo né catalogo comandi rapidi. Palette da collegare ai dati e al backend esistenti: azioni reali, non suggerimenti statici.",
+    "source": "consolidamento-operativo-2026-10-23"
+  },
+  {
+    "key": "model-router-governance",
+    "name": "Router modelli e governance di istruzioni e skill",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Routing per task/costo/sensibilità con retry, fallback, budget, cost accounting e capability matrix; LLM, TTS, avatar, dubbing, image e vision via adapter, mai un solo provider; una fonte canonica per dominio con controllo automatico del drift tra AGENTS.md, CLAUDE.md, regole, brand e design; classificazione TRIVIAL/STANDARD/COMPLEX/CRITICAL/CREATIVE con azioni proporzionate; registro skill con audit licenza/script/hook/segreti prima dell'adozione.",
+    "remaining": "Tutti i provider non disponibili (STATO); copilot NVIDIA esistente senza router. Nessun provider a pagamento attivato senza autorizzazione. Entrypoint condivisi presenti ma nessun gate anti-drift; nessun audit supply-chain registrato per le skill adottate.",
+    "source": "rebuild-original-2026-10"
+  },
+  {
+    "key": "roles-agents-rbac",
+    "name": "Ruoli granulari e scope esecuzione agenti AI",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Permission primitive con template di ruolo (Sales, PM, Finance, Client, Partner, Service Account, AI Agent) e execution scope ben più stretto dell'Owner.",
+    "remaining": "Valutare OpenFGA solo se la granularità esistente è insufficiente; non sostituire auth a ciecamente.",
+    "source": "revenue-growth-operating-system-2026-10-23"
+  },
+  {
+    "key": "orchestration-dashboard",
+    "name": "Osservatorio orchestrazione e metriche per task",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "acceptance": "Vista di agenti/CLI, sessioni, missioni, ownership, modello, effort, stato, token e costi disponibili, branch/PR, test e approvazioni; costo per task verificato, retry, rework e qualità handoff misurati o dichiarati assenti.",
+    "remaining": "Nessuna dashboard in Agency OS; costi non misurati e nessun dato inventato.",
+    "source": "cli-native-orchestration-2026-10-23"
+  },
+  {
+    "key": "reusable-library",
+    "name": "Libreria riusabile e selezione open source",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "acceptance": "Starter kit, template, componenti, schemi dati, formule, checklist, pipeline di deploy e configurazioni settoriali versionati e usabili dagli agenti; criteri espliciti (licenza, compatibilità Cloudflare, multi-tenant, costi) prima di adottare un progetto esterno.",
+    "remaining": "Nessuna libreria tecnica riusabile; i candidati open source restano da verificare, non approvati.",
+    "source": "consolidamento-operativo-2026-10-23"
+  },
+  {
+    "key": "context-handoff-vaults",
+    "name": "Context pack, handoff e vault di reference e prompt",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Per progetto: obiettivo, contesto, requisiti, decisioni, reference, architettura, repo/branch, task, problemi, vincoli, integrazioni, stato e prossime azioni; handoff con fatto/verificato/non funziona/file/commit/test/blocchi/prossima azione; export agent-ready senza segreti; reference con titolo, URL, preview autorizzata, fonte, categoria, motivo, elementi riutilizzabili, licenza, stato valutazione, progetto e componenti collegati con catena reference→requisito→task→implementazione; prompt versionati con scopo, schema input/output, esempi, costi misurati, valutazioni e ripristino.",
+    "remaining": "Memoria 0009 copre record e versioni, non il pacchetto progetto né l'handoff. Tre reference importate come record generici; nessun versionamento prompt. Moodboard e raccolte tematiche da progettare. Nessuna nuova piattaforma: viste sul modello esistente.",
+    "source": "persistent-intelligence-2026-10-23"
+  },
+  {
+    "key": "content-cms",
+    "name": "Contenuti editoriali, case study e multilingua",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "acceptance": "Modello per pagine, articoli, guide, portfolio, case study, servizi e demo con draft/approvazione/pubblicazione, scheduling, version history, metadata SEO e prontezza multilingua; distinzione concept vs progetto reale.",
+    "remaining": "Pagine pubbliche scritte a mano; nessun modello editoriale né versionamento. SEO tecnico già coperto resta invariato.",
+    "source": "product-quality-integrazione-2026-10-23"
+  },
+  {
+    "key": "ops-inbox-support",
+    "name": "Inbox unificata, supporto clienti e back office",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "acceptance": "Centro notifiche collegato con priorità, filtri, letto/non letto, snooze, deep link e digest; inbox e ticket con stato e proprietario, messaggi, documenti e notifiche nel portale isolato per tenant con audit degli accessi; customer success e rinnovi collegati ai clienti, contratti/fatture e reporting costi-margini su dati reali; evoluzione a email/chat solo con provider autorizzati.",
+    "remaining": "Notifiche base LIVE ma nessuna inbox multicanale; il portale LIVE copre approvazioni e deliverable. Solo registri finanziari con aggregati: ticket, rinnovi, fatturazione fiscale e reporting margini assenti. Nessun canale esterno attivato.",
+    "source": "connected-ecosystem-2026-10-23"
+  },
+  {
+    "key": "vision-gesture",
+    "name": "Vision/Gesture Lab con gate di sicurezza",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "acceptance": "Webdemo MediaPipe: landmarks, pinch, swipe, calibrazione, emergency stop, pause, timeout dopo tracking loss; segnare demo vs possibile prodotto; consenso webcam esplicito.",
+    "remaining": "STATO non conferma il lab nel playground; nessuna voce di backlog su vision/gesture. Companion desktop resta opzionale e separato dal server.",
+    "source": "continuation-original-2026-10"
+  },
+  {
+    "key": "ci-risk-gates",
+    "name": "Gate CI proporzionati al rischio del cambiamento",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "source": "cli-native-orchestration-2026-10-23",
+    "acceptance": "Gate CI proporzionati al rischio del cambiamento (docs-only vs codice vs migrazioni vs sicurezza) con controlli type/lint/test/accessibilità/security/segreti/licenza/migrazioni/API fail-fast integrati nella pipeline pre-rilascio.",
+    "remaining": "Integrare i controlli esistenti senza gate duplicati, verificando la coverage reale prima di richiedere nuovi tool o framework aggiuntivi."
+  },
+  {
+    "key": "cost-observability",
+    "name": "Metriche costo e observabilità agentica",
+    "status": "PLANNED",
+    "priority": "NORMAL",
+    "source": "cli-native-orchestration-2026-10-23",
+    "acceptance": "Misurare costo per task, retry, rework, failure, handoff riusciti, token, durata e modello usato, senza dichiarare alcun risparmio senza misura.",
+    "remaining": "Usare solo le metriche disponibili senza analytics complesse; dati insufficienti = NON_CERTO e niente percentuali inventate."
+  },
+  {
+    "key": "docs-drift-control",
+    "name": "Controllo drift della documentazione",
+    "status": "PLANNED",
+    "priority": "LOW",
+    "source": "adaptive-agent-engineering-2026-10-23",
+    "acceptance": "Verificare la coerenza tra CONTEXT/STATO/moduli, AGENTS.md, CLAUDE.md, regole, skill, PRD, test, CI e release rispetto al codice, identificando la fonte canonica nei conflitti.",
+    "remaining": "Fonte unica = costituzione OMNI101: link ai documenti canonici senza copie, controllo su richiesta o su PR significativa."
   }
 ]
