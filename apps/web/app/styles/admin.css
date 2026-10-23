@@ -52,3 +52,28 @@
 .os-nav-link{font-size:14px;padding:10px 12px;min-height:44px}
 .os-nav-purpose{font-size:13px;max-width:100%}
 }
+
+/* R5 ProductUI states — solo append, prefisso .pui-, token esistenti */
+.pui-feedback{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 16px;margin:0 0 20px;border:1px solid var(--os-line);border-radius:4px;background:var(--os-panel);color:var(--os-text);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.pui-feedback-text{margin:0;flex:1 1 12rem;min-width:0;color:var(--os-text)}
+.pui-feedback--loading,.pui-feedback--pending,.pui-feedback--empty,.pui-feedback--read-only,.pui-feedback--offline{color:var(--os-muted)}
+.pui-feedback--loading .pui-feedback-text,.pui-feedback--pending .pui-feedback-text,.pui-feedback--empty .pui-feedback-text,.pui-feedback--read-only .pui-feedback-text,.pui-feedback--offline .pui-feedback-text{color:var(--os-muted)}
+.pui-feedback--success{border-color:var(--os-gold);background:color-mix(in srgb,var(--os-gold) 8%,var(--os-panel))}
+.pui-feedback--success .pui-feedback-text{color:var(--os-gold)}
+.pui-feedback--error,.pui-feedback--unauthorized{border-color:var(--os-gold);background:color-mix(in srgb,var(--os-text) 6%,var(--os-panel))}
+.pui-feedback[data-busy=true] .pui-feedback-text::before{content:"";display:inline-block;width:.7em;height:.7em;margin-right:.55em;border:2px solid var(--os-line);border-top-color:var(--os-gold);border-radius:50%;vertical-align:-.1em;animation:pui-spin .7s linear infinite}
+.pui-feedback-retry{margin:0;min-height:44px}
+.pui-confirm{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pui-confirm-go,.pui-confirm-cancel{min-height:44px}
+.pui-confirm-go:focus-visible,.pui-confirm-cancel:focus-visible,.pui-feedback-retry:focus-visible,.pui-unsaved-actions .os-button:focus-visible{outline:2px solid var(--os-gold);outline-offset:3px}
+.pui-unsaved-overlay{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:20px;background:color-mix(in srgb,var(--os-bg) 72%,transparent)}
+.pui-unsaved-dialog{width:min(420px,100%);padding:28px 24px;border:1px solid var(--os-line);border-radius:8px;background:var(--os-panel);color:var(--os-text);box-shadow:0 12px 40px color-mix(in srgb,var(--os-bg) 55%,transparent)}
+.pui-unsaved-title{margin:0 0 10px;font-size:18px;font-weight:500;letter-spacing:-.02em;color:var(--os-text);text-wrap:balance}
+.pui-unsaved-body{margin:0 0 22px;font-size:13px;line-height:1.6;color:var(--os-muted);max-width:65ch}
+.pui-unsaved-actions{display:flex;flex-wrap:wrap;gap:10px}
+.pui-unsaved-actions .os-button{min-height:44px;margin:0}
+@keyframes pui-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){
+.pui-feedback[data-busy=true] .pui-feedback-text::before{animation:none;border-color:var(--os-gold)}
+.pui-unsaved-overlay,.pui-unsaved-dialog{transition:none}
+}

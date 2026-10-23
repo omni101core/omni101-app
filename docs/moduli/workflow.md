@@ -41,11 +41,23 @@ Grafo di partenza: trigger «Brief acquisito» → `AI_INTAKE` → `CREATE_PROPO
 
 ## Test
 
-`tests/workflow.test.ts`: validazione, esecuzione persistita, conversione dopo approvazione, resume. `tests/approval-concurrency.test.ts`: una sola decisione vince. `tests/e2e/workspace.spec.ts`: builder versionato sul D1 di test. `tests/e2e/workflow-builder.spec.ts`: bozza nuova, valida/avvia sulla versione salvata, conflitto 409 e blocco dei controlli, con API mock. Il canary `tests/cloud-smoke.mjs` percorre il grafo sullo staging quando il job CI ci arriva.
+`tests/workflow.test.ts`: validazione, esecuzione persistita, conversione dopo approvazione, resume. `tests/approval-concurrency.test.ts`: una sola decisione vince. `tests/e2e/workspace.spec.ts`: builder versionato sul D1 di test. `tests/e2e/workflow-builder.spec.ts`: bozza nuova, valida/avvia sulla versione salvata, conflitto 409, blocco dei controlli, annulla/ripristina, copia con id nuovo. API mock. Il canary `tests/cloud-smoke.mjs` percorre il grafo sullo staging quando il job CI ci arriva.
 
 ## Stato
 
 Parziale, 2026-10-22. Nove nodi, grafo aciclico, dry run, attesa umana, retry di dispatch. 2026-10-23: il builder distingue bozza nuova e versione salvata, blocca valida/avvia se la tela non coincide col salvataggio, e su 409 non sostituisce la bozza da solo. Il mandato chiede 18 nodi, branch/merge già in parte coperti da `CONDITION`, più loop, delay, error, subflow, email e HTTP esterni. Quegli ultimi il README di root li dichiara non disponibili, non simulati. SPEC-14 non era partita alle 15:40.
+
+## Editor del grafo — 2026-10-23
+
+Stack locale solo sul grafo, massimo 50 passi, il più vecchio cade. Annulla: Ctrl o Cmd+Z. Ripristina: Maiusc+Ctrl o Maiusc+Cmd+Z. Non tocca nome, casella Attivo, né la versione sul server. Lo stack si azzera quando si cambia workflow o quando un salvataggio viene applicato. Dentro un campo di testo le scorciatoie restano al campo.
+
+Duplica, Copia e Incolla creano un id nuovo (`crypto.randomUUID`), senza riuso. I collegamenti non si copiano. Scorciatoie: Ctrl o Cmd+D, +C, +V, più i pulsanti con lo stesso nome.
+
+Prova: il pulsante «Valida senza eseguire» chiama `POST /api/workflow-runs` con `dryRun: true`. Nessun endpoint nuovo. Parte solo se la tela coincide con la versione salvata.
+
+Minimappa e adattamento alla vista sono quelli di `@xyflow/react` (`MiniMap`, `fitView`). Nessuna libreria aggiunta. Il pulsante «Adatta alla vista» chiama `fitView`. Lo zoom resta nei controlli della libreria.
+
+La riga sotto il titolo dice se la bozza coincide con la versione salvata, se è diversa, se è nuova, o se c'è un conflitto. Non è `role=status`: quello resta il messaggio dell'ultima operazione. Un 409 non ricarica da solo.
 
 ## Decisioni
 
@@ -65,3 +77,7 @@ Il runtime è nel tree. La correzione del 23 ottobre sul builder (bozza nuova, v
 ## Bozze iniziali — 2026-10-22 sera
 
 Preparazione Owner dal Centro operativo: tre template persistenti DRAFT (discovery, creatività, consegna), ciascuno trigger manuale su lead verificato → approvazione umana → attività → fine. Grafo validato con lo stesso `validateGraph`, versione 1 registrata. Nessuna attivazione, pianificazione cron o invio esterno. Sono basi da modificare nel builder, non flussi completi di business. Ripetere conserva le definizioni già modificate. Verifica nuova CI ancora necessaria.
+
+## REC-MISSION-01 — 2026-10-23, codice in attesa CI/release
+
+Il GET dettaglio run restituisce `canResume`, `approvalId`, `approvalStatus`, con lo stesso controllo esatto già imposto dal POST resume (organizzazione, run, nodo corrente e APPROVED). Il builder non propone Riprendi mentre la decisione è PENDING/REJECTED o assente e collega direttamente l'approvazione tramite `?record=`. Il polling esistente acquisisce le decisioni; nessun nuovo trigger/autoresume, provider o schema. Le correzioni builder punti1–3 sono già online nella baseline5808a6ef; la nota storica che le descrive soltanto locali è superata da quella release. Test regressione server e UI in `tests/mission-control.test.ts` e `tests/e2e/mission-controls.spec.ts`. CI/release di questo delta ancora da eseguire.

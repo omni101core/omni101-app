@@ -28,6 +28,43 @@ Il tipo `Role` include anche `AGENT_SERVICE_ACCOUNT`. L'invito HTTP non lo offre
 
 `/api/dashboard` azzera `revenueCents` e `aiCostCents` se il ruolo non è OWNER, ADMIN o FINANCE. Il workspace manda un CLIENT su `/portal` (`admin.tsx`).
 
+## Template di ruolo (REC-018)
+
+`ROLE_TEMPLATES` in `auth.ts`: 18 template, ognuno restringe un ruolo base esistente con un elenco di risorse (`schema.ts`) e di capacità (`CAPABILITIES`, copia dei `requireRole` già in uso). `templateScope` calcola lo scope effettivo: ruolo base ∩ elenco. Un template non aggiunge mai un permesso. Nessuna migrazione, nessun ruolo nuovo in `Role`, l'invito HTTP non cambia: i template sono la matrice di riferimento e di test.
+
+| Template | Base | Lettura | Scrittura | Capacità |
+|---|---|---|---|---|
+| Owner | OWNER | tutto | tutto | tutte |
+| Admin | ADMIN | tutto | tutto | tutte tranne inviti, revoca, budget, backlog |
+| Sales | SALES | CRM, preventivi, campagne | CRM, preventivi, campagne | nessuna |
+| Marketing | SALES | campagne, growth, contatti, aziende | campagne, growth | nessuna |
+| PM | PROJECT_MANAGER | tutto | tutto | agent-run, workflow |
+| Developer | DEVELOPER | progetti, task, ticket, consegne | task, ticket | nessuna |
+| Creative | DESIGNER | progetti, task, ticket, produzioni, contenuti, media | task, ticket, produzioni | nessuna |
+| Finance | FINANCE | clienti, progetti, preventivi, contratti, fatture, spese, abbonamenti | contratti, fatture, spese, abbonamenti | finance-approve, money |
+| Support | DEVELOPER | ticket, clienti, progetti, contatti, aziende | ticket | nessuna |
+| Client Owner | CLIENT | progetti, ticket, preventivi, contratti, fatture propri | nessuna | nessuna |
+| Client Admin | CLIENT | progetti, ticket, preventivi propri | nessuna | nessuna |
+| Client Member | CLIENT | progetti, ticket propri | nessuna | nessuna |
+| Reviewer | CLIENT | progetti, preventivi propri | nessuna | nessuna |
+| Partner/Reseller | CLIENT | progetti, ticket propri | nessuna | nessuna |
+| Contractor | DEVELOPER | progetti, task, ticket | task | nessuna |
+| Service Account | AGENT_SERVICE_ACCOUNT | niente | niente | nessuna |
+| AI Agent | AGENT_SERVICE_ACCOUNT | progetti, traguardi, task, ticket, CRM, contenuti, ereditati | niente | nessuna |
+| Workflow Identity | AGENT_SERVICE_ACCOUNT | progetti, task, lead, ereditati | task, ereditato | nessuna |
+
+AI Agent e Workflow Identity non hanno scope proprio: è l'elenco del template ∩ lo scope del template che li avvia. Senza chi li avvia, o se chi li avvia è un altro agente, lo scope è vuoto. Non toccano mai finanza, privacy, approvazioni, né capacità. I template cliente non leggono nessuna risorsa interna; solo il Client Owner legge fatture e contratti, e sono i propri (`client_id`). Test: `tests/role-templates.test.ts`.
+
+## Operazioni critiche Owner (REC-030)
+
+Oggi non esistono trasferimento della proprietà amministrativa né cancellazione definitiva di record di business. Esistono: invito con ruolo OWNER (`POST /api/invitations`), revoca (`POST /api/team/:id/revoke`, rifiuta l'ultimo Owner e se stessi) e la cancellazione delle conversazioni dell'assistente (dati dell'utente, con scadenza). Per questo non c'è codice da proteggere, solo la policy. Quando una di queste operazioni verrà costruita, vale:
+
+- Trasferimento della proprietà amministrativa e cancellazione definitiva richiedono due cose: ri-autenticazione passkey recente (assertion nuova, `userVerification: required`, non più vecchia di 5 minuti, come la challenge) e l'approvazione di un secondo Owner attivo. Con un solo Owner, la cancellazione definitiva non è disponibile e il trasferimento passa dall'invito di un secondo Owner.
+- La richiesta e l'approvazione vanno in `audit_logs` con attore, risorsa e motivazione. Chi richiede non può approvare.
+- La sessione cookie da sola non basta. L'identità Access da sola non basta.
+- Parità applicativa degli Owner non è titolarità legale: il trasferimento dell'azienda o dei diritti segue il contratto, non questa app (RB 1480).
+- Il test da scrivere insieme alla funzione: senza assertion recente, 403; senza secondo Owner, 409; stesso Owner richiedente e approvante, 409.
+
 ## Header e confini
 
 Ogni POST, PATCH, PUT, DELETE sotto `/api/` passa da `assertSameOrigin`: l'header `Origin` deve essere l'origine della richiesta. Il login passkey rifiuta anche un'origine diversa da `PUBLIC_ORIGIN`.

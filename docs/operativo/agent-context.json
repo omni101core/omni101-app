@@ -466,5 +466,35 @@
       "esecuzione reale di hermes, goose, cursor-agent",
       "policy dati poolside e NVIDIA oltre il perimetro 'pubblici'"
     ]
+  },
+  "private_sources": [
+    {
+      "id": "codex-master-command-2026-10-23",
+      "artifact_id": "art_20261023T171046_db81159128bc",
+      "sha256": "ddf1ba7fa179ca4f3d43d2e5497a21cf0f7c2a1b12bf2994a24665688d84d5c5",
+      "size_bytes": 34138,
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "priority": "P0",
+      "coverage": "CAPTURED; clause reconciliation pending; original private in MemPalace"
+    },
+    {
+      "id": "master-reconciliation-2026-10-23",
+      "artifact_id": "art_20261023T200842_8a070813a607",
+      "sha256": "c72c144ed2f8a4a6da0c635b083201d42305287d6e892f728f9c2dbd212a7221",
+      "size_bytes": 29794,
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "priority": "P0",
+      "version": 1,
+      "source": "Founder message Codex App session01a16100-836b-7c31-845b-9cb04879cffb",
+      "predecessor": "codex-master-command-2026-10-23",
+      "coverage": "CAPTURED; original stored and exact retrieval verified; implementation ongoing"
+    }
+  ],
+  "coverage": {
+    "matrix": "docs/operativo/requirement-coverage.json",
+    "evidence": "docs/operativo/requirement-evidence.json",
+    "findings": "docs/operativo/mandate-reconciliation-findings.json",
+    "generator": "scripts/reconcile-requirements.mjs",
+    "rule": "Source capture is not semantic review; implementation and operational status remain separate. No automatic VERIFIED from file or matching title."
   }
 }
