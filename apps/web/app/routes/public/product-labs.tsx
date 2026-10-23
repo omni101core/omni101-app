@@ -12,7 +12,7 @@ const LAB_KIND_LABEL:Record<LabKind,string>={
 
 /** Badge realtà lab: etichetta + cosa NON fa. Visibile, non tooltip. */
 export function LabStatus({kind,limit}:{kind:LabKind;limit:string}):ReactNode{
- return <p className="lab-status" role="status" data-lab-status={kind}><span className="lab-status-kind">{LAB_KIND_LABEL[kind]}</span><span className="lab-status-limit">{limit}</span></p>;
+ return <p className="lab-status" data-lab-status={kind}><span className="lab-status-kind">{LAB_KIND_LABEL[kind]}</span><span className="lab-status-limit">{limit}</span></p>;
 }
 
 const scripts={it:'Benvenuto. Scopri come trasformiamo la tua idea in un’esperienza digitale.',en:'Welcome. Discover how we turn your idea into a digital experience.',fr:'Bienvenue. Découvrez comment nous transformons votre idée en expérience numérique.'};
