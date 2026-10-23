@@ -27,3 +27,5 @@ Restano builder landing/funnel, composer email, segmenti dinamici, calendario da
 ## Verifica
 
 Test integrazione: persistenza link/eventi, replay e collisioni, audit, completezza deterministica, date derivate, isolamento tenant/ruoli e intervalli validi. Browser autenticato: creare campagna, collegare lead, documentare attività, reload e agenda. Review indipendente read-only del nuovo handler/schema/UI: nessun finding azionabile; non sostituisce CI. Attendere una run verde e health revision prima di dichiararlo live.
+
+Verifica visiva canary della prima pubblicazione 76d17bd: lo stile legacy `.os-inline-actions button` rendeva trasparente lo sfondo del bottone primario mantenendo testo scuro. Corretto con contenitore azioni Revenue dedicato e header responsive; aggiunta asserzione browser del contrasto effettivo >=4.5, risalendo al background visibile degli antenati. Non basta che il click sia tecnicamente possibile. Patch CSS in verifica successiva, schema e dati invariati.
