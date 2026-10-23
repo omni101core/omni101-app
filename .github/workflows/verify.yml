@@ -15,6 +15,9 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
+      - name: Verify context references
+        run: |
+          for domain in growth knowledge frontend security release; do node scripts/project-context.mjs "$domain" > /dev/null; done
       - run: npm run typecheck
       - run: npm test
       - name: Build isolated test environment

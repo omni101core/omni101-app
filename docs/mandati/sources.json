@@ -64,5 +64,27 @@
     "coverage": "archived original; earlier instructions may be superseded by later founder directions; no automatic execution",
     "record_id": "8c412977-55f1-444b-a08d-f521d0418d8b",
     "title": "Riallineamento prodotto e reference"
+  },
+  {
+    "id": "adaptive-agent-engineering-2026-10-23",
+    "file": "docs/mandati/adaptive-agent-engineering-2026-10-23.md",
+    "source": "founder attachment 296ffb30-4dde-453d-bd91-550ffc80487f",
+    "imported_at": "2026-10-23",
+    "sha256": "e3faf0b1cc00429a46787f4fa68838a7a59c074b7693a884d518d9c65ab35a5c",
+    "original_preserved": true,
+    "coverage": "captured; candidates are references, not authorization for installation or spending",
+    "record_id": "456e1de5-3d85-4512-a19e-bd905816ec39",
+    "title": "Adaptive Agent Engineering · ottimizzazione esecuzione"
+  },
+  {
+    "id": "revenue-growth-operating-system-2026-10-23",
+    "file": "docs/mandati/revenue-growth-operating-system-2026-10-23.md",
+    "source": "founder attachment 0f5f2fcf-f3fc-4c09-b521-803065a40a1b",
+    "imported_at": "2026-10-23",
+    "sha256": "ff95f7a5b90b8119d8bf3fe1162cc63cef273d311675c3adc2027a2d5b905f23",
+    "original_preserved": true,
+    "coverage": "captured; candidates are references, not authorization for installation or spending",
+    "record_id": "a0fc59bc-6b84-4271-a422-0cec72b8290b",
+    "title": "Revenue & Growth OS · acquisizione e delivery"
   }
 ]

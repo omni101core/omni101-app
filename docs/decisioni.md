@@ -45,3 +45,5 @@ Decisioni precedenti del sito Astro (registro Calibro, prezzi nascosti fino ai p
 
 - 2026-10-23: memoria commerciale su D1, relazioni esplicite fonte→requisito→task e revisioni attribuite con controllo versione; nessun database grafo/embedding o dipendenza dal Mac. Prima policy solo team interno, niente documenti riservati dei clienti fino ad ACL per progetto. OpenHands/Sandbox restano reference, nessuna attivazione a pagamento.
 - 2026-10-23: marketing invii disattivati anche con evidenza di consenso. Ritiro crea blocco persistente; consenso successivo non lo annulla automaticamente. SEO e GEO derivati da contenuti reali, senza metriche/risultati inventati.
+
+- 2026-10-23: adattamento ai due nuovi mandati con routing contestuale leggero e modello Revenue su registri esistenti. KEEP_EXISTING per tracker/memoria/workflow; Serena non esposto tra i tool (installazione non verificata), Headroom non adottato senza benchmark, nessun proxy Caveman presunto. No installazioni di OpenSpec/Spec Kit/Beads/GSD duplicati. Date originali aggregate e scoring di completezza spiegabile, non LLM o attribuzione automatica.

@@ -3,9 +3,9 @@ import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 const roles:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','DEVELOPER','DESIGNER','SALES','FINANCE'];
 const kinds=['REQUIREMENT','IDEA','DECISION','REFERENCE','PROMPT','HANDOFF','LEARNING','MANDATE','RISK'] as const;
 const statuses=['CAPTURED','NEEDS_CLARIFICATION','APPROVED','PLANNED','IN_PROGRESS','BLOCKED','IMPLEMENTED','VERIFIED','DEFERRED','REJECTED','SUPERSEDED','ARCHIVED'] as const;
-const fields=z.object({name:z.string().trim().min(2).max(180),kind:z.enum(kinds),status:z.enum(statuses),body:z.string().trim().min(1).max(40000),source:z.string().trim().min(3).max(1000),acceptance:z.string().max(4000).default(''),evidence:z.string().max(4000).default(''),source_id:z.string().max(160).nullable().default(null),task_id:z.string().max(160).nullable().default(null)}).strict();
+const fields=z.object({name:z.string().trim().min(2).max(180),kind:z.enum(kinds),status:z.enum(statuses),body:z.string().trim().min(1).max(60000),source:z.string().trim().min(3).max(1000),acceptance:z.string().max(4000).default(''),evidence:z.string().max(4000).default(''),source_id:z.string().max(160).nullable().default(null),task_id:z.string().max(160).nullable().default(null)}).strict();
 const json=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
-async function body(request:Request){const raw=await request.text();if(raw.length>60000)throw new HttpError(413,'Contenuto troppo grande.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'JSON non valido.')}}
+async function body(request:Request){const raw=await request.text();if(raw.length>90000)throw new HttpError(413,'Contenuto troppo grande.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'JSON non valido.')}}
 export async function handleKnowledge(request:Request,env:Env,actor:Identity):Promise<Response|null>{
  const url=new URL(request.url),match=url.pathname.match(/^\/api\/knowledge(?:\/([a-zA-Z0-9-]+))?$/);if(!match)return null;
  requireRole(actor,roles);const org=actor.orgId,rid=match[1],stamp=Date.now();

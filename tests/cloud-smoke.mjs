@@ -73,6 +73,9 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
  const requirements=await owner('GET','/api/knowledge?kind=REQUIREMENT');assert.equal(requirements.status,200);assert(requirements.body.records.filter(r=>r.source_id&&r.task_id).length>=12,'Reviewed requirements must retain source and task links');
  const marketing=await owner('GET','/api/growth/overview');assert.equal(marketing.status,200);assert.equal(marketing.body.sendingEnabled,false);assert.equal(marketing.body.measurementEnabled,false);assert.deepEqual(marketing.body.channelsConnected,[]);
  assert.equal((await a('GET','/api/knowledge')).status,403);assert.equal((await a('GET','/api/growth/overview')).status,403);
+ const revenue=await owner('GET','/api/revenue/overview');assert.equal(revenue.status,200);assert.equal(revenue.body.sendingEnabled,false);assert.equal(revenue.body.trackingEnabled,false);assert.equal(revenue.body.channels.email,'NOT_CONNECTED');assert.equal((await a('GET','/api/revenue/overview')).status,403);
+ const agenda=await owner('GET','/api/revenue/calendar?start=2026-10-01&end=2026-10-31');assert.equal(agenda.status,200);assert(Array.isArray(agenda.body.items));
+ console.log('Live staging: revenue, transparent qualification and source calendar available; client blocked and channels disconnected');
  const robots=await readWithRetry(origin+'/robots.txt');assert((await robots.text()).includes('Disallow: /'));assert(robots.headers.get('x-robots-tag').includes('noindex'));
  console.log('Live staging: original mandate hashes, requirement/source/task coverage, private memory and disabled marketing verified');
 }
@@ -84,6 +87,7 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
  for(const [name,viewport] of [['desktop',{width:1440,height:900}],['mobile',{width:390,height:844}]]){
   await shot(ownerRaw,viewport,'/admin','staging-admin-'+name+'.png','Una visione chiara.');
   await shot(ownerRaw,viewport,'/admin/knowledge','staging-knowledge-'+name+'.png','Knowledge & Intelligence');
+  await shot(ownerRaw,viewport,'/admin/revenue','staging-revenue-'+name+'.png','Revenue & Growth');
   await shot(ownerRaw,viewport,'/admin/growth','staging-growth-'+name+'.png','Marketing, ricerca e fiducia');
   await shot(ownerRaw,viewport,'/admin/agent-runs','staging-mission-control-'+name+'.png','Mission Control');
   await shot(ownerRaw,viewport,'/admin/pipeline?project='+projectA,'staging-pipeline-'+name+'.png','Pipeline di progetto');

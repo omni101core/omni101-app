@@ -23,7 +23,7 @@ for directory in ['apps/web','packages','.github/workflows','tests','docs']:
   if not path.is_file() or any(part in SKIP_PARTS for part in path.parts):continue
   if directory=='docs' and path.stat().st_size>DOC_MAX_BYTES:left_out.append(str(path.relative_to(ROOT)));continue
   paths.append(path)
-for filename in ['scripts/cloud-verify.py','scripts/seed-reviewed-context.mjs','package.json','vitest.config.ts','playwright.config.ts','README.md','AGENTS.md','CLAUDE.md','GEMINI.md']:
+for filename in ['scripts/cloud-verify.py','scripts/seed-reviewed-context.mjs','scripts/project-context.mjs','package.json','vitest.config.ts','playwright.config.ts','README.md','AGENTS.md','CLAUDE.md','GEMINI.md']:
  path=ROOT/filename
  if path.is_file():paths.append(path)
 # Anti-secret scan, before anything leaves this machine. It reports file, line and rule only, never the matched text.

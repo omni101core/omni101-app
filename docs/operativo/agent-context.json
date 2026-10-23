@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "entrypoints": [
+    "AGENTS.md",
+    "docs/CONTEXT.md",
+    "docs/README.md"
+  ],
+  "state": "docs/STATO.md",
+  "sources": "docs/mandati/sources.json",
+  "requirements": "docs/operativo/mandate-backlog.json",
+  "handoff": "docs/operativo/ripresa.md",
+  "domains": {
+    "growth": {
+      "risk": "STANDARD",
+      "docs": [
+        "docs/moduli/analytics-seo.md",
+        "docs/moduli/revenue.md"
+      ],
+      "code": [
+        "apps/web/app/server/revenue.ts",
+        "apps/web/app/server/growth.ts",
+        "apps/web/app/components/workspace/RevenueWorkspace.tsx"
+      ],
+      "tests": [
+        "tests/integration.test.ts",
+        "tests/e2e/workspace.spec.ts"
+      ],
+      "skills": [
+        "ponytail",
+        "caveman",
+        "backend-patterns"
+      ]
+    },
+    "knowledge": {
+      "risk": "STANDARD",
+      "docs": [
+        "docs/moduli/knowledge-intelligence.md"
+      ],
+      "code": [
+        "apps/web/app/server/knowledge.ts",
+        "apps/web/app/components/workspace/KnowledgeWorkspace.tsx"
+      ],
+      "tests": [
+        "tests/integration.test.ts"
+      ],
+      "skills": [
+        "ponytail",
+        "caveman"
+      ]
+    },
+    "frontend": {
+      "risk": "CREATIVE",
+      "docs": [
+        "docs/brand.md",
+        "docs/moduli/pubblico.md",
+        "docs/moduli/regia-motion.md"
+      ],
+      "code": [
+        "apps/web/app/routes/public.tsx"
+      ],
+      "tests": [
+        "tests/e2e/public.spec.ts",
+        "tests/e2e/work-studio.spec.ts"
+      ],
+      "skills": [
+        "ponytail",
+        "caveman",
+        "frontend-design"
+      ]
+    },
+    "security": {
+      "risk": "CRITICAL",
+      "docs": [
+        "docs/sicurezza.md",
+        "docs/architettura.md"
+      ],
+      "code": [
+        "apps/web/app/server/auth.ts",
+        "apps/web/app/server/api.ts"
+      ],
+      "tests": [
+        "tests/security.test.ts",
+        "tests/integration.test.ts"
+      ],
+      "skills": [
+        "security-auditor",
+        "verification-before-completion"
+      ]
+    },
+    "release": {
+      "risk": "CRITICAL",
+      "docs": [
+        "docs/operativo/rilascio.md",
+        "docs/operativo/ripresa.md"
+      ],
+      "code": [
+        ".github/workflows/verify.yml",
+        "scripts/cloud-verify.py"
+      ],
+      "tests": [
+        "tests/cloud-smoke.mjs"
+      ],
+      "skills": [
+        "verification-before-completion"
+      ]
+    }
+  },
+  "handoff_fields": [
+    "task_id",
+    "objective",
+    "status",
+    "source_ids",
+    "branch",
+    "revision",
+    "files",
+    "tests_passed",
+    "tests_failed",
+    "decisions",
+    "blockers",
+    "risks",
+    "next_action"
+  ],
+  "candidate_policy": {
+    "Serena": "ON_DEMAND: tool non esposto in questa sessione; installazione non verificata. rg e strumenti nativi coprono il lavoro attuale.",
+    "Headroom": "NOT_ADOPTED: nessun benchmark comparabile o prova di beneficio; stato proxy Caveman non verificato.",
+    "OpenSpec/Spec Kit/Beads/GSD": "KEEP_EXISTING: requisiti/versioni/D1/task con dipendenze e handoff già presenti. Non aggiungere tracker duplicati.",
+    "Puck/React Email/PostHog/social engines": "REFERENCE: valutare codice, licenza e integrazione solo quando si implementa il relativo motore. Nessuna installazione o connessione dichiarata."
+  },
+  "skill_catalog": {
+    "caveman": {
+      "purpose": "Concise communication without losing evidence",
+      "trigger": "Token efficiency explicitly requested",
+      "compatible_agents": [
+        "Codex",
+        "Claude Code",
+        "Hermes"
+      ],
+      "prerequisite": "Skill available on the calling host; read its instructions before use.",
+      "tools": [
+        "conversation"
+      ],
+      "risk": "LOW",
+      "version": "LOCAL_UNPINNED",
+      "source": "local skill catalog, resolve on host",
+      "confidence": "availability must be checked; runtime/proxy activation not inferred",
+      "alternative": "native tooling and project instructions"
+    },
+    "ponytail": {
+      "purpose": "Reuse native/existing implementation, avoid duplicate systems",
+      "trigger": "Implementation scope",
+      "compatible_agents": [
+        "Codex",
+        "Claude Code",
+        "Hermes"
+      ],
+      "prerequisite": "Skill available on the calling host; read its instructions before use.",
+      "tools": [
+        "repository tools"
+      ],
+      "risk": "LOW",
+      "version": "LOCAL_UNPINNED",
+      "source": "local skill catalog, resolve on host",
+      "confidence": "availability must be checked; runtime/proxy activation not inferred",
+      "alternative": "native tooling and project instructions"
+    },
+    "backend-patterns": {
+      "purpose": "Backend contracts and errors",
+      "trigger": "Server domain changes",
+      "compatible_agents": [
+        "Codex",
+        "Claude Code",
+        "Hermes"
+      ],
+      "prerequisite": "Skill available on the calling host; read its instructions before use.",
+      "tools": [
+        "repository tools",
+        "CI"
+      ],
+      "risk": "REVIEW",
+      "version": "LOCAL_UNPINNED",
+      "source": "local skill catalog, resolve on host",
+      "confidence": "availability must be checked; runtime/proxy activation not inferred",
+      "alternative": "native tooling and project instructions"
+    },
+    "frontend-design": {
+      "purpose": "Visual hierarchy and product states",
+      "trigger": "Frontend design changes",
+      "compatible_agents": [
+        "Codex",
+        "Claude Code",
+        "Hermes"
+      ],
+      "prerequisite": "Skill available on the calling host; read its instructions before use.",
+      "tools": [
+        "browser",
+        "repository tools"
+      ],
+      "risk": "REVIEW",
+      "version": "LOCAL_UNPINNED",
+      "source": "local skill catalog, resolve on host",
+      "confidence": "availability must be checked; runtime/proxy activation not inferred",
+      "alternative": "native tooling and project instructions"
+    },
+    "security-auditor": {
+      "purpose": "Permission and boundary review",
+      "trigger": "Auth, roles, sensitive data",
+      "compatible_agents": [
+        "Codex",
+        "Claude Code",
+        "Hermes"
+      ],
+      "prerequisite": "Skill available on the calling host; read its instructions before use.",
+      "tools": [
+        "repository tools",
+        "CI"
+      ],
+      "risk": "CRITICAL",
+      "version": "LOCAL_UNPINNED",
+      "source": "local skill catalog, resolve on host",
+      "confidence": "availability must be checked; runtime/proxy activation not inferred",
+      "alternative": "native tooling and project instructions"
+    },
+    "verification-before-completion": {
+      "purpose": "Evidence before release/completion claims",
+      "trigger": "Verification and release",
+      "compatible_agents": [
+        "Codex",
+        "Claude Code",
+        "Hermes"
+      ],
+      "prerequisite": "Skill available on the calling host; read its instructions before use.",
+      "tools": [
+        "CI",
+        "owned endpoint checks"
+      ],
+      "risk": "REVIEW",
+      "version": "LOCAL_UNPINNED",
+      "source": "local skill catalog, resolve on host",
+      "confidence": "availability must be checked; runtime/proxy activation not inferred",
+      "alternative": "native tooling and project instructions"
+    }
+  }
+}

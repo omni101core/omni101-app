@@ -39,3 +39,7 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 Rivedere i 12 requisiti con i soci e scomporre il resto dei mandati in criteri verificabili, mantenendo fonti e storia. Completare ACL per progetto e importazione guidata prima di acquisire materiali privati dei clienti; poi calendario/social/brand/collaborazione coding secondo il backlog. La memoria iniziale è operativa, il mandato complessivo non è completato. Identità legale, DPA, retention e fornitori restano da verificare, nessuna certificazione GDPR dichiarata.
 
 Fonti: `docs/mandati/sources.json`, `docs/operativo/mandate-backlog.json`. File e contratti nei moduli; handoff dettagliato in `docs/operativo/ripresa.md`. `src/` e `worker/` restano il sito Astro precedente e non fanno parte del deploy. ceo-os non è stato toccato.
+
+## Continuazione Adaptive Engineering / Revenue — candidata verificata
+
+Run 39948348249 (e5aab0f0ecbda920aa4a29a7e263da27235bebd0) verde completa. Nuovo Revenue workspace, link CRM, eventi manuali idempotenti, score di completezza spiegabile e agenda derivata; 0010 e import degli 8 originali riusciti in staging. Routing contestuale e relativi riferimenti verificati dalla CI. Produzione resta 3fa90a5 fino al rilascio successivo. Nessun email/social/Ads connesso e nessuna installazione di nuovi framework. Fonti complete preservate; triage di 15 requisiti iniziale, non copertura integrale di ogni clausola.

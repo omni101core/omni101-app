@@ -61,3 +61,5 @@ Chi cambia un'area aggiorna nello stesso lavoro il suo `docs/moduli/<area>.md` e
 ## Mandati integrativi del 23 ottobre
 
 Originali e provenienza: `docs/mandati/sources.json`. Product Excellence, integrazione qualità e Persistent Intelligence sono aggiunte al mandato storico, senza sovrascriverlo. Memoria prodotto: `docs/moduli/knowledge-intelligence.md`; acquisizione/privacy: `docs/moduli/analytics-seo.md`. Stato di pubblicazione sempre distinto da codice locale.
+
+Revenue: docs/moduli/revenue.md. Contesto per dominio: `node scripts/project-context.mjs growth` (knowledge/frontend/security/release). Registro unico docs/operativo/agent-context.json, nessun framework o proxy nuovo. Gli ultimi due mandati sono preservati in originale nel manifest: ora 8 allegati.

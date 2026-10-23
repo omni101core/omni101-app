@@ -11,3 +11,5 @@ Locale: http://127.0.0.1:4176/work, build 3fa90a5 in /tmp/omni101-preview-3fa90a
 Non leggere ~/.omni101/state/omni101-app/. Non stampare token. Non usare scripts/refresh-deploy-auth.py. Il secret CI funziona già; non chiedere un altro token. Release solo dal ramo release-commercial con verifica completa e autorizzazione founder. Questa pubblicazione incrementale è autorizzata dai suoi mandati diretti.
 
 Originali con hash in docs/mandati/sources.json; triage iniziale docs/operativo/mandate-backlog.json. Memoria prodotto TEAM_INTERNAL, clienti esclusi; niente documenti clienti finché mancano ACL progetto. GDPR non certificato, identità/fornitori/retention da verificare. Mandato globale non concluso: vedere backlog e limiti reali nella matrice.
+
+Nuova continuazione: due mandati Adaptive Agent Engineering e Revenue/Growth preservati byte per byte (8 originali totali). Codice nuovo Revenue workspace, link CRM/eventi manuali/agenda e routing contestuale in verifica run 39948348249, SHA e5aab0f0ecbda920aa4a29a7e263da27235bebd0. Produzione resta 3fa90a5 finché non passa il rilascio successivo. Dettagli in docs/moduli/revenue.md e docs/operativo/ripresa.md.
