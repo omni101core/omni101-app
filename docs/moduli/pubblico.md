@@ -1,5 +1,15 @@
 # Pubblico
 
+Aggiornamento locale successivo: il secondo tentativo di 0b8fc25 non è passato (race di inizializzazione nella prova reduced-motion desktop). Registrazione listener ora precede sincronizzazione dello stato; il test attende un’azione tastiera effettiva sul reel prima del cambio preferenza. Nessuna asserzione eliminata. Inoltre riprodotto in browser staging il rientro nella scena 3D che restava poster: il listener context-lost viene ora rimosso prima del teardown intenzionale R3F. Regressione dedicata `tests/e2e/cinematic-reentry.spec.ts`, ancora da eseguire in CI. Il codice nuovo non è dichiarato live.
+
+
+## Aggiornamento verificato — 23 ottobre, coordinamento Codex
+
+Live `3adf682` / run `39994191429`, verify e production verdi: UX portale, home con tre porte (`/work`, `/explore`, `/start-project`), contrasto, contatto diretto al brief e testi workspace. Portfolio con nove casi dichiarati; concept B&B verificato visivamente nello staging, preview e chiusura Esc funzionanti. Il listener Escape ridondante su `/work` è stato rimosso; Radix conserva la gestione del dialog.
+
+Motion successiva: lifecycle RAF e reduced-motion dinamico, CI `1c7ecab` / run `39995312269` verde (148 server,107 browser,13 skip), nuova regressione desktop/mobile emulato. Non ancora dichiarata live: release `0b8fc25` / run `39996221347` in corso. Le sezioni SPEC datate sotto restano documentazione storica; per gli ambienti correnti fa fede `docs/STATO.md`.
+
+
 ## Scopo
 
 Far capire cosa fa lo studio e portare a un brief. Pagine: home, soluzioni, lavori, studio, insights, contatto, avvio progetto, login, privacy e termini. Le demo stanno nel modulo playground.

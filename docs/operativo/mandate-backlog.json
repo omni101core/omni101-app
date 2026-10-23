@@ -121,7 +121,7 @@
     "key": "email-foundation",
     "name": "Composer email e lifecycle con connessione autorizzata",
     "source": "revenue-growth-operating-system-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "Template/preview/versione, canale e purpose del consenso, suppression/preference center e adapter di delivery verificati prima di chiamarlo READY_FOR_CONNECTION.",
     "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere. Non coperti: editor visuale, drip, A/B, bounce/complaint, SPF/DKIM/DMARC e report. Scadenza Garante 29 ottobre 2026 su pixel/tracking nelle email: oggi nessun invio ne' pixel (conforme per assenza); al collegamento tracking disattivato di default e base giuridica documentata.",
     "priority": "NORMAL"
@@ -166,9 +166,9 @@
     "key": "connected-runtime",
     "name": "Eventi, approvazioni e runtime condivisi",
     "source": "connected-ecosystem-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "Workflow, agenti e moduli usano eventi tipizzati persistenti, permessi, costi e log; scenari A–G verificati.",
-    "remaining": "Workflows/approvazioni durevoli già presenti; bus commerciale, tool agenti e scenari completi ancora parziali. Non coperti: editor canvas a nodi con diagnosi, runtime persistente retriable, Approval Center trasversale, team di agenti con supervisore/handoff/anti-loop, agent registry, mission control, budget, costo per run, log e retry."
+    "remaining": "Workflow persistenti, retry, approvazioni, registry, mission control, budget e costi per run sono presenti: non ricostruirli. Audit23ott: editor Nuovo conserva id precedente; esecuzione/valida non distinguono modifiche locali da snapshot salvato; recupero409 da completare senza perdere locale. Inoltre Riprendi in attesa approvazione è proposto prima della decisione e artefatti workflow aprono la lista senza record. Bus commerciale trasversale, loop/subflow e scenari A–G completi restano da verificare. Fonte audit: docs/operativo/workflow-dashboard-audit-2026-10-23.md."
   },
   {
     "key": "commercial-catalog",
@@ -191,11 +191,12 @@
     "key": "pricing-hardening-self-approval",
     "name": "Preventivi: vietare richiedente = decisore",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "decision() in apps/web/app/server/api.ts rifiuta l'approvazione quando richiedente e decisore coincidono (guardia di una riga) con test; il canary CI usa due utenti distinti.",
-    "remaining": "Guardia assente in decision(); verificare il canary CI a due utenti.",
+    "remaining": "Nessuna modifica di policy in questa revisione; conservare review e identità separate.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "decision() blocca con403 il richiedente; integrazione e browser a due Owner e canary già nel baseline3ad/run39994191429."
   },
   {
     "key": "pricing-hardening-recurring-total",
@@ -203,49 +204,53 @@
     "source": "consegna-sonnet-a-opus-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Un preventivo con sole voci ricorrenti riporta un amount_cents di testata coerente con le regole di cadenza, con test.",
-    "remaining": "Oggi amount_cents di testata = 0 per i preventivi solo ricorrenti. Soglie e policy economiche restano decisione del founder.",
-    "priority": "HIGH",
+    "remaining": "Policy attuale documentata e testata: testata solo ONE_TIME, zero se manca; canoni separati e totale combinato null. Eventuale semantica economica diversa richiede scelta esplicita, non sommare cadenze automaticamente.",
+    "priority": "NORMAL",
     "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
   },
   {
     "key": "pricing-hardening-tax-overflow",
     "name": "Pricing: overflow in netCents*taxBp",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "Il prodotto netCents*taxBp non supera Number.MAX_SAFE_INTEGER: il tetto 1e12 si applica prima del calcolo, con test ai limiti.",
-    "remaining": "In pricing.ts il prodotto è calcolato prima del tetto 1e12 e può superare MAX_SAFE_INTEGER. Tetti e soglie restano decisione del founder.",
+    "remaining": "Tetti e aliquote economiche non modificati; nessuna tariffa reale presunta.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Tetto prima dell’imposta e mulDiv BigInt; limiti sintetici in tests/integration.test.ts, baseline3ad/run39994191429."
   },
   {
     "key": "pricing-hardening-decision-guard",
     "name": "Preventivi: UPDATE di decision() condizionato",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "L'UPDATE del preventivo in decision() richiede status='IN_REVIEW' e il legame con la versione dell'evidenza approvata, con test di concorrenza.",
-    "remaining": "UPDATE attuale senza condizione di stato né legame con la versione dell'evidenza.",
+    "remaining": "Confermare la nuova regressione con due decisioni opposte sulla stessa versione; nessuna patch al calcolo o alla policy necessaria.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Guardia IN_REVIEW e pricing_version presente; test sequenziali e claim transazionale verificati. Aggiunto caso di concorrenza per review pricing versionata in approval-concurrency.test.ts, ancora da confermare in CI."
   },
   {
     "key": "pricing-hardening-request-scope",
     "name": "Ricerca requestId: filtro organizzazione",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "La ricerca per requestId è limitata alla organization_id del chiamante, con test cross-organizzazione.",
-    "remaining": "Ricerca attuale senza filtro organizzazione.",
+    "remaining": "Mantenere filtro tenant e conflitto409 senza esporre la riga altrui.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Ricerca requestId con organization_id; test cross-tenant does not match a request id of another tenant in integration.test.ts."
   },
   {
     "key": "pricing-hardening-portal-tests",
     "name": "Portale cliente: test su scope, terms, pricing_version",
     "source": "consegna-sonnet-a-opus-2026-10-23",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "acceptance": "Test automatici sul portale coprono scope, terms e pricing_version del preventivo mostrato al cliente.",
-    "remaining": "Test mancanti sul portale per scope, terms e pricing_version.",
+    "remaining": "Copertura API presente; un’ulteriore verifica visuale della proposta nel portale può essere estesa senza cambiare il contratto.",
     "priority": "HIGH",
-    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md",
+    "evidence": "Payload portale testato per scope,terms,pricing_version e assenza costi interni in integration.test.ts; baseline3ad verde."
   },
   {
     "key": "design-system",
@@ -259,10 +264,10 @@
   {
     "key": "public-experience",
     "name": "Esperienza pubblica immersiva, motion e showcase",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "priority": "HIGH",
     "acceptance": "Hero fullscreen con svh/dvh e CTA immediata, scroll storytelling cinematica con fallback e motion saltabile, capitoli BUILD/SPEAK/SEE/CREATE/ACT/GROW, showcase con player audio, avatar video, comparatore media, workflow animato e preview software; reel orbit, OMNI PORTAL R3F, page transitions, gallery e typography motion verificati con reduced motion, skip, fallback statico e regole performance §5.10; nessun risultato inventato, demo etichettate.",
-    "remaining": "Home e portfolio esistono; Explore, narrazione cinematica e showcase media non risultano fatti. Prestazioni mobile da verificare prima del rilascio. Dal mandato rebuild: transizioni parallele, skip dell'intro e loader su asset reali da verificare o realizzare.",
+    "remaining": "Home, Explore, portfolio, reel orbit, capitoli e demo cinematiche presenti; non ricostruirli. Riduzione movimento dinamica e teardown/reentry GPU verificati su CI desktop/mobile emulato: run40004937242, 154server e15browser/3skip. Release corrente da confermare prima di dichiararli live. Screenshot mobile: OMNIASSIST fisso copre parte delle tab cinematiche, correggere ingombro. Qualità media/immagini concept, prestazioni su dispositivi reali, transizioni e copertura completa §5.10 restano da verificare; nessun avatar/video esterno operativo dichiarato.",
     "source": "product-excellence-2026-10-23"
   },
   {
@@ -408,5 +413,26 @@
     "source": "adaptive-agent-engineering-2026-10-23",
     "acceptance": "Verificare la coerenza tra CONTEXT/STATO/moduli, AGENTS.md, CLAUDE.md, regole, skill, PRD, test, CI e release rispetto al codice, identificando la fonte canonica nei conflitti.",
     "remaining": "Fonte unica = costituzione OMNI101: link ai documenti canonici senza copie, controllo su richiesta o su PR significativa."
+  },
+  {
+    "key": "prospect-research-preparation",
+    "name": "Prospect: ricerca documentata e preparazione commerciale",
+    "source": "master-takeover-2026-10-23",
+    "origin": "docs/operativo/coordinamento-codex-2026-10-23.md",
+    "status": "PLANNED",
+    "priority": "HIGH",
+    "acceptance": "Schede prospect con fonte, data, ipotesi esplicite e prossima azione; deduplica e revisione prima di ogni contatto. Nessun invio o scraping vietato.",
+    "remaining": "Implementare ricerca e revisione interna; un contatto pubblico non prova consenso marketing. Non inventare budget, fatturato o intenzione di acquisto."
+  },
+  {
+    "key": "commercial-campaign-draft-pack",
+    "name": "Prima campagna: proposta, contenuti e asset pronti per revisione",
+    "source": "master-takeover-2026-10-23",
+    "origin": "docs/operativo/campagna-pilota-bozza.md",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH",
+    "acceptance": "Pacchetto interno collegato a offerta verificata: landing, email e social in bozza, asset, calendario, metriche e responsabile revisione.",
+    "remaining": "Collegare contenuti a campagna interna e composer, produrre formati asset e revisionare segmento/offerta/fornitori prima di qualsiasi attivazione.",
+    "evidence": "Bozza v1 con proposta, email completa, tre contenuti social, preparazione SEM/SEO/GEO e checklist; nessun invio o pubblicazione."
   }
 ]

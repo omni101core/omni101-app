@@ -1,0 +1,1 @@
+a new workflow discards|validate and start use|a stale save keeps|inputs and workflow selection|workflow can be saved

@@ -1,0 +1,1658 @@
+{
+  "version": 1,
+  "baseline": {
+    "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+    "run": "40007650626"
+  },
+  "requirements": [
+    {
+      "key": "memory",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/knowledge.ts",
+          "reason": "Record tenant-scoped, versioni, ricerca, conflitti, export e originale v1."
+        },
+        {
+          "path": "apps/web/app/components/workspace/KnowledgeWorkspace.tsx",
+          "reason": "Cattura e cronologia nella UI."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "shares attributed versions between Owners, rejects stale saves and preserves source history"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "isolates tenants, excludes clients and requires proof for VERIFIED"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "Owner captures a versioned requirement, reloads its provenance and creates a campaign link without sending"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Slice di memoria provata da integrazione e browser; il gruppo esteso resta parziale."
+      },
+      "gaps": [
+        "ACL progetto e documenti clienti non disponibili; solo TEAM_INTERNAL.",
+        "Ricerca semantica/duplicati, decision log fino al commit e export completo non provati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "seo",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/public-seo.ts",
+          "reason": "Sitemap/robots/favicon/redirect pubblici."
+        },
+        {
+          "path": "apps/web/app/content/seo.ts",
+          "reason": "Meta canonical e JSON-LD."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/seo.test.ts",
+          "name": "lists real public cases and articles without exposing workspace or query data"
+        },
+        {
+          "path": "tests/seo.test.ts",
+          "name": "excludes preview, private routes and errors and redirects only known public aliases"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Test verificano output tecnico, non risultati SEO/GEO."
+      },
+      "gaps": [
+        "Search Console non verificata; nessun risultato ranking provato.",
+        "Hreflang, crawler AI, llms.txt e prestazioni dispositivi reali non verificati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "growth-privacy",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/growth.ts",
+          "reason": "Consenso, suppression, richieste diritti e readiness canali."
+        },
+        {
+          "path": "apps/web/app/components/workspace/GrowthWorkspace.tsx",
+          "reason": "Piani e UTM senza invio."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "retains suppression after withdrawal and a later documented consent, with idempotent evidence"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "limits privacy evidence to administrators and prevents unsupported closure"
+        },
+        {
+          "path": "tests/growth-tools.test.ts",
+          "name": "builds a campaign link without retaining click identifiers or permitting credential destinations"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Controlli tecnici testati; compliance organizzativa e canali esclusi."
+      },
+      "gaps": [
+        "Titolare, DPA, retention e procedura diritti non verificati.",
+        "Email/social/Ads non connessi; nessuna conformità certificata."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "calendar",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/calendar.ts",
+          "reason": "Aggrega task, milestone, progetti, attività e revenue con limiti/tenant."
+        },
+        {
+          "path": "apps/web/app/server/revenue.ts",
+          "reason": "Agenda derivata anche da campagne e growth plan."
+        },
+        {
+          "path": "apps/web/app/components/workspace/RevenueWorkspace.tsx",
+          "reason": "Vista agenda mensile."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/calendar.test.ts",
+          "name": "aggregates only the actor organization and sorts by start"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "Revenue workspace persists campaign links, manual activity and the shared calendar"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Il backlog PLANNED è arretrato: aggregazione già testata e rilasciata, scheduling avanzato assente."
+      },
+      "gaps": [
+        "Niente ricorrenze, timezone appuntamenti, conflitti o drag and drop.",
+        "Esistono due API di agenda con sorgenti/limiti diversi: non un unico calendario avanzato."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "social",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "BLOCKED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Registri contenuti e creative job; non scheduler publishing."
+        },
+        {
+          "path": "apps/web/app/components/workspace/GrowthWorkspace.tsx",
+          "reason": "Canali dichiarati non connessi."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "persists growth and creative plans, validates scope and protects studio costs"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Test dei registri non provano un lifecycle social operativo. Release riferita solo alla slice descritta, non al provider o lifecycle assente."
+      },
+      "gaps": [
+        "Nessun adapter/account connesso: pubblicazione bloccata.",
+        "Pipeline bozze→asset→approvazione→coda, preview piattaforme e retry non provata end-to-end; lavoro interno non bloccato dal provider."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "ads",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "BLOCKED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Campagne/growth plan/creative job persistenti."
+        },
+        {
+          "path": "apps/web/app/server/growth.ts",
+          "reason": "Readiness canali onesta."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "persists growth and creative plans, validates scope and protects studio costs"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Esistono registri di pianificazione, non gestione Ads connessa. Release riferita solo alla slice descritta, non al provider o lifecycle assente."
+      },
+      "gaps": [
+        "Nessun account o autorizzazione economica; attivazione bloccata.",
+        "Metriche provider, approvazioni budget e lifecycle campagne non provati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "brand",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/styles/themes.css",
+          "reason": "Token e temi public/workspace esistenti."
+        },
+        {
+          "path": "apps/web/app/routes/admin.tsx",
+          "reason": "Workspace riusa primitive e tema."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/realignment.spec.ts",
+          "name": "public theme persists, private scope defaults dark and all seven labs are reachable"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Tema persistente è una slice provata, non un Brand Studio completo."
+      },
+      "gaps": [
+        "Brand draft/preview/version/publish/restore non presente come lifecycle.",
+        "Contrasto e primitive completi non provati sistematicamente."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "team",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Inviti, lista membri, revoca e protezione ultimo Owner."
+        },
+        {
+          "path": "apps/web/app/server/passkeys.ts",
+          "reason": "Attivazione individuale con passkey e sessioni."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/owners.spec.ts",
+          "name": "two independent Owners use verified passkeys, invite and persist projects"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "revokes an individual collaborator session while retaining the deciding Owner"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Due Owner/passkey e revoca sono testati; gestione inviti estesa resta parziale."
+      },
+      "gaps": [
+        "Ricerca, stati inviti completi e resend non provati.",
+        "Non ricreare gli Owner esistenti; nessuna modifica account effettuata in questa review."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "intake",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Intake atomico, Turnstile, deduplica e classificazione deterministica."
+        },
+        {
+          "path": "apps/web/app/routes/public/start.tsx",
+          "reason": "Form di acquisizione reale."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "persists a real intake atomically, deduplicates and does not invent budget"
+        },
+        {
+          "path": "tests/assistant-lead.test.ts",
+          "name": "creates exactly one real lead from a confirmed chat brief and records the handoff in the conversation"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Acquisizione reale provata; non completamento dell’intero intake adattivo."
+      },
+      "gaps": [
+        "Autosave/resume e percorso adattivo a tre ingressi non provati.",
+        "Catena agentica15passi, allegati e follow-up non implementati completamente."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "coding-agents",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "BLOCKED",
+      "implementation": [
+        {
+          "path": ".github/workflows/verify.yml",
+          "reason": "CI reale verify/staging/production con preview."
+        },
+        {
+          "path": "scripts/cloud-verify.py",
+          "reason": "Publisher controllato via Git Data API."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "CI verificata sul run baseline; ciclo task→branch→PR multiprovider non provato. Release riferita solo alla slice descritta, non al provider o lifecycle assente."
+      },
+      "gaps": [
+        "Branch protection/required review e coding adapter di prodotto non verificati.",
+        "OpenHands e sandbox sono reference, nessuna integrazione attiva; sandbox richiede decisione costi."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "assets",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "BLOCKED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Registro metadata media read-only."
+        },
+        {
+          "path": "docs/moduli/contenuti-media.md",
+          "reason": "Nessun upload/binding storage."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Media pubblici statici non equivalgono a DAM operativo. Release riferita solo alla slice descritta, non al provider o lifecycle assente."
+      },
+      "gaps": [
+        "Storage binario assente e R2 non autorizzato.",
+        "Metadata completi diritti/consenso/versioni e relazioni non provati."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "coverage",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "docs/mandati/sources.json",
+          "reason": "11 originali con provenienza/hash."
+        },
+        {
+          "path": "scripts/seed-reviewed-context.mjs",
+          "reason": "Import additivo e sincronizzazione solo record importer-owned."
+        },
+        {
+          "path": "docs/operativo/mandate-backlog.json",
+          "reason": "48 gruppi; non granularità completa delle clausole."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/seed-reviewed-context.test.ts",
+          "name": "never touches rows edited by a human"
+        },
+        {
+          "path": "tests/seed-reviewed-context.test.ts",
+          "name": "second run on a fresh import changes nothing"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Import/hash provati; questa matrice è review locale non ancora parte del baseline rilasciato."
+      },
+      "gaps": [
+        "Macrogruppi non dimostrano copertura di ogni clausola; riconciliazione in corso.",
+        "Nuovi originali privati restano MemPalace, non testo nel repo pubblico."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "adaptive-execution",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "scripts/project-context.mjs",
+          "reason": "Loader per dominio con riferimenti pertinenti."
+        },
+        {
+          "path": "docs/operativo/agent-context.json",
+          "reason": "Registry contesto e contratti condivisi."
+        },
+        {
+          "path": ".github/workflows/verify.yml",
+          "reason": "Verifica riferimenti per cinque domini."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Gate riferimenti osservato nella CI verde; nessun risparmio dichiarato."
+      },
+      "gaps": [
+        "Nessuna misura comparativa token/latency né prova uso skill in tutte le CLI."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "revenue-foundation",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/revenue.ts",
+          "reason": "Campagne, link CRM, eventi manuali idempotenti, qualificazione e calendario."
+        },
+        {
+          "path": "apps/web/app/components/workspace/RevenueWorkspace.tsx",
+          "reason": "UI campagne/lead/eventi/agenda."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "links a campaign to the CRM, records attributed events idempotently, and reads original calendar dates"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "prevents cross-tenant campaign links/events and excludes client and developer accounts"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "Revenue workspace persists campaign links, manual activity and the shared calendar"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Acceptance della foundation coperta da API+browser; nessun invio o ROI reale verificato."
+      },
+      "gaps": [
+        "Attribuzione solo manuale, qualificazione misura completezza; nessun canale invio connesso."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "email-foundation",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "BLOCKED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/email-drafts.ts",
+          "reason": "Bozze persistenti, CAS, preview sicura, export e review."
+        },
+        {
+          "path": "apps/web/app/components/workspace/EmailDraftWorkspace.tsx",
+          "reason": "Composer, reload, conflitti e campagna opzionale."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/email-drafts.test.ts",
+          "name": "due PATCH letti prima della scrittura: uno solo vince e il 409 non sostituisce il testo locale"
+        },
+        {
+          "path": "tests/email-drafts.test.ts",
+          "name": "chiede revisione nel registro approvazioni e non tratta il salvataggio come approvazione"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "email draft reopens after reload, isolates preview and export, and keeps local text on a delayed save and a 409"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Composer testato e rilasciato al baseline; email marketing completo non READY_FOR_CONNECTION. Release riferita solo alla slice descritta, non al provider o lifecycle assente."
+      },
+      "gaps": [
+        "Provider null/sendingEnabled false; delivery non connessa.",
+        "Segmenti, preference center, drip/A-B, bounce/complaint e DNS email non operativi."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "pricing",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Calcolo versionato deterministico, snapshot, review e catalogo."
+        },
+        {
+          "path": "apps/web/app/components/workspace/PricingWorkspace.tsx",
+          "reason": "UI preventivatore versionato."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "calculates margin rather than markup, separates cadences, persists immutable snapshots and locks approval versions"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "pricing saves a calculated version and requests a real approval without sending"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Vertical slice pricing testata; catena commerciale completa non provata."
+      },
+      "gaps": [
+        "Listini reali approvati non attestati in repo pubblico.",
+        "PDF, varianti commerciali, accettazione cliente→contratto/fattura non completi."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "crm-completion",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/workspace/KanbanBoard.tsx",
+          "reason": "Board persistente con rollback errori."
+        },
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "CRUD tenant-scoped, conflitti, timeline e dedup contatti."
+        },
+        {
+          "path": "apps/web/app/components/workspace/LeadConversion.tsx",
+          "reason": "Conversione acquisizione collegata a workflow."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/crm-backend.test.ts",
+          "name": "rejects a stale PATCH with the current record and keeps the write atomic"
+        },
+        {
+          "path": "tests/crm-backend.test.ts",
+          "name": "builds a bounded, organization-isolated timeline for contacts and companies"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "workspace persists board changes, rolls back failures, finds records and validates versioned workflows"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Kanban non statico: browser verifica persistenza e rollback; gruppo CRM completo resta parziale."
+      },
+      "gaps": [
+        "Fasi configurabili, filtri salvati, SLA/forecast/motivi perdita e import/export avanzato non provati.",
+        "Race specifica su spostamento trattativa e catena contratto/fattura non provate."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "integrations-mcp",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Nessuna evidenza di tool MCP operativo nel prodotto. Release riferita solo alla slice descritta, non al provider o lifecycle assente."
+      },
+      "gaps": [
+        "Nessun MCP remoto/OAuth connesso o server MCP esposto.",
+        "Scope, capability negotiation, revoca e SSRF richiedono implementazione e test."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "education",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Nessun test specifico di tutorial completo individuato."
+      },
+      "gaps": [
+        "Onboarding per ruolo, progresso riprendibile e tour accessibili non provati."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "connected-runtime",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/workflow-runtime.ts",
+          "reason": "DAG persistenti, versioni, retry/resume, approvazioni e conversione."
+        },
+        {
+          "path": "apps/web/app/components/workspace/WorkflowBuilder.tsx",
+          "reason": "Builder corretto su nuovo/save/versione/409."
+        },
+        {
+          "path": "apps/web/app/server/mission.ts",
+          "reason": "Controlli mission reali."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/workflow.test.ts",
+          "name": "versions a saved DAG, executes proposal and blocks at an actual approval"
+        },
+        {
+          "path": "tests/workflow.test.ts",
+          "name": "requires approved current-node evidence and dispatches exactly one resume instance"
+        },
+        {
+          "path": "tests/e2e/workflow-builder.spec.ts",
+          "name": "a stale save keeps the local draft and loads the server copy only after confirmation"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Runtime reale e builder testati; non tutti i workflow/provider richiesti operativi."
+      },
+      "gaps": [
+        "Controlli UI mission resume/artifact hanno gap noti punti4–5.",
+        "Bus commerciale trasversale, loop/subflow e scenari A–G completi non provati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "commercial-catalog",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Import/listini versionati di pricing."
+        },
+        {
+          "path": "apps/web/app/components/workspace/PricingCatalog.tsx",
+          "reason": "Catalogo pricing, non reseller/referral."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/pricing-catalog.test.ts",
+          "name": "importa una nuova versione, deduplica per generatoIl e registra audit"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Il catalogo prezzi non soddisfa il catalogo commerciale riusabile."
+      },
+      "gaps": [
+        "Blueprint10verticali/provisioning idempotente non implementati.",
+        "Reseller/referral/commissioni/white-label non operativi."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "orchestration-routing",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "IN_PROGRESS",
+      "implementation": [
+        {
+          "path": "docs/operativo/agent-context.json",
+          "reason": "Registry tool/CLI e routing documentato."
+        },
+        {
+          "path": "docs/operativo/coordinamento-codex-2026-10-23.md",
+          "reason": "Ownership e handoff reali."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Review e contratti persistenti esistono; niente dashboard operativa completa né promessa di tutti i modelli attivi."
+      },
+      "gaps": [
+        "Orchestrazione operatori Orca non equivale a coding adapter nel prodotto.",
+        "Costi per task e disponibilità continuativa di ogni CLI non misurati."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "pricing-hardening-self-approval",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Backend vieta richiedente=decisore con403; review e due identità distinte."
+        },
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Decisione/portale con permessi e versioni."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "separates pricing review from approval and refuses a stale review"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "VERIFIED",
+        "reason": "Backend vieta richiedente=decisore con403; review e due identità distinte. Test nel run baseline verde; review non crea dati produzione."
+      },
+      "gaps": [
+        "Monitorare regressioni; nessuna nuova policy commerciale introdotta."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "pricing-hardening-recurring-total",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "NEEDS_DECISION",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Testata solo ONE_TIME; ricorrenti separati, combinato null."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "keeps recurring-only pricing separate and leaves the one-time header at zero"
+        }
+      ],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Comportamento attuale verificato da test, richiesta originaria di un diverso totale resta decisione esplicita."
+      },
+      "gaps": [
+        "Cambiare semantica totale richiede decisione founder; non sommare cadenze automaticamente."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "pricing-hardening-tax-overflow",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Calcolo BigInt mulDiv e limite prima imposta; test limiti sintetici."
+        },
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Decisione/portale con permessi e versioni."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "keeps rejected pricing recoverable and does not leave an empty quote after a request-id race"
+        },
+        {
+          "path": "tests/pricing-formula.test.ts",
+          "name": "netto massimo raggiungibile con input validi: 4e10 adj, margine 9500 → 8e11 < 1e12 (nessun throw)"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "VERIFIED",
+        "reason": "Test integration prova net/tax800000000000 e totale safe integer; pricing-formula prova massimo input valido. BigInt e tetto applicati prima imposta. CI baseline verde; nessuna tariffa o aliquota reale presunta."
+      },
+      "gaps": [
+        "Monitorare regressioni; nessuna nuova policy commerciale introdotta."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "pricing-hardening-decision-guard",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Claim approval e UPDATE quote condizionati IN_REVIEW/pricing_version."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/approval-concurrency.test.ts",
+          "name": "keeps a versioned pricing review tied to one concurrent decision and one audit"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "VERIFIED",
+        "reason": "Caso con decisioni opposte, un vincitore e un audit incluso nella CI baseline verde; backlog IN_PROGRESS superato."
+      },
+      "gaps": [
+        "Nessun cambiamento di formule o policy; conservare regressione concorrente."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "pricing-hardening-request-scope",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Lookup requestId limita organization_id; test tenant esterno."
+        },
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Decisione/portale con permessi e versioni."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "does not match a request id of another tenant"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "VERIFIED",
+        "reason": "Lookup requestId limita organization_id; test tenant esterno. Test nel run baseline verde; review non crea dati produzione."
+      },
+      "gaps": [
+        "Monitorare regressioni; nessuna nuova policy commerciale introdotta."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "pricing-hardening-portal-tests",
+      "implementationStatus": "IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/pricing.ts",
+          "reason": "Portale espone scope/terms/pricing_version senza costi interni; test API."
+        },
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Decisione/portale con permessi e versioni."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "rejects unsafe inputs, tenant references and unauthorized clients, while exposing no internal costs in portal"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "VERIFIED",
+        "reason": "Portale espone scope/terms/pricing_version senza costi interni; test API. Test nel run baseline verde; review non crea dati produzione."
+      },
+      "gaps": [
+        "Monitorare regressioni; nessuna nuova policy commerciale introdotta."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "design-system",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/workspace/ProductUI.tsx",
+          "reason": "Primitive comuni usate dal workspace."
+        },
+        {
+          "path": "apps/web/app/styles/themes.css",
+          "reason": "Token e temi condivisi."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/realignment.spec.ts",
+          "name": "public theme persists, private scope defaults dark and all seven labs are reachable"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Esistono primitive riusate e temi: non ripartire da zero, ma non dichiarare design system completo."
+      },
+      "gaps": [
+        "Registry varianti/API/stati e gate visuale/a11y completo assenti.",
+        "Duplicazioni per pagina e tutte le famiglie non censite."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "public-experience",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/public/ReelOrbit.tsx",
+          "reason": "Hero/reel con preferenza movimento dinamica."
+        },
+        {
+          "path": "apps/web/app/components/public/CinematicScene.tsx",
+          "reason": "Scene WebGL con cleanup context e rientro."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/motion-lifecycle.spec.ts",
+          "name": "home adapts to reduced-motion changes without reload or lost navigation"
+        },
+        {
+          "path": "tests/e2e/cinematic-reentry.spec.ts",
+          "name": "cinematic scene returns after leaving the viewport and intentional GPU teardown"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "CI desktop/mobile emulato verifica motion/reentry; performance e completezza §5.10 non provate."
+      },
+      "gaps": [
+        "Mobile fisico/Safari e prestazioni reali non verificati.",
+        "Overlay assistente copre tab; media demo non equivalgono a provider avatar/video reali."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "ai-assist",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "CONNECTED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/assistant.ts",
+          "reason": "NVIDIA con output schema, routing validato, memoria interna e limiti."
+        },
+        {
+          "path": "tests/assistant-lead.test.ts",
+          "reason": "Tool intake richiede conferma esplicita e Turnstile."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/assistant.test.ts",
+          "name": "never retrieves private or unpublished content for public prompts"
+        },
+        {
+          "path": "tests/assistant-lead.test.ts",
+          "name": "creates exactly one real lead from a confirmed chat brief and records the handoff in the conversation"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Adapter AI reale confermato dal canary baseline; test unit con mock non sono prova autonoma provider."
+      },
+      "gaps": [
+        "Nessuna generative UI arbitraria o tool execution generale autorizzata.",
+        "Handoff umano e tre livelli completi non provati; overlay mobile aperto."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "analytics-kpi",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/operations.ts",
+          "reason": "Priorità, approvazioni, incassi/spese e costi AI reali con RBAC."
+        },
+        {
+          "path": "apps/web/app/components/workspace/OperationsOverview.tsx",
+          "reason": "Dashboard su registri reali."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "serves real operational priorities while withholding finance from developers"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Aggregati reali esistono, differenza incassi-spese non è utile fiscale."
+      },
+      "gaps": [
+        "Niente briefing programmati, BI completo, attribution traffico o ROI.",
+        "KPI end-to-end Marketing→rinnovo e drilldown sistematico non provati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "security-baseline",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/auth.ts",
+          "reason": "Identity/sessioni/origin/ruoli."
+        },
+        {
+          "path": "apps/web/app/server/passkeys.ts",
+          "reason": "Autenticazione passkey."
+        },
+        {
+          "path": "apps/web/app/server/permissions.ts",
+          "reason": "Controlli risorse."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/security.test.ts",
+          "name": "rejects cross-origin state changes"
+        },
+        {
+          "path": "tests/integration.test.ts",
+          "name": "prevents cross-organization foreign keys and reads"
+        },
+        {
+          "path": "tests/assistant.test.ts",
+          "name": "never retrieves private or unpublished content for public prompts"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Controlli concreti testati; non equivale a revisione completa di sicurezza/compliance."
+      },
+      "gaps": [
+        "Nessuna certificazione ASVS/WCAG/GDPR.",
+        "Recovery backup provato, retention completa, audit supply-chain e test sicurezza estesi non attestati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "landing-funnel-builder",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Growth plan persistenti, non builder pagine."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Registri funnel non sono funnel eseguibili."
+      },
+      "gaps": [
+        "Nessun builder a blocchi, publish/rollback domini o esperimenti multi-step.",
+        "Candidati OSS ancora da valutare."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "dashboard-ux",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/workspace/CommandPalette.tsx",
+          "reason": "Ricerca pagine e record reali via API autorizzate."
+        },
+        {
+          "path": "apps/web/app/components/workspace/OperationsOverview.tsx",
+          "reason": "Dashboard priorità con dati."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "workspace persists board changes, rolls back failures, finds records and validates versioned workflows"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Backlog sottostima palette esistente; browser verifica ricerca record, non copertura totale UI."
+      },
+      "gaps": [
+        "Palette non cerca tool MCP/workflow definizioni né azioni contestuali complete.",
+        "16 fetch su apertura: performance/scala da misurare.",
+        "QA completa schermi e controlli mission/mobile non conclusa."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "model-router-governance",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "CONNECTED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/assistant.ts",
+          "reason": "Adapter NVIDIA configurato e prezzi fail-closed."
+        },
+        {
+          "path": "docs/operativo/agent-context.json",
+          "reason": "Routing operatori e riferimenti."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/assistant.test.ts",
+          "name": "fails closed on paid provider pricing and cross-origin requests"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Un adapter configurato non equivale a model router completo."
+      },
+      "gaps": [
+        "Router dinamico multiprovider/retry/fallback per ogni modalità non implementato.",
+        "Supply-chain skill e anti-drift completo non provati."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "roles-agents-rbac",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/auth.ts",
+          "reason": "Ruoli individuali e tenant."
+        },
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "Read/write role per risorsa."
+        },
+        {
+          "path": "packages/agents/registry.ts",
+          "reason": "Scope authorized-brief-only e tools vuoti."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "protects financial writes from developer accounts"
+        },
+        {
+          "path": "tests/crm-backend.test.ts",
+          "name": "refuses roles that cannot read CRM records"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "RBAC reale esiste; agenti non hanno tool generali da autorizzare."
+      },
+      "gaps": [
+        "Service account/AI Agent/Partner come identità esecutive granulari non provati.",
+        "ABAC/project ACL completo assente; non sostituire auth senza necessità."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "orchestration-dashboard",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/workspace/MissionControl.tsx",
+          "reason": "Run prodotto con stati/step/artefatti, non sessioni CLI locali."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/mission-control.test.ts",
+          "name": "executes a real workflow run, lists it and resolves its artifacts, with controls matching the state"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Mission Control è una base distinta dall’osservatorio richiesto."
+      },
+      "gaps": [
+        "CLI/Orca sessioni, effort, branch/PR e rework per task non collegati al prodotto."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "reusable-library",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "PLANNED",
+      "implementation": [
+        {
+          "path": "apps/web/app/content/capabilities.ts",
+          "reason": "Catalogo servizi e capacità; non starter kit tecnici."
+        },
+        {
+          "path": "apps/web/app/components/workspace/ProductUI.tsx",
+          "reason": "Primitive riusabili già presenti."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Riutilizzo locale presente, libreria tecnica commerciale non provata."
+      },
+      "gaps": [
+        "Nessun catalogo starterkit/blueprint/versioni/licenze verificato."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "key": "context-handoff-vaults",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/knowledge.ts",
+          "reason": "Record PROMPT/REFERENCE/HANDOFF versionati."
+        },
+        {
+          "path": "scripts/project-context.mjs",
+          "reason": "Context pack operatori con riferimenti."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/integration.test.ts",
+          "name": "shares attributed versions between Owners, rejects stale saves and preserves source history"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Versionamento generico esiste; non prova prompt library valutata o handoff per ogni progetto."
+      },
+      "gaps": [
+        "Context pack per progetto, prompt eval e reference strutturate fino a implementazione non completi.",
+        "TEAM_INTERNAL esclude documenti clienti."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "content-cms",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/schema.ts",
+          "reason": "CRUD content con stati; modello content_revisions nello schema."
+        },
+        {
+          "path": "apps/web/app/routes/public/insights.tsx",
+          "reason": "Contenuti pubblici dal codice."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Backend cassetto contenuti presente, CMS pubblico operativo non dimostrato."
+      },
+      "gaps": [
+        "CRUD non pubblica le route; lifecycle editoriale/versioni/scheduling/traduzioni non connesso."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "ops-inbox-support",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/operations.ts",
+          "reason": "Notifiche unread/read reali."
+        },
+        {
+          "path": "apps/web/app/server/pipeline.ts",
+          "reason": "Ticket manutenzione dal portale cliente isolato."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/agency-pipeline.test.ts",
+          "name": "opens maintenance tickets only on the client’s own shared projects and keeps them private"
+        },
+        {
+          "path": "tests/e2e/workspace.spec.ts",
+          "name": "delivery pipeline runs from QA rejection to client approval and maintenance ticket"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Backlog dice ticket assenti ma esiste manutenzione cliente testata; supporto completo resta parziale."
+      },
+      "gaps": [
+        "Inbox multicanale, snooze/digest, rinnovi e customer success avanzato non implementati.",
+        "Contratti/fatture sono registri: niente emissione fiscale/pagamenti provider."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "vision-gesture",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/components/vision/VisionLab.tsx",
+          "reason": "MediaPipe lazy/consenso, stop/pause, tracking loss, calibrazione e fallback manuale."
+        },
+        {
+          "path": "apps/web/app/components/vision/hand.ts",
+          "reason": "Soglie/pinch/swipe deterministici."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/e2e/playground.spec.ts",
+          "name": "vision loads with manual controls and does not ask for the camera"
+        },
+        {
+          "path": "tests/e2e/playground.spec.ts",
+          "name": "reduced motion keeps vision and voice usable without permission prompts"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Il lab esiste e ha guardrail: backlog PLANNED/stato non confermato è arretrato; non confondere fallback testato e webcam verificata."
+      },
+      "gaps": [
+        "Pipeline camera/landmarks/gesti reali non provata con device fisico.",
+        "Test browser coprono default senza webcam e permissions policy, non inferenza modello MediaPipe."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "ci-risk-gates",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": ".github/workflows/verify.yml",
+          "reason": "Type/test/build/Chromium/migrazioni/canary; focus solo verify-commercial."
+        },
+        {
+          "path": "scripts/cloud-verify.py",
+          "reason": "Scansione segreti prima push."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Run baseline verde conferma gate attivi, non tutti quelli richiesti."
+      },
+      "gaps": [
+        "Routing CI per classe rischio, lint/license/API contract/a11y/visual diff non completi."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "cost-observability",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "apps/web/app/server/api.ts",
+          "reason": "Riserva budget agenti, token/costo e fallimenti persistiti."
+        },
+        {
+          "path": "apps/web/app/server/mission.ts",
+          "reason": "Stati/costi/durate run prodotto."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/mission-control.test.ts",
+          "name": "records a provider failure on retry without hiding it as success"
+        },
+        {
+          "path": "tests/assistant.test.ts",
+          "name": "calls actual adapter contract, stores measured usage and never creates a lead directly"
+        }
+      ],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "TESTED",
+        "reason": "Metriche per run prodotto reali; osservabilità costo/task cross-CLI incompleta."
+      },
+      "gaps": [
+        "Costi CLI per task, rework e qualità handoff non disponibili.",
+        "Modelli/prezzi configurati zero non dimostrano risparmi economici."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "docs-drift-control",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "scripts/project-context.mjs",
+          "reason": "Verifica esistenza riferimenti di contesto."
+        },
+        {
+          "path": "docs/STATO.md",
+          "reason": "Head corrente distinta dallo storico."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Gate link rotto esiste; drift di significato scoperto da questa review non è intercettato automaticamente."
+      },
+      "gaps": [
+        "Documenti moduli conservano stato storico non sempre marcato; coverage/calendar/vision/ticket sottostimati nel backlog.",
+        "Nessun controllo semantico automatico docs↔codice↔release."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "prospect-research-preparation",
+      "implementationStatus": "PLANNED",
+      "operationalStatus": "PLANNED",
+      "implementation": [
+        {
+          "path": "docs/operativo/mandate-backlog.json",
+          "reason": "Acceptance e limiti ricerca registrati."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Task catturato, nessun risultato commerciale di ricerca attestato."
+      },
+      "gaps": [
+        "Nessuna scheda prospect revisionata con fonti/data e dedup provata.",
+        "Contatto pubblico non è consenso; nessun invio autorizzato da questo requisito."
+      ],
+      "confidence": "high"
+    },
+    {
+      "key": "commercial-campaign-draft-pack",
+      "implementationStatus": "PARTIALLY_IMPLEMENTED",
+      "operationalStatus": "RELEASED",
+      "implementation": [
+        {
+          "path": "docs/operativo/campagna-pilota-bozza.md",
+          "reason": "Proposta/email/social/SEM in bozza; riferimento importato."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
+        "run": "40007650626"
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Bozza reale preservata/importata come reference; non campagna attivata."
+      },
+      "gaps": [
+        "Asset formati finali, segmento/offerta approvati e collegamento reale composer/campagna non provati.",
+        "Nessun invio, pubblicazione o risultato commerciale misurato."
+      ],
+      "confidence": "high"
+    }
+  ]
+}

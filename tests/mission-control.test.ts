@@ -32,7 +32,7 @@ describe('Mission Control: real durable runs',()=>{
   const detail=await call(env,owner,'GET','/api/mission-control/workflow/'+run.id);
   expect(detail.body.steps.map((s:any)=>s.node_id+':'+s.status)).toEqual(['start:COMPLETED','task:COMPLETED','end:COMPLETED']);
   expect(detail.body.artifacts).toHaveLength(1);
-  expect([detail.body.artifacts[0].kind,detail.body.artifacts[0].name,detail.body.artifacts[0].route]).toEqual(['TASK','Task Mission Control','/admin/tasks']);
+  expect([detail.body.artifacts[0].kind,detail.body.artifacts[0].name,detail.body.artifacts[0].route]).toEqual(['TASK','Task Mission Control','/admin/tasks?record='+encodeURIComponent(detail.body.artifacts[0].id)]);
   expect(one(sqlite,"SELECT count(*) n FROM tasks WHERE name='Task Mission Control'").n).toBe(1);
   expect((await call(env,owner,'GET','/api/mission-control/workflow/missing')).status).toBe(404);
  });
@@ -53,7 +53,7 @@ describe('Mission Control: real durable runs',()=>{
   expect(run.status).toBe('AWAITING_APPROVAL');
   expect(one(sqlite,"SELECT count(*) n FROM approvals WHERE status='PENDING'").n).toBe(1);
   const listed=(await call(env,owner,'GET','/api/mission-control')).body.runs.find((r:any)=>r.id===run.id);
-  expect([listed.canCancel,listed.canResume]).toEqual([true,true]);
+  expect([listed.canCancel,listed.canResume]).toEqual([true,false]);
   const viewer=(await call(env,dev,'GET','/api/mission-control')).body;
   expect(viewer.capabilities.controlsEnabled).toBe(false);
   expect((await call(env,dev,'POST','/api/workflow-runs/'+run.id+'/cancel',{})).status).toBe(403);
@@ -67,6 +67,37 @@ describe('Mission Control: real durable runs',()=>{
   expect((await call(env,owner,'POST','/api/workflow-runs/missing/cancel',{})).status).toBe(404);
   const approvalId=one(sqlite,'SELECT id FROM approvals WHERE resource_id=?',run.id).id;
   expect((await call(env,owner,'POST','/api/approvals/'+approvalId+'/decision',{decision:'APPROVED',reason:'Approvo comunque.'})).status).toBe(409);
+ });
+ it('exposes resume only for the exact tenant, run and current approved node',async()=>{
+  const {sqlite,env}=database('http://localhost:4174');const owner=await person(sqlite,'owner');const leadId=lead(sqlite);
+  const id=await definition(env,owner,'Revisione precisa',[node('start','TRIGGER','Avvio'),node('review','HUMAN_APPROVAL','Revisione'),node('end','END','Fine')],['start','review','end']);
+  await call(env,owner,'POST','/api/workflow-runs',{definitionId:id,leadId,idempotencyKey:'mission-specific-approval'});
+  const run=one(sqlite,'SELECT id FROM workflow_runs'),approvalId=run.id+':review';
+  async function flags(expected:boolean,approvalStatus:string|null){
+   const overview=(await call(env,owner,'GET','/api/mission-control')).body.runs.find((r:any)=>r.id===run.id);
+   const detail=(await call(env,owner,'GET','/api/mission-control/workflow/'+run.id)).body;
+   const builder=(await call(env,owner,'GET','/api/workflow-runs/'+run.id)).body;
+   for(const value of [overview,detail.run,builder.run])expect(value).toMatchObject({canResume:expected,approvalStatus});
+   return detail;
+  }
+  const pending=await flags(false,'PENDING');
+  expect(pending.run.approvalId).toBe(approvalId);
+  expect(pending.artifacts[0].route).toBe('/admin/approvals?record='+encodeURIComponent(approvalId));
+  expect((await call(env,owner,'POST','/api/workflow-runs/'+run.id+'/resume',{})).status).toBe(409);
+  sqlite.prepare("UPDATE approvals SET status='REJECTED' WHERE id=?").run(approvalId);await flags(false,'REJECTED');
+  sqlite.prepare("UPDATE approvals SET status='APPROVED',resource_id='wrong-run' WHERE id=?").run(approvalId);await flags(false,null);
+  sqlite.prepare("UPDATE approvals SET resource_id=?,resource_type='quotes' WHERE id=?").run(run.id,approvalId);await flags(false,null);
+  sqlite.prepare("UPDATE approvals SET resource_type='workflow_runs' WHERE id=?").run(approvalId);
+  sqlite.prepare("UPDATE workflow_runs SET current_node='different-node' WHERE id=?").run(run.id);await flags(false,null);
+  sqlite.prepare("UPDATE workflow_runs SET current_node='review' WHERE id=?").run(run.id);
+  sqlite.prepare("INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES('other','Altro','other',0,0)").run();
+  sqlite.prepare("UPDATE approvals SET organization_id='other' WHERE id=?").run(approvalId);
+  const hidden=await flags(false,null);expect(hidden.artifacts).toEqual([]);
+  sqlite.prepare("UPDATE approvals SET organization_id='omni101' WHERE id=?").run(approvalId);await flags(true,'APPROVED');
+  for(const state of ['FAILED','QUEUED','DISPATCH_FAILED']){sqlite.prepare('UPDATE workflow_runs SET status=? WHERE id=?').run(state,run.id);await flags(true,null)}
+  sqlite.prepare("UPDATE workflow_runs SET status='AWAITING_APPROVAL' WHERE id=?").run(run.id);
+  expect((await call(env,owner,'POST','/api/workflow-runs/'+run.id+'/resume',{})).status).toBe(202);
+  expect(one(sqlite,'SELECT status FROM workflow_runs WHERE id=?',run.id).status).toBe('COMPLETED');
  });
  it('stops a run cancelled between two nodes without letting a late step overwrite the cancellation',async()=>{
   const {sqlite,env}=database('http://localhost:4174');const owner=await person(sqlite,'owner');const leadId=lead(sqlite);

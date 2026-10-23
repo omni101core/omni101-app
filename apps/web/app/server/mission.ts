@@ -11,19 +11,23 @@ export const missionCapabilities={pause:false,cancel:true,retry:true,resume:true
 const terminalWorkflow=['COMPLETED','CANCELLED'];
 function stmt(env:Env,sql:string,...values:(string|number|null)[]){return env.DB.prepare(sql).bind(...values)}
 type AgentRun={id:string;name:string|null;agent_id:string|null;status:string;provider:string|null;model:string|null;tokens_used:number;cost_cents:number;error:string|null;retry_of:string|null;created_at:number;updated_at:number};
-type WorkflowRun={id:string;name:string|null;status:string;current_node:string|null;error:string|null;created_at:number;updated_at:number};
+type WorkflowRun={id:string;name:string|null;status:string;current_node:string|null;error:string|null;created_at:number;updated_at:number;approval_id?:string|null;approval_status?:string|null};
 export function agentControls(run:{status:string;updated_at:number},at=now()){
  const stale=run.status==='RUNNING'&&at-run.updated_at>STALE_RUNNING_MS;
  return {canCancel:run.status==='QUEUED'||stale,canRetry:['FAILED','CANCELLED'].includes(run.status),canResume:false};
 }
-export function workflowControls(run:{status:string}){
- return {canCancel:!terminalWorkflow.includes(run.status),canRetry:false,canResume:['AWAITING_APPROVAL','FAILED','QUEUED','DISPATCH_FAILED'].includes(run.status)};
+export function workflowControls(run:{status:string;approval_id?:string|null;approval_status?:string|null}){
+ return {canCancel:!terminalWorkflow.includes(run.status),canRetry:false,canResume:run.status==='AWAITING_APPROVAL'?!!run.approval_id&&run.approval_status==='APPROVED':['FAILED','QUEUED','DISPATCH_FAILED'].includes(run.status),approvalId:run.status==='AWAITING_APPROVAL'?run.approval_id||null:null,approvalStatus:run.status==='AWAITING_APPROVAL'?run.approval_status||null:null};
+}
+export async function workflowRunControls(env:Env,orgId:string,run:{id:string;status:string;current_node:string|null}){
+ const approval=run.status==='AWAITING_APPROVAL'&&run.current_node?await stmt(env,"SELECT id,status FROM approvals WHERE id=? AND organization_id=? AND resource_type='workflow_runs' AND resource_id=?",run.id+':'+run.current_node,orgId,run.id).first<{id:string;status:string}>():null;
+ return workflowControls({...run,approval_id:approval?.id,approval_status:approval?.status});
 }
 async function overview(env:Env,actor:Identity){
  requireRole(actor,staff);
  const [agents,workflows,approvals]=await Promise.all([
   stmt(env,'SELECT id,name,agent_id,status,provider,model,tokens_used,cost_cents,error,retry_of,created_at,updated_at FROM agent_runs WHERE organization_id=? ORDER BY created_at DESC LIMIT 60',actor.orgId).all<AgentRun>(),
-  stmt(env,"SELECT r.id,coalesce(d.name,'Workflow') name,r.status,r.current_node,r.error,r.created_at,r.updated_at FROM workflow_runs r LEFT JOIN workflow_definitions d ON d.id=r.definition_id WHERE r.organization_id=? ORDER BY r.created_at DESC LIMIT 60",actor.orgId).all<WorkflowRun>(),
+  stmt(env,"SELECT r.id,coalesce(d.name,'Workflow') name,r.status,r.current_node,r.error,r.created_at,r.updated_at,a.id approval_id,a.status approval_status FROM workflow_runs r LEFT JOIN workflow_definitions d ON d.id=r.definition_id AND d.organization_id=r.organization_id LEFT JOIN approvals a ON a.id=r.id||':'||r.current_node AND a.organization_id=r.organization_id AND a.resource_type='workflow_runs' AND a.resource_id=r.id WHERE r.organization_id=? ORDER BY r.created_at DESC LIMIT 60",actor.orgId).all<WorkflowRun>(),
   stmt(env,"SELECT count(*) n FROM approvals WHERE organization_id=? AND status='PENDING'",actor.orgId).first<{n:number}>()
  ]);
  const at=now();
@@ -41,7 +45,7 @@ async function overview(env:Env,actor:Identity){
 }
 async function workflowDetail(env:Env,actor:Identity,runId:string){
  requireRole(actor,staff);
- const run=await stmt(env,"SELECT r.id,coalesce(d.name,'Workflow') name,r.status,r.current_node,r.error,r.input,r.requested_by,r.created_at,r.updated_at FROM workflow_runs r LEFT JOIN workflow_definitions d ON d.id=r.definition_id WHERE r.id=? AND r.organization_id=?",runId,actor.orgId).first<WorkflowRun&{input:string}>();
+ const run=await stmt(env,"SELECT r.id,coalesce(d.name,'Workflow') name,r.status,r.current_node,r.error,r.input,r.requested_by,r.created_at,r.updated_at FROM workflow_runs r LEFT JOIN workflow_definitions d ON d.id=r.definition_id AND d.organization_id=r.organization_id WHERE r.id=? AND r.organization_id=?",runId,actor.orgId).first<WorkflowRun&{input:string}>();
  if(!run)throw new HttpError(404,'Esecuzione non trovata.');
  const steps=(await stmt(env,'SELECT id,node_id,kind,status,output,error,attempts,duration_ms,created_at FROM workflow_run_steps WHERE run_id=? AND organization_id=? ORDER BY created_at',runId,actor.orgId).all<{id:string;node_id:string;kind:string;status:string;output:string|null;error:string|null;attempts:number;duration_ms:number|null;created_at:number}>()).results;
  // A step output that names a record is an artifact of the run: resolve it from the table that owns it.
@@ -52,11 +56,11 @@ async function workflowDetail(env:Env,actor:Identity,runId:string){
   for(const [key,[kind,table,route]] of Object.entries(owners)){
    const value=output[key];if(typeof value!=='string')continue;
    const row=await stmt(env,`SELECT id,name,status FROM ${table} WHERE id=? AND organization_id=?`,value,actor.orgId).first<{id:string;name:string|null;status:string|null}>();
-   if(row)artifacts.push({kind,id:row.id,name:row.name,status:row.status,route,stepNode:step.node_id});
+   if(row)artifacts.push({kind,id:row.id,name:row.name,status:row.status,route:route+'?record='+encodeURIComponent(row.id),stepNode:step.node_id});
   }
  }
  const events=(await stmt(env,'SELECT id,action,details,created_at FROM audit_logs WHERE resource_id=? AND organization_id=? ORDER BY created_at',runId,actor.orgId).all()).results;
- return {run:{...run,kind:'workflow',...workflowControls(run)},steps,artifacts,events,storage:{artifacts:'D1',r2:!!env.MEDIA}};
+ return {run:{...run,kind:'workflow',...await workflowRunControls(env,actor.orgId,run)},steps,artifacts,events,storage:{artifacts:'D1',r2:!!env.MEDIA}};
 }
 async function cancelAgentRun(env:Env,actor:Identity,runId:string){
  requireRole(actor,managers);

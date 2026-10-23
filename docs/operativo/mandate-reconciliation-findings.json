@@ -1,0 +1,977 @@
+{
+ "version": 1,
+ "reviewedSources": [
+  {
+   "id": "product-excellence-2026-10-23",
+   "sha256": "5fad170106e602f3a894521b85972ae141a6b2a05966cb2e65527d73dd2873c8",
+   "linesRead": 1800,
+   "complete": true
+  },
+  {
+   "id": "product-quality-integrazione-2026-10-23",
+   "sha256": "d8d5fad6c563a0d514b1b63eaf206774ff335a8a92ebb3264b173fbbef621de1",
+   "linesRead": 1134,
+   "complete": true
+  },
+  {
+   "id": "persistent-intelligence-2026-10-23",
+   "sha256": "b832840ef588e163de30e1777338a69512d501c50706e694a89eb457b65061e0",
+   "linesRead": 994,
+   "complete": true
+  },
+  {
+   "id": "rebuild-original-2026-10",
+   "sha256": "b45455f2d283fb16de4b32b10113953da87457e3753600d9edd5d8e1a3f593c2",
+   "linesRead": 2086,
+   "complete": true
+  },
+  {
+   "id": "continuation-original-2026-10",
+   "sha256": "b63d5674887f6c41701108cc581627e78305bdf906fe97702a2286c47bf4d238",
+   "linesRead": 1435,
+   "complete": true
+  },
+  {
+   "id": "realignment-original-2026-10",
+   "sha256": "5363f75d6f4b0dfa3a0696b0a404f830ae1bbb10d694c03f91c5a9cb3111308a",
+   "linesRead": 1206,
+   "complete": true
+  },
+  {
+   "id": "adaptive-agent-engineering-2026-10-23",
+   "sha256": "e3faf0b1cc00429a46787f4fa68838a7a59c074b7693a884d518d9c65ab35a5c",
+   "linesRead": 1206,
+   "complete": true
+  },
+  {
+   "id": "revenue-growth-operating-system-2026-10-23",
+   "sha256": "ff95f7a5b90b8119d8bf3fe1162cc63cef273d311675c3adc2027a2d5b905f23",
+   "linesRead": 1086,
+   "complete": true
+  },
+  {
+   "id": "consolidamento-operativo-2026-10-23",
+   "sha256": "f7b9bd3e556a5b0b7a07ec1e894df25e84430006e9b3c66aebe870ae9cf98fad",
+   "linesRead": 712,
+   "complete": true
+  },
+  {
+   "id": "connected-ecosystem-2026-10-23",
+   "sha256": "08369c8c7c57be4ec9f5ba76507f35f1853ce77c9851b99689168d08307dd490",
+   "linesRead": 1150,
+   "complete": true
+  },
+  {
+   "id": "cli-native-orchestration-2026-10-23",
+   "sha256": "8c1175b5051b80f4e0654b68b335051e635329edb2eaeef7196cfd7033330249",
+   "linesRead": 415,
+   "complete": true
+  }
+ ],
+ "findings": [
+  {
+   "id": "REC-001",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 109,
+   "endLine": 113,
+   "kind": "contradiction",
+   "requirement": "Stati modulo distinti MISSING/PARTIAL/IMPLEMENTED/CONFIGURED/CONNECTED/TESTED/LIVE/BLOCKED; vietato usare implemented/done come sinonimo di working (anche PQI 78-87, PI 176-186, AE 671-681, PE 1549-1565, RG 1003-1007 READY_FOR_CONNECTION).",
+   "acceptance": "Un solo enum canonico registrato in decisioni.md con mappatura delle tassonomie dei mandati; nessun gruppo IMPLEMENTED con remaining che elenca clausole non coperte; stati Verified/Superseded/READY_FOR_CONNECTION rappresentabili.",
+   "backlogKeys": [
+    "memory",
+    "seo",
+    "growth-privacy",
+    "adaptive-execution",
+    "revenue-foundation"
+   ],
+   "gap": "Il backlog usa 4 stati (PLANNED/IN_PROGRESS/IMPLEMENTED/BLOCKED). Nove gruppi IMPLEMENTED, cinque dei quali con remaining ampio, sono di fatto PARTIAL. Sei originali definiscono tassonomie diverse, nessuna adottata.",
+   "severity": "high",
+   "dependencies": [],
+   "confidence": 0.9
+  },
+  {
+   "id": "REC-002",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 79,
+   "endLine": 85,
+   "kind": "omission",
+   "requirement": "Matrice interrogabile Mandato->clausola->requisito->stato reale->componente->task->test->commit/PR->release; clausole non implementate sempre visibili. Campi requisito: ID, fonte, priorita, responsabile, stato, dipendenze, acceptance, link task/PR, test, evidenza (PI 159-172, RB 1892-1903, CLI 193-209).",
+   "acceptance": "Ogni voce di backlog porta righe sorgente, owner, dipendenze, test e link evidenza; un conteggio di clausole non classificate per fonte e consultabile in app.",
+   "backlogKeys": [
+    "coverage"
+   ],
+   "gap": "Schema backlog: key/name/source/status/priority/acceptance/remaining/evidence/origin. Mancano righe sorgente, owner, dipendenze, test e link PR; il livello e il gruppo, non la clausola.",
+   "severity": "high",
+   "dependencies": [],
+   "confidence": 0.9
+  },
+  {
+   "id": "REC-003",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 607,
+   "endLine": 613,
+   "kind": "priority-conflict",
+   "requirement": "Slice A (prima) = registrazione mandato, recupero clausole, matrice copertura, gap; PI 910-921 la mette in P0 con decision log versionato.",
+   "acceptance": "coverage ha priorita massima; remaining allineato al manifest reale (11 originali); decision log versionato con provenienza come acceptance esplicita.",
+   "backlogKeys": [
+    "coverage",
+    "memory"
+   ],
+   "gap": "coverage non ha priorita e dice 'Dieci originali nel manifest' mentre sources.json ne ha 11; il decision log compare solo nel remaining di memory (IMPLEMENTED).",
+   "severity": "high",
+   "dependencies": [
+    "REC-002"
+   ],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-004",
+   "sourceId": "realignment-original-2026-10",
+   "startLine": 1,
+   "endLine": 1206,
+   "kind": "traceability",
+   "requirement": "Il mandato di riallineamento definisce strategia tema (572-602), homepage in 8 scene (634-659), pagine Solutions (293-306), capability map (754-816) e Playground a 7 lab etichettati (820-890).",
+   "acceptance": "Ogni clausola del riallineamento e collegata a un gruppo o marcata SUPERSEDED con riferimento alla decisione che la sostituisce.",
+   "backlogKeys": [
+    "public-experience",
+    "brand"
+   ],
+   "gap": "Nessun gruppo del backlog ha source realignment-original-2026-10 (0 gruppi su 48). Alcune clausole risultano decise o realizzate (decisioni.md righe 12, 19, 41) ma il backlog non le traccia.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-002"
+   ],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-005",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 675,
+   "endLine": 679,
+   "kind": "omission",
+   "requirement": "Prova integrata obbligatoria: landing->lead CRM->attribuzione sorgente->Kanban->qualifica->proposta calcolata->approvazione socio->accettazione->progetto->cliente vede solo i propri dati; email/social fino al confine autorizzato (anche RB 2070-2074, CO 1413-1415, CE 969-971, CE 1148).",
+   "acceptance": "Un test E2E (canary staging) asserisce ogni passaggio della catena, incluso source sul lead e isolamento del portale; esito collegato alla release.",
+   "backlogKeys": [
+    "connected-runtime",
+    "crm-completion",
+    "pricing",
+    "ai-assist"
+   ],
+   "gap": "Nessuna voce possiede la catena end-to-end. Il canary in STATO copre AI->approvazioni->pipeline, ma non l'attribuzione, l'accettazione e la vista cliente nello stesso flusso.",
+   "severity": "high",
+   "dependencies": [
+    "REC-014"
+   ],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-006",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 656,
+   "endLine": 656,
+   "kind": "contradiction",
+   "requirement": "Non bloccare tutte le implementazioni in attesa di servizi esterni: completare cio che funziona in sicurezza (social interno PI 466-541, ads PI 545-603, metadata asset PI 607-655; P1 in PI 925-930 e RG 1035-1037).",
+   "acceptance": "social, ads e assets divisi in parte interna (PLANNED, priorita P1) e parte di pubblicazione/storage (BLOCKED per causa esterna).",
+   "backlogKeys": [
+    "social",
+    "ads",
+    "assets"
+   ],
+   "gap": "I tre gruppi sono BLOCKED LOW per intero, mentre il loro stesso remaining dice che bozze, approvazioni e calendario interni non dipendono dalla connessione.",
+   "severity": "high",
+   "dependencies": [
+    "REC-007"
+   ],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-007",
+   "sourceId": "rebuild-original-2026-10",
+   "startLine": 2040,
+   "endLine": 2049,
+   "kind": "omission",
+   "requirement": "La Definition of Done include storage cloud (2042) e i servizi a pagamento richiedono autorizzazione (2049); media su R2 con metadati in DB (RB 1394, PI 655).",
+   "acceptance": "Riga in decisioni.md con la risposta del founder su R2 (piano, limiti di costo) o un'alternativa; lo stato di assets segue quella decisione.",
+   "backlogKeys": [
+    "assets"
+   ],
+   "gap": "assets e BLOCKED con 'R2 non autorizzato', ma nessuna richiesta o decisione del founder risulta registrata: il blocco non ha un passo di sblocco.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-008",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 226,
+   "endLine": 352,
+   "kind": "over-aggregation",
+   "requirement": "Automation Studio: editor con pan/zoom, minimappa, gruppi, multi-selezione, copia/incolla, undo/redo, validazione live, esecuzione passo-passo, debugger, draft/publish, import/export, nodi tipizzati, runtime con versioni immutabili per run (anche PE 1065-1098, PQI 834-844, CO 754-859).",
+   "acceptance": "Gruppo dedicato al builder con checklist verificabile; Scenario D (CE 981-983) superato in E2E: drag nodi, trigger CRM, condizione, test, publish, evento, run visibile nel debugger, effetto persistito.",
+   "backlogKeys": [
+    "connected-runtime"
+   ],
+   "gap": "connected-runtime copre runtime e audit di tre bug; le funzioni dell'editor non sono in nessuna acceptance.",
+   "severity": "high",
+   "dependencies": [
+    "REC-026"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-009",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 333,
+   "endLine": 352,
+   "kind": "omission",
+   "requirement": "Libreria iniziale di 12 workflow pronti (lead->CRM, preventivo, deal vinto->progetto, proposta in scadenza, ticket urgente, costo API anomalo...); dipendenze mancanti mostrate (anche PQI 1007-1008).",
+   "acceptance": "Template come DRAFT eseguibili in test mode; quelli che richiedono integrazioni assenti mostrano la dipendenza e aprono il wizard.",
+   "backlogKeys": [
+    "connected-runtime"
+   ],
+   "gap": "Esistono template workflow DRAFT (decisioni 22/10 sera), ma nessuna voce di backlog ne fissa l'elenco o la verifica.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-008"
+   ],
+   "confidence": 0.6
+  },
+  {
+   "id": "REC-010",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 356,
+   "endLine": 407,
+   "kind": "omission",
+   "requirement": "Agent Studio: agente come entita operativa (supervisore, tool, MCP, knowledge, budget, test, versioni) e Agent Builder guidato in 12 passi, senza prompt engineering obbligatorio.",
+   "acceptance": "Creazione di un agente da template con tool e budget, test sicuro, pubblicazione versionata; il registro mostra versione e ultimi run.",
+   "backlogKeys": [
+    "connected-runtime",
+    "roles-agents-rbac"
+   ],
+   "gap": "Registry e mission control esistono; builder guidato, versioni e test dell'agente non sono in nessuna acceptance.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-018"
+   ],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-011",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 965,
+   "endLine": 995,
+   "kind": "dependency",
+   "requirement": "Scenari obbligatori A-G (lead->progetto, campagna, agente con MCP, workflow visuale, tutorial, coding agent, integrazione non disponibile).",
+   "acceptance": "Ogni scenario ha acceptance e stato propri; dipendenze dichiarate: C->integrations-mcp, E->education, F->coding-agents, B->email-foundation/social.",
+   "backlogKeys": [
+    "connected-runtime",
+    "integrations-mcp",
+    "education",
+    "coding-agents",
+    "email-foundation"
+   ],
+   "gap": "connected-runtime (IN_PROGRESS) promette 'scenari A-G verificati', ma C, E e F dipendono da gruppi PLANNED o BLOCKED: impossibile da chiudere senza quelle dipendenze.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-012",
+    "REC-032"
+   ],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-012",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 1045,
+   "endLine": 1051,
+   "kind": "omission",
+   "requirement": "Fase 3: almeno un'integrazione completa e verificata, un tool MCP funzionante, un workflow persistente, un agente con strumenti reali, un tutorial interattivo E2E.",
+   "acceptance": "Cinque evidenze distinte, ciascuna con id run o test.",
+   "backlogKeys": [
+    "integrations-mcp",
+    "education",
+    "connected-runtime"
+   ],
+   "gap": "Le soglie minime non sono tracciate; integrations-mcp non ha priorita.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-013",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 737,
+   "endLine": 755,
+   "kind": "contradiction",
+   "requirement": "Eventi di dominio tipizzati, persistenti, idempotenti, versionati e osservabili (lead.created, opportunity.stage_changed...). RG 254-272 usa page_view/form_submitted/deal_won; RB 1319-1343 usa LeadReceived/DealWon; RG 907-915 chiede un unico modello versionato e documentato.",
+   "acceptance": "Un catalogo eventi canonico versionato e documentato, con mappatura delle tre nomenclature; decisione registrata.",
+   "backlogKeys": [
+    "analytics-kpi",
+    "connected-runtime",
+    "revenue-foundation"
+   ],
+   "gap": "Tre nomenclature negli originali, nessuna decisione; i gruppi parlano di 'eventi tipizzati' senza fissare il catalogo.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-014",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 252,
+   "endLine": 272,
+   "kind": "omission",
+   "requirement": "Attribution: event schema con source/medium/campaign/content; distinguere attribuzione osservata da causalita; P0 in RG 1027-1029 (anche PE 917, RB 1548).",
+   "acceptance": "La sorgente catturata al form_submitted si propaga a lead, deal e progetto; i report dichiarano 'attribuzione osservata', mai causalita; test di persistenza.",
+   "backlogKeys": [
+    "revenue-foundation",
+    "analytics-kpi"
+   ],
+   "gap": "Nessun gruppo possiede l'attribuzione; revenue-foundation la esclude esplicitamente.",
+   "severity": "high",
+   "dependencies": [
+    "REC-013"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-015",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 1027,
+   "endLine": 1029,
+   "kind": "priority-conflict",
+   "requirement": "P0 Revenue: capture-first, Campaign, Audience/Consent, Landing/Funnel, Email foundation, Growth calendar, Attribution, Sales integration; CS 173 chiede di realizzare subito la parte email senza invii.",
+   "acceptance": "Le priorita di email-foundation e calendar riflettono P0, oppure una riga di decisione motiva il declassamento.",
+   "backlogKeys": [
+    "email-foundation",
+    "calendar"
+   ],
+   "gap": "email-foundation e calendar sono NORMAL senza motivazione registrata.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-016",
+   "sourceId": "rebuild-original-2026-10",
+   "startLine": 875,
+   "endLine": 910,
+   "kind": "priority-conflict",
+   "requirement": "AI Client Intake 'strategicamente prioritario' (877) con catena in 15 passi; P0 in CO 1335-1346.",
+   "acceptance": "intake HIGH, oppure riga di decisione che motiva la priorita minore.",
+   "backlogKeys": [
+    "intake"
+   ],
+   "gap": "intake e NORMAL; il remaining stesso dice che la catena agentica non e coperta.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-017",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 50,
+   "endLine": 52,
+   "kind": "contradiction",
+   "requirement": "Quattro modalita di intake: freeform, guided, conversational ed EXPRESS (nome/email+messaggio), convergenti in Lead/Request/Brief con partial capture, attribution, consenso e anti-spam (anche RG 492-510).",
+   "acceptance": "Esiste un percorso Express che crea un lead valido; la cattura parziale e salvata; test di convergenza dei 4 percorsi sullo stesso modello.",
+   "backlogKeys": [
+    "intake"
+   ],
+   "gap": "L'acceptance di intake dice 'tre ingressi' (da PE 422-436): manca Express; partial capture e anti-abuse non sono citati.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-018",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 831,
+   "endLine": 845,
+   "kind": "over-aggregation",
+   "requirement": "Matrice ruoli: Owner, Admin, Sales, Marketing, PM, Developer, Creative, Finance, Support, Client Owner/Admin/Member, Reviewer, Partner/Reseller, Contractor, Service Account, AI Agent, su permission primitives (anche RG 173-186, RB 665-683, CS 382-394).",
+   "acceptance": "Template di ruolo per ciascuna categoria su permessi primitivi; test che lo scope di un AI Agent e piu stretto di quello dell'Owner che lo avvia.",
+   "backlogKeys": [
+    "roles-agents-rbac"
+   ],
+   "gap": "roles-agents-rbac elenca 7 template (Sales, PM, Finance, Client, Partner, Service Account, AI Agent): mancano Admin, Marketing, Developer, Creative, Support, ruoli cliente distinti, Contractor e Workflow Identity, pur essendo RG la fonte del gruppo.",
+   "severity": "high",
+   "dependencies": [],
+   "confidence": 0.9
+  },
+  {
+   "id": "REC-019",
+   "sourceId": "product-quality-integrazione-2026-10-23",
+   "startLine": 742,
+   "endLine": 756,
+   "kind": "omission",
+   "requirement": "Finance & Operations: preventivi, contratti, fatture, spese, costi ricorrenti, abbonamenti, margini per progetto, spesa AI/cloud/campagne, profittabilita, export; fatturazione fiscale solo tramite provider autorizzato (RB 1289-1311, CO 739-750, RA 1004-1011, PE 945-961).",
+   "acceptance": "Gruppo finance con margine per progetto da costi registrati, stato pagamenti ed export; nessun documento fiscale simulato.",
+   "backlogKeys": [
+    "pricing",
+    "ops-inbox-support",
+    "analytics-kpi"
+   ],
+   "gap": "Nessun gruppo finance: i requisiti stanno sparsi nel remaining di pricing ('non coperti: contratti, spese e margini come modulo Operations') e di ops-inbox-support.",
+   "severity": "high",
+   "dependencies": [],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-020",
+   "sourceId": "product-quality-integrazione-2026-10-23",
+   "startLine": 783,
+   "endLine": 795,
+   "kind": "omission",
+   "requirement": "Agency Resource Planning: capacita, carico, disponibilita, ownership, health di progetto, colli di bottiglia, utilizzo, stime vs consuntivi, per due soci e agenti (anche PE 958, RA 196).",
+   "acceptance": "Vista calcolata solo su task e tempi registrati; nessuna capacita inventata; stime vs consuntivi per progetto.",
+   "backlogKeys": [],
+   "gap": "Nessun gruppo; STATO cita solo il limite 'nessuna previsione di capacita inventata'.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-002"
+   ],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-021",
+   "sourceId": "realignment-original-2026-10",
+   "startLine": 820,
+   "endLine": 890,
+   "kind": "traceability",
+   "requirement": "Playground con 7 lab (Avatar, Voice, Vision/Gesture, Agent Workflow, Commerce, Creative AI, Software), ciascuno etichettato reale/simulato/parziale/rappresentativo; RB 1402-1446 tre demo obbligatorie senza pagamenti o API live.",
+   "acceptance": "Voce di backlog per lab con etichetta e limiti; test che ogni lab mostri l'etichetta.",
+   "backlogKeys": [
+    "public-experience",
+    "vision-gesture"
+   ],
+   "gap": "STATO dichiara 7 esperienze e i limiti; il backlog ha solo vision-gesture. Nessuna voce traccia i restanti lab e le loro etichette.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-022",
+   "sourceId": "continuation-original-2026-10",
+   "startLine": 315,
+   "endLine": 418,
+   "kind": "traceability",
+   "requirement": "Catalogo capacita pubbliche (BUILD/AUTOMATE/CREATE/GROW/EMERGING) con, per voce, descrizione, applicazione, esempio, disponibilita reale, CTA e demo (anche RA 754-816).",
+   "acceptance": "Voce di backlog collegata al catalogo esistente; test che ogni capacita abbia una disponibilita valorizzata.",
+   "backlogKeys": [
+    "public-experience"
+   ],
+   "gap": "Deciso e realizzato (decisioni.md riga 19: 75 capacita), ma senza voce di backlog: la copertura non e tracciabile.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-023",
+   "sourceId": "rebuild-original-2026-10",
+   "startLine": 1933,
+   "endLine": 1943,
+   "kind": "omission",
+   "requirement": "Sprint 2: Homepage, Solutions, Explore, Work, Studio, Start Project, Contact, Legal, SEO; IA pubblica in PQI 906-919.",
+   "acceptance": "Pagine Contact e Legal raggiungibili; i contenuti legali (titolare, DPA) solo da dati forniti dal founder, mai inventati.",
+   "backlogKeys": [
+    "public-experience",
+    "growth-privacy",
+    "content-cms"
+   ],
+   "gap": "Nessun gruppo cita pagine legali o Contact; growth-privacy segnala titolare/DPA/retention da verificare senza una voce per le pagine pubbliche.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.65
+  },
+  {
+   "id": "REC-024",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 652,
+   "endLine": 671,
+   "kind": "contradiction",
+   "requirement": "Copy home: principio Problema->Possibilita->Dimostrazione->Risultato->Contatto, headline e CTA date; supporting copy diversa in RB 183-198 e CO 199-205.",
+   "acceptance": "Riga di decisione con la copy canonica; test che verifica headline e due CTA.",
+   "backlogKeys": [
+    "public-experience"
+   ],
+   "gap": "Tre varianti della supporting copy negli originali, nessuna decisione registrata e nessuna acceptance di copy.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-025",
+   "sourceId": "realignment-original-2026-10",
+   "startLine": 572,
+   "endLine": 602,
+   "kind": "contradiction",
+   "requirement": "Tema: pubblico light-first, workspace dark-first, toggle pubblico, preferenze persistenti (anche PQI 306-320). La palette scura di RB 210-218 e CO 207-213 e superata.",
+   "acceptance": "brand.remaining riallineato alla decisione esistente; contrasto verificato su entrambi i temi; RB/CO palette marcate superseded.",
+   "backlogKeys": [
+    "brand",
+    "design-system"
+   ],
+   "gap": "decisioni.md (22/10 sera) registra gia la scelta light/dark e STATO dice 'temi indipendenti', ma brand.remaining la dichiara 'non coperta'. Il gruppo ha come fonte PE, che non contiene quella clausola.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-026",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 80,
+   "endLine": 98,
+   "kind": "over-aggregation",
+   "requirement": "Stati di componente: hover, focus, active, disabled, loading, empty, success, error, pending, offline, unauthorized, read-only, partial, retry, confirmation, undo; preset di motion semantici (PQI 321-343, PE 578-599); governance del motion (RA 457-463); overlay vs pagina dedicata (PE 188-190, PQI 418); protezione modifiche non salvate (PE 163).",
+   "acceptance": "Il registry dei componenti dichiara gli stati supportati per famiglia, i preset motion nominati e la regola overlay/pagina, con test.",
+   "backlogKeys": [
+    "design-system"
+   ],
+   "gap": "L'acceptance di design-system elenca solo default/loading/empty/error/disabled e 'token semantici'; motion e regole d'uso degli overlay mancano.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-027",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 625,
+   "endLine": 642,
+   "kind": "over-aggregation",
+   "requirement": "Brand Studio con theme validation, contrast check, modifiche sensibili revisionabili, nessuna configurazione non validata; theme engine su font, radius, densita, stile icone, profilo motion, trattamento pulsanti e media (PQI 344-358).",
+   "acceptance": "Configurazione brand validata da schema prima del salvataggio; flusso di revisione per la pubblicazione; test di contrasto.",
+   "backlogKeys": [
+    "brand"
+   ],
+   "gap": "L'acceptance di brand copre bozza/preview/versione/pubblicazione ma non la validazione schema, la revisione e il perimetro del theme engine.",
+   "severity": "low",
+   "dependencies": [
+    "REC-026"
+   ],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-028",
+   "sourceId": "rebuild-original-2026-10",
+   "startLine": 254,
+   "endLine": 310,
+   "kind": "over-aggregation",
+   "requirement": "Reel orbit: 12-16 card come link reali, drag/touch/frecce/bottoni/pausa/skip; contenuto comprensibile senza JS/WebGL; loader su asset reali. Transizioni con annuncio della route, focus e back/forward (RB 395-420); service carousel con accesso diretto da tab/tastiera (RB 365-393); cleanup di listener e timeline al cambio route (RB 539).",
+   "acceptance": "Test distinti per controlli tastiera/pausa, rendering senza JS, annuncio della route e focus dopo la navigazione, cleanup dei listener al cambio route.",
+   "backlogKeys": [
+    "public-experience"
+   ],
+   "gap": "L'acceptance di public-experience nomina reel orbit e page transitions in modo aggregato: i vincoli di accessibilita e di cleanup non sono verificabili separatamente (rilevante per l'intermittenza reduced-motion).",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-029",
+   "sourceId": "rebuild-original-2026-10",
+   "startLine": 1857,
+   "endLine": 1866,
+   "kind": "omission",
+   "requirement": "Target LCP<=2.5s, INP<=200ms, CLS<=0.1, Lighthouse mobile >=90 dove realistico, accessibilita >=95, WCAG 2.2 AA; test a 320/375/768/1024/1440/1920 (PE 1465-1467).",
+   "acceptance": "Misura per release su emulazione mobile con soglie dichiarate e set di screenshot alle sei larghezze; nessun test dichiarato senza esecuzione.",
+   "backlogKeys": [
+    "seo",
+    "public-experience",
+    "ci-risk-gates"
+   ],
+   "gap": "Nessun gruppo fissa soglie; seo e public-experience dicono solo 'da verificare'.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-030",
+   "sourceId": "product-quality-integrazione-2026-10-23",
+   "startLine": 447,
+   "endLine": 463,
+   "kind": "omission",
+   "requirement": "Parita Owner su 11 aree; operazioni critiche (trasferimento della proprieta amministrativa, cancellazione definitiva) con protezioni aggiuntive definite; parita applicativa distinta dalla titolarita legale (RB 1480).",
+   "acceptance": "Policy scritta e test: ri-autenticazione o approvazione del secondo Owner per trasferimento e hard delete.",
+   "backlogKeys": [
+    "team",
+    "security-baseline"
+   ],
+   "gap": "Nessun gruppo definisce le protezioni per le operazioni critiche.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-031",
+   "sourceId": "rebuild-original-2026-10",
+   "startLine": 713,
+   "endLine": 713,
+   "kind": "omission",
+   "requirement": "Pari privilegi in OMNI101 non danno accesso automatico a Cloudflare/GitHub: serve una procedura di concessione separata (anche PQI 1075, PE 517, accessi per membro PE 487).",
+   "acceptance": "Procedura documentata e stato per membro visibile in People & Access; nessuna credenziale condivisa.",
+   "backlogKeys": [
+    "team",
+    "coding-agents"
+   ],
+   "gap": "Nessuna voce traccia la concessione degli accessi esterni.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-032",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 1136,
+   "endLine": 1233,
+   "kind": "priority-conflict",
+   "requirement": "Collaborazione GitHub dei due soci 'requisito prioritario' (1138): branch protection, PR, required checks, preview, sync issue/task, deploy approval, Connect Your Agent, brief agent-ready copiabile; passo 5 dei 9 iniziali (1788); PQI 465-537.",
+   "acceptance": "Divisione: collaborazione GitHub e Connect Tools PLANNED HIGH; sandbox cloud BLOCKED con decisione su costi.",
+   "backlogKeys": [
+    "coding-agents"
+   ],
+   "gap": "coding-agents e BLOCKED LOW per intero, mentre il suo remaining elenca parti non dipendenti dal sandbox.",
+   "severity": "high",
+   "dependencies": [
+    "REC-031"
+   ],
+   "confidence": 0.85
+  },
+  {
+   "id": "REC-033",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 1282,
+   "endLine": 1351,
+   "kind": "omission",
+   "requirement": "Matrice di decisione AI vs deterministico e 8 domande prima di introdurre una chiamata AI (costo, latenza, dati trasmessi, fallback, verificabilita); RG 917-941.",
+   "acceptance": "Matrice documentata in una fonte canonica e richiamata nel template di PR o spec per ogni nuova chiamata AI.",
+   "backlogKeys": [
+    "model-router-governance"
+   ],
+   "gap": "Nessun artefatto o acceptance; il principio vive solo negli originali.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-034",
+   "sourceId": "continuation-original-2026-10",
+   "startLine": 548,
+   "endLine": 576,
+   "kind": "over-aggregation",
+   "requirement": "Tool tipizzati dell'assistente (navigate_to_route, open_service, open_demo, show_project, search_content, compare_solutions, start_brief, save_draft_brief, submit_lead, request_human_contact) validati lato server, senza URL non approvati e senza spostare l'utente senza un'azione comprensibile; continuita della conversazione con retention configurabile ed eliminazione per policy (CO 627-637); recupero di una richiesta salvata (PE 770).",
+   "acceptance": "Registro tool nominato con test di allowlist delle route; policy di retention conversazioni configurabile e testata.",
+   "backlogKeys": [
+    "ai-assist"
+   ],
+   "gap": "L'acceptance di ai-assist dice 'tool tipizzati validati' senza contratto nominato, allowlist o retention.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-035",
+   "sourceId": "continuation-original-2026-10",
+   "startLine": 1193,
+   "endLine": 1195,
+   "kind": "omission",
+   "requirement": "Consenso webcam e microfono, trattamento di dati biometrici e immagini, voice cloning solo autorizzato.",
+   "acceptance": "Policy e UI di consenso per microfono e voce; nessuna registrazione automatica; voice cloning disabilitato senza consenso documentato.",
+   "backlogKeys": [
+    "vision-gesture",
+    "security-baseline",
+    "growth-privacy"
+   ],
+   "gap": "vision-gesture copre solo il consenso webcam; biometria e voice cloning non sono in nessun gruppo privacy o sicurezza.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-036",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 674,
+   "endLine": 684,
+   "kind": "omission",
+   "requirement": "Feedback & Customer Intelligence: survey, NPS/CSAT, richiesta feedback, feedback di progetto, motivo di churn, insight qualitativi, client health (P1 in RG 1035-1037).",
+   "acceptance": "Richiesta di feedback a fine progetto salvata e collegata al cliente; health calcolata da dati reali.",
+   "backlogKeys": [
+    "ops-inbox-support"
+   ],
+   "gap": "Nessun gruppo; ops-inbox-support copre notifiche e ticket, non il feedback.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-037",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 1039,
+   "endLine": 1045,
+   "kind": "priority-conflict",
+   "requirement": "P1 Client factory (Capability, Blueprint e Integration Registry, provisioning nuovo cliente RG 364-386 e 797-807) distinto da P2 partner (Affiliate, Referral, Reseller, White-label).",
+   "acceptance": "Due gruppi: client factory P1 con wizard di provisioning idempotente; programmi partner P2 come policy separate.",
+   "backlogKeys": [
+    "commercial-catalog",
+    "reusable-library"
+   ],
+   "gap": "commercial-catalog (LOW) mescola factory P1 e partner P2; il provisioning sta solo nel remaining.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-038",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 516,
+   "endLine": 568,
+   "kind": "omission",
+   "requirement": "Email: transactional (account, invito, passkey, approvazioni, fatture) separate dal marketing; lifecycle blueprint (welcome, nurture, follow-up preventivo, brief abbandonato, rinnovo, upsell, riattivazione, soddisfazione); un unico sistema di notifiche senza sender per modulo (RG 688-692).",
+   "acceptance": "Template transactional e marketing distinti nel composer; un solo punto di invio; lifecycle come bozze di journey.",
+   "backlogKeys": [
+    "email-foundation",
+    "ops-inbox-support"
+   ],
+   "gap": "email-foundation non cita le transactional e riduce il lifecycle a 'drip'.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-039",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 453,
+   "endLine": 455,
+   "kind": "omission",
+   "requirement": "SEO/GEO e accessibilita verificati sia sul sito pubblico sia sulle landing create dalla piattaforma.",
+   "acceptance": "Le landing generate ereditano meta, canonical, JSON-LD e noindex di bozza, con test.",
+   "backlogKeys": [
+    "seo",
+    "landing-funnel-builder"
+   ],
+   "gap": "seo copre solo il sito pubblico.",
+   "severity": "low",
+   "dependencies": [
+    "REC-040"
+   ],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-040",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 104,
+   "endLine": 106,
+   "kind": "dependency",
+   "requirement": "Design System -> Component Registry -> Page Builder -> Funnel Builder: un blocco ha props validate, mai CSS o JS arbitrario.",
+   "acceptance": "landing-funnel-builder dichiara la dipendenza da design-system (registry) e parte solo con blocchi registrati.",
+   "backlogKeys": [
+    "landing-funnel-builder",
+    "design-system"
+   ],
+   "gap": "Il backlog non ha un campo dipendenze: il builder HIGH potrebbe partire prima del registry richiesto.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-002",
+    "REC-026"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-041",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 1008,
+   "endLine": 1041,
+   "kind": "over-aggregation",
+   "requirement": "Pattern di produttivita: saved views, filter preset, inline editing, split view, detail drawer, bulk, undo, autosave, navigazione da tastiera, quick create; sidebar personalizzabile, favoriti, recenti, workspace switcher (anche PQI 797-823, RG 957-980).",
+   "acceptance": "Checklist per schermata chiave con i pattern pertinenti segnati come presenti, assenti o non pertinenti.",
+   "backlogKeys": [
+    "dashboard-ux",
+    "crm-completion"
+   ],
+   "gap": "L'acceptance di dashboard-ux copre verifica e palette; gli altri pattern non hanno criteri.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-042",
+   "sourceId": "adaptive-agent-engineering-2026-10-23",
+   "startLine": 1076,
+   "endLine": 1085,
+   "kind": "priority-conflict",
+   "requirement": "P0: eliminare conflitti e duplicazioni, consolidare le fonti canoniche, skill routing, handoff e requirement coverage, quality gate essenziali; CLI 4-7 priorita alta e trasversale.",
+   "acceptance": "Priorita di docs-drift-control e ci-risk-gates allineate o declassamento motivato.",
+   "backlogKeys": [
+    "docs-drift-control",
+    "ci-risk-gates",
+    "orchestration-routing"
+   ],
+   "gap": "docs-drift-control e LOW, ci-risk-gates NORMAL, orchestration-routing senza priorita.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.8
+  },
+  {
+   "id": "REC-043",
+   "sourceId": "revenue-growth-operating-system-2026-10-23",
+   "startLine": 468,
+   "endLine": 474,
+   "kind": "omission",
+   "requirement": "Audience: segmenti dinamici, lifecycle stage, scoring, source, consenso e preferenze; Campaign come entita unificata (P0 RG 1029; PE 905, PQI 694).",
+   "acceptance": "Segmenti dinamici salvati e riutilizzati da email e campagne, con esclusioni dalla suppression.",
+   "backlogKeys": [
+    "revenue-foundation",
+    "email-foundation"
+   ],
+   "gap": "La segmentazione non e acceptance di alcun gruppo.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-044",
+   "sourceId": "product-quality-integrazione-2026-10-23",
+   "startLine": 708,
+   "endLine": 726,
+   "kind": "omission",
+   "requirement": "Creative Production OS: media job, provider routing, versioni, varianti, review, usage rights, export; dubbing, localizzazione, render queue (PE 928-943, CO 727-737, RA 994-1002).",
+   "acceptance": "Gruppo per il flusso di produzione (brief->job->review->approvazione) separato dallo storage binario.",
+   "backlogKeys": [
+    "assets"
+   ],
+   "gap": "assets copre solo metadati ed e BLOCKED per R2; il flusso di produzione non e tracciato.",
+   "severity": "medium",
+   "dependencies": [
+    "REC-006"
+   ],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-045",
+   "sourceId": "product-quality-integrazione-2026-10-23",
+   "startLine": 984,
+   "endLine": 1006,
+   "kind": "omission",
+   "requirement": "Contextual workspaces per tipo di progetto, Continuous Quality Intelligence (problemi UX/test -> task verificabili), Delivery Health (pronto in base a test, output, review, approvazioni, dipendenze).",
+   "acceptance": "Delivery health calcolata da dati reali per progetto; i problemi QA diventano task con fonte.",
+   "backlogKeys": [],
+   "gap": "Nessun gruppo: direzioni dichiarate 'gia autorizzate' (PQI 1009) e non pianificate.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-046",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 977,
+   "endLine": 994,
+   "kind": "omission",
+   "requirement": "Administration: riferimenti ai segreti, API key con scope, webhook, usage, configurazione billing, feature flag, data retention; feature flag per funzioni incomplete (PQI 1043-1044).",
+   "acceptance": "Gestione API key con scope e revoca; feature flag che nasconde le funzioni incomplete; test.",
+   "backlogKeys": [
+    "integrations-mcp",
+    "security-baseline"
+   ],
+   "gap": "API key, feature flag e usage non hanno un gruppo.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.7
+  },
+  {
+   "id": "REC-047",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 1627,
+   "endLine": 1637,
+   "kind": "omission",
+   "requirement": "AI operations: prompt registry, provider health, limiti di costo, test dataset, valutazioni degli agenti, failure analysis, run replay; prompt evaluations P2 (PI 942).",
+   "acceptance": "Dataset di valutazione per almeno un agente reale con esito registrato per versione del prompt.",
+   "backlogKeys": [
+    "model-router-governance",
+    "context-handoff-vaults",
+    "cost-observability"
+   ],
+   "gap": "Valutazioni e replay non hanno acceptance.",
+   "severity": "medium",
+   "dependencies": [],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-048",
+   "sourceId": "connected-ecosystem-2026-10-23",
+   "startLine": 502,
+   "endLine": 540,
+   "kind": "over-aggregation",
+   "requirement": "Approval Center trasversale per 15 tipi (preventivi, contratti, campagne, email, post, spese, infrastruttura, pubblicazioni, accessi sensibili, tool call rischiose, azioni agenti, merge/deploy, cancellazioni, pagamenti, richieste clienti) con alternative, scadenza e richiesta modifiche, applicato dal backend.",
+   "acceptance": "Elenco dei tipi coperti con test backend per tipo; scadenza e 'richiedi modifiche' disponibili.",
+   "backlogKeys": [
+    "connected-runtime"
+   ],
+   "gap": "Le approvazioni esistono, ma i tipi coperti e i campi richiesti non sono acceptance.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.65
+  },
+  {
+   "id": "REC-049",
+   "sourceId": "consolidamento-operativo-2026-10-23",
+   "startLine": 234,
+   "endLine": 234,
+   "kind": "contradiction",
+   "requirement": "Senza account: NOT_CONNECTED o READY_TO_CONNECT; RG 1003-1007 usa READY_FOR_CONNECTION; stati post diversi tra PI 531-539 e RG 282.",
+   "acceptance": "Nomenclatura unica per gli stati di connessione e di pubblicazione, registrata.",
+   "backlogKeys": [
+    "email-foundation",
+    "social",
+    "ads"
+   ],
+   "gap": "email-foundation usa READY_FOR_CONNECTION; gli originali usano nomi diversi per lo stesso concetto.",
+   "severity": "low",
+   "dependencies": [
+    "REC-001"
+   ],
+   "confidence": 0.75
+  },
+  {
+   "id": "REC-050",
+   "sourceId": "persistent-intelligence-2026-10-23",
+   "startLine": 159,
+   "endLine": 172,
+   "kind": "traceability",
+   "requirement": "Ogni requisito ha una fonte tracciabile.",
+   "acceptance": "Le voci con source non presente in sources.json puntano a un'origine registrata o vengono ricondotte a un originale.",
+   "backlogKeys": [
+    "pricing-hardening-self-approval",
+    "pricing-hardening-recurring-total",
+    "pricing-hardening-tax-overflow",
+    "pricing-hardening-decision-guard",
+    "pricing-hardening-request-scope",
+    "pricing-hardening-portal-tests",
+    "prospect-research-preparation",
+    "commercial-campaign-draft-pack"
+   ],
+   "gap": "8 gruppi hanno source fuori da sources.json (consegna-sonnet-a-opus, master-takeover): tracciati solo come origin o reference.",
+   "severity": "low",
+   "dependencies": [
+    "REC-002"
+   ],
+   "confidence": 0.9
+  },
+  {
+   "id": "REC-051",
+   "sourceId": "product-excellence-2026-10-23",
+   "startLine": 1465,
+   "endLine": 1481,
+   "kind": "omission",
+   "requirement": "Su mobile: tabelle come viste usabili, alternativa ergonomica al Kanban, canvas con inspector adattato, dialog complessi come sheet, 3D in qualita ridotta; esperienze gestuali con alternativa standard (CO 1242).",
+   "acceptance": "Test mobile per Kanban (alternativa al drag), tabelle e builder; nessuna funzione accessibile solo via gesto.",
+   "backlogKeys": [
+    "design-system",
+    "dashboard-ux",
+    "vision-gesture"
+   ],
+   "gap": "Non presente nelle acceptance.",
+   "severity": "low",
+   "dependencies": [],
+   "confidence": 0.7
+  }
+ ]
+}

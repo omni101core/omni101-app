@@ -33,10 +33,10 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
  useEffect(()=>{
   const mq=matchMedia('(prefers-reduced-motion: reduce)'),el=root.current,world=ring.current,view=stage.current,veil=loader.current;
   if(!el||!world||!view)return;
-  setReduced(mq.matches);
   const scene=model.current,written=new Map<string,string>();
+  let motionReduced=mq.matches;
   const links=Array.from(world.querySelectorAll<HTMLElement>('.reel-card'));
-  let alive=true,last=performance.now(),lastActive=0,lastCount=-1,visible=true,loaded=0,formed=false,ready=coverUrls.length===0,opening=false;
+  let alive=true,last=performance.now(),lastActive=0,lastCount=-1,visible=true,loaded=0,formed=false,ready=coverUrls.length===0,opening=false,frame=0;
   const write=(key:string,value:string,apply:()=>void)=>{if(written.get(key)===value)return;written.set(key,value);apply()};
   const count=(value:number)=>{
    if(value===lastCount)return;
@@ -63,7 +63,7 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
    gsap.killTweensOf(scene);
    if(veil)gsap.killTweensOf(veil);
    scene.formation=1;scene.expansion=1;playing.current=false;
-   count(100);draw();setEntering(false);markIntroSeen();
+   count(100);draw();setEntering(false);markIntroSeen();wake();
   };
   skip.current=finish;
   const tryOpen=()=>{
@@ -72,7 +72,7 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
    gsap.to(scene,{expansion:1,duration:1.7,ease:'power4.inOut',onUpdate:draw,onComplete:finish});
    if(veil)gsap.to(veil,{autoAlpha:0,duration:.9,delay:.45,ease:'power2.out'});
   };
-  const settle=()=>{loaded++;if(loaded>=coverUrls.length){ready=true;tryOpen()}};
+  const settle=()=>{if(!alive)return;loaded++;if(loaded>=coverUrls.length){ready=true;tryOpen()}};
   const blockScroll=(event:Event)=>{if(playing.current&&event.cancelable)event.preventDefault()};
   const keys=(event:KeyboardEvent)=>{
    if(!playing.current)return;
@@ -82,31 +82,45 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
   window.addEventListener('keydown',keys);
   window.addEventListener('wheel',blockScroll,{passive:false});
   window.addEventListener('touchmove',blockScroll,{passive:false});
-  const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting},{rootMargin:'100px'});
+  const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;wake()},{rootMargin:'100px'});
+  const motionChange=(event?:MediaQueryListEvent)=>{motionReduced=event?.matches??mq.matches;setReduced(motionReduced);if(motionReduced)finish();else wake()};
+  mq.addEventListener('change',motionChange);
+  motionChange();
+  document.addEventListener('visibilitychange',wake);
   observer.observe(el);
   coverUrls.forEach(src=>{const image=new Image();image.onload=image.onerror=settle;image.src=src});
   const patience=window.setTimeout(()=>{ready=true;tryOpen()},6000);
-  if(mq.matches||introSeen()){finish()}
+  if(motionReduced||introSeen()){finish()}
   else{
    playing.current=true;
    gsap.to(scene,{formation:1,duration:2,ease:'none',onUpdate:draw,onComplete:()=>{formed=true;tryOpen()}});
   }
   draw();
-  const tick=(time:number)=>{
-   if(!alive)return;
-   requestAnimationFrame(tick);
+  // Keep media query reads out of animation frames; media events own the cached preference.
+  function canAnimate(){return alive&&visible&&!document.hidden&&!motionReduced}
+  function wake(){
+   if(!canAnimate()){cancelAnimationFrame(frame);frame=0;return}
+   if(!frame){last=performance.now();frame=requestAnimationFrame(tick)}
+  }
+  function tick(time:number){
+   frame=0;
+   if(!canAnimate())return;
    const dt=Math.min((time-last)/1000,.05);last=time;
-   if(!visible||document.hidden||mq.matches||playing.current)return;
-   if(!paused.current&&drag.current===null)scene.target-=dt*3.4;
-   if(Math.abs(scene.target-scene.angle)<.01)return;
-   scene.angle+=(scene.target-scene.angle)*(1-Math.exp(-dt*9));
-   draw();
-  };
-  requestAnimationFrame(tick);
+   if(!playing.current){
+    if(!paused.current&&drag.current===null)scene.target-=dt*3.4;
+    if(Math.abs(scene.target-scene.angle)>=.01){
+     scene.angle+=(scene.target-scene.angle)*(1-Math.exp(-dt*9));draw();
+    }
+   }
+   frame=requestAnimationFrame(tick);
+  }
+  wake();
   return()=>{
-   alive=false;window.clearTimeout(patience);
+   alive=false;cancelAnimationFrame(frame);window.clearTimeout(patience);
    gsap.killTweensOf(scene);if(veil)gsap.killTweensOf(veil);
    observer.disconnect();
+   mq.removeEventListener('change',motionChange);
+   document.removeEventListener('visibilitychange',wake);
    window.removeEventListener('keydown',keys);
    window.removeEventListener('wheel',blockScroll);
    window.removeEventListener('touchmove',blockScroll);
