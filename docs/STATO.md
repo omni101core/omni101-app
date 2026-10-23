@@ -1,3 +1,7 @@
+## 24 ottobre — integrazione Codex in verifica
+Snapshot9564112ec1cfe69cac501e30a5ac02c3bcac69cc, pipeline40040870969 in corso: privacy OWNER_ADMIN/assistente, import privati4 con preflight, CRM Kanban, calendario, mission controls, email3layout, galleria social3asset. Review statica indipendente senza blocker; test runtime ancora da eseguire in CI. Produzione resta5808a6e finché canary/release non confermano.
+Deleghe concluse e ownership restituite: Opus sicurezza; subagenti import, review, email, social. Grok fermato su500 ripetuti, output recuperato. Anteprima card standalone http://127.0.0.1:4177/social-review/preview aperta; app4177 resta artifactf5 verificato, nessuna navigazione utente sovrascritta.
+
 # OMNI101 — stato corrente
 
 ## Ripresa24ott — stato del nuovo giro (prevale sullo storico)
