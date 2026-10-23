@@ -93,3 +93,25 @@ dialog.os-command.os-dialog{position:fixed;inset:0;top:0;left:0;transform:none;m
 dialog.os-command::backdrop{background:#000b;backdrop-filter:blur(5px)}
 @media(prefers-reduced-motion:reduce){dialog.os-command::backdrop{backdrop-filter:none}}
 
+/* G4 centro operativo UX 24/10: append, solo .os-operations */
+.os-operations{min-width:0;max-width:100%;overflow-x:clip;overflow-wrap:anywhere}
+.os-operations .os-panel-title{flex-wrap:wrap;align-items:flex-start}
+.os-operations .os-panel-title>div{min-width:0;flex:1 1 12rem}
+.os-operations h3{margin:0 0 8px;font-size:18px;font-weight:500;letter-spacing:-.02em;text-wrap:balance;color:var(--os-text,#f2eee6)}
+.os-operations .os-ops-now{margin:0 0 8px;font-size:16px;line-height:1.45;max-width:65ch;color:var(--os-text,#f2eee6);text-wrap:pretty}
+.os-operations .os-ops-now-panel{border-color:var(--os-gold)}
+.os-operations .os-hint,.os-operations .os-panel>p,.os-operations .os-priority-list small{max-width:65ch}
+.os-operations .os-button,.os-operations .os-text-button{min-height:44px;max-width:100%}
+.os-operations .os-text-button{padding:12px 0;font-size:13px;white-space:normal;text-align:left}
+.os-operations .os-priority-list a,.os-operations .os-project-progress a,.os-operations .os-panel a{display:flex;flex-direction:column;justify-content:center;min-height:44px;overflow-wrap:anywhere}
+.os-operations .os-metrics{grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr))}
+.os-operations .os-metric,.os-operations .os-table-wrap,.os-operations .os-activity{min-width:0}
+.os-operations .os-table-wrap{max-width:100%;overflow-x:clip}
+.os-operations .os-table{table-layout:fixed;width:100%}
+.os-operations .os-table,.os-operations .os-table th,.os-operations .os-table td{white-space:normal;overflow-wrap:anywhere;max-width:none;overflow:visible;text-overflow:clip}
+@media(max-width:480px){
+.os-operations .os-metrics{grid-template-columns:1fr}
+.os-operations .os-metric{padding:16px}
+.os-operations .os-table th,.os-operations .os-table td{padding:10px 8px}
+}
+

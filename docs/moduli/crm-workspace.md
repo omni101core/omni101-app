@@ -106,3 +106,15 @@ Permessi: li applica l'endpoint. 401 o 403 → quella sezione dice «non autoriz
 Stati: «Ricerca in corso…»; «Nessun risultato per …» solo a caricamento finito e lista vuota; errore con Riprova. Tastiera: frecce, Invio, Esc (chiude e rimette il focus dov'era). `<dialog>.showModal()` fa il focus trap. Ruoli: `dialog` + `aria-modal`, combobox sull'input, listbox/option sulle righe. Il bottone della riga ha `tabIndex={-1}` così Tab non entra nei risultati; il clic resta un bottone, come in `tests/e2e/workspace.spec.ts`.
 
 Trappola: `automations` in `load()` di `admin.tsx` azzera `records`. `?record=` su un workflow arriva all'URL ma questa shell non apre il grafo. Lead, progetti, clienti e agenti sì: l'effetto `record` in `admin.tsx` apre il dialog della scheda.
+
+## Centro operativo — UX 24/10
+
+`OperationsOverview.tsx`, stili in coda a `admin.css` (solo `.os-operations`). Nessun endpoint nuovo. Nessun numero previsto: conteggi e importi restano quelli di `GET /api/operations`.
+
+Chi entra vede prima «Da affrontare adesso»: una frase con la prossima azione (prima attività, altrimenti prima approvazione, esecuzione da verificare, notifica, oppure il backlog). Poi la lista. Code, numeri e progetti stanno sotto.
+
+Pulsanti con verbo e oggetto. «Prepara backlog operativo» è invariato (test `workspace.spec.ts`). «Ricarica il centro» ricarica `/api/operations`. Le righe: «Apri attività», «Apri approvazione», «Apri elenco esecuzioni» (l'elenco è `/admin/agent-runs`, non la scheda del run), «Apri pianificazione», «Segna come letta» con il nome. Il backlog resta 15 attività, 3 traguardi, 3 workflow in bozza, nessun agente avviato.
+
+Stati pagina con `Feedback` (`ProductUI`): `loading` al primo carico, `pending` se un aggiornamento arriva con dati già visibili, `empty` se non arriva un payload, `error` con «Riprova» sull'ultima azione fallita (carica, prepara, segna letta). Liste vuote: `empty`. Vista finance senza permesso: `unauthorized`. I conteggi in lista dicono il tetto già noto (20 approvazioni, 30 notifiche), non uno storico.
+
+Sotto i 480px la pagina è a colonna, la tabella va a capo, pulsanti e link del centro sono alti almeno 44px. `overflow-x: clip` sulla section, così a 375px non si allarga la pagina.
