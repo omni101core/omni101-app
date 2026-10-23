@@ -6,7 +6,7 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 - **LIVE verificato:** `5808a6ef1f9eafe8deabadbde63b81317ed5aeeb`, run `40007650626` completamente verde:154server,114browser/18skip, staging canary AI→approvazioni→pipeline e production cutover. Health stesso SHA e database operativo in entrambi gli ambienti. Bozze email0013, reduced-motion dinamico e rientro scene GPU inclusi;11fonti48task6reference importati.
 - **Worker corrente:** `6ec03776-8508-424b-88ed-69fdb09f3330`; precedente stabile3adf682 / Worker305cbd87-8736-4dc5-b114-4ad98f57dc8f conservato come riferimento rollback. Migrazioni additive, nessuna tabella cancellata o nuovo servizio a pagamento.
-- **Builder online verificato:** audit punti1–3 corretti e testati; creazione indipendente, versione salvata, dirty/conflitti e blocco input durante richieste. Esito `/tmp/omni101-deleghe/grok-workflow-builder-fix.md`. Punti4–5mission restano aperti. Screenshot mobile: pulsante assistente copre parte delle tab cinema, rifinitura registrata.
+- **Builder online verificato:** audit punti1–3 corretti e testati; creazione indipendente, versione salvata, dirty/conflitti e blocco input durante richieste. Esito `/tmp/omni101-deleghe/grok-workflow-builder-fix.md`. Punti4–5mission corretti nel codice, in attesa di release (codice locale, non pubblicato). Screenshot mobile: pulsante assistente copre parte delle tab cinema, rifinitura registrata.
 - **Coordinamento:** Codex App; Grok esecutore. Checkpoint corrente: `docs/operativo/coordinamento-codex-2026-10-23.md`. I checkpoint datati sotto sono storico, non il live corrente.
 
 ## Matrice unica
@@ -38,7 +38,7 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 ## Prossimo passaggio verificabile
 
-Release motion/email e import campagna verificati. Builder workflow punti1–3 pubblicati e verificati; affrontare punti4–5mission e overlay mobile. Riallineare i 48 gruppi del backlog a prove del codice, senza ripetere le funzioni già consegnate. ACL progetto, brand, intake adattivo, social e adapter restano ambiti aperti: il mandato complessivo non è completato. Identità legale, DPA, retention e fornitori richiedono verifica specifica, nessuna certificazione GDPR dichiarata.
+Release motion/email e import campagna verificati. Builder workflow punti1–3 pubblicati e verificati; punti4–5mission corretti nel codice, in attesa di release (codice locale, non pubblicato); affrontare overlay mobile. Riallineare i 48 gruppi del backlog a prove del codice, senza ripetere le funzioni già consegnate. ACL progetto, brand, intake adattivo, social e adapter restano ambiti aperti: il mandato complessivo non è completato. Identità legale, DPA, retention e fornitori richiedono verifica specifica, nessuna certificazione GDPR dichiarata.
 
 Fonti: `docs/mandati/sources.json`, `docs/operativo/mandate-backlog.json`. File e contratti nei moduli; handoff dettagliato in `docs/operativo/ripresa.md`. `src/` e `worker/` restano il sito Astro precedente e non fanno parte del deploy. ceo-os non è stato toccato.
 

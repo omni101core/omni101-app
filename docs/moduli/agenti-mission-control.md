@@ -57,7 +57,7 @@ Scope solo brief. Nessun tool nel registro, così il modello non ha un'azione da
 
 SPEC-06 (Mission Control, agenti, portale). Handoff automatici tra agenti: SPEC-14.
 
-## REC-MISSION-01 — 2026-10-23, codice in attesa CI/release
+## REC-MISSION-01 — 2026-10-23, corretti nel codice, in attesa di release (codice locale, non pubblicato)
 
 Audit workflow-dashboard punti4–5: `canResume` in attesa umana è true solo per l'approvazione `runId:current_node` APPROVED, stessa organizzazione, `resource_type=workflow_runs` e `resource_id=runId`. Overview e dettaglio espongono anche `approvalId`/`approvalStatus`. In attesa/rifiutata la UI mostra il link alla decisione specifica; la route POST mantiene il controllo server già esistente. FAILED/QUEUED/DISPATCH_FAILED restano recuperabili. Nessuna ripresa automatica.
 

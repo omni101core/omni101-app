@@ -88,15 +88,18 @@ test('reduced motion keeps the assistant trigger off the visible cinema commands
  await assertClear(page);
  const launch=page.getByRole('button',{name:'OMNI ASSIST',exact:true});
  await launch.focus();
+ const y=await page.evaluate(()=>window.scrollY);
  await page.keyboard.press('Shift+Tab');
  await page.keyboard.press('Tab');
  await expect(launch).toBeFocused();
+ await page.evaluate(top=>window.scrollTo(0,top),y);
  await assertClear(page);
  const link=page.locator('.cinema-experience a').first();
  await link.focus();
  await page.keyboard.press('Shift+Tab');
  await page.keyboard.press('Tab');
  await expect(link).toBeFocused();
+ await page.evaluate(top=>window.scrollTo(0,top),y);
  await assertClear(page);
  await page.screenshot({path:'test-results/assist-mobile-reduced-'+testInfo.project.name+'.png'});
 });

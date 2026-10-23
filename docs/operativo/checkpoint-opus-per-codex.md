@@ -1,8 +1,20 @@
 # Checkpoint coordinatore — registro operativo
 
-Aggiornato: 2026-10-23 22:45. Coordinatore e publisher: Opus. Il coordinatore app precedente è fermo per quota di sessione: quando rientra riprende da questo file. Mandato in corso: "Master Mandate Reconciliation & Autonomous Execution", originale privato (sha256 7954d17a…, puntatore MemPalace `art_20261023T202925_ecb9930ef28e`).
+Aggiornato: 2026-10-24. Coordinatore e publisher: Opus. Mandato in corso: "Master Mandate Reconciliation & Autonomous Execution", originale privato (sha256 7954d17a…, puntatore MemPalace `art_20261023T202925_ecb9930ef28e`).
 
-## Stato
+## Giro 24/10
+
+- LIVE invariato `5808a6e` (health verificato). STAGING `277b856` pubblicato: integra R2 editor workflow, R3 backlog (12 gruppi nuovi), R4b `tests/commercial-chain.test.ts` (scritto senza compilare), F13-A (`LabStatus` senza `role="status"`). CI in corso.
+- F13-B rifiutato: rendeva fisso il link capitolo per far passare il test. Delegato F14 (Grok) fix del test reduce-motion senza indebolire l'asserzione.
+- Audit mission punti 4–5 già corretti nel codice (`mission.ts` `canResume` solo se `APPROVED`, artefatti con `?record=`): K4 allinea STATO/moduli.
+- Worker attivi: F14 Grok, D1 disco Hermes (ops Mac, solo cache rigenerabili), R7 ruoli REC-018/REC-030 Sonnet medium su copia `/tmp/omni101-deleghe/r7-roles/in` (non blocca i push), K3 larghezze/soglie REC-029 Kilo nemotron, K4 docs Kilo laguna. Pool xAI = 2 (Grok+Hermes): pieno.
+- OpenCode free esaurito su tutto l'account ("Free usage limit reached"): gratuiti = Kilo (solo classe C). Gate rifiuta `public.spec.ts`/`showcase.spec.ts` (prezzi demo): usare spec senza `€` come riferimento.
+- Disco Mac 3% libero: niente build/Playwright locali; D1 in corso.
+- `omni-delega.py staffetta` è citato nelle istruzioni ma NON esiste nello script (sottocomandi: quote, lancia, ci, integra, chiudi, consumi). Staffetta = leggere `coordinatore-staffetta.md` a mano.
+- Grok in tab Orca chiede "Do you trust the contents of this directory?" sulla copia: rispondere `y` a quel tab, altrimenti resta fermo.
+- Prossimo: CI 277b856 → se verde con F14 integrato, release; poi integrare R7/K3/K4.
+
+## Stato (23/10 22:45, storico)
 
 - LIVE `5808a6ef1f9eafe8deabadbde63b81317ed5aeeb`, run `40007650626` verde. Health: database true, storage false.
 - STAGING `6c5aa50`: contiene il lavoro non pubblicato del coordinatore precedente (dashboard copertura requisiti, controlli Mission Control, builder, fix mobile assistente di Grok) più le prime modifiche R1. Due run rosse corrette: typecheck `RequirementCoverage.tsx`, script `reconcile-requirements.mjs` assente dal publisher, test anonimo 503/401. Run in corso.
