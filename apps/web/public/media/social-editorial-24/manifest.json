@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "status": "DRAFT_REQUIRES_REVIEW",
+  "collection": "Materia e possibilità",
+  "provenance": {
+    "generator": "OpenAI built-in image_gen",
+    "generationDate": "2026-10-24",
+    "method": "Three separate text-to-image calls; no reference images",
+    "kind": "AI-generated conceptual editorial artwork",
+    "publication": "Not published by this integration",
+    "storage": "Static bundled files; not uploaded to D1 or cloud media",
+    "rightsNote": "Review applicable service terms before publication; no additional rights guarantee."
+  },
+  "assets": [
+    {
+      "id": "automate",
+      "file": "01-automate-clear-path.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "bf62791c8c2b8c66e16713b7bd0f7f9f7095ca8fbef652cabbf91fe236989cda",
+      "status": "DRAFT_REQUIRES_REVIEW",
+      "title": "Meno passaggi. Più spazio.",
+      "copy": "Automazioni intorno al lavoro che conta.",
+      "alt": "Nastro di ottone che attraversa pieghe di carta avorio e si distende su fondo grafite.",
+      "ctaLabel": "Esplora AUTOMATE",
+      "concept": "Percorso che supera le pieghe: semplificare i passaggi.",
+      "squareCrop": {
+        "x": 0,
+        "y": 140,
+        "width": 1122,
+        "height": 1122
+      }
+    },
+    {
+      "id": "build",
+      "file": "02-build-concrete-experience.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "097709fd48ef6fb41ec935250fe3d7476adb91ef65ca5f8f6d04b0887a455b2c",
+      "status": "DRAFT_REQUIRES_REVIEW",
+      "title": "La tua idea prende forma.",
+      "copy": "Esperienze digitali progettate per essere usate.",
+      "alt": "Un libro di carta avorio diventa una soglia illuminata, bordata in ottone.",
+      "ctaLabel": "Esplora BUILD",
+      "concept": "Una soglia concreta: il prodotto come esperienza.",
+      "squareCrop": {
+        "x": 0,
+        "y": 140,
+        "width": 1122,
+        "height": 1122
+      }
+    },
+    {
+      "id": "create",
+      "file": "03-create-shared-form.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "831f19052fb88f322c7d8f9c1bfd42f43c7b57edf0cca11c54d1de32ab8bf7c7",
+      "status": "DRAFT_REQUIRES_REVIEW",
+      "title": "Creatività, con una struttura.",
+      "copy": "Identità ed esperienze che parlano la stessa lingua.",
+      "alt": "Ventaglio di carta avorio che si apre in una curva continua, unito da una base sottile di ottone.",
+      "ctaLabel": "Esplora CREATE",
+      "concept": "Rigore e libertà appartengono alla stessa forma.",
+      "squareCrop": {
+        "x": 0,
+        "y": 140,
+        "width": 1122,
+        "height": 1122
+      }
+    }
+  ]
+}

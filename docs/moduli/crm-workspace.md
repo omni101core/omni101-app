@@ -118,3 +118,17 @@ Pulsanti con verbo e oggetto. «Prepara backlog operativo» è invariato (test `
 Stati pagina con `Feedback` (`ProductUI`): `loading` al primo carico, `pending` se un aggiornamento arriva con dati già visibili, `empty` se non arriva un payload, `error` con «Riprova» sull'ultima azione fallita (carica, prepara, segna letta). Liste vuote: `empty`. Vista finance senza permesso: `unauthorized`. I conteggi in lista dicono il tetto già noto (20 approvazioni, 30 notifiche), non uno storico.
 
 Sotto i 480px la pagina è a colonna, la tabella va a capo, pulsanti e link del centro sono alti almeno 44px. `overflow-x: clip` sulla section, così a 375px non si allarga la pagina.
+
+## Pipeline — UX 24/10
+
+`KanbanBoard.tsx`. Stili in coda a `admin.css` (solo `.os-pipeline-board` / `.os-kanban`). Nessun endpoint nuovo. Nessun numero previsto: i conteggi sono i record già passati al board. Il nome accessibile della colonna resta il codice stato (`aria-label={status}`), così `tests/e2e/workspace.spec.ts` trova la region `ACTIVE` e `REVIEW`.
+
+Chi entra vede prima «Da fare ora»: la prima scheda della prima fase che ne ha una (ordine di `statuses`, poi stati presenti solo sui record). La frase dice nome e fase, e la mossa: aprire la scheda, poi «Sposta fase» o trascinare. Sola lettura: la stessa scheda si apre, lo spostamento dice «non disponibile». Pipeline vuota: la frase lo dice, senza un pulsante finto.
+
+Pulsanti con verbo e oggetto. «Apri scheda» apre la scheda (in cima porta il nome). «Sposta fase» è l'elenco a tendina, valore ancora il codice. Senza permesso di scrittura il pulsante è «Sposta non disponibile» e non parte. Il trascinamento resta il percorso col puntatore (Playwright `dragTo`).
+
+Stati con `Feedback` (`ProductUI`): `loading` mentre uno spostamento è in corso («Spostamento in corso.»), `empty` se non c'è nessuna scheda («Nessuna scheda in pipeline.»), `error` se `onMove` rifiuta, con «Riprova» sulla stessa mossa. Il testo dell'errore è il messaggio ricevuto, altrimenti «Spostamento non riuscito.». Una fase senza schede ha la riga «Nessuna scheda in questa fase.»: non è un `Feedback`, così non si aggiunge un `role="status"` per ogni colonna vuota. `empty` non ha Riprova: in questo componente non c'è un ricarica.
+
+Conteggi: stesso filtro delle card (`status` vuoto conta come `NEW`), con la parola «scheda/schede». Le etichette italiane coprono solo gli stati lead già scritti sopra in questo file. Gli altri codici (per esempio `ACTIVE`, `REVIEW`) restano il codice, anche nelle opzioni della tendina.
+
+Sotto i 480px le fasi vanno in colonna, `min-width` delle colonne a zero, `overflow-x: clip` sul board. Pulsanti, tendina e «Riprova» alti almeno 44px. A 375px il board non impone lo scroll orizzontale.

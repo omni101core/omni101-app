@@ -1,13 +1,14 @@
 // Idempotent, additive import of explicitly supplied founder mandates. No agents, invitations or external sends.
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {decodePrivateMandates,verifyPrivateRevisions} from './private-mandates.mjs';
+import {decodePrivateMandates,verifyPrivateRevisions,preflightPrivateMandates,scopedImportRecord} from './private-mandates.mjs';
 const target=process.argv[2];
-if(!['staging','production','--dry-run','--sql'].includes(target))throw new Error('Specify staging, production, --dry-run or --sql.');
+if(!['staging','production','--dry-run','--sql','--preflight'].includes(target))throw new Error('Specify staging, production, --dry-run, --sql or --preflight.');
 const stamp=Date.now(),org='omni101',actor='system:founder-mandate-import',project='operating:omni101:project';
-const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8')),backlog=JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8'));
 const privateRegistry=JSON.parse(readFileSync('docs/operativo/agent-context.json','utf8')).private_sources||[];
 const privateTransport=(process.env.OMNI101_PRIVATE_MANDATES_GZIP_1||'')+(process.env.OMNI101_PRIVATE_MANDATES_GZIP_2||'');
+if(target==='--preflight'){console.log(JSON.stringify(preflightPrivateMandates(privateTransport,privateRegistry)));process.exit(0)}
+const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8')),backlog=JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8'));
 if(target==='--sql'&&privateTransport)throw new Error('Private originals cannot be printed as SQL.');
 const privateOriginals=decodePrivateMandates(privateTransport,privateRegistry,{required:['staging','production'].includes(target)});
 const hash=s=>createHash('sha256').update(s).digest('hex');
@@ -15,8 +16,9 @@ const uid=key=>{const hex=hash('omni101-context-v1:'+key);return hex.slice(0,8)+
 const value=v=>v===null?'NULL':typeof v==='number'?String(v):"'"+String(v).replaceAll("'","''")+"'";
 const insert=(table,row)=>`INSERT OR IGNORE INTO ${table}(${Object.keys(row).join(',')}) VALUES(${Object.values(row).map(value).join(',')});`;
 const batches=[],syncs=[];
-const fields=['name','kind','status','body','source','acceptance','evidence','source_id','task_id'];
-function record(key,data){
+const fields=['name','kind','status','body','source','acceptance','evidence','source_id','task_id','access_scope'];
+function record(key,data,options){
+ data=scopedImportRecord(data,options);
  const id=uid(key),row={id,organization_id:org,...data,version:1,created_by:actor,updated_by:actor,created_at:stamp,updated_at:stamp};
  const revision=uid(key+':v1'),audit=uid(key+':audit');
  // Each insert is independently repeatable; a partial API failure can be resumed without overwriting edits.
@@ -36,7 +38,7 @@ for(const source of sources){
  if(source.record_id&&source.record_id!==uid(source.id))throw new Error('Source identity mismatch.');
  record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body:original.toString('utf8'),source:source.source+' · '+source.file+' · sha256:'+source.sha256,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null});
 }
-for(const {source,body} of privateOriginals)record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body,source:'Private founder original · '+source.artifact_id+' · sha256:'+source.sha256,acceptance:'Preservare originale e provenienza. Implementazione e operatività richiedono prove separate.',evidence:'Originale verificato byte-per-byte nel trasporto CI; v1 preservata.',source_id:null,task_id:null});
+for(const {source,body} of privateOriginals)record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body,source:'Private founder original · '+source.artifact_id+' · sha256:'+source.sha256,acceptance:'Preservare originale e provenienza. Implementazione e operatività richiedono prove separate.',evidence:'Originale verificato byte-per-byte nel trasporto CI; v1 preservata.',source_id:null,task_id:null},{privateOriginal:true});
 const origins=new Map();
 for(const o of new Set(backlog.filter(i=>![...sources,...privateRegistry].some(s=>s.id===i.source)).map(i=>i.origin)))origins.set(o,record('reference:'+o,{name:o.replace(/^docs\/operativo\//,''),kind:'REFERENCE',status:'CAPTURED',body:readFileSync(o,'utf8'),source:o,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null}));
 for(const item of backlog){

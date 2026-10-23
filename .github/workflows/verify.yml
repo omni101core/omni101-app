@@ -108,6 +108,11 @@ jobs:
       - run: npm run build
         env:
           CLOUDFLARE_ENV: production
+      - name: Preflight required private founder originals
+        run: node scripts/seed-reviewed-context.mjs --preflight
+        env:
+          OMNI101_PRIVATE_MANDATES_GZIP_1: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_1 }}
+          OMNI101_PRIVATE_MANDATES_GZIP_2: ${{ secrets.OMNI101_PRIVATE_MANDATES_GZIP_2 }}
       - name: Apply production migrations
         run: npx wrangler d1 migrations apply DB --remote --config wrangler.jsonc --env production
         working-directory: apps/web

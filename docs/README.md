@@ -63,3 +63,5 @@ Chi cambia un'area aggiorna nello stesso lavoro il suo `docs/moduli/<area>.md` e
 Originali e provenienza: `docs/mandati/sources.json`. Product Excellence, integrazione qualità e Persistent Intelligence sono aggiunte al mandato storico, senza sovrascriverlo. Memoria prodotto: `docs/moduli/knowledge-intelligence.md`; acquisizione/privacy: `docs/moduli/analytics-seo.md`. Stato di pubblicazione sempre distinto da codice locale.
 
 Revenue: docs/moduli/revenue.md. Contesto per dominio: `node scripts/project-context.mjs growth` (knowledge/frontend/security/release). Registro unico docs/operativo/agent-context.json, nessun framework o proxy nuovo. Il manifest contiene 11 originali con hash. Backlog corrente: 48 gruppi; il nuovo originale di takeover resta privato in MemPalace, con puntatore nel checkpoint Codex.
+
+24ott:64macrogruppi e51clausole riconciliate (non copertura completa) in requirement-coverage.json,11originali pubblici e4privati indicizzati. Gli originali privati entrano in Knowledge via trasporto CI cifrato e verifica hash, mai nel repository. Previewlocale4177 documentata in STATO; rilascio sempre gatecompleto.

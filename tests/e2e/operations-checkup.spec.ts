@@ -1,0 +1,46 @@
+import {test,expect} from '@playwright/test';
+
+test('operations checkup starts only on click, retries one key and preserves the last result on failure',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Checkup interaction contract is exercised once on desktop.');
+ let role='OWNER';
+ await page.route('**/api/session',route=>route.fulfill({json:{user:{id:'checkup-fixture',name:'Socio'},membership:{role}}}));
+ await page.route('**/api/operations',route=>route.fulfill({json:{canPrepareBacklog:false,today:'2026-10-24',priorities:[],projects:[],notifications:[],failedRuns:[],approvals:[],overdueCount:0,finance:null,algorithm:'Regole dai record.'}}));
+ const requests:string[]=[];
+ let release=()=>{};
+ const held=new Promise<void>(resolve=>{release=resolve});
+ const result={tool:'operations.health',ruleVersion:'operations.health/1',measuredAt:'2026-10-24T10:00:00.000Z',today:'2026-10-24',timeZone:'Europe/Rome',metrics:{openTasks:3,blockedTasks:1,openTasksWithDueDate:0,overdueTasks:null,pendingApprovals:0,activeProjects:0,activeProjectsWithoutOpenTasks:null,failedWorkflowRuns:0},recommendations:[{rule:'blocked-tasks',priority:'HIGH',value:1,action:'Sbloccare 1 attività bloccate.'}],attention:1,sources:['tasks','approvals','projects','workflow_runs']};
+ await page.route('**/api/operations/checkup',async route=>{
+  expect(route.request().method()).toBe('POST');
+  const body=route.request().postDataJSON();expect(Object.keys(body)).toEqual(['requestKey']);expect(body.requestKey).toMatch(/^[0-9a-f-]{36}$/i);requests.push(body.requestKey);
+  const attempt=requests.length;
+  if(attempt===1)await held;
+  if(attempt===1||attempt===3)return route.fulfill({status:503,json:{error:'Checkup non completato: riprova con la stessa chiave.'}});
+  return route.fulfill({status:201,json:{runId:'fixture-run',artifactId:'fixture-artifact',replay:false,result}});
+ });
+ await page.goto('/admin/operations');
+ const checkup=page.getByRole('region',{name:'Checkup operativo',exact:true});
+ await expect(checkup.getByRole('button',{name:'Esegui checkup',exact:true})).toBeVisible();
+ expect(requests).toHaveLength(0);
+ await checkup.getByRole('button',{name:'Esegui checkup',exact:true}).click();
+ await expect(checkup.getByRole('button',{name:'Verifica in corso…',exact:true})).toBeDisabled();
+ release();
+ await expect(checkup.getByRole('alert')).toContainText('stessa chiave');
+ await checkup.getByRole('button',{name:'Riprova checkup',exact:true}).click();
+ await expect(checkup.getByRole('button',{name:'Nuova verifica',exact:true})).toBeVisible();
+ expect(requests).toHaveLength(2);expect(requests[1]).toBe(requests[0]);
+ await expect(checkup.locator('time')).toHaveAttribute('datetime',result.measuredAt);
+ await expect(checkup.locator('time')).toContainText('12:00:00');
+ await expect(checkup.getByText('Non misurabile',{exact:true})).toHaveCount(2);
+ await expect(checkup).toContainText('Sbloccare 1 attività bloccate.');
+ await expect(checkup.getByRole('link',{name:'Apri risultato JSON',exact:true})).toHaveAttribute('href','/api/artifacts/fixture-artifact');
+ await checkup.getByRole('button',{name:'Nuova verifica',exact:true}).click();
+ await expect(checkup.getByRole('alert')).toBeVisible();
+ expect(requests).toHaveLength(3);expect(requests[2]).not.toBe(requests[1]);
+ await expect(checkup).toContainText('Ultimo risultato valido precedente a questo tentativo.');
+ await expect(checkup.locator('time')).toHaveAttribute('datetime',result.measuredAt);
+ await checkup.getByRole('button',{name:'Riprova checkup',exact:true}).click();
+ await expect(checkup.getByRole('button',{name:'Nuova verifica',exact:true})).toBeVisible();
+ expect(requests[3]).toBe(requests[2]);
+ role='DEVELOPER';await page.reload();await expect(page.getByText('Regole dai record.',{exact:true})).toBeVisible();
+ await expect(page.getByRole('region',{name:'Checkup operativo',exact:true})).toHaveCount(0);expect(requests).toHaveLength(4);
+});
