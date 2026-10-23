@@ -4,14 +4,9 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 ## Revisioni e ambienti
 
-- **In verifica (non LIVE)**: hardening preventivi, sync backlog, CRM, drag kanban (corpo card non-button), `GET /api/calendar`, listino versione 0012. Run precedente 39973963479 rossa sul drag. Nuova run staging da questa staffetta, non ancora SHA. Aziende e lead senza identificativi: niente controllo duplicati finché il founder non decide i campi (P.IVA/telefono).
-
-- **Produzione LIVE 23 ott: 01805108595ba1bc21866bcc84825fae829792ff, run 39962720977 verify+production verdi, health a SHA esatto.** Include preventivatore (migrazione 0011 additiva), review con motivo, portale cliente isolato e import 11 originali. Primo tentativo 39962517077 fallito al typecheck (portal.tsx, `&&` su unknown) e corretto con ternari; produzione non toccata. Mandato ancora PARTIAL. Aperti: autoapprovazione richiedente=decisore non vietata (decision() in api.ts), importo testata 0 per preventivi solo ricorrenti, tetti numerici imposta/target, piano sicurezza CLI gratuite. Locale ancora su f53: aggiornare da artefatto CI.
-- **Produzione/staging/locale**: `f53fe2c7b8870f08eec7b3d2226a0aab403c8244`, run **39950784094** completamente verde. 104 server + 104 browser passati, 12 skip espliciti, canary cloud e health esatto confermati.
-- **Dati**: 0010 applicata; import riuscito di 8 originali, 15 requisiti/task e 3 reference (26 elementi). Nessuna esecuzione automatica o campagna sintetica in produzione.
-- **QA visiva**: risolto stile legacy che nascondeva la CTA; test contrasto >=4.5 e screenshot desktop/mobile finali controllati. Review indipendente in sola lettura: nessun finding; test rimangono l’evidenza di esecuzione.
-- **Locale**: /tmp/omni101-preview-f53fe2c/local.json, processo 33508, solo 127.0.0.1:4176, D1 persistente precedente preservato; backup prima di 0010. 26 elementi, 15 task mandato, zero utenti creati, hash degli 8 originali verificati.
-- **Rollback**: codice precedente 3fa90a5 o 76d17bd ignora le nuove tabelle additive. Non cancellare dati/tabelle per tornare al Worker precedente. Nessun nuovo servizio o costo attivato.
+- **LIVE ora:** `3101815c9aee44ce6679f0e4fec6e01bda217258`, run `39984184634` verify+production verdi, health allo stesso SHA. Rollback: `01805108595ba1bc21866bcc84825fae829792ff`.
+- **Staging verde:** `735174da12821ea6b0891f898e8a7f8921e8c78e`, run `39980811933` attempt 2. Drag mouse, calendario, listino 0012, seeder `source_id`. Release verso `omni101.app` in corso da questo aggiornamento. Dettaglio e comando: `docs/operativo/checkpoint-opus-per-codex.md`.
+- **Rollback:** tornare al Worker `01805108`. Migrazioni additive. Non cancellare tabelle. Nessun servizio a pagamento nuovo.
 
 ## Matrice unica
 
