@@ -60,3 +60,7 @@ Run `39833548394`, SHA `7289881`: 87 test server, 99 browser passati e 9 skip; b
 `python3 scripts/cloud-verify.py --verify-only` usa `verify-commercial`: typecheck, test, migrazioni locali e build, senza migrazioni/deploy/smoke remoti. `--check` scansiona soltanto. Non scambiare una verifica senza deploy per una pubblicazione.
 
 23 ottobre: aggiornato il secret permanente CI usando il token esistente fornito esplicitamente dal founder tramite clipboard macOS. Nessun token nuovo, OAuth o modifica DNS. Non stampare mai clipboard o header; valori solo in memoria e stdin verso il secret GitHub. Non eseguire `refresh-deploy-auth.py`.
+
+### Import contesto founder
+
+Il job CI esegue scripts/seed-reviewed-context.mjs dopo deploy, prima dello smoke. Solo tre originali con hash, 12 requisiti/task e tre reference revisionate; insert-or-ignore, nessun overwrite o esecuzione agente. CLI locale --dry-run/--sql non richiede secret. Lo script usa il secret CI esistente senza stamparlo; non dipende dalla clipboard o dal Mac. Un errore si diagnostica e poi si ripete l’import idempotente, senza cancellare record.

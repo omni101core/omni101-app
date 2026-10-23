@@ -25,3 +25,9 @@ Ancora da fare: importazione guidata Markdown/JSON con anteprima e redazione, ca
 ## Verifica
 
 Nuovi test integrazione: due Owner e attribuzione; versioni e originali; conflitto concorrente; idempotenza; ricerca; separazione tenant; clienti esclusi; fonte/task esterni respinti; verifica priva di prova respinta. Attendere run verde prima di chiamare questi controlli superati.
+
+## Importazione revisionata e copilot (aggiunta successiva)
+
+`scripts/seed-reviewed-context.mjs` verifica hash e importa in modo additivo tre mandati originali, 12 requisiti con task reali e 3 reference. Fonte del triage: `docs/operativo/mandate-backlog.json`. Attribuzione esplicita `system:founder-mandate-import`, audit con revisione CI; non attribuire l’import a un Owner umano. Record CAPTURED/PLANNED/IMPLEMENTED, mai VERIFIED per sola importazione. Insert-or-ignore preserva modifiche successive. Pipeline CI applica import in staging dopo deploy; produzione solo nel job release. `--dry-run` non muta dati; `--sql` consente revisione e verifica in memoria. Validato su SQLite con doppia applicazione: 18 record, 18 revisioni, 12 task, collegamenti coerenti. Questa prova non equivale all’applicazione remota.
+
+Il copilot interno recupera al massimo 12 estratti di memoria con ID/fonte/stato/criteri/prova quando la richiesta riguarda mandati, reference o handoff; tratta il testo come dati non attendibili e deve citare provenienza e limiti. Il copilot pubblico non legge la memoria. Nessun embedding o agente autonomo nuovo.
