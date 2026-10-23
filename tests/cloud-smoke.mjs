@@ -82,7 +82,7 @@ console.log('Live staging: Mission Control lists the real Cloudflare Workflows r
 // Real staging-only pricing persistence, concurrency boundary and central approval.
 const pricingQuoteId=randomUUID();
 {
- const input={name:'SYNTHETIC staging calculated quote '+key.slice(0,8),leadId:null,clientId:null,currency:'EUR',scope:'A documented synthetic delivery scope used only by the staging canary.',terms:'Synthetic internal terms requiring human review.',assumptions:'No approved rates, taxes or commercial offer are implied.',lines:[{name:'Synthetic delivery work',category:'LABOR',cadence:'ONE_TIME',unit:'hours',quantityMilli:2000,unitCostCents:5000}],overheadBp:1000,contingencyBp:0,marginBp:5000,discountBp:0,taxBp:null,taxNote:''};
+ const input={name:'SYNTHETIC staging calculated quote '+key.slice(0,8),leadId:null,clientId:clientA,currency:'EUR',scope:'A documented synthetic delivery scope used only by the staging canary.',terms:'Synthetic internal terms requiring human review.',assumptions:'No approved rates, taxes or commercial offer are implied.',lines:[{name:'Synthetic delivery work',category:'LABOR',cadence:'ONE_TIME',unit:'hours',quantityMilli:2000,unitCostCents:5000}],overheadBp:1000,contingencyBp:0,marginBp:5000,discountBp:0,taxBp:null,taxNote:''};
  const payload={quoteId:pricingQuoteId,requestId:randomUUID(),version:0,input};
  assert.equal((await owner('POST','/api/pricing',payload)).status,201);
  assert.equal((await owner('POST','/api/pricing',payload)).status,200);
@@ -92,6 +92,7 @@ const pricingQuoteId=randomUUID();
  assert.equal((await owner('POST','/api/pricing',{...payload,requestId:randomUUID(),version:1})).status,409);
  assert.equal((await owner('POST','/api/approvals/'+encodeURIComponent(review.body.approval.id)+'/decision',{decision:'APPROVED',reason:'Synthetic staging review of persisted pricing snapshot.'})).status,200);
  assert.equal((await owner('GET','/api/pricing/'+pricingQuoteId)).body.quote.status,'APPROVED');
+ const visible=(await a('GET','/api/portal')).body.proposals.find(q=>q.id===pricingQuoteId);assert(visible,'Approved pricing proposal must reach its actual client portal');assert.equal(visible.pricing_version,1);assert(visible.summary.includes('220.00'));assert(!JSON.stringify(visible).includes('unitCostCents'));assert(!(await b('GET','/api/portal')).body.proposals.some(q=>q.id===pricingQuoteId),'Other client must not see the quote');
  console.log('Live staging: pricing snapshot, cents calculation, safe retry, locked review and central approval verified; client forbidden, no sends');
 }
 // Evidence: screenshots of /admin and /portal with the synthetic sessions, then the sessions are revoked.
