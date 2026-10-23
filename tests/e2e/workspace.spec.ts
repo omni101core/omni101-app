@@ -77,7 +77,8 @@ test('Mission Control shows real durable runs with steps and artifacts, and canc
 
  await page.getByRole('button',{name:new RegExp(waiting)}).click();
  await expect(detail.getByRole('heading',{name:waiting})).toBeVisible();
- await expect(detail.getByRole('button',{name:'Riprendi'})).toBeVisible();
+ await expect(detail.getByRole('button',{name:'Riprendi',exact:true})).toHaveCount(0);
+ await expect(detail.getByRole('link',{name:'Apri approvazione richiesta ↗'})).toBeVisible();
  await detail.getByRole('button',{name:'Annulla esecuzione'}).click();
  await detail.getByRole('button',{name:/^Conferma · Annulla esecuzione/}).click();
  await expect(page.getByRole('status').filter({hasText:'Esecuzione annullata'})).toBeVisible();
