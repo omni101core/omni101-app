@@ -1,5 +1,5 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-export interface Env { DB: D1Database; ENVIRONMENT?: string; TURNSTILE_TEST_MODE?: string; MEDIA?: R2Bucket; QUEUE?: Queue; INTAKE_WORKFLOW?: Workflow<{leadId:string;orgId:string}>; ACCESS_TEAM_DOMAIN?: string; ACCESS_AUD?: string; ACCESS_MFA_ENFORCED?: string; ORGANIZATION_ID?: string; TURNSTILE_SECRET_KEY?: string; TURNSTILE_SITE_KEY?: string; AI_INPUT_CENTS_PER_MILLION?: string; AI_OUTPUT_CENTS_PER_MILLION?: string; BOOTSTRAP_OWNER_EMAIL?: string; PUBLIC_ORIGIN?: string; AI_API_KEY?: string; AI_MODEL?: string; AI_PROVIDER?: string; AI_MONTHLY_BUDGET_CENTS?: string; }
+export interface Env { DB: D1Database; BUILD_REVISION?:string; AGENCY_WORKFLOW?: Workflow<{runId:string;orgId:string}>; ENVIRONMENT?: string; TURNSTILE_TEST_MODE?: string; MEDIA?: R2Bucket; QUEUE?: Queue; INTAKE_WORKFLOW?: Workflow<{leadId:string;orgId:string}>; ACCESS_TEAM_DOMAIN?: string; ACCESS_AUD?: string; ACCESS_MFA_ENFORCED?: string; ORGANIZATION_ID?: string; TURNSTILE_SECRET_KEY?: string; TURNSTILE_SITE_KEY?: string; AI_INPUT_CENTS_PER_MILLION?: string; AI_OUTPUT_CENTS_PER_MILLION?: string; BOOTSTRAP_OWNER_EMAIL?: string; PUBLIC_ORIGIN?: string; AI_API_KEY?: string; AI_MODEL?: string; AI_PROVIDER?: string; AI_MONTHLY_BUDGET_CENTS?: string; }
 export type Role = 'OWNER'|'ADMIN'|'PROJECT_MANAGER'|'DEVELOPER'|'DESIGNER'|'SALES'|'FINANCE'|'CLIENT'|'AGENT_SERVICE_ACCOUNT';
 export interface Identity { id:string; email:string; name:string; orgId:string; role:Role; clientId:string|null }
 export class HttpError extends Error { constructor(public status:number,message:string){super(message)} }
@@ -26,3 +26,5 @@ export async function authenticate(request:Request,env:Env):Promise<Identity>{
 export function requireRole(identity:Identity,roles:Role[]){if(!roles.includes(identity.role))throw new HttpError(403,'Il tuo ruolo non autorizza questa operazione.');}
 export function assertSameOrigin(request:Request){const origin=request.headers.get('origin');if(origin!==new URL(request.url).origin)throw new HttpError(403,'Origine della richiesta non valida.');}
 export async function digest(value:string){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');}
+
+export function decodePathId(value:string){try{return decodeURIComponent(value)}catch{throw new HttpError(400,'Identificativo non valido.')}}

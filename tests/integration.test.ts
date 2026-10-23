@@ -14,4 +14,30 @@ describe('persistent business operations',()=>{
  it('prevents cross-organization foreign keys and reads',async()=>{const {sqlite,env}=database();const t=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('foreign','Other','other',t,t);const cookie=await owner(sqlite);sqlite.prepare('INSERT INTO clients(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('foreign-client','foreign','Private client',t,t);const invalid=await handleApi(req('/api/records/projects',cookie,'POST',{name:'Bad reference',status:'PLANNING',client_id:'foreign-client'}),env);expect(invalid?.status).toBe(400);const list=await handleApi(req('/api/records/clients',cookie),env);expect(await list?.json()).toEqual({records:[]})});
  it('protects financial writes from developer accounts',async()=>{const {sqlite,env}=database();const cookie=await owner(sqlite,'omni101','DEVELOPER','dev');const res=await handleApi(req('/api/records/expenses',cookie,'POST',{name:'Unauthorized cost',amount_cents:100,status:'RECORDED'}),env);expect(res?.status).toBe(403)});
  it('requires an actual pending approval and records the deciding Owner',async()=>{const {sqlite,env}=database();const cookie=await owner(sqlite);const t=Date.now();sqlite.prepare("INSERT INTO approvals(id,organization_id,name,status,resource_type,resource_id,version,created_at,updated_at) VALUES('approval','omni101','Review','PENDING','test','deliverable',1,?,?)").run(t,t);const res=await handleApi(req('/api/approvals/approval/decision',cookie,'POST',{decision:'APPROVED',reason:'Evidence inspected'}),env);expect(res?.status).toBe(200);expect(sqlite.prepare("SELECT decided_by FROM approvals WHERE id='approval'").get()?.decided_by).toBe('owner');const repeated=await handleApi(req('/api/approvals/approval/decision',cookie,'POST',{decision:'REJECTED',reason:'Repeated decision'}),env);expect(repeated?.status).toBe(409)});
+ it('does not disclose finance or commercial proposals to developer accounts',async()=>{const {sqlite,env}=database();const cookie=await owner(sqlite,'omni101','DEVELOPER','read-dev');for(const resource of ['invoices','contracts','expenses','proposals']){const response=await handleApi(req('/api/records/'+resource,cookie),env);expect(response?.status).toBe(403)}});
+
+ it('revokes an individual collaborator session while retaining the deciding Owner',async()=>{const {sqlite,env}=database();const a=await owner(sqlite,'omni101','OWNER','revoke-owner-a'),b=await owner(sqlite,'omni101','OWNER','revoke-owner-b');const self=await handleApi(req('/api/team/revoke-owner-a/revoke',a,'POST',{reason:'Owner self protection'}),env);expect(self?.status).toBe(409);const response=await handleApi(req('/api/team/revoke-owner-b/revoke',a,'POST',{reason:'Synthetic access revocation verification'}),env);expect(response?.status).toBe(200);expect((await handleApi(req('/api/session',b),env))?.status).toBe(401);expect((await handleApi(req('/api/session',a),env))?.status).toBe(200)});
+
+});
+
+it('persists growth and creative plans, validates scope and protects studio costs',async()=>{
+ const {sqlite,env}=database();const cookie=await owner(sqlite);
+ for(const [resource,payload] of Object.entries({campaigns:{name:'Launch plan',status:'DRAFT',channel:'EMAIL'},'growth-plans':{name:'SEO plan',status:'BACKLOG',kind:'SEO'},'creative-jobs':{name:'Product film',status:'BRIEF',storyboard:'Opening, product detail, closing'},subscriptions:{name:'Provider register',status:'PLANNED',amount_cents:0,cadence:'MONTHLY'}})){
+  const created=await handleApi(req('/api/records/'+resource,cookie,'POST',payload),env);expect(created?.status).toBe(201);
+  const listed=await handleApi(req('/api/records/'+resource,cookie),env);expect((await listed?.json() as {records:unknown[]}).records).toHaveLength(1);
+ }
+ const t=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('other-studio','Other','other-studio',t,t);
+ const foreign=await owner(sqlite,'other-studio','OWNER','other-owner');expect((await (await handleApi(req('/api/records/campaigns',foreign),{...env,ORGANIZATION_ID:'other-studio'}))?.json() as {records:unknown[]}).records).toHaveLength(0);
+ const dev=await owner(sqlite,'omni101','DEVELOPER','studio-dev');expect((await handleApi(req('/api/records/subscriptions',dev),env))?.status).toBe(403);
+ expect((await handleApi(req('/api/records/campaigns',dev,'POST',{name:'Forbidden',status:'DRAFT'}),env))?.status).toBe(403);
+ expect((await handleApi(req('/api/records/campaigns',cookie,'POST',{name:'Wrong state',status:'SENT'}),env))?.status).toBe(400);
+});
+
+it('serves real operational priorities while withholding finance from developers',async()=>{
+ const {sqlite,env}=database(),cookie=await owner(sqlite),dev=await owner(sqlite,'omni101','DEVELOPER','ops-dev'),t=Date.now();
+ sqlite.prepare('INSERT INTO tasks(id,organization_id,name,status,priority,due_date,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)').run('overdue','omni101','Attività scaduta','TODO','HIGH','2000-01-01',t,t);
+ sqlite.prepare('INSERT INTO notifications(id,organization_id,name,body,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run('notice','omni101','Da leggere','Verifica','UNREAD',t,t);
+ const a=await (await handleApi(req('/api/operations',cookie),env))!.json() as any;expect(a.overdueCount).toBe(1);expect(a.priorities[0].id).toBe('overdue');expect(a.finance).not.toBeNull();
+ const d=await (await handleApi(req('/api/operations',dev),env))!.json() as any;expect(d.finance).toBeNull();
+ expect((await handleApi(req('/api/notifications/notice/read',cookie,'POST',{}),env))?.status).toBe(200);expect(sqlite.prepare('SELECT status FROM notifications WHERE id=?').get('notice')?.status).toBe('READ');
 });

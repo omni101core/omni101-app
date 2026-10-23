@@ -62,6 +62,11 @@
           "name": "omni101-intake-staging",
           "binding": "INTAKE_WORKFLOW",
           "class_name": "LeadIntakeWorkflow"
+        },
+        {
+          "name": "omni101-agency-staging",
+          "binding": "AGENCY_WORKFLOW",
+          "class_name": "AgencyWorkflow"
         }
       ]
     },
@@ -107,6 +112,11 @@
           "name": "omni101-intake",
           "binding": "INTAKE_WORKFLOW",
           "class_name": "LeadIntakeWorkflow"
+        },
+        {
+          "name": "omni101-agency",
+          "binding": "AGENCY_WORKFLOW",
+          "class_name": "AgencyWorkflow"
         }
       ],
       "routes": [
@@ -122,6 +132,11 @@
       "name": "omni101-intake",
       "binding": "INTAKE_WORKFLOW",
       "class_name": "LeadIntakeWorkflow"
+    },
+    {
+      "name": "omni101-agency",
+      "binding": "AGENCY_WORKFLOW",
+      "class_name": "AgencyWorkflow"
     }
   ]
 }

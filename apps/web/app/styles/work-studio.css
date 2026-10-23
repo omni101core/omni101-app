@@ -1,0 +1,73 @@
+/* /work: kinds legend, full preview, case hero. /studio: OMNI PORTAL stage. Tokens from public.css. */
+.work-media-img{display:block;width:100%;height:100%;object-fit:cover}
+.work-preview .work-media-img,.case-hero .work-media-img,.wp-frame .work-media-img{position:absolute;inset:0}
+
+/* three kinds of work */
+.work-kinds{padding-top:40px;padding-bottom:0}
+.work-kinds dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;border-top:1px solid var(--line)}
+.work-kind{padding:22px 28px 26px 0;display:grid;gap:10px;align-content:start}
+.work-kind+.work-kind{padding-left:28px;border-left:1px solid var(--line)}
+.work-kind dt{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.work-kind dd{margin:0;display:grid;gap:8px;font-size:13px;line-height:1.5;color:#cfcbc2}
+.work-kind dd strong{font-size:34px;font-weight:400;letter-spacing:-.04em;color:var(--ivory)}
+.work-kind-reale dd strong{color:var(--muted)}
+.work-kind-concept dt{color:var(--gold)}
+
+/* full preview */
+.wp-overlay{position:fixed;inset:0;z-index:120;background:#101112f5}
+.wp{position:fixed;inset:0;z-index:121;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:22px;padding:clamp(70px,9vh,96px) 4.8vw clamp(20px,3.4vh,40px);color:var(--ivory);outline:none}
+.wp-frame{position:relative;overflow:hidden;min-height:0;background:var(--surface);border:1px solid #ffffff14}
+.wp-frame .visual{position:absolute;inset:0;width:100%;height:100%;min-height:0;aspect-ratio:auto!important;border-radius:0!important}
+.wp-panel{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px 40px;align-items:end}
+.wp-kind{font-size:9px;letter-spacing:.16em;color:var(--gold)}
+.wp-title{font-size:clamp(28px,3.6vw,56px);line-height:1;font-weight:400;letter-spacing:-.045em;margin:10px 0 0}
+.wp-text{font-size:13px;line-height:1.6;color:#cfcbc2;margin:0;max-width:420px}
+.wp-actions{display:flex;gap:18px;align-items:center}
+.wp-close{background:none;border:0;border-bottom:1px solid #706b5e;color:#bdb9b0;font:inherit;font-size:11px;padding:12px 0;cursor:pointer}
+.wp-close:hover,.wp-close:focus-visible{color:var(--ivory)}
+
+/* case page hero: first thing on the page, so the flip from the preview lands in view */
+.case-hero.case-flip{position:relative;overflow:hidden;margin-top:24px;height:clamp(300px,58svh,560px)}
+.case-hero.case-flip .visual{position:absolute;inset:0;width:100%;height:100%;min-height:0;aspect-ratio:auto!important;border-radius:0!important}
+
+/* /studio: OMNI PORTAL */
+html.lenis,html.lenis body{height:auto}
+html.lenis{scroll-behavior:auto!important}
+.studio-portal{--spread:0;--core:.3;padding:0 4.8vw;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.studio-portal[data-portal-mode=explore]{--spread:40;--core:.45}
+.studio-portal[data-portal-mode=build]{--spread:8;--core:.7}
+.studio-portal[data-portal-mode=automate]{--spread:22;--core:.5}
+.studio-portal[data-portal-mode=create]{--spread:65;--core:.55}
+.studio-portal[data-portal-mode=grow]{--spread:14;--core:.95}
+.sp-intro{padding:90px 0 20px;display:grid;gap:18px}
+.sp-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:4vw;align-items:start}
+.sp-stage{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
+.sp-canvas{position:absolute;inset:0}
+.sp-state{position:absolute;left:0;bottom:7svh;margin:0;font-size:10px;letter-spacing:.2em;color:var(--gold)}
+.sp-state span{color:var(--muted);margin-right:8px}
+.sp-fallback{position:absolute;inset:0;display:grid;place-items:center;perspective:900px;transition:opacity .5s}
+.sp-fallback[data-ready=true]{opacity:0}
+.sp-fallback i{position:absolute;width:min(44vmin,360px);aspect-ratio:1;border-radius:50%;border:2px solid var(--gold);transform:rotateX(calc(58deg + var(--n)*22deg + var(--spread)*1deg)) rotateY(calc(var(--n)*32deg)) scale(calc(1 - var(--n)*.14));transition:transform 1s ease,opacity 1s ease}
+.studio-portal[data-portal-mode=idle] .sp-fallback i:not(:first-of-type){opacity:.12}
+.sp-fallback b{width:calc(var(--core)*min(26vmin,210px));aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4e8cd,#d2b77b 55%,#6e5d3a);transition:width 1s ease}
+.sp-steps{list-style:none;margin:0;padding:0}
+.sp-step{min-height:80svh;display:flex;flex-direction:column;justify-content:center;gap:16px;max-width:460px}
+.sp-index{font-size:9px;letter-spacing:.18em;color:var(--muted)}
+.sp-step h3{font-size:clamp(34px,4.4vw,68px);line-height:1;font-weight:400;letter-spacing:-.05em;margin:0}
+.sp-step p{font-size:14px;line-height:1.65;color:#cfcbc2;margin:0}
+
+@media(max-width:800px){
+ .work-kinds dl{grid-template-columns:1fr}
+ .work-kind,.work-kind+.work-kind{padding:18px 0;border-left:0;border-bottom:1px solid var(--line)}
+ .wp{padding-top:78px}
+ .wp-panel{grid-template-columns:1fr;gap:12px}
+ .sp-layout{grid-template-columns:1fr;gap:0}
+ .sp-stage{height:42svh;z-index:2;background:var(--bg)}
+ .sp-step{min-height:62svh}
+ .sp-state{bottom:2svh}
+}
+@media(prefers-reduced-motion:reduce){
+ .sp-fallback i,.sp-fallback b{transition:none}
+}
+
+.work-sector{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}.work-sector select{font:inherit;padding:.8rem 1rem;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:0}.case-scope{padding-left:1.2rem;line-height:1.9;margin:1.5rem 0}
