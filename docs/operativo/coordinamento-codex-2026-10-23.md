@@ -13,4 +13,9 @@ Codex coordina; Grok esegue ambiti assegnati. Un solo integratore e publisher. L
 Il nuovo originale è conservato privatamente in MemPalace: art_20261023T171046_db81159128bc. SHA256 ddf1ba7fa179ca4f3d43d2e5497a21cf0f7c2a1b12bf2994a24665688d84d5c5, 34138 byte. Non copiare testo privato nel repository pubblico. Questo documento è sintesi operativa, non sostituisce l’originale.
 
 ## Deleghe iniziali
-OpenCode GLM e DeepSeek: limite gratuito raggiunto, nessuna modifica prodotta. Kilo pubblico: copia filtrata di ReelOrbit/reel-ring/CSS, task codex-motion-lifecycle-kilo; integrazione solo dopo revisione. Nessun accesso delegato ad auth, database, API finanziarie o credenziali.
+OpenCode GLM e DeepSeek: limite gratuito raggiunto, nessuna modifica prodotta. Kilo pubblico: task codex-motion-lifecycle-kilo avviato su copia filtrata; fermato dopo lettura senza modifiche prodotte. Codex ha preparato correzione motion e test, CI isolata verify-only 1c7ecab / run39995312269 conclusa verde: typecheck, 148 test server, controlli browser desktop/mobile inclusa regressione dinamica reduced-motion. Non è ancora una prova di deploy. Nessun accesso delegato ad auth, database, API finanziarie o credenziali.
+
+## Ownership dopo il punto sicuro
+Grok ha consegnato handoff senza altri push. Ora esegue soltanto il composer email (nuovi moduli, integrazioni minime e test); specifica locale `/tmp/omni101-grok-email-drafts.md`, esito atteso `/tmp/omni101-deleghe/grok-email-drafts-esito.md`. Codex possiede motion, test dedicato, backlog e checkpoint. Non pubblicare l’albero locale finché le bozze Grok in lavorazione non sono revisionate.
+
+Release UX completata, verify e production verdi; health live SHA corrispondente e database operativo: `3adf68234deef62b9ca234c4245528c342fb82cc`, run `39994191429`. Import contesto concluso; backlog 48 attività. Il codice motion successivo non è incluso. La copia isolata usata per la sua CI parte da questa release, senza includere file email in corso.
