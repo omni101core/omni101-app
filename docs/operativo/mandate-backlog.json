@@ -121,7 +121,7 @@
     "key": "email-foundation",
     "name": "Composer email e lifecycle con connessione autorizzata",
     "source": "revenue-growth-operating-system-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "Template/preview/versione, canale e purpose del consenso, suppression/preference center e adapter di delivery verificati prima di chiamarlo READY_FOR_CONNECTION.",
     "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere. Non coperti: editor visuale, drip, A/B, bounce/complaint, SPF/DKIM/DMARC e report. Scadenza Garante 29 ottobre 2026 su pixel/tracking nelle email: oggi nessun invio ne' pixel (conforme per assenza); al collegamento tracking disattivato di default e base giuridica documentata.",
     "priority": "NORMAL"
@@ -259,7 +259,7 @@
   {
     "key": "public-experience",
     "name": "Esperienza pubblica immersiva, motion e showcase",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "priority": "HIGH",
     "acceptance": "Hero fullscreen con svh/dvh e CTA immediata, scroll storytelling cinematica con fallback e motion saltabile, capitoli BUILD/SPEAK/SEE/CREATE/ACT/GROW, showcase con player audio, avatar video, comparatore media, workflow animato e preview software; reel orbit, OMNI PORTAL R3F, page transitions, gallery e typography motion verificati con reduced motion, skip, fallback statico e regole performance §5.10; nessun risultato inventato, demo etichettate.",
     "remaining": "Home e portfolio esistono; Explore, narrazione cinematica e showcase media non risultano fatti. Prestazioni mobile da verificare prima del rilascio. Dal mandato rebuild: transizioni parallele, skip dell'intro e loader su asset reali da verificare o realizzare. Priorità del richiamo Codex: adattamento motion durante la sessione, stop/resume fuori viewport, viewport mobile e assenza di sovrapposizioni sui comandi. Prove CI separate da prove su dispositivo reale.",
