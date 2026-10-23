@@ -90,9 +90,10 @@ const pricingQuoteId=randomUUID();
  assert.equal((await a('GET','/api/pricing/'+pricingQuoteId)).status,403);
  const review=await owner('POST','/api/pricing/'+pricingQuoteId+'/review',{version:1});assert.equal(review.status,201);
  assert.equal((await owner('POST','/api/pricing',{...payload,requestId:randomUUID(),version:1})).status,409);
- assert.equal((await owner('POST','/api/approvals/'+encodeURIComponent(review.body.approval.id)+'/decision',{decision:'APPROVED',reason:'Synthetic staging review of persisted pricing snapshot.'})).status,200);
+ const decisionPath='/api/approvals/'+encodeURIComponent(review.body.approval.id)+'/decision',decisionBody={decision:'APPROVED',reason:'Synthetic staging review of persisted pricing snapshot.'},ownerB=as(await synthetic('pipe-owner-b-'+tag,'OWNER'));
+ assert.equal((await owner('POST',decisionPath,decisionBody)).status,403);assert.equal((await ownerB('POST',decisionPath,decisionBody)).status,200);
  assert.equal((await owner('GET','/api/pricing/'+pricingQuoteId)).body.quote.status,'APPROVED');
- const visible=(await a('GET','/api/portal')).body.proposals.find(q=>q.id===pricingQuoteId);assert(visible,'Approved pricing proposal must reach its actual client portal');assert.equal(visible.pricing_version,1);assert(visible.summary.includes('220.00'));assert(!JSON.stringify(visible).includes('unitCostCents'));assert(!(await b('GET','/api/portal')).body.proposals.some(q=>q.id===pricingQuoteId),'Other client must not see the quote');
+ const visible=(await a('GET','/api/portal')).body.proposals.find(q=>q.id===pricingQuoteId);assert(visible,'Approved pricing proposal must reach its actual client portal');assert.equal(visible.pricing_version,1);assert.equal(visible.amount_cents,22000);assert(visible.summary.includes('Una tantum'));assert(!JSON.stringify(visible).includes('unitCostCents'));assert(!(await b('GET','/api/portal')).body.proposals.some(q=>q.id===pricingQuoteId),'Other client must not see the quote');
  console.log('Live staging: pricing snapshot, cents calculation, safe retry, locked review and central approval verified; client forbidden, no sends');
 }
 // Evidence: screenshots of /admin and /portal with the synthetic sessions, then the sessions are revoked.

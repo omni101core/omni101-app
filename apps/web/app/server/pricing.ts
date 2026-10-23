@@ -3,6 +3,9 @@ import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 const roles:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','SALES','FINANCE'];
 const json=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
 const bp=z.number().int().min(0).max(10000),money=z.number().int().min(0).max(100000000);
+// Exact integer math: float division can misround above ~1e11 cents. ponytail: local BigInt, no dependency.
+const mulDiv=(a:number,b:number,d:number)=>Number((BigInt(a)*BigInt(b)*2n+BigInt(d))/(BigInt(d)*2n));
+const ceilDiv=(a:number,d:number)=>Number((BigInt(a)+BigInt(d)-1n)/BigInt(d));
 export const pricingInput=z.object({
  name:z.string().trim().min(3).max(160),leadId:z.string().min(1).max(160).nullable(),clientId:z.string().min(1).max(160).nullable().default(null),currency:z.literal('EUR'),
  scope:z.string().trim().min(20).max(6000),terms:z.string().trim().min(10).max(4000),assumptions:z.string().trim().min(10).max(4000),
@@ -13,13 +16,14 @@ export const pricingInput=z.object({
 export type PricingInput=z.infer<typeof pricingInput>;
 export function calculatePricing(input:PricingInput){
  // Integer cents/basis points, rounded per line. Inputs are bounded so intermediate products remain safe integers.
- const lines=input.lines.map(line=>({...line,costCents:Math.round(line.unitCostCents*line.quantityMilli/1000)}));
+ const lines=input.lines.map(line=>({...line,costCents:mulDiv(line.unitCostCents,line.quantityMilli,1000)}));
  const groups=(['ONE_TIME','MONTHLY','ANNUAL','USAGE'] as const).flatMap(cadence=>{
   const selected=lines.filter(l=>l.cadence===cadence);if(!selected.length)return [];
   const directCents=selected.reduce((n,l)=>n+l.costCents,0);if(directCents>10000000000)throw new HttpError(400,'Costo aggregato oltre il limite per cadenza.');
-  const overheadCents=Math.round(directCents*input.overheadBp/10000),contingencyCents=Math.round((directCents+overheadCents)*input.contingencyBp/10000),adjustedCostCents=directCents+overheadCents+contingencyCents;
-  const targetCents=Math.ceil(adjustedCostCents*10000/(10000-input.marginBp)),discountCents=Math.round(targetCents*input.discountBp/10000),netCents=targetCents-discountCents,taxCents=input.taxBp===null?null:Math.round(netCents*input.taxBp/10000);
+  const overheadCents=mulDiv(directCents,input.overheadBp,10000),contingencyCents=mulDiv(directCents+overheadCents,input.contingencyBp,10000),adjustedCostCents=directCents+overheadCents+contingencyCents;
+  const targetCents=ceilDiv(adjustedCostCents*10000,10000-input.marginBp),discountCents=mulDiv(targetCents,input.discountBp,10000),netCents=targetCents-discountCents;
   if(netCents>1000000000000)throw new HttpError(400,'Importo oltre il limite del preventivatore.');
+  const taxCents=input.taxBp===null?null:mulDiv(netCents,input.taxBp,10000);
   return [{cadence,unit:cadence==='USAGE'?selected[0].unit:null,directCents,overheadCents,contingencyCents,adjustedCostCents,targetCents,discountCents,netCents,taxCents,totalCents:taxCents===null?null:netCents+taxCents,effectiveMarginBp:netCents?Math.round((netCents-adjustedCostCents)*10000/netCents):null,belowTarget:netCents<targetCents,belowCost:netCents<adjustedCostCents}];
  });
  return {method:'cost-margin-v1',currency:input.currency,rounding:'Arrotondamento al centesimo per riga; prezzo obiettivo arrotondato per eccesso.',formula:'(diretto + overhead + contingency) / (1 - margine). Sconto applicato dopo il prezzo obiettivo.',lines,groups,oneTimeNetCents:groups.find(g=>g.cadence==='ONE_TIME')?.netCents||0,combinedTotal:null,taxStatus:input.taxBp===null?'NOT_CONFIGURED':'USER_DECLARED',warning:'Stima interna: tariffe, margini, imposte e condizioni richiedono revisione umana. Cadenze diverse non vengono sommate.'};
@@ -34,7 +38,7 @@ export async function handlePricing(request:Request,env:Env,actor:Identity):Prom
  if(path==='/api/pricing'&&request.method==='GET')return json({records:(await stmt('SELECT id,name,status,amount_cents,pricing_version,updated_at FROM quotes WHERE organization_id=? AND pricing_version IS NOT NULL ORDER BY updated_at DESC LIMIT 101',org).all()).results,sendingEnabled:false});
  if(path==='/api/pricing'&&request.method==='POST'){
   const data=z.object({quoteId:z.uuid(),requestId:z.uuid(),version:z.number().int().min(0),input:pricingInput}).strict().parse(await body(request)),input=JSON.stringify(data.input),calculation=calculatePricing(data.input);
-  const version=()=>stmt('SELECT * FROM pricing_versions WHERE id=?',data.requestId).first<Version>();const same=(v:Version|null)=>v&&v.organization_id===org&&v.quote_id===data.quoteId&&v.input===input&&v.created_by===actor.id&&v.version===data.version+1;
+  const version=()=>stmt('SELECT * FROM pricing_versions WHERE id=? AND organization_id=?',data.requestId,org).first<Version>();const same=(v:Version|null)=>v&&v.organization_id===org&&v.quote_id===data.quoteId&&v.input===input&&v.created_by===actor.id&&v.version===data.version+1;
   const old=await version();if(old){if(!same(old))throw new HttpError(409,'Identificativo già usato per una versione diversa.');return json({quoteId:data.quoteId,version:old.version,duplicate:true});}
   const quote=await stmt('SELECT pricing_version,status FROM quotes WHERE id=? AND organization_id=?',data.quoteId,org).first<{pricing_version:number|null;status:string}>();
   if(quote&&(quote.pricing_version!==data.version||!['DRAFT','REJECTED'].includes(quote.status))||!quote&&data.version!==0)throw new HttpError(409,'Versione superata o proposta in revisione/approvata. Ricarica prima di modificare.');
@@ -42,7 +46,7 @@ export async function handlePricing(request:Request,env:Env,actor:Identity):Prom
   if(data.input.clientId&&!await stmt('SELECT id FROM clients WHERE id=? AND organization_id=?',data.input.clientId,org).first())throw new HttpError(404,'Cliente non disponibile nel workspace.');
   const statements=[];if(!quote)statements.push(stmt("INSERT OR IGNORE INTO quotes(id,organization_id,name,status,pricing_version,created_at,updated_at) SELECT ?,?,?,'DRAFT',0,?,? WHERE NOT EXISTS(SELECT 1 FROM pricing_versions WHERE id=?)",data.quoteId,org,data.input.name,stamp,stamp,data.requestId));
   statements.push(stmt("INSERT OR IGNORE INTO pricing_versions(id,organization_id,quote_id,version,lead_id,input,calculation,created_by,created_at) SELECT ?,?,?,?, ?,?,?,?,? FROM quotes WHERE id=? AND organization_id=? AND pricing_version=? AND status IN ('DRAFT','REJECTED')",data.requestId,org,data.quoteId,data.version+1,data.input.leadId,input,JSON.stringify(calculation),actor.id,stamp,data.quoteId,org,data.version));
-  statements.push(stmt("UPDATE quotes SET name=?,client_id=?,scope=?,terms=?,assumptions=?,summary=?,amount_cents=?,status='DRAFT',pricing_version=?,updated_at=? WHERE id=? AND organization_id=? AND pricing_version=? AND status IN ('DRAFT','REJECTED') AND EXISTS(SELECT 1 FROM pricing_versions WHERE id=? AND organization_id=? AND quote_id=? AND version=?)",data.input.name,data.input.clientId,data.input.scope,data.input.terms,data.input.assumptions,'Stima interna da approvare. '+calculation.groups.map(g=>g.cadence+': EUR '+(g.netCents/100).toFixed(2)+(g.unit?' / '+g.unit:'')+' netti').join('; ')+'. Imposte: '+(data.input.taxBp===null?'non configurate':data.input.taxBp/100+'% dichiarato: '+data.input.taxNote)+'. Totale testata: sola quota una tantum netta; non somma le cadenze.',calculation.oneTimeNetCents,data.version+1,stamp,data.quoteId,org,data.version,data.requestId,org,data.quoteId,data.version+1));
+  statements.push(stmt("UPDATE quotes SET name=?,client_id=?,scope=?,terms=?,assumptions=?,summary=?,amount_cents=?,status='DRAFT',pricing_version=?,updated_at=? WHERE id=? AND organization_id=? AND pricing_version=? AND status IN ('DRAFT','REJECTED') AND EXISTS(SELECT 1 FROM pricing_versions WHERE id=? AND organization_id=? AND quote_id=? AND version=?)",data.input.name,data.input.clientId,data.input.scope,data.input.terms,data.input.assumptions,'Proposta economica · importi netti: '+calculation.groups.map(g=>({ONE_TIME:'Una tantum',MONTHLY:'Al mese',ANNUAL:'All’anno',USAGE:'A consumo'}[g.cadence])+': '+new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(g.netCents/100)+(g.unit?' / '+g.unit:'')+' netti').join('; ')+'. Imposte: '+(data.input.taxBp===null?'non configurate':data.input.taxBp/100+'% dichiarato: '+data.input.taxNote)+'. Quote iniziali, ricorrenti e a consumo sono distinte: non rappresentano un unico importo da pagare.',calculation.oneTimeNetCents,data.version+1,stamp,data.quoteId,org,data.version,data.requestId,org,data.quoteId,data.version+1));
   statements.push(audit('PRICING_VERSION_SAVED',data.quoteId,{version:data.version+1,snapshotId:data.requestId}));
   await env.DB.batch(statements);if(!same(await version()))throw new HttpError(409,'Conflitto concorrente: nessuna versione sovrascritta.');return json({quoteId:data.quoteId,version:data.version+1},201);
  }

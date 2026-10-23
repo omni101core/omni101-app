@@ -1006,5 +1006,240 @@
       }
     ],
     "coverage_granularity": "section inventory; not exhaustive atomic acceptance coverage"
+  },
+  {
+    "id": "cli-native-orchestration-2026-10-23",
+    "file": "docs/mandati/cli-native-orchestration-2026-10-23.md",
+    "source": "founder attachment 9579c83d-182d-43f3-b063-8460c5cd5360",
+    "imported_at": "2026-10-23",
+    "sha256": "8c1175b5051b80f4e0654b68b335051e635329edb2eaeef7196cfd7033330249",
+    "record_id": "9f2d883a-b9eb-4c66-a43b-0059019766df",
+    "title": "Orchestrazione permanente, CLI e model routing",
+    "original_preserved": true,
+    "coverage": "Originale acquisito integralmente; assegnazioni e prove distinte dalla sola disponibilità degli strumenti.",
+    "coverage_granularity": "section inventory; not exhaustive atomic acceptance coverage",
+    "clauses": [
+      {
+        "line": 8,
+        "title": "0. PRINCIPIO FONDAMENTALE",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 24,
+        "title": "1. RICOGNIZIONE OBBLIGATORIA DELL'ECOSISTEMA CLI",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 65,
+        "title": "2. ORCHESTRATORE COME RESPONSABILE DEL RISULTATO",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 85,
+        "title": "3. DELEGAZIONE INTELLIGENTE PER COMPETENZA",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 107,
+        "title": "4. MODEL ROUTING ED EFFORT ADATTIVO",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 173,
+        "title": "5. OTTIMIZZAZIONE DEI TOKEN E DEL CONTESTO",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 193,
+        "title": "6. DELEGAZIONE CON CONTRATTI DI LAVORO",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 212,
+        "title": "7. PARALLELISMO SENZA CONFLITTI",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 229,
+        "title": "8. USO COORDINATO DI CODEX, CLAUDE CODE, HERMES, CAVEMAN E PONYTAIL",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 248,
+        "title": "9. CROSS-REVIEW TRA AGENTI",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 270,
+        "title": "10. REALE UTILIZZO DELLE CLI E DELLE CAPACITÀ DISPONIBILI",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 285,
+        "title": "11. PERSISTENZA DELLA MEMORIA DI ORCHESTRAZIONE",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 320,
+        "title": "12. ORCHESTRATION DASHBOARD IN OMNI101",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 343,
+        "title": "13. MISURAZIONE DELL'EFFICACIA",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 361,
+        "title": "14. ANTI-PATTERN DA EVITARE",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 382,
+        "title": "15. PROTOCOLLO DI ESECUZIONE IMMEDIATA",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      },
+      {
+        "line": 406,
+        "title": "16. REGOLA FINALE",
+        "classification": "REQUIREMENT_GROUP",
+        "implementation": "PARTIAL",
+        "verification": "NOT_VERIFIED_FOR_ENTIRE_SECTION",
+        "requirement_keys": [
+          "orchestration-routing"
+        ],
+        "task_ids": [
+          "mandate:omni101:orchestration-routing"
+        ]
+      }
+    ]
   }
 ]

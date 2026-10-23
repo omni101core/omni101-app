@@ -141,19 +141,20 @@ describe('versioned pricing and applied review policy',()=>{
   const converted=await handleApi(req('/api/lead-to-project',second,'POST',{leadId,approvalId,dealWon:true,name:'Approved pricing project'}),env);expect(converted?.status).toBe(201);expect(sqlite.prepare('SELECT quote_id FROM lead_project_links WHERE lead_id=?').get(leadId)?.quote_id).toBe(quoteId);
  });
  it('rejects unsafe inputs, tenant references and unauthorized clients, while exposing no internal costs in portal',async()=>{
-  const {sqlite,env}=database(),cookie=await owner(sqlite),client=await owner(sqlite,'omni101','CLIENT','pricing-client'),dev=await owner(sqlite,'omni101','DEVELOPER','pricing-dev');
+  const {sqlite,env}=database(),cookie=await owner(sqlite),client=await owner(sqlite,'omni101','CLIENT','pricing-client'),second=await owner(sqlite,'omni101','OWNER','pricing-owner-b'),dev=await owner(sqlite,'omni101','DEVELOPER','pricing-dev');
   for(const c of [client,dev])for(const [path,method,data] of [['/api/pricing','GET',undefined],['/api/pricing/preview','POST',estimateInput]] as const)expect((await handleApi(req(path,c,method,data),env))?.status).toBe(403);
   for(const input of [{...estimateInput,marginBp:10000},{...estimateInput,taxBp:2200},{...estimateInput,lines:[{...estimateInput.lines[0],quantityMilli:1.5}]},{...estimateInput,lines:[{...estimateInput.lines[0],cadence:'USAGE',quantityMilli:2000}]},{...estimateInput,lines:[{...estimateInput.lines[0],unitCostCents:100000000,quantityMilli:1000000}]}])expect((await handleApi(req('/api/pricing/preview',cookie,'POST',input),env))?.status).toBe(400);
   const stamp=Date.now();sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('pricing-foreign','Other','pricing-foreign',stamp,stamp);sqlite.prepare('INSERT INTO leads(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('foreign-lead','pricing-foreign','Private',stamp,stamp);
   const payload={quoteId:crypto.randomUUID(),requestId:crypto.randomUUID(),version:0,input:{...estimateInput,leadId:'foreign-lead'}};expect((await handleApi(req('/api/pricing',cookie,'POST',payload),env))?.status).toBe(404);expect(sqlite.prepare('SELECT count(*) n FROM pricing_versions').get()?.n).toBe(0);
   const saved={...payload,input:estimateInput};expect((await handleApi(req('/api/pricing',cookie,'POST',saved),env))?.status).toBe(201);const foreign=await owner(sqlite,'pricing-foreign','OWNER','pricing-foreign-owner');expect((await handleApi(req('/api/pricing/'+saved.quoteId,foreign),{...env,ORGANIZATION_ID:'pricing-foreign'}))?.status).toBe(404);
-  sqlite.prepare('INSERT INTO clients(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('pricing-visible-client','omni101','Synthetic client',stamp,stamp);sqlite.prepare('UPDATE memberships SET client_id=? WHERE user_id=?').run('pricing-visible-client','pricing-client');const connected={quoteId:saved.quoteId,requestId:crypto.randomUUID(),version:1,input:{...estimateInput,clientId:'pricing-visible-client'}};expect((await handleApi(req('/api/pricing',cookie,'POST',connected),env))?.status).toBe(201);const r=await (await handleApi(req('/api/pricing/'+saved.quoteId+'/review',cookie,'POST',{version:2,riskReason:'Synthetic documented commercial discount.'}),env))?.json() as any;expect((await handleApi(req('/api/approvals/'+encodeURIComponent(r.approval.id)+'/decision',cookie,'POST',{decision:'APPROVED',reason:'Scoped proposal checked before portal visibility.'}),env))?.status).toBe(200);const portal=await handleApi(req('/api/portal',client),env);expect(portal?.status).toBe(200);const portalData=await portal?.json() as any;expect(portalData.proposals).toHaveLength(1);expect(JSON.stringify(portalData)).not.toMatch(/unitCostCents|adjustedCostCents|created_by|contingencyCents/);
+  sqlite.prepare('INSERT INTO clients(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('pricing-visible-client','omni101','Synthetic client',stamp,stamp);sqlite.prepare('UPDATE memberships SET client_id=? WHERE user_id=?').run('pricing-visible-client','pricing-client');const connected={quoteId:saved.quoteId,requestId:crypto.randomUUID(),version:1,input:{...estimateInput,clientId:'pricing-visible-client'}};expect((await handleApi(req('/api/pricing',cookie,'POST',connected),env))?.status).toBe(201);const r=await (await handleApi(req('/api/pricing/'+saved.quoteId+'/review',cookie,'POST',{version:2,riskReason:'Synthetic documented commercial discount.'}),env))?.json() as any;expect((await handleApi(req('/api/approvals/'+encodeURIComponent(r.approval.id)+'/decision',second,'POST',{decision:'APPROVED',reason:'Scoped proposal checked before portal visibility.'}),env))?.status).toBe(200);const portal=await handleApi(req('/api/portal',client),env);expect(portal?.status).toBe(200);const portalData=await portal?.json() as any;expect(portalData.proposals).toHaveLength(1);expect(JSON.stringify(portalData)).not.toMatch(/unitCostCents|adjustedCostCents|created_by|contingencyCents/);expect(portalData.proposals[0]).toMatchObject({status:'APPROVED',pricing_version:2,scope:estimateInput.scope,terms:estimateInput.terms});expect(Object.keys(portalData.proposals[0]).sort()).toEqual(['amount_cents','id','name','pricing_version','scope','status','summary','terms','valid_until']);
+  const draftId=crypto.randomUUID();expect((await handleApi(req('/api/pricing',cookie,'POST',{quoteId:draftId,requestId:crypto.randomUUID(),version:0,input:{...estimateInput,clientId:'pricing-visible-client'}}),env))?.status).toBe(201);expect((await (await handleApi(req('/api/portal',client),env))?.json() as any).proposals.map((q:any)=>q.id)).toEqual([saved.quoteId]);
   const input={...estimateInput,discountBp:10000,taxBp:2200,taxNote:'Synthetic tax treatment for arithmetic test only.'};const p=await (await handleApi(req('/api/pricing/preview',cookie,'POST',input),env))?.json() as any;expect(p.calculation.groups[0]).toMatchObject({netCents:0,totalCents:0,effectiveMarginBp:null,belowCost:true});
  });
 });
 
 it('keeps rejected pricing recoverable and does not leave an empty quote after a request-id race',async()=>{
- const {sqlite,env}=database(),cookie=await owner(sqlite);const quoteId=crypto.randomUUID(),requestId=crypto.randomUUID();
+ const {sqlite,env}=database(),cookie=await owner(sqlite),second=await owner(sqlite,'omni101','OWNER','pricing-owner-b');const quoteId=crypto.randomUUID(),requestId=crypto.randomUUID();
  const payload={quoteId,requestId,version:0,input:estimateInput};
  const original=env.DB.batch.bind(env.DB);let interleaved=false;
  env.DB.batch=(async(statements:unknown[])=>{
@@ -163,8 +164,40 @@ it('keeps rejected pricing recoverable and does not leave an empty quote after a
  expect((await handleApi(req('/api/pricing',cookie,'POST',payload),env))?.status).toBe(409);expect(sqlite.prepare('SELECT id FROM quotes WHERE id=?').get(quoteId)).toBeUndefined();env.DB.batch=original;
  const fresh={...payload,requestId:crypto.randomUUID()};expect((await handleApi(req('/api/pricing',cookie,'POST',fresh),env))?.status).toBe(201);
  const review=await (await handleApi(req('/api/pricing/'+quoteId+'/review',cookie,'POST',{version:1}),env))?.json() as any;
- expect((await handleApi(req('/api/approvals/'+encodeURIComponent(review.approval.id)+'/decision',cookie,'POST',{decision:'REJECTED',reason:'Revise the documented delivery scope.'}),env))?.status).toBe(200);
+ expect((await handleApi(req('/api/approvals/'+encodeURIComponent(review.approval.id)+'/decision',second,'POST',{decision:'REJECTED',reason:'Revise the documented delivery scope.'}),env))?.status).toBe(200);
  expect((await handleApi(req('/api/pricing',cookie,'POST',{...fresh,requestId:crypto.randomUUID(),version:1,input:{...estimateInput,name:'Revised scope proposal'}}),env))?.status).toBe(201);
  const next=await handleApi(req('/api/pricing/'+quoteId+'/review',cookie,'POST',{version:2}),env);expect(next?.status).toBe(201);expect((await next?.json() as any).approval.id).not.toBe(review.approval.id);
  const max={...estimateInput,lines:[{...estimateInput.lines[0],quantityMilli:100000,unitCostCents:100000000}],overheadBp:10000,contingencyBp:10000,marginBp:9500,taxBp:10000,taxNote:'Synthetic arithmetic upper-bound test, no tax advice.'};const preview=await handleApi(req('/api/pricing/preview',cookie,'POST',max),env);expect(preview?.status).toBe(200);const group=(await preview?.json() as any).calculation.groups[0];expect(group.netCents).toBe(800000000000);expect(group.taxCents).toBe(800000000000);expect(Number.isSafeInteger(group.totalCents)).toBe(true);
+});
+
+it('separates pricing review from approval and refuses a stale review',async()=>{
+ const {sqlite,env}=database(),cookie=await owner(sqlite),second=await owner(sqlite,'omni101','OWNER','pricing-owner-b'),quoteId=crypto.randomUUID();
+ expect((await handleApi(req('/api/pricing',cookie,'POST',{quoteId,requestId:crypto.randomUUID(),version:0,input:estimateInput}),env))?.status).toBe(201);
+ const review=await (await handleApi(req('/api/pricing/'+quoteId+'/review',cookie,'POST',{version:1}),env))?.json() as any;
+ const path='/api/approvals/'+encodeURIComponent(review.approval.id)+'/decision',decide={decision:'APPROVED',reason:'Synthetic independent review.'};
+ const state=()=>sqlite.prepare('SELECT status FROM approvals WHERE id=?').get(review.approval.id)?.status;
+ expect((await handleApi(req(path,cookie,'POST',decide),env))?.status).toBe(403);expect(state()).toBe('PENDING');
+ sqlite.prepare('UPDATE quotes SET pricing_version=2 WHERE id=?').run(quoteId);
+ expect((await handleApi(req(path,second,'POST',decide),env))?.status).toBe(409);expect(state()).toBe('PENDING');
+ sqlite.prepare("UPDATE quotes SET pricing_version=1,status='DRAFT' WHERE id=?").run(quoteId);
+ expect((await handleApi(req(path,second,'POST',decide),env))?.status).toBe(409);expect(state()).toBe('PENDING');
+ sqlite.prepare("UPDATE quotes SET status='IN_REVIEW' WHERE id=?").run(quoteId);
+ expect((await handleApi(req(path,second,'POST',decide),env))?.status).toBe(200);
+ expect(sqlite.prepare('SELECT status FROM quotes WHERE id=?').get(quoteId)?.status).toBe('APPROVED');
+});
+
+it('does not match a request id of another tenant',async()=>{
+ const {sqlite,env}=database(),cookie=await owner(sqlite),stamp=Date.now(),requestId=crypto.randomUUID();
+ sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('pricing-foreign','Other','pricing-foreign',stamp,stamp);
+ const foreign=await owner(sqlite,'pricing-foreign','OWNER','pricing-foreign-owner');
+ expect((await handleApi(req('/api/pricing',foreign,'POST',{quoteId:crypto.randomUUID(),requestId,version:0,input:estimateInput}),{...env,ORGANIZATION_ID:'pricing-foreign'}))?.status).toBe(201);
+ const res=await handleApi(req('/api/pricing',cookie,'POST',{quoteId:crypto.randomUUID(),requestId,version:0,input:estimateInput}),env);
+ expect(res?.status).toBe(409);expect(JSON.stringify(await res?.json())).not.toContain('già usato');
+ expect(sqlite.prepare("SELECT count(*) n FROM pricing_versions WHERE organization_id='omni101'").get()?.n).toBe(0);
+});
+
+it('keeps recurring-only pricing separate and leaves the one-time header at zero',async()=>{
+ const {sqlite,env}=database(),cookie=await owner(sqlite);
+ const input={...estimateInput,lines:[estimateInput.lines[1]]};const calc=(await (await handleApi(req('/api/pricing/preview',cookie,'POST',input),env))?.json() as any).calculation;
+ expect(calc.oneTimeNetCents).toBe(0);expect(calc.groups).toHaveLength(1);expect(calc.groups[0]).toMatchObject({cadence:'MONTHLY',netCents:12100});
 });

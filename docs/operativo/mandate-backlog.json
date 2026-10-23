@@ -29,23 +29,26 @@
     "source": "persistent-intelligence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Unire date originali di task, milestone, campagne e revisioni con timezone, filtri e agenda senza duplicarle.",
-    "remaining": "Il registro eventi esiste; aggregazione e scheduling ricorrente da realizzare."
+    "remaining": "Il registro eventi esiste; aggregazione e scheduling ricorrente da realizzare.",
+    "priority": "NORMAL"
   },
   {
     "key": "social",
     "name": "Pipeline social e calendario contenuti",
     "source": "persistent-intelligence-2026-10-23",
-    "status": "PLANNED",
+    "status": "BLOCKED",
     "acceptance": "Brief→asset→revisione→approvazione→coda con stati reali e adapter autorizzati.",
-    "remaining": "Nessuna pubblicazione simulata; verificare capacità e permessi per ogni piattaforma."
+    "remaining": "Bloccato da causa esterna: nessun account social connesso. Nessuna pubblicazione simulata; verificare capacità e permessi per ogni piattaforma.",
+    "priority": "LOW"
   },
   {
     "key": "ads",
     "name": "Pianificazione e controllo campagne Ads",
     "source": "persistent-intelligence-2026-10-23",
-    "status": "PLANNED",
+    "status": "BLOCKED",
     "acceptance": "Brief, target, varianti, budget pianificato, approvazione e metriche solo da fonti reali.",
-    "remaining": "Nessuna spesa né modifica live prima di connessione e autorizzazione esplicita."
+    "remaining": "Bloccato da causa esterna: nessun account Ads connesso né autorizzazione esplicita. Nessuna spesa né modifica live prima di connessione e autorizzazione esplicita.",
+    "priority": "LOW"
   },
   {
     "key": "brand",
@@ -69,23 +72,26 @@
     "source": "product-excellence-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Tre ingressi, modello condiviso, logica deterministica, revisione e recupero bozza.",
-    "remaining": "Usare AI solo per trasformazioni semantiche con conferma."
+    "remaining": "Usare AI solo per trasformazioni semantiche con conferma.",
+    "priority": "NORMAL"
   },
   {
     "key": "coding-agents",
     "name": "Collaborazione coding indipendente dal provider",
     "source": "product-excellence-2026-10-23",
-    "status": "PLANNED",
+    "status": "BLOCKED",
     "acceptance": "Task→branch isolato→test→PR→review→preview→rilascio approvato; adapter solo dove supportati.",
-    "remaining": "OpenHands è una reference da valutare. Sandbox cloud richiede valutazione costi; non attivare."
+    "remaining": "Bloccato da causa esterna: sandbox cloud richiede valutazione costi e autorizzazione. OpenHands è una reference da valutare. Sandbox cloud richiede valutazione costi; non attivare.",
+    "priority": "LOW"
   },
   {
     "key": "assets",
     "name": "Archivio asset con diritti e versioni",
     "source": "persistent-intelligence-2026-10-23",
-    "status": "PLANNED",
+    "status": "BLOCKED",
     "acceptance": "Metadata fonte/licenza/autore/modello/consenso/versione, preview e relazioni ai progetti.",
-    "remaining": "Storage binario non disponibile: R2 e costi richiedono autorizzazione."
+    "remaining": "Bloccato da causa esterna: storage binario assente (R2 non autorizzato). Storage binario non disponibile: R2 e costi richiedono autorizzazione.",
+    "priority": "LOW"
   },
   {
     "key": "coverage",
@@ -117,15 +123,18 @@
     "source": "revenue-growth-operating-system-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Template/preview/versione, canale e purpose del consenso, suppression/preference center e adapter di delivery verificati prima di chiamarlo READY_FOR_CONNECTION.",
-    "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere."
+    "remaining": "Studiare prima codice e licenze delle candidate React Email/Plunk/Dittofeed/Mautic/listmonk; non installare tutti, non inviare né spendere.",
+    "priority": "NORMAL"
   },
   {
     "key": "pricing",
     "name": "Preventivazione spiegabile, versionata e approvata",
     "source": "consolidamento-operativo-2026-10-23",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "acceptance": "Costi per cadenza, formule esplicite, snapshot, conflitti, approvazione backend e collegamento al lead.",
-    "remaining": "Catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione e PDF ancora da completare."
+    "remaining": "Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*.",
+    "priority": "HIGH",
+    "evidence": "Produzione LIVE 01805108595ba1bc21866bcc84825fae829792ff, run CI 39962720977 verde (verify e production, health a SHA esatto). Fonte: docs/operativo/consegna-sonnet-a-opus-2026-10-23.md."
   },
   {
     "key": "crm-completion",
@@ -133,7 +142,8 @@
     "source": "consolidamento-operativo-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Kanban persistente con audit, conflitti, timeline, opportunità, fasi configurabili e collegamenti offerte/progetti.",
-    "remaining": "Kanban e CRUD esistono; transizioni concorrenti, eventi condivisi, filtri salvati e deduplicazione avanzata da completare."
+    "remaining": "Kanban e CRUD esistono; transizioni concorrenti, eventi condivisi, filtri salvati e deduplicazione avanzata da completare.",
+    "priority": "HIGH"
   },
   {
     "key": "integrations-mcp",
@@ -149,7 +159,8 @@
     "source": "connected-ecosystem-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Percorso reale riprendibile per ruolo, reduced motion, accessibilità e progresso persistente.",
-    "remaining": "Tour e Academy completi non realizzati; nessuna dimostrazione fittizia."
+    "remaining": "Tour e Academy completi non realizzati; nessuna dimostrazione fittizia.",
+    "priority": "NORMAL"
   },
   {
     "key": "connected-runtime",
@@ -165,6 +176,75 @@
     "source": "consolidamento-operativo-2026-10-23",
     "status": "PLANNED",
     "acceptance": "Template e pacchetti versionati con prerequisiti, commissioni approvate e attribuzione verificabile.",
-    "remaining": "Catalogo modulare, reseller, referral e white label da costruire per priorità; nessun pagamento attivato."
+    "remaining": "Catalogo modulare, reseller, referral e white label da costruire per priorità; nessun pagamento attivato.",
+    "priority": "LOW"
+  },
+  {
+    "key": "orchestration-routing",
+    "name": "Orchestrazione CLI, routing e memoria persistente",
+    "source": "cli-native-orchestration-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Capability registry verificato, startup persistente, contratti di delega con ownership/modello/effort/budget, esiti realmente controllati e cross-review prima del rilascio.",
+    "remaining": "Review Claude/Grok tramite Orca eseguite; registry e startup in consolidamento. Costi non misurati, coding adapter nel prodotto e controllo sessioni cloud restano da realizzare; nessun agente fittizio."
+  },
+  {
+    "key": "pricing-hardening-self-approval",
+    "name": "Preventivi: vietare richiedente = decisore",
+    "source": "consegna-sonnet-a-opus-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "decision() in apps/web/app/server/api.ts rifiuta l'approvazione quando richiedente e decisore coincidono (guardia di una riga) con test; il canary CI usa due utenti distinti.",
+    "remaining": "Guardia assente in decision(); verificare il canary CI a due utenti.",
+    "priority": "HIGH",
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+  },
+  {
+    "key": "pricing-hardening-recurring-total",
+    "name": "Preventivi solo ricorrenti: totale testata",
+    "source": "consegna-sonnet-a-opus-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Un preventivo con sole voci ricorrenti riporta un amount_cents di testata coerente con le regole di cadenza, con test.",
+    "remaining": "Oggi amount_cents di testata = 0 per i preventivi solo ricorrenti. Soglie e policy economiche restano decisione del founder.",
+    "priority": "HIGH",
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+  },
+  {
+    "key": "pricing-hardening-tax-overflow",
+    "name": "Pricing: overflow in netCents*taxBp",
+    "source": "consegna-sonnet-a-opus-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Il prodotto netCents*taxBp non supera Number.MAX_SAFE_INTEGER: il tetto 1e12 si applica prima del calcolo, con test ai limiti.",
+    "remaining": "In pricing.ts il prodotto è calcolato prima del tetto 1e12 e può superare MAX_SAFE_INTEGER. Tetti e soglie restano decisione del founder.",
+    "priority": "HIGH",
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+  },
+  {
+    "key": "pricing-hardening-decision-guard",
+    "name": "Preventivi: UPDATE di decision() condizionato",
+    "source": "consegna-sonnet-a-opus-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "L'UPDATE del preventivo in decision() richiede status='IN_REVIEW' e il legame con la versione dell'evidenza approvata, con test di concorrenza.",
+    "remaining": "UPDATE attuale senza condizione di stato né legame con la versione dell'evidenza.",
+    "priority": "HIGH",
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+  },
+  {
+    "key": "pricing-hardening-request-scope",
+    "name": "Ricerca requestId: filtro organizzazione",
+    "source": "consegna-sonnet-a-opus-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "La ricerca per requestId è limitata alla organization_id del chiamante, con test cross-organizzazione.",
+    "remaining": "Ricerca attuale senza filtro organizzazione.",
+    "priority": "HIGH",
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
+  },
+  {
+    "key": "pricing-hardening-portal-tests",
+    "name": "Portale cliente: test su scope, terms, pricing_version",
+    "source": "consegna-sonnet-a-opus-2026-10-23",
+    "status": "PLANNED",
+    "acceptance": "Test automatici sul portale coprono scope, terms e pricing_version del preventivo mostrato al cliente.",
+    "remaining": "Test mancanti sul portale per scope, terms e pricing_version.",
+    "priority": "HIGH",
+    "origin": "docs/operativo/consegna-sonnet-a-opus-2026-10-23.md"
   }
 ]

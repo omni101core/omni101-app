@@ -4,6 +4,7 @@ Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedent
 
 ## Revisioni e ambienti
 
+- **Produzione LIVE 23 ott: 01805108595ba1bc21866bcc84825fae829792ff, run 39962720977 verify+production verdi, health a SHA esatto.** Include preventivatore (migrazione 0011 additiva), review con motivo, portale cliente isolato e import 11 originali. Primo tentativo 39962517077 fallito al typecheck (portal.tsx, `&&` su unknown) e corretto con ternari; produzione non toccata. Mandato ancora PARTIAL. Aperti: autoapprovazione richiedente=decisore non vietata (decision() in api.ts), importo testata 0 per preventivi solo ricorrenti, tetti numerici imposta/target, piano sicurezza CLI gratuite. Locale ancora su f53: aggiornare da artefatto CI.
 - **Produzione/staging/locale**: `f53fe2c7b8870f08eec7b3d2226a0aab403c8244`, run **39950784094** completamente verde. 104 server + 104 browser passati, 12 skip espliciti, canary cloud e health esatto confermati.
 - **Dati**: 0010 applicata; import riuscito di 8 originali, 15 requisiti/task e 3 reference (26 elementi). Nessuna esecuzione automatica o campagna sintetica in produzione.
 - **QA visiva**: risolto stile legacy che nascondeva la CTA; test contrasto >=4.5 e screenshot desktop/mobile finali controllati. Review indipendente in sola lettura: nessun finding; test rimangono l’evidenza di esecuzione.
@@ -42,3 +43,7 @@ Rivedere i 15 gruppi requisito con i soci e scomporre il resto dei mandati in cr
 
 Fonti: `docs/mandati/sources.json`, `docs/operativo/mandate-backlog.json`. File e contratti nei moduli; handoff dettagliato in `docs/operativo/ripresa.md`. `src/` e `worker/` restano il sito Astro precedente e non fanno parte del deploy. ceo-os non è stato toccato.
 
+
+## Checkpoint più recente — handoff esecutivo a Claude
+
+23 ottobre: staging eafa5aff312f04123fcfa9df9bd3a0de87df4aee verificato run39960583760 SUCCESS,107server+105browser/13skip, migrazione0011, canary pricing/approvazione/isolamento portale reali. Produzione ancora f53. Screenshot pricing desktop/mobile controllati. Ultimi delta summary/terms/portale e ultimo mandato CLI ancora da rilasciare; locale ripristinato f53. Fonti locali11/gruppi22/reference3; stageimport10/21/3. Review Claude/Grok tramite CLI Orca effettuate, OpenCode gratuito sul solo registry/startup. Fonte di ripresa più recente `docs/operativo/continuazione-claude-2026-10-23.md`; le sezioni precedenti descrivono produzione f53 e restano storico, non sovrascrivere la distinzione.
