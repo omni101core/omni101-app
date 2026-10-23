@@ -22,6 +22,9 @@ Voci Workspace in `admin.tsx`: Panoramica `/admin`, Inbox, Lead, Contatti, Azien
 - `GET/POST/PATCH /api/records/:risorsa` e `GET /api/records/:risorsa/:id`
 - `GET /api/schema/:risorsa` — i campi tornano solo se il ruolo è in `write`.
 - `GET /api/team`, `POST /api/team/:id/revoke` (revoca: solo chi `canManage`, cioè OWNER; motivo richiesto dalla UI, almeno 5 caratteri).
+- `PATCH /api/records/:risorsa/:id` accetta `expectedUpdatedAt` (ms, opzionale). Se non coincide con `updated_at` corrente: 409 `{error:"Record modificato da un altro socio. Ricarica.", current:<record>}`, nessuna scrittura e nessun audit. Se coincide, la risposta contiene anche il nuovo `updated_at`. Senza il campo il comportamento non cambia.
+- `POST /api/records/contacts`: 409 `{error:"Possibile duplicato", duplicateId, resource:"contacts"}` se nella stessa organizzazione esiste un contatto con la stessa email (trim + minuscolo) o lo stesso telefono (solo cifre, almeno 6). Nessuna fusione. Aziende e lead non hanno email, telefono o partita IVA nello schema: nessun controllo finché non esiste una colonna (migrazione additiva da decidere).
+- `GET /api/records/contacts/:id/timeline` e `/api/records/companies/:id/timeline`: `{items:[{type,id,title,status,at}]}` per `at` decrescente, massimo 100, solo la stessa organizzazione. Tipi emessi: `interaction`, `lead`, `deal` (dai contatti, per l'azienda dai suoi contatti) e `note` (note con `resource_type` uguale alla risorsa). `activity` non viene emesso: `activities` non ha legame con contatti o aziende. 403 per ruoli senza lettura, 404 se il record non c'è.
 - Riferimenti nei form: `client_id`, `project_id`, `contact_id`, `company_id`, `lead_id` da `/api/records/...`; `owner_id` e `assignee_id` da `/api/team`.
 
 Status lead: `NEW`, `AI_TRIAGE`, `QUALIFICATION`, `DISCOVERY`, `PROPOSAL_DRAFT`, `PROPOSAL_SENT`, `NEGOTIATION`, `WON`, `LOST`, `ON_HOLD`. Le trattative partono da `QUALIFICATION` e non hanno `NEW`.
@@ -36,7 +39,7 @@ Tabelle `contacts`, `companies`, `leads`, `deals`, `clients`, `interactions`, `n
 
 ## Stato
 
-Parziale, 2026-10-22. Il CRUD e il kanban ci sono. Non ci sono, nel file `admin.tsx` letto oggi: Gantt, timeline del contatto, filtri salvati, commenti, menzioni, presenza. Sono SPEC-13, in coda dopo SPEC-06. Inbox e calendario sono risorse (`notifications`, `activities`), non una casella di posta esterna.
+Parziale, 2026-10-23. Il CRUD e il kanban ci sono. Il centro della card è un `div.os-card-body` trascinabile; «Apri» è un button piccolo. Così il drop arriva a `onMove`. Non ci sono, nel file `admin.tsx`: Gantt, commenti, menzioni, presenza. Inbox e calendario operativo restano risorse (`notifications`, `activities`). Vista unica date: `GET /api/calendar` (modulo revenue).
 
 `settings`, `automations` e `pipeline` in `load()` non chiamano `/api/records`: azzerano l'elenco. Pipeline e automazioni hanno pannelli propri (moduli progetti e workflow).
 
@@ -68,3 +71,7 @@ Migrazione additiva `0006_studio_operations.sql`: `campaigns`, `growth_plans`, `
 `server/operating-backlog.ts`: preparazione esplicita Owner via `POST /api/setup/operating-backlog`, pulsante nel Centro operativo. ID stabili per organizzazione, insert senza sovrascrittura, batch atomico, audit. Progetto interno OMNI101, 15 task TODO, 3 milestone senza data promessa e 3 workflow DRAFT. Dipendenze iniziali conservate alle ripetizioni, anche se archiviate dopo la prima preparazione. Nessun incarico assegnato a utenti inesistenti: solo suggerimento agente nel brief. Non avvia run o servizi. Test in `agency-pipeline.test.ts`; modifica in attesa di nuova CI. Percorso di ripresa aggiornato in `docs/operativo/ripresa.md`.
 
 Export CSV: celle testuali che iniziano con formule (`=`, `+`, `-`, `@`, anche dopo spazi) prefissate da apostrofo, per impedire esecuzione involontaria nei fogli di calcolo. Le esportazioni restano limitate ai record caricati e autorizzati.
+
+23 ottobre: preparazione eseguita anche sul D1 staging dopo migrazioni, conteggi 15 task/3 milestone/3 workflow DRAFT. Tre task chiusi con prove e audit di verifica, nessuna sovrascrittura di dati cliente. Collaboratore Owner attivo con passkey solo in produzione, verificato via metadati: nessun nuovo invito duplicato. Ambiente staging distinto.
+
+23 ottobre: il trace del test due Owner rilevava il secondo invito fermo con pulsante normale, nessun errore e nessuna verifica in corso: clic possibile sull'HTML SSR prima del collegamento degli eventi. AuthGate ora parte disabilitato con «Preparazione accesso…» e abilita login/registrazione soltanto dopo mount client. Nessun bypass della passkey, nessun retry del login e nessuna modifica alle identità. Il test con due Owner indipendenti rimane obbligatorio.

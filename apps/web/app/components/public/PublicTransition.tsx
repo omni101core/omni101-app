@@ -24,6 +24,8 @@ export function PublicTransition({routeKey,children}:{routeKey:string;children:R
   if(!scope||!next)return;
   const generation=++sequence.current;
   const focusHeading=()=>{
+   // A visitor may already be using a control while the entrance finishes.
+   if(next.contains(document.activeElement))return;
    const heading=next.querySelector<HTMLElement>('h1');
    if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
   };

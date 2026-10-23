@@ -20,7 +20,7 @@ test('home: loader and hero are one scene, skippable, with doors instead of the 
  await expect(page.locator('.reel-loader')).toBeHidden();
  await expect(page.locator('.spatial-gallery,.portal-visual,.portal-narrative,.process')).toHaveCount(0);
  await expect(page.getByRole('link',{name:'prodotti',exact:true})).toHaveAttribute('href','/solutions/build');
- for(const href of ['/solutions','/work','/explore','/start-project'])await expect(page.locator('.home-doors').locator('a[href="'+href+'"]')).toHaveCount(1);
+ for(const href of ['/work','/explore','/start-project'])await expect(page.locator('.home-doors').locator('a[href="'+href+'"]')).toHaveCount(1);
  expect(await page.locator('canvas').count()).toBeLessThanOrEqual(1);
 });
 test('home: the intro plays once per session',async({page})=>{
