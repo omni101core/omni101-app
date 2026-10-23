@@ -43,3 +43,12 @@ Piattaforma: `approvals`, `audit_logs`, `settings`, `feature_flags`, `intake_key
 Scritture: `sales` (OWNER, ADMIN, PROJECT_MANAGER, SALES) su CRM e preventivi; `managers` sui progetti e sui contenuti; FINANCE su contratti, fatture, spese; DEVELOPER e DESIGNER anche su task e issue. `approvals`, `agent-runs`, `automations`, `media`, `inbox`, `deliverables` hanno `write: []`: non si creano da quel CRUD. Il preventivo non passa a `APPROVED` con una PATCH: risponde 409 e manda al centro approvazioni. Contratto o fattura verso `APPROVED`, `RECORDED` o `PAID` richiedono OWNER o FINANCE. Un task `kind=QA` non si chiude cambiando status. Un task `DONE` senza descrizione risponde 400.
 
 Ogni SELECT di record filtra `organization_id`. Il ruolo CLIENT aggiunge `client_id` e solo sulle risorse con `client: true`.
+
+## Estensioni studio e pianificazione — 2026-10-22 sera
+
+- `0006_studio_operations.sql`: campagne, piani crescita, lavorazioni creative e abbonamenti gestionali. Risorse del workspace, nessun invio esterno o addebito automatico.
+- `0007_project_planning.sql`: `tasks.start_date`, `tasks.estimate_minutes`, `task_dependencies.active`, `project_plans` con versione e claim. Trigger per isolamento delle dipendenze, assenza di cicli e stati incompatibili. Rimozione dipendenza = `active=0`.
+- `notes` già esistente usata per commenti progetto: ID richiesta idempotente, autore autenticato, organizzazione e progetto verificati. Nessuna nuova tabella commenti duplicata.
+- Bootstrap Owner del backlog è un'azione separata dalle migrazioni: ID stabili per organizzazione, nessuna sovrascrittura di edit. Lo snapshot locale non è un seed automatico live e non crea identità.
+
+Applicazione: migrazioni 0001–0007 presenti nel D1 isolato della preview locale. Per staging/produzione leggere STATO; non dedurre l'applicazione dal solo schema nel repository.

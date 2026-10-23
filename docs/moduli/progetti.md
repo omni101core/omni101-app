@@ -59,3 +59,5 @@ SPEC-13 per Gantt, file e deliverable avanzati, dopo SPEC-06. Il server di pipel
 ## Pianificazione operativa — 2026-10-22 notte
 
 Nuovo `/admin/planning`, API `/api/projects/:id/planning`, sottorisorse POST `dependencies` e `comments`. Tasks con inizio e stima minuti, milestone esistenti esposte nel CRUD. Ordinamento topologico/percorso critico e margine delle attività, senza AI e senza fingere un calendario delle persone. Dipendenze vincolate a stesso progetto/organizzazione, cicli e avvii prematuri bloccati anche da trigger SQLite. Versione condivisa del piano con claim atomico per modifiche concorrenti. Vincoli rimossi disattivati, non cancellati. Commenti attribuiti all'utente autenticato e idempotenti per requestId. Test `planning-algorithms`, `agency-pipeline` nuovi casi. Migrazione additiva 0007, verifica CI ancora da eseguire.
+
+Identificativi URL: planning, pipeline e CRUD decodificano il segmento ID (errore 400 per encoding non valido). Necessario per ID stabili del backlog che contengono `:`; verifiche aggiunte al test di preparazione, incluse lettura piano/pipeline e modifica progetto con ID codificato.

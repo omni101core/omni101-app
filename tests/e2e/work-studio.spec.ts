@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 // scroll-reveal cards stay visibility:hidden until near the viewport, so bring the card there before clicking
-const openFirstCard=async(page:import('@playwright/test').Page)=>{const card=page.locator('.work-grid .work-card').first();await card.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await card.click()};
+const openFirstCard=async(page:import('@playwright/test').Page)=>{const card=page.locator('.work-grid .work-card[href="/work/essenza"]');await card.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await card.click()};
 test('work grid card opens a full preview, then the case page continues from it',async({page})=>{
  await page.goto('/work');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
@@ -61,4 +61,13 @@ test('404 has a real heading, useful links and a 3D text cylinder that turns wit
  await page.screenshot({path:'test-results/not-found.png'});
  await page.getByRole('navigation',{name:'Pagine utili'}).getByRole('link',{name:/Progetti/}).click();
  await expect(page).toHaveURL(/\/work$/);
+});
+
+test('sector portfolio shows original hospitality cover and concrete scope',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/work');
+ await expect(page.locator('[data-hydrated="true"]')).toBeVisible();await page.getByLabel('Settore',{exact:true}).selectOption('B&B e ospitalità');
+ await expect(page.locator('.work-grid .work-card')).toHaveCount(1);
+ await expect(page.locator('.work-grid img')).toHaveAttribute('src','/media/originali/work-07-casa-luce.jpg');
+ await page.getByRole('link',{name:/Casa Luce/}).click();await expect(page).toHaveURL(/\/work\/casa-luce$/);
+ await expect(page.getByText('Richiesta soggiorno e disponibilità da confermare',{exact:true})).toBeVisible();
 });

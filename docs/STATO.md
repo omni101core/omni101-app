@@ -34,3 +34,11 @@ Staging misurato nel pomeriggio: `https://preview.omni101.app`, revisione `b6e61
 ## Aggiornamento riallineamento successivo a Claude — 2026-10-22 sera
 
 Health letto prima delle modifiche: preview e produzione rispondono entrambe `24ac9b74ac99faa1072f9842c5048845635fb908`, database vero, storage falso. Questo dato sostituisce la misura pomeridiana sopra per il live. Codice locale esteso con temi distinti, narrativa home completa, Avatar/Software Lab e quattro registri Growth/Creative/Ops; migrazione 0006 ancora da verificare/applicare attraverso CI staging. Test nuovi per temi/demo e persistenza/isolamento/permessi. Ultima CI preesistente `39808455672` rossa (diagnostica volutamente fallente, galleria che saltava, hit target ruota, SQLITE_BUSY). Correzioni preparate. Produzione non modificata da questa ripresa; completamento globale del mandato non dichiarato.
+
+## Prove e continuità — aggiornamento successivo
+
+CI `39833548394`, SHA `7289881681d00cad1bfe109e9d187a379691f555`: 87 test server + 99 browser superati, 9 skip preesistenti; build completate. Deploy non eseguito: migrazione remota bloccata da Cloudflare D1 7403 (token CI con restrizione IP e scope insufficienti). Artefatto servito solo in locale su 4176. Il live resta alla revisione indicata sopra.
+
+Nuovi centro operativo, aggregati finanziari, pianificazione/percorso critico/dipendenze/commenti e bootstrap backlog sono successivi a quella prova. CI `39836488222` ha rilevato errori di tipo nelle nuove viste; corretti localmente, nuova verifica necessaria. Migrazione 0007 e backlog **non applicati al live**. Preparazione Owner disponibile nel codice: 15 task, 3 milestone e 3 workflow DRAFT, nessuna esecuzione automatica. Dettagli e prossime azioni in `docs/operativo/ripresa.md`.
+
+Backlog ora popolato **nel solo D1 locale**: conteggi verificati 15 task, 3 milestone, 3 workflow DRAFT, 0 esecuzioni agenti/workflow. Nuovi casi portfolio Casa Luce/Tavola/Studio Forma con immagini originali e filtro settore preparati nel codice, in verifica CI.

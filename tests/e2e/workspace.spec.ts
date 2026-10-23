@@ -162,3 +162,17 @@ test('delivery pipeline runs from QA rejection to client approval and maintenanc
  await expect(page.getByText('CLIENT_APPROVED')).toBeVisible();
  expect((await api(page,'GET','/api/projects/'+project.body.record.id+'/pipeline')).body.project.status).toBe('COMPLETED');
 });
+
+test('Owner prepares a persistent operating backlog and leaves a project handoff comment',async({page,baseURL},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Passkey fixture runs on desktop.');test.setTimeout(90000);await owner(page,baseURL!);
+ await page.goto('/admin/operations');await expect(page.getByRole('heading',{name:'Centro operativo',exact:true,level:2})).toBeVisible();
+ await page.getByRole('button',{name:'Prepara backlog operativo'}).click();
+ await expect(page.locator('.os-project-progress').filter({hasText:'OMNI101 · Sviluppo piattaforma'})).toBeVisible();
+ const response=await page.request.post('/api/setup/operating-backlog',{headers:{Origin:new URL(baseURL!).origin},data:{}});expect(response.ok()).toBeTruthy();const prepared=await response.json();expect(prepared.executionsStarted).toBe(0);
+ await page.goto('/admin/planning?project='+encodeURIComponent(prepared.projectId));
+ await expect(page.locator('.os-table').getByRole('link',{name:'Sbloccare deploy CI Cloudflare ↗',exact:true})).toBeVisible();
+ const comment='Passaggio di consegne verificato '+randomUUID();
+ await page.getByLabel('Commento al progetto').fill(comment);
+ await page.getByRole('button',{name:'Aggiungi commento'}).click();await expect(page.getByText(comment,{exact:true})).toBeVisible();
+ await page.reload();await expect(page.getByText(comment,{exact:true})).toBeVisible();
+});

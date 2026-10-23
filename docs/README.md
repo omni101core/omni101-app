@@ -18,12 +18,13 @@ OMNI101 qui è la piattaforma commerciale di [omni101.app](https://omni101.app):
 |---|---|
 | `docs/STATO.md` | Stato per area. Sostituisce le sezioni di stato che stavano in `docs/CONTEXT.md`. |
 | `docs/architettura.md` | Stack, cartelle, binding, flussi. |
-| `docs/dati.md` | Tabelle D1 e migrazioni `0001`–`0005`. |
+| `docs/dati.md` | Tabelle D1 e migrazioni; `0006` registri studio, `0007` pianificazione (stato applicazione in STATO). |
 | `docs/sicurezza.md` | Passkey, ruoli, header, rate limit, dove stanno i segreti. |
 | `docs/brand.md` | Palette, font, voce. La regia motion è un documento a parte. |
 | `docs/decisioni.md` | Registro datato. |
 | `docs/operativo/rilascio.md` | CI, staging, produzione, rollback, token. |
-| `docs/operativo/ripresa.md` | Come riprende una AI o il founder. |
+| `docs/operativo/ripresa.md` | Come riprende una AI o il collaboratore: passaggio corrente, prove, blocchi e backlog. |
+| `docs/operativo/dashboard-checklist.md` | Inventario operativo, lacune e criteri di chiusura del workspace. |
 | `docs/operativo/qa.md` | Script di misura e soglie del 22/10. |
 | `docs/moduli/*.md` | Un file per area: scopo, file, API, dati, test, stato, decisioni, trappole, proprietario. |
 

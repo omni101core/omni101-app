@@ -1,3 +1,4 @@
+import {decodePathId} from './auth';
 import {z} from 'zod';
 import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 const json=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -183,12 +184,12 @@ async function pipelineOf(env:Env,actor:Identity,projectId:string){
 export async function handlePipeline(request:Request,env:Env,actor:Identity):Promise<Response|null>{
  const path=new URL(request.url).pathname,method=request.method;
  let match:RegExpMatchArray|null;
- if(method==='POST'&&(match=path.match(/^\/api\/tasks\/([^/]+)\/request-qa$/)))return json(await requestQa(request,env,actor,match[1]),201);
- if(method==='POST'&&(match=path.match(/^\/api\/qa\/([^/]+)\/outcome$/)))return json(await decideQa(request,env,actor,match[1]));
- if(method==='GET'&&(match=path.match(/^\/api\/projects\/([^/]+)\/pipeline$/)))return json(await pipelineOf(env,actor,match[1]));
- if(method==='POST'&&(match=path.match(/^\/api\/projects\/([^/]+)\/deliverables$/)))return json(await createDeliverable(request,env,actor,match[1]),201);
- if(method==='POST'&&(match=path.match(/^\/api\/deliverables\/([^/]+)\/deliver$/)))return json(await deliver(env,actor,match[1]));
- if(method==='POST'&&(match=path.match(/^\/api\/portal\/deliverables\/([^/]+)\/decision$/)))return json(await clientDecision(request,env,actor,match[1]));
+ if(method==='POST'&&(match=path.match(/^\/api\/tasks\/([^/]+)\/request-qa$/)))return json(await requestQa(request,env,actor,decodePathId(match[1])),201);
+ if(method==='POST'&&(match=path.match(/^\/api\/qa\/([^/]+)\/outcome$/)))return json(await decideQa(request,env,actor,decodePathId(match[1])));
+ if(method==='GET'&&(match=path.match(/^\/api\/projects\/([^/]+)\/pipeline$/)))return json(await pipelineOf(env,actor,decodePathId(match[1])));
+ if(method==='POST'&&(match=path.match(/^\/api\/projects\/([^/]+)\/deliverables$/)))return json(await createDeliverable(request,env,actor,decodePathId(match[1])),201);
+ if(method==='POST'&&(match=path.match(/^\/api\/deliverables\/([^/]+)\/deliver$/)))return json(await deliver(env,actor,decodePathId(match[1])));
+ if(method==='POST'&&(match=path.match(/^\/api\/portal\/deliverables\/([^/]+)\/decision$/)))return json(await clientDecision(request,env,actor,decodePathId(match[1])));
  if(method==='POST'&&path==='/api/portal/tickets')return json(await openTicket(request,env,actor),201);
  return null;
 }

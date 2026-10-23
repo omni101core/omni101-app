@@ -61,3 +61,7 @@ Niente ciclo: il messaggio è «Cicli non supportati: usare un grafo aciclico.»
 ## Chi lo possiede ora
 
 Il runtime è nel tree. SPEC-14 (18 nodi, loop, subflow, handoff) è il prossimo proprietario, dopo SPEC-06.
+
+## Bozze iniziali — 2026-10-22 sera
+
+Preparazione Owner dal Centro operativo: tre template persistenti DRAFT (discovery, creatività, consegna), ciascuno trigger manuale su lead verificato → approvazione umana → attività → fine. Grafo validato con lo stesso `validateGraph`, versione 1 registrata. Nessuna attivazione, pianificazione cron o invio esterno. Sono basi da modificare nel builder, non flussi completi di business. Ripetere conserva le definizioni già modificate. Verifica nuova CI ancora necessaria.
