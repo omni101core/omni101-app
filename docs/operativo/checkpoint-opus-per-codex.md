@@ -1,61 +1,45 @@
-# Checkpoint Opus per il rientro del coordinatore precedente
+# Checkpoint coordinatore
 
-Aggiornato: 2026-10-23 16:45. Coordinatore e publisher unico: Opus (term_e5a19495). Mandato complessivo: PARTIAL.
+Aggiornato: 2026-10-23, push release in questo commit. Coordinatore: Grok. Altra CLI: zero ownership, zero file. Lock staffetta in `/tmp/omni101-deleghe/staffetta.lock`.
 
-## LIVE / IN VERIFICA
+## SHA e CI
 
-- **LIVE**: produzione `01805108595ba1bc21866bcc84825fae829792ff` (run 39962720977). Health verificato alle 16:40: revision esatta, database true, storage false.
-- **Release bloccata**: `0feb0a6` run 39969074214, verify fallito su 1 e2e (`workspace.spec.ts:17`: sul 409 del kanban manca il prefisso "Spostamento non salvato"); produzione non toccata. Fix S4h in corso (Cursor). Server: 139 test verdi nella run 65c06ca dopo S4g.
-- **Nella prossima release**: S1 (separazione compiti, 409 versione/stato, aritmetica intera, requestId per org, test portale), S1b (19 test calcolo), S1c (e2e con secondo Owner), S3 (sync conservativo del backlog in app + priorità + 6 gruppi pricing-hardening), S4a-g (CRM: 409 concorrenza, duplicati contatti con override solo per telefono, timeline, filtri URL, a11y), T2 (convertitore listino, solo script locale + test), CONTEXT/STATO.
-- **Locale**: ancora f53 su 127.0.0.1:4176 (workerd). Script di aggiornamento pronto e testato: `/tmp/omni101-deleghe/S2-local-update/in/local-update.py` (dry run di default, `--apply` dopo la release). Non eseguito.
+- LIVE ancora `01805108595ba1bc21866bcc84825fae829792ff`, run `39962720977`. Health si ricontrolla dopo la CI di `release-commercial`.
+- STAGING verde: `735174da12821ea6b0891f898e8a7f8921e8c78e`, run `39980811933` attempt 2, verify verde, production saltato. 148 test, Playwright 105 pass / 13 skip, smoke a slice verticale completa. Il 503 sul workflow dell'attempt 1 non si è ripetuto.
+- Questo `--release` porta gli stessi byte di `735174d` più `docs/CONTEXT.md`, questo checkpoint, `docs/STATO.md`, `docs/decisioni.md`. Lo SHA di release è quello stampato da `cloud-verify.py`.
 
-## Lavoro attivo
+## Locali non pubblicati
 
-| Task | Esecutore | Esito atteso |
-|---|---|---|
-| S4h messaggio 409 kanban | Cursor composer-2.5 (pool xAI) | `/tmp/omni101-deleghe/S4h-msg-409/esito.md` |
-| T3 registro CLI (agent-context.json + startup AGENTS) | OpenCode deepseek free | `/tmp/omni101-deleghe/T3-registro-cli/esito.md` |
-| T4 fusione copertura mandati nel backlog (≤15 nuovi gruppi) | OpenCode deepseek free | `/tmp/omni101-deleghe/T4-backlog-merge/esito.md` |
-| Controfattuali copertura R2c (Goose) e R2d (Kilo poolside) | gratuiti, dati già pubblici | `esito-SECONDO.md` nelle cartelle R2c/R2d |
+Nessun codice fuori da questo push. Esiti pronti, non copiati (release successiva):
 
-Registro dei lanci: `/tmp/omni101-deleghe/registro.jsonl`. Contratti Sonnet: `/tmp/omni101-opus-20261023/`.
+- U4 area soci: `admin.tsx` + solo regole `os-nav-*` in fondo a `admin.css`. Non toccare KanbanBoard né il CSS del drag.
+- P2 listino UI: `PricingCatalog.tsx`, `PricingWorkspace.tsx`. Confronto visivo, calcolo invariato.
+- UX1–UX5: copy su file disgiunti. UX6 si sovrappone a U4 su `admin.tsx`/`admin.css`: non copiare UX6 sopra U4.
+- W-email: esito presente, non in `docs/operativo/`.
 
-## Copertura mandati (R2a-d, 4 worker gratuiti + controfattuali)
+## Ownership
 
-29 gruppi proposti, in fusione (T4). Punti da non perdere, verificati sul testo:
-- Garante: **29 ottobre 2026** per pixel/tracking nelle email (revenue-growth riga 74). Oggi conformi per assenza (nessun invio, nessun pixel).
-- "Pronto per il collegamento" ≠ collegato ≠ autorizzato ≠ verificato: stati onesti.
-- Percorso completo prima di schermate sparse: CRM → evento → workflow → agente con tool reale → approvazione → preventivo → CRM.
-- Bloccato non vuol dire fermo: bozze, approvazioni e calendario social/ads costruibili senza connessione.
-- Input dei clienti = dati, non istruzioni. Nessun servizio a pagamento senza autorizzazione.
+- Grok coordina. Non rifare `integra` di S4k: il DOM S4k è già nel tree e S4l (mousedown/mouseup, niente `draggable`) è il path che ha reso verde Playwright.
+- Modello UI pesante `cursor-grok-4.5-high` già usato su U4 e P2. Stesso pool di Grok. Non lanciare un terzo worker su `admin.tsx`, `admin.css`, `PricingWorkspace.tsx`, `PricingCatalog.tsx`.
 
-## Strumenti nuovi (verificati)
+## Backlog reale nell'app
 
-- `~/.omni101/bin/omni-delega/omni-delega.py`: `quote`, `lancia` (gate + copia + Orca + registro, blocco se pool xAI occupato), `ci`, `integra`. Gate: gitleaks + grep PII/importi + rizzo-flow locale (:8017) + home path → `~`.
-- Skill Orca aggiornata (sezione "Deleghe sicure con script").
-- CLI: OpenCode glm/deepseek free (codice, B pseudonimizzato); Kilo solo `--pure --model kilo/poolside/laguna-s-2.1:free` (dati pubblici); Goose = NVIDIA nemotron (dati pubblici); Cursor/Grok/Hermes = pool xAI, uno alla volta.
-
-## Decisioni aperte del founder
-
-1. Repo `omni101core/omni101-app` è **PUBBLICO**: mandati originali, decisioni e stato sono su GitHub. Voluto (regola 100) o da rendere privato (attenzione a costi Actions)?
-2. Tenant con un solo Owner: deroga alla separazione dei compiti sui preventivi?
-3. Testata dei preventivi solo ricorrenti (oggi 0, riepilogo per cadenza).
-4. Campi identificativi per aziende/lead (P.IVA, telefono) per la deduplicazione.
-5. Download di modelli: disco al 3-4%, nessuno finché non si libera spazio.
-
-## Prossima azione (comando)
-
-1. Integrare S4h (`omni-delega.py integra S4h-msg-409 apps/web/app/routes/admin.tsx`) → `python3 scripts/cloud-verify.py --check` → `python3 scripts/cloud-verify.py --release` → `omni-delega.py ci <sha> --branch release-commercial` → health a SHA esatto.
-2. Dopo la release: `local-update.py --zip <artefatto> --sha <sha> ...` (dry run, poi `--apply`), aggiornare CONTEXT/STATO/moduli.
-3. Integrare T3/T4, `node scripts/seed-reviewed-context.mjs --dry-run`, release successiva: il backlog in app riceve i nuovi gruppi.
-4. Slice prodotto successiva: catalogo listino in app (import dell'Owner nel DB, mai nel repo pubblico) + vista "prezzo di listino" nel preventivatore.
-
-## Rollback
-
-Codice `01805108`. Migrazioni additive: non cancellare tabelle per tornare indietro.
+Drag kanban (mouse), `GET /api/calendar`, listino `0012` + UI catalogo, seeder con `source_id` anche per le 6 voci senza mandato in `sources.json` (REFERENCE da `origin`). Ancora fuori da questo codice: copy UX1–UX5, menu soci U4, confronto listino P2, email. Decisioni founder aperte: repo pubblico con mandati visibili; deroga separazione compiti con un solo Owner; testata preventivi solo ricorrenti; P.IVA/telefono.
 
 ## Blocchi
 
-- MemPalace read-only ("Peer MCP writer active"): stato su questo file e nella memoria di progetto.
-- Docs-only senza CI impossibile con il publisher attuale.
-- Kilo con la maggior parte dei modelli free: limite 128 tool.
+- Un solo push alla volta. Niente `--release` se la CI di release è rossa.
+- Non sovrascrivere `.os-card-body`, `.os-card-open` piccolo, `user-select:none`.
+- Classe A non ai modelli gratuiti.
+
+## Rollback
+
+Codice live precedente: `01805108595ba1bc21866bcc84825fae829792ff`. Migrazioni additive (0011, 0012). Non cancellare tabelle.
+
+## Prossimo comando
+
+Dopo questo push, lo SHA è nell'output di cloud-verify. Poi:
+
+`python3 -I ~/.omni101/bin/omni-delega/omni-delega.py ci <sha> --branch release-commercial`
+
+Verde: `curl -s https://omni101.app/api/health` deve mostrare quello SHA. Poi integra U4 e P2 su una release nuova, dopo `--check`.

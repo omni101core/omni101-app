@@ -30,4 +30,6 @@ Test integrazione: persistenza link/eventi, replay e collisioni, audit, complete
 
 Verifica visiva canary della prima pubblicazione 76d17bd: lo stile legacy `.os-inline-actions button` rendeva trasparente lo sfondo del bottone primario mantenendo testo scuro. Corretto con contenitore azioni Revenue dedicato e header responsive; aggiunta asserzione browser del contrasto effettivo >=4.5, risalendo al background visibile degli antenati. Non basta che il click sia tecnicamente possibile. Patch CSS in verifica successiva, schema e dati invariati.
 
-Esito finale: 39950784094 verde, 208 test passati e 12 skip; migrazione/import in entrambi gli ambienti, letture reali di Revenue/calendario, client bloccato e canali disconnessi confermati dal canary. Health di produzione f53fe2c7b8870f08eec7b3d2226a0aab403c8244. Screenshot finali revenue-final-desktop/mobile.png controllati: CTA leggibile in entrambe le viewport.
+Esito finale storico: 39950784094 verde. Health di produzione ancora da confermare sullo SHA della run successiva a questa nota.
+
+2026-10-23, non ancora in produzione: `GET /api/calendar?from&to` (max 92 giorni, 500 righe, CLIENT 403) legge tasks, milestones, projects, activities e revenue_events della sola organizzazione. Nessuna tabella nuova, `end` sempre null, niente ricorrenze. Il calendario revenue esistente (`/api/revenue/calendar`) resta. Migrazione 0012 additiva: versioni di listino importate, solo OWNER/ADMIN in scrittura. Importi di test sintetici, non il listino reale.
