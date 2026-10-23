@@ -1,5 +1,10 @@
 # Preventivatore spiegabile
 
+## Stato verificato del 23 ottobre — ritorno Codex
+
+Il preventivatore e il catalogo0012 sono già nel live3adf682, run39994191429 verde. Audit Grok mirato e revisione Codex hanno distinto backlog obsoleto e residui: guardia richiedente/decisore, aritmetica BigInt, requestId per tenant e payload portale sono presenti e testati. Guardia stato/versione presente; nuova regressione concorrente specifica per review versionata aggiunta, da confermare nella prossima CI. Nessuna tariffa o policy modificata qui. Le note locali e la policy precedente alla sezione S1 sotto sono storico.
+
+
 23 ottobre 2026 — implementazione locale, verifica CI e rilascio ancora da eseguire. Mandato: consolidamento-operativo §7; ecosistema connesso §5, scenari A/B. Nessun listino, imposta o margine approvato presunto.
 
 ## Percorso
@@ -24,7 +29,7 @@ Test integrazione: aritmetica, ricorrenze, sconti, limiti, tasse non presunte, i
 
 Da completare: catalogo tariffe approvate, opzioni, PDF/proposta impaginata, personalizzazione fiscale multivaluta, accettazione cliente, pagamenti e fatturazione. Non esporre snapshot con costi al CLIENT. Nessun invio o pagamento attivo. Per rollback il vecchio Worker ignora colonna/tabelle nuove; conservare dati e snapshot.
 
-Review CLI Orca (23 ottobre): Claude Sonnet 5.5 medium ha individuato un caso di collisione requestId che poteva lasciare quote v0: creazione ora condizionata nel batch, test di interleaving. Sconto/sotto costo richiedono motivazione server-side nella richiesta, flag nell’evidenza senza importi interni. Nessuna imposizione arbitraria di doppia firma: la policy corrente permette a Owner/Admin di approvare anche proprie richieste; separazione dei compiti resta decisione configurabile. Limite numerico verificabile: diretto<=1e10, costo corretto<=4e10, target<=8e11, massimo prodotto monetario per basis point<=8e15<2^53; nessun overflow presunto senza controesempio. Scenario REJECTED→nuova versione→nuova review aggiunto ai test.
+Review CLI Orca (23 ottobre): Claude Sonnet 5.5 medium ha individuato un caso di collisione requestId che poteva lasciare quote v0: creazione ora condizionata nel batch, test di interleaving. Sconto/sotto costo richiedono motivazione server-side nella richiesta, flag nell’evidenza senza importi interni. Nota storica prima di S1: allora Owner/Admin potevano decidere proprie richieste. Questa frase è superata dalla guardia di separazione dei compiti S1 descritta sotto e già presente nel live verificato. Limite numerico verificabile: diretto<=1e10, costo corretto<=4e10, target<=8e11, massimo prodotto monetario per basis point<=8e15<2^53; nessun overflow presunto senza controesempio. Scenario REJECTED→nuova versione→nuova review aggiunto ai test.
 
 Review Grok 4.7 medium tramite CLI visibile Orca: report in /tmp/omni101-orca-20261023/grok-review.md, solo statica. Risolti: dialog approvazione non si chiude prima dell’esito, motivazione umana richiesta, feedback attribuito/versionato nel preventivatore, azioni nascoste ai ruoli non autorizzati, vista fiscale/lead dello snapshot, review permessa solo sulla versione corrente, stato riletto dal server. Le ipotesi sullo schema approval e sull’ordine degli snapshot sono state confrontate con API/schema: fields per write=[] non sono concessi; snapshot latest100+versione richiesta oppure404, quindi nessuna sostituzione silenziosa della versione richiesta. Portale mostra versione, quota una tantum anche a zero e precisa che visione non equivale ad accettazione/pagamento; canary ora collega un vero cliente QA staging e verifica che l’altro non veda la proposta. Test browser ampliato su rifiuto motivato, feedback, nuova versione e permessi Sales.
 

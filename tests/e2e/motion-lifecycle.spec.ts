@@ -4,9 +4,30 @@ test('home adapts to reduced-motion changes without reload or lost navigation',a
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.goto('/');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
- await page.emulateMedia({reducedMotion:'reduce'});
  const hero=page.locator('.omni-reel');
- await expect(hero).toHaveClass(/reel-reduced/);
+ // Exercise a preference change after the reel accepts a real keyboard action, independently of root hydration.
+ await page.keyboard.press('Escape');
+ await expect(hero).toHaveAttribute('data-reel-phase','expanded');
+ // CI probe: a fresh listener records the media event. The class assertion stays.
+ await page.evaluate(() => {
+  const mq = matchMedia('(prefers-reduced-motion: reduce)');
+  const read = () => ({matches:mq.matches,hidden:document.hidden,visibility:document.visibilityState,reel:document.querySelector('.omni-reel')?.className||'',phase:document.querySelector('.omni-reel')?.getAttribute('data-reel-phase')||'',cinema:document.querySelector('.cinema-experience')?.className||''});
+  const hits:{eventMatches:boolean;listMatches:boolean;reel:string}[] = [];
+  const on = (event:MediaQueryListEvent) => {hits.push({eventMatches:event.matches,listMatches:mq.matches,reel:document.querySelector('.omni-reel')?.className||''})};
+  mq.addEventListener('change', on);
+  (window as unknown as {__omniMotionProbe?:unknown}).__omniMotionProbe = {before:read(),hits,on};
+ });
+ await page.emulateMedia({reducedMotion:'reduce'});
+ const probe = await page.evaluate(() => {
+  const bag = (window as unknown as {__omniMotionProbe:{before:unknown;hits:unknown[];on:(event:MediaQueryListEvent)=>void}}).__omniMotionProbe;
+  const mq = matchMedia('(prefers-reduced-motion: reduce)');
+  mq.removeEventListener('change', bag.on);
+  const now = {matches:mq.matches,hidden:document.hidden,visibility:document.visibilityState,reel:document.querySelector('.omni-reel')?.className||'',phase:document.querySelector('.omni-reel')?.getAttribute('data-reel-phase')||'',cinema:document.querySelector('.cinema-experience')?.className||''};
+  const out = {before:bag.before,hits:bag.hits,now};
+  delete (window as unknown as {__omniMotionProbe?:unknown}).__omniMotionProbe;
+  return out;
+ });
+ await expect(hero, JSON.stringify(probe)).toHaveClass(/reel-reduced/);
  await expect(hero).toHaveAttribute('data-reel-phase','expanded');
  await expect(page.locator('.reel-loader')).toBeHidden();
  await expect(page.locator('.reel-card[tabindex="0"]')).toHaveCount(12);

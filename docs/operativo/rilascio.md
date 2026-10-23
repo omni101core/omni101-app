@@ -1,5 +1,16 @@
 # Rilascio
 
+## Checkpoint operativo — 23 ottobre, coordinamento Codex
+
+Il founder ha richiesto esplicitamente prosecuzione e rilascio su omni101.app; Codex è l’unico publisher, Grok è esecutore sui file assegnati. Live verificato `3adf682`, run `39994191429`, verify+production verdi e health esatto. Import concluso: 11 originali,48 requisiti/task,5 reference, senza esecuzioni automatiche.
+
+Motion: verify-only `1c7ecab`, run `39995312269`, verde148server/107browser/13skip; release isolata `0b8fc25`, run `39996221347`. Primo tentativo fermato nello smoke da ECONNRESET su POST sintetico; produzione saltata e sessioni test revocate. Ripetuto job fallito allo stesso SHA, senza rendere ritentabili scritture prive di idempotenza. Esito corrente in `docs/STATO.md` e checkpoint Codex.
+
+Un solo flusso può migrare/deployare staging e fare il canary dello SHA alla volta. Una verifica `--verify-only` su snapshot isolato non tocca ambienti remoti: usata per controllare motion mentre terminava la release UX. Non promuovere alberi locali con file worker ancora in scrittura. Nessun comando di pubblicazione delegato ai worker.
+
+Le sezioni datate del 22 ottobre sotto sono storico operativo; non descrivono un blocco credenziali attuale. Il secret CI permanente funziona; nessun nuovo token è necessario. Un esito `production_changed:false` dello script continua a significare soltanto push, non prova di pubblicazione.
+
+
 Letto il 2026-10-22. Questo worker di documentazione non pubblica e non lancia la CI.
 
 ## Branch

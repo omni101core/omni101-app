@@ -12,7 +12,11 @@ GEO significa qui contenuti SSR chiari, fonti e descrizioni verificabili per mot
 
 ## Workspace marketing
 
-`/admin/growth`: iniziative reali, stato canali dichiarato, UTM builder locale (solo HTTPS, niente credenziali/query riservate), registro esclusioni e verifica destinatario. `/admin/growth-plans` distingue SEO, SEM, GEO, LOCAL_SEO, PRIVACY e altri piani. Campagne sono registri di pianificazione: nessun account Ads collegato, nessuna spesa, nessuna pubblicazione o email reale, nessun ROAS/CPA inventato. Analytics riusa ancora i dati gestionali; non è analytics di traffico.
+`/admin/growth`: iniziative reali, stato canali dichiarato, UTM builder locale (solo HTTPS, niente credenziali/query riservate), registro esclusioni, verifica destinatario e bozze email. `/admin/growth-plans` distingue SEO, SEM, GEO, LOCAL_SEO, PRIVACY e altri piani. Campagne sono registri di pianificazione: nessun account Ads collegato, nessuna spesa, nessuna pubblicazione, nessun ROAS/CPA inventato. Analytics riusa ancora i dati gestionali; non è analytics di traffico.
+
+## Bozze email
+
+Migrazione `0013_email_drafts.sql`, `server/email-drafts.ts`, pannello `EmailDraftWorkspace` dentro `/admin/growth`. Ruoli come il marketing: Owner, Admin, Project Manager, Sales. Campi: oggetto, preheader, testo, CTA solo https, campagna facoltativa dello stesso tenant. La versione è ottimistica: un conflitto risponde 409 e il modulo tiene il testo locale. Il salvataggio resta `DRAFT`. «Chiedi revisione» apre una riga `approvals` in `PENDING` e porta la bozza a `IN_REVIEW`. `APPROVED` arriva solo da `POST /api/approvals/:id/decision`. Un rifiuto riporta la bozza a `DRAFT` e lascia la decisione `REJECTED`. Anteprima in iframe `sandbox` ed export HTML/testo escapati, senza script, immagini remote o pixel. `provider` è null e `sendingEnabled` è false. Nessun destinatario, SMTP o account.
 
 ## Controlli privacy tecnici
 
@@ -24,7 +28,7 @@ Identità del titolare, P.IVA, contatti, fornitori/DPA, trasferimenti, retention
 
 ## Verifica
 
-`tests/seo.test.ts`, `tests/growth-tools.test.ts`, integrazioni marketing/privacy in `tests/integration.test.ts`. Aggiungere prova browser autenticata e verifica live dopo CI. Niente claim di pubblicazione prima della revisione confermata dall'health.
+`tests/seo.test.ts`, `tests/growth-tools.test.ts`, `tests/email-drafts.test.ts`, integrazioni marketing/privacy in `tests/integration.test.ts`. Aggiungere prova browser autenticata e verifica live dopo CI. Niente claim di pubblicazione prima della revisione confermata dall'health.
 
 Verifica conclusa: 0008 applicata in staging e produzione; 102 test server e 103 browser complessivi passati. Nessuna campagna o invio attivato. Testo privacy pubblico aggiornato ai trattamenti reali di OMNI ASSIST (NVIDIA), passkey e R2 assente; dati legali e policy da completare restano dichiarati.
 
