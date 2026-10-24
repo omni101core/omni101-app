@@ -655,5 +655,19 @@
     "priority": "HIGH",
     "acceptance": "Per ogni modulo separare qualità visiva, funzionalità, automazione, integrazione e readiness commerciale con evidenza o UNKNOWN. Browser e percorsi end-to-end, nessuna media nasconde sicurezza o blocchi. Fonti§2/18/23–24.",
     "remaining": "Audit e matrice avviati; completare prove visuali/operazioni, prioritizzare gap certi. Nessun punteggio numerico dimostrativo usato come misura. Login/recovery richiede strategia e approvazione prima della migrazione."
+  },
+  {
+    "key": "continuous-quality-scout-24",
+    "name": "Qualità continua con scout indipendente e recupero verificabile",
+    "source": "continuous-product-quality-2026-10-24",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH",
+    "related_backlog_keys": [
+      "brand",
+      "design-system",
+      "public-experience"
+    ],
+    "acceptance": "Scout indipendente in sola lettura, senza nuovi job persistenti: ogni finding conserva ID, schermata/percorso, riproduzione, misura o prova, severità, priorità, criterio di chiusura e verifica dopo la correzione. Misurare contrasto, tipografia e temi su schermate reali; verificare chatbot adattivo, brief artistico rispetto agli asset effettivi, lingua/copy e percorso di conversione. Collegare gli interventi a brand, design-system e public-experience, preservando il lavoro precedente senza redesign distruttivi.",
+    "remaining": "Scout attivo: output temporaneo findings.json da rivedere e importare dal coordinatore. Misure, correzioni e prove di chiusura non ancora consolidate né rilasciate; nessuna qualità complessiva dichiarata."
   }
 ]

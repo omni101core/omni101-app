@@ -13,3 +13,5 @@ Aggiorna atomicamente soltanto `main`, `assets.directory`, `vars.BUILD_REVISION`
 Rollback: copiare il backup indicato su `/tmp/omni101-preview-3af1af4/local.restore.json`, poi rinominarlo con `mv` su `local.json`. È una sostituzione atomica nella stessa directory; non toccare directory di stato, porte o processi. Le directory preparate restano conservate anche in caso di errore. Eseguire `status` e confrontare health/revisione configurata: se differiscono, l’anteprima non è ancora aggiornata; eventuale intervento sul processo richiede una verifica separata.
 
 Vincoli: massimo 150 MiB archivio/build, 50 MiB per file, 12.000 entry ZIP; supplementi massimo 25 MiB/2.000 entry per directory. Il wrapper non legge `.env`, stato applicativo o credenziali locali. Prima applicazione riservata alla revisione del coordinatore; nessun aggiornamento eseguito durante l’implementazione.
+
+Il manifest distingue CI_SUCCEEDED da ampiezza delle verifiche: FULL_RELEASE_PIPELINE sul branchrelease-commercial, ISOLATED_OR_FOCUSED_CHECKS sugli altri branch consentiti. Una preview da test mirati non dimostra la verifica completa del prodotto.

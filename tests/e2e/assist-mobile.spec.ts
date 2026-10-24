@@ -64,7 +64,8 @@ test('assistant trigger stays clear of visible cinema controls on a small screen
  const box=await launch.boundingBox();
  expect(box).toBeTruthy();
  expect(box!.width).toBeLessThanOrEqual(160);
- expect(box!.height).toBeLessThanOrEqual(36);
+ expect(box!.height).toBeGreaterThanOrEqual(44);
+ expect(box!.height).toBeLessThanOrEqual(48);
  expect(640-(box!.y+box!.height)).toBeGreaterThanOrEqual(64);
  await tabs.last().focus();
  await page.keyboard.press('Tab');

@@ -53,7 +53,7 @@ def status():
     proof = Path(data['main']).parent.parent / 'preview-source.json'
     if proof.is_file() and not proof.is_symlink():
         source = json.loads(proof.read_text())
-        result['source'] = {key: source.get(key) for key in ('sha', 'run', 'status', 'conclusion', 'verification')}
+        result['source'] = {key: source.get(key) for key in ('sha', 'run', 'status', 'conclusion', 'verification', 'testScope')}
     print(json.dumps(result))
 
 def download(artifact, destination):
@@ -137,7 +137,7 @@ def update(run, apply):
     matches = [a for a in artifacts if a['name'] == 'omni101-verified-build' and not a.get('expired')]
     if len(matches) != 1 or matches[0]['size_in_bytes'] > LIMIT:
         fail('Exactly one bounded, unexpired verified build is required.')
-    plan = {'run': run, 'sha': sha, 'verification': 'VERIFIED', 'apply': apply, 'serverRestarted': False}
+    plan = {'run': run, 'sha': sha, 'verification': 'CI_SUCCEEDED', 'testScope': 'FULL_RELEASE_PIPELINE' if info['head_branch']=='release-commercial' else 'ISOLATED_OR_FOCUSED_CHECKS', 'apply': apply, 'serverRestarted': False}
     if apply:
         directory = Path(tempfile.mkdtemp(prefix=f'omni101-preview-{sha[:12]}-', dir='/tmp'))
         archive = directory / 'artifact.zip'

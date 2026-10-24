@@ -2,7 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {DatabaseSync} from 'node:sqlite';
 import {execFileSync} from 'node:child_process';
 import {readFileSync,readdirSync} from 'node:fs';
-const sql=()=>execFileSync('node',['scripts/seed-reviewed-context.mjs','--sql'],{encoding:'utf8',maxBuffer:64e6});
+const sql=(revision='a'.repeat(40))=>execFileSync('node',['scripts/seed-reviewed-context.mjs','--sql'],{encoding:'utf8',maxBuffer:64e6,env:{PATH:process.env.PATH,GITHUB_SHA:revision}});
 const database=()=>{const db=new DatabaseSync(':memory:');for(const f of readdirSync('packages/db/migrations').sort())db.exec(readFileSync('packages/db/migrations/'+f,'utf8'));const t=Date.now();db.prepare('INSERT OR IGNORE INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('omni101','OMNI101','omni101',t,t);return db};
 const snapshot=(db:DatabaseSync)=>JSON.stringify(['knowledge_records','knowledge_revisions','audit_logs','tasks'].map(t=>db.prepare(`SELECT * FROM ${t} ORDER BY id`).all()));
 const one=(db:DatabaseSync,q:string,...p:string[])=>db.prepare(q).get(...p) as Record<string,unknown>;
@@ -42,5 +42,44 @@ describe('seed-reviewed-context conservative sync',()=>{
   db.exec(sql());
   expect(one(db,'SELECT * FROM knowledge_records WHERE id=?',record)).toEqual(edited[0]);
   expect(one(db,'SELECT * FROM tasks WHERE id=?',pricing)).toEqual(edited[1]);
+ });
+});
+
+describe('reviewed scout findings in Knowledge',()=>{
+ it('imports five traceable team risks under the existing task without creating extra tasks',()=>{
+  const db=database();db.exec(sql());
+  const findings=JSON.parse(readFileSync('docs/operativo/product-quality-findings.json','utf8')).findings;
+  const rows=db.prepare("SELECT * FROM knowledge_records WHERE kind='RISK' AND source LIKE 'docs/operativo/product-quality-findings.json#%' ORDER BY name").all() as Record<string,unknown>[];
+  expect(rows).toHaveLength(5);
+  expect(one(db,'SELECT count(*) n FROM tasks').n).toBe(JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8')).length);
+  for(const finding of findings){
+   const row=rows.find(r=>String(r.name).startsWith(finding.id+' · '))!;
+   expect(row).toMatchObject({task_id:'mandate:omni101:continuous-quality-scout-24',source_id:null,access_scope:'TEAM_INTERNAL',status:finding.verificationStatus==='PRODUCTION_VERIFIED'?'VERIFIED':finding.implementationStatus==='IMPLEMENTED'?'IMPLEMENTED':'IN_PROGRESS'});
+   const detail=JSON.parse(String(row.body)),proof=JSON.parse(String(row.evidence));
+   expect(detail).toMatchObject({observed:finding.observed,expected:finding.expected,confidence:finding.confidence,viewport:finding.viewport,theme:finding.theme,language:finding.language,authstate:finding.authstate,possiblecause:finding.possiblecause});
+   if(finding.standardsNote)expect(detail.standardsNote).toBe(finding.standardsNote);
+   expect(proof).toMatchObject({screenshot:finding.evidenceScreenshotpath,runtimeRevision:finding.runtimeRevision,repositoryImage:'https://github.com/omni101core/omni101-app/blob/'+'a'.repeat(40)+'/'+finding.evidenceScreenshotpath});
+   expect(String(row.source)).toContain('art_20261024T042351_a495f8339026');
+   expect(one(db,'SELECT count(*) n FROM knowledge_revisions WHERE record_id=?',String(row.id)).n).toBe(1);
+  }
+ });
+ it('syncs stale importer findings once while preserving human edits and revision history',()=>{
+  const db=database();db.exec(sql());
+  const rows=db.prepare("SELECT id FROM knowledge_records WHERE kind='RISK' AND source LIKE 'docs/operativo/product-quality-findings.json#%' ORDER BY name").all() as {id:string}[];
+  db.prepare("UPDATE knowledge_records SET body='stale observation',status='CAPTURED' WHERE id=?").run(rows[0].id);
+  db.prepare("UPDATE knowledge_records SET body='human-reviewed observation',updated_by='user-1',version=version+1,updated_at=updated_at+1 WHERE id=?").run(rows[1].id);
+  const human=one(db,'SELECT * FROM knowledge_records WHERE id=?',rows[1].id);
+  db.exec(sql());
+  expect(one(db,'SELECT body,version FROM knowledge_records WHERE id=?',rows[0].id).version).toBe(2);
+  expect(one(db,'SELECT count(*) n FROM knowledge_revisions WHERE record_id=?',rows[0].id).n).toBe(2);
+  expect(one(db,'SELECT * FROM knowledge_records WHERE id=?',rows[1].id)).toEqual(human);
+  const settled=snapshot(db);db.exec(sql());expect(snapshot(db)).toBe(settled);
+ });
+ it('reports added risk count and sync statements without printing SQL or original bodies',()=>{
+  const result=JSON.parse(execFileSync('node',['scripts/seed-reviewed-context.mjs','--dry-run'],{encoding:'utf8',env:{PATH:process.env.PATH}}));
+  expect(result.qualityFindings).toBe(5);
+  expect(result.syncStatements.knowledgeRecords).toBe(result.requirements+result.sources+result.privateOriginals+result.references+result.qualityFindings);
+  expect(result.tasks).toBe(result.requirements);
+  expect(result.mutations).toBe(false);
  });
 });

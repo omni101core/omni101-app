@@ -5,7 +5,9 @@
 .theme-toggle:hover{background:var(--surface)}
 .site-header{border-bottom-color:var(--line)}
 .site-nav a,.availability,.home-numbers dt,.home-door-index{color:var(--muted)}
-.site-menu{background:var(--bg);color:var(--ivory)}
+/* Menu and footer are dark shell surfaces in both themes: like the dark scenes, they own their tokens and foreground. */
+.site-menu,.site-footer{--bg:#101112;--surface:#191a1c;--elevated:#252629;--ivory:#f2eee6;--gold:#d2b77b;--muted:#b0ada6;--line:#353535;color:var(--ivory);color-scheme:dark}
+.site-menu{background:var(--bg)}
 .reel-skip,.reel-loader-caption{color:var(--muted)}
 .cinema-experience,.sp-stage,.vision-stage,.creative-art{--bg:#101112;--surface:#191a1c;--elevated:#252629;--ivory:#f2eee6;--gold:#d2b77b;--muted:#b0ada6;--line:#353535;color:#f2eee6;color-scheme:dark}
 :root[data-theme=light] .creative-controls select{background:var(--bg)}
