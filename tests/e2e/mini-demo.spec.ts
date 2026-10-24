@@ -18,6 +18,7 @@ test('public demo page: banner, noindex, read-only landing, CTA with brief',asyn
 test('revoked or unknown share shows a neutral message',async({page})=>{
  await page.route('**/api/demo/'+demoRef,route=>route.fulfill({status:404,json:{error:'Demo non disponibile.'}}));
  await page.goto('/demo/'+demoRef);
- await expect(page.getByRole('alert')).toContainText('Demo not available');
+ await expect(page.getByRole('alert')).toContainText('Questo link non è più valido');
+ await expect(page.getByRole('alert')).not.toContainText('Demo non disponibile');
  await expect(page.getByRole('heading',{level:1})).toHaveCount(0);
 });

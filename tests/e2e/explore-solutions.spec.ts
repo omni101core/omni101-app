@@ -5,7 +5,7 @@ const demos=['voice','commerce','workflow','creative','vision','avatar','softwar
 
 test('explore: the path loads with every station, real links and one WebGL canvas at most',async({page,isMobile})=>{
  const response=await page.goto('/explore');expect(response?.status()).toBe(200);await hydrated(page);
- await expect(page).toHaveTitle(/Playground · OMNI101/);
+ await expect(page).toHaveTitle(/OMNI101 · Playground/);
  await expect(page.getByRole('heading',{level:1})).toContainText('Le possibilità');
  await expect(page.locator('.ex-card')).toHaveCount(12);
  for(const demo of demos)await expect(page.locator(`.ex-card>a[href="/explore/${demo}"]`)).toHaveCount(1);
@@ -41,7 +41,7 @@ test('explore: reduced motion keeps every station visible without pinning',async
 
 test('solutions: the wheel opens on a family, tabs work with the keyboard and the catalogue follows',async({page})=>{
  const response=await page.goto('/solutions');expect(response?.status()).toBe(200);await hydrated(page);
- await expect(page).toHaveTitle(/Soluzioni · OMNI101/);
+ await expect(page).toHaveTitle(/OMNI101 · Soluzioni/);
  const tabs=page.getByRole('tab');await expect(tabs).toHaveCount(5);
  await expect(page.getByRole('tab',{name:/BUILD/})).toHaveAttribute('aria-selected','true');
  await page.getByRole('tab',{name:/BUILD/}).focus();

@@ -10,7 +10,7 @@ async function open(page:Page,path='/start-project'){
 test.describe('bozza intake',()=>{
  test('il ricaricamento ripristina i campi non personali e non salva email né consenso',async({page})=>{
   await open(page);
-  await page.getByLabel('Tipo di progetto',{exact:true}).selectOption('sito');
+  await page.getByRole('combobox',{name:/^Tipo di progetto/}).selectOption('sito');
   await page.getByLabel('Quante pagine ti immagini?').selectOption('Fino a 5');
   await page.getByLabel(/Raccontaci la tua idea/i).fill('Un sito per il mio studio dentistico');
   await page.getByLabel(/La tua email/i).fill('luca@example.test');
