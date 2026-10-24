@@ -1,4 +1,4 @@
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {Link,NavLink,useLocation} from 'react-router';
 import {ThemeToggle} from '../../ThemeToggle';
 import {gsap} from 'gsap';
@@ -17,7 +17,7 @@ const closed='polygon(50% 50%,50% 50%,50% 50%,50% 50%)',opened='polygon(0% 0%,10
 function Menu(){
  const [open,setOpen]=useState(false);
  const panel=useRef<HTMLDivElement>(null),trigger=useRef<HTMLButtonElement>(null),close=useRef<HTMLButtonElement>(null),wasOpen=useRef(false);
- useEffect(()=>{
+ useLayoutEffect(()=>{
   const element=panel.current;
   if(!element)return;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -26,13 +26,15 @@ function Menu(){
   if(open){
    wasOpen.current=true;
    element.dataset.open='true';
+   // aria-modal does not contain focus itself. Keep native/pointer focus from returning to the background trigger.
+   const containFocus=(event:FocusEvent)=>{if(event.target instanceof Node&&!element.contains(event.target))close.current?.focus({preventScroll:true})};
+   document.addEventListener('focusin',containFocus);
    close.current?.focus({preventScroll:true});
-   // ponytail: retry on the next frame if focus did not land inside the panel; CI diagnostics name the cause.
-   const frame=requestAnimationFrame(()=>{if(!element.contains(document.activeElement))close.current?.focus({preventScroll:true})});
-   if(reduced)return()=>cancelAnimationFrame(frame);
+   const releaseFocus=()=>document.removeEventListener('focusin',containFocus);
+   if(reduced)return releaseFocus;
    gsap.to(element,{clipPath:opened,duration:.8,ease:'expo.out'});
    gsap.fromTo(items,{yPercent:70,opacity:0},{yPercent:0,opacity:1,duration:.8,ease:'expo.out',stagger:.05,delay:.12});
-   return()=>cancelAnimationFrame(frame);
+   return releaseFocus;
   }else if(wasOpen.current){
    trigger.current?.focus({preventScroll:true});
    if(reduced){element.dataset.open='false';return}

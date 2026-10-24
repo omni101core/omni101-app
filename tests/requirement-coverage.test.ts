@@ -87,3 +87,34 @@ describe('requirement coverage reconciliation',()=>{
  });
 
 });
+
+describe('coverage operational navigation from the real registry',()=>{
+ it('links only registered task keys, original records and the canonical handoff without granting clients access',async()=>{
+  const {handleRequirementCoverage}=await import('../apps/web/app/server/requirement-coverage');
+  const backlog=JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8'));
+  const context=JSON.parse(readFileSync('docs/operativo/agent-context.json','utf8'));
+  const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8'));
+  const actor={id:'synthetic-owner',orgId:'omni101',role:'OWNER'} as any,env={ORGANIZATION_ID:'omni101'} as any;
+  const read=async(query:string,who=actor)=>await handleRequirementCoverage(new Request('https://omni101.app/api/requirement-coverage'+query),env,who)!.json() as any;
+  const page=await read('?kind=MACRO_GROUP');
+  expect(page.navigation).toEqual({pipeline:'/admin/pipeline',handoff:context.handoff});
+  expect(readFileSync(page.navigation.handoff,'utf8').length).toBeGreaterThan(0);
+  for(const offset of [0,25,50])for(const row of (await read('?kind=MACRO_GROUP&offset='+offset)).records){
+   expect(row.tasks.length).toBeGreaterThan(0);
+   for(const task of row.tasks){const key=task.id.replace('mandate:omni101:','');expect(backlog.some((item:any)=>item.key===key&&item.name===task.name)).toBe(true);expect(task.href).toBe('/admin/tasks?record='+encodeURIComponent(task.id))}
+  }
+  const publicRow=(await read('?source='+sources[0].id+'&kind=CANDIDATE')).records[0];
+  expect(publicRow.source.knowledgeRecordId).toBe(sources[0].record_id);
+  const privateSource=context.private_sources.find((s:any)=>s.id==='commerce-engine-2026-10-24');
+  for(const role of ['OWNER','ADMIN']){
+   const row=(await read('?source='+privateSource.id,{...actor,role})).records[0];
+   const hex=digest('omni101-context-v1:'+privateSource.id),id=hex.slice(0,8)+'-'+hex.slice(8,12)+'-4'+hex.slice(13,16)+'-a'+hex.slice(17,20)+'-'+hex.slice(20,32);
+   expect(row.source.knowledgeHref).toBe('/admin/knowledge?record='+id);
+   expect(row.source.knowledgeRecordId).toBe(id);
+  }
+  const team=(await read('?source='+privateSource.id,{...actor,role:'DEVELOPER'})).records[0];
+  expect(team.source.knowledgeHref).toBeUndefined();expect(team.source.knowledgeRecordId).toBeUndefined();expect(team.source.body).toBeUndefined();
+  const unlinked=(await read('?kind=REQUIREMENT&q=REC-020')).records.find((r:any)=>r.id==='REC-020');expect(unlinked.tasks).toEqual([]);
+  try{handleRequirementCoverage(new Request('https://omni101.app/api/requirement-coverage'),env,{...actor,role:'CLIENT'});throw new Error('Client unexpectedly allowed')}catch(error){expect((error as {status:number}).status).toBe(403)}
+ });
+});

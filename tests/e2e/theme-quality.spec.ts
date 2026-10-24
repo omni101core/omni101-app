@@ -82,6 +82,9 @@ for(const theme of ['light','dark'] as const){
    const active=document.activeElement,close=document.querySelector('#site-menu>header button')!,style=getComputedStyle(close);
    return {active:active?.getAttribute('aria-label')||active?.tagName,activeClass:active?.className||'',hasFocus:document.hasFocus(),inertAncestor:close.closest('[inert]')?.className||null,visibility:style.visibility,display:style.display,open:(document.querySelector('#site-menu') as HTMLElement).dataset.open};
   })).toMatchObject({active:'Chiudi menu',hasFocus:true});
+  // A native focus default or another control must not leave an aria-modal panel's focus outside it.
+  await page.getByRole('button',{name:'Apri menu'}).focus();
+  await expect(menu.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
   expectReadable(await contrast(page,'#site-menu'));
   const outside=await menu.locator('a,small,p,.wordmark').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.left<-.5||r.right>innerWidth+.5}).map(el=>el.textContent));
   expect(outside).toEqual([]);
@@ -90,6 +93,16 @@ for(const theme of ['light','dark'] as const){
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
   await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  await expect(page.getByRole('button',{name:'Apri menu'})).toBeFocused();
+  // Reopening by keyboard and touch must obey the same focus contract as the mouse click above.
+  await page.keyboard.press('Enter');
+  await expect(menu.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button',{name:'Apri menu'})).toBeFocused();
+  await page.getByRole('button',{name:'Apri menu'}).tap();
+  await expect(menu.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
+  await menu.getByRole('button',{name:'Chiudi menu'}).tap();
   await expect(menu).toBeHidden();
   await expect(page.getByRole('button',{name:'Apri menu'})).toBeFocused();
  });

@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router';
 import CapabilityCarousel from './CapabilityCarousel';
 import CapabilityCatalog from './CapabilityCatalog';
 import SegmentGrid from './SegmentGrid';
+import EngagementModes from './EngagementModes';
 import {ClosingCTA,PublicShell} from './PublicShell';
 import {familyFromSlug,panels} from './panels';
 
@@ -27,6 +28,7 @@ export default function SolutionsView({slug}:{slug?:string}){
   <CapabilityCarousel active={active} fixed={fixed>=0} onSelect={select}/>
   {family&&<SegmentGrid family={family} name={panel.name}/>}
   <CapabilityCatalog index={active}/>
+  <EngagementModes/>
   <ClosingCTA/>
  </PublicShell>;
 }

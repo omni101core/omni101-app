@@ -1,6 +1,6 @@
 import RequirementCoverage from './RequirementCoverage';
-import {useEffect,useState,type FormEvent} from 'react';
-import {Link} from 'react-router';
+import {useEffect,useRef,useState,type FormEvent} from 'react';
+import {Link,useSearchParams} from 'react-router';
 import {ActionButton,TextField,Panel,Feedback} from './ProductUI';
 type RecordData={id:string;name:string;kind:string;status:string;body:string;source:string;acceptance:string;evidence:string;source_id:string|null;task_id:string|null;version:number;updated_by?:string};
 type Revision={version:number;snapshot:string;author_id:string;created_at:number};
@@ -8,11 +8,21 @@ type Listing={records:RecordData[];hasMore:boolean;kinds:string[];statuses:strin
 async function api<T>(path:string,init?:RequestInit){const res=await fetch(path,{...init,headers:{'Content-Type':'application/json',...init?.headers}}),data=await res.json() as T&{error?:string};if(!res.ok)throw new Error(data.error||'Operazione non completata.');return data;}
 const empty=():RecordData=>({id:crypto.randomUUID(),name:'',kind:'IDEA',status:'CAPTURED',body:'',source:'',acceptance:'',evidence:'',source_id:null,task_id:null,version:0});
 export default function KnowledgeWorkspace(){
+ const [params]=useSearchParams(),linkedRecord=params.get('record'),opening=useRef(0);
  const [list,setList]=useState<Listing|null>(null),[draft,setDraft]=useState<RecordData|null>(null),[history,setHistory]=useState<Revision[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState(''),[query,setQuery]=useState(''),[kind,setKind]=useState(''),[status,setStatus]=useState(''),[editorKey,setEditorKey]=useState(0);
  async function load(){setList(await api<Listing>('/api/knowledge?'+new URLSearchParams({q:query,kind,status})));}
  useEffect(()=>{let active=true;void api<Listing>('/api/knowledge').then(data=>{if(active)setList(data)}).catch(e=>{if(active)setError(e.message)});return()=>{active=false}},[]);
  async function run(work:()=>Promise<void>){setBusy(true);setError('');setNotice('');try{await work()}catch(e){setError((e as Error).message)}finally{setBusy(false)}}
- async function open(id:string){const data=await api<{record:RecordData;revisions:Revision[]}>('/api/knowledge/'+id);setDraft(data.record);setHistory(data.revisions);setEditorKey(n=>n+1);}
+ useEffect(()=>{
+  const seq=++opening.current,controller=new AbortController();
+  if(!linkedRecord){setBusy(false);return()=>{controller.abort();opening.current++}}
+  setDraft(null);setHistory([]);setError('');setNotice('');
+  if(!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(linkedRecord)){setError('Collegamento alla fonte non valido.');return()=>{controller.abort();opening.current++}}
+  setBusy(true);
+  void api<{record:RecordData;revisions:Revision[]}>('/api/knowledge/'+encodeURIComponent(linkedRecord),{signal:controller.signal}).then(data=>{if(seq===opening.current){setDraft(data.record);setHistory(data.revisions);setEditorKey(n=>n+1)}}).catch(e=>{if(!controller.signal.aborted&&seq===opening.current)setError((e as Error).message)}).finally(()=>{if(seq===opening.current)setBusy(false)});
+  return()=>{controller.abort();opening.current++};
+ },[linkedRecord]);
+ async function open(id:string){const seq=++opening.current;const data=await api<{record:RecordData;revisions:Revision[]}>('/api/knowledge/'+encodeURIComponent(id));if(seq!==opening.current)return;setDraft(data.record);setHistory(data.revisions);setEditorKey(n=>n+1);}
  function save(e:FormEvent<HTMLFormElement>){e.preventDefault();if(!draft)return;const f=new FormData(e.currentTarget),record={name:String(f.get('name')),kind:String(f.get('kind')),status:String(f.get('status')),body:String(f.get('body')),source:String(f.get('source')),acceptance:String(f.get('acceptance')),evidence:String(f.get('evidence')),source_id:String(f.get('source_id')||'')||null,task_id:String(f.get('task_id')||'')||null};void run(async()=>{await api('/api/knowledge'+(draft.version?'/'+draft.id:''),{method:draft.version?'PATCH':'POST',body:JSON.stringify({id:draft.id,version:draft.version,record})});await open(draft.id);await load();setNotice('Elemento salvato con versione, autore e audit. Nessuna attività o esecuzione avviata.');});}
  function restore(revision:Revision){if(!draft)return;const old=JSON.parse(revision.snapshot) as RecordData;setDraft({...old,id:draft.id,version:draft.version,status:'CAPTURED',evidence:''});setEditorKey(n=>n+1);setNotice('Versione precedente caricata come bozza. Salva per creare una nuova revisione; la cronologia resta conservata.');}
  function exportRecord(){if(!draft)return;const file=new Blob([JSON.stringify({format:'omni101-context-v1',policy:'TEAM_INTERNAL',exported_at:new Date().toISOString(),record:draft,revisions:history},null,2)],{type:'application/json'}),url=URL.createObjectURL(file),a=document.createElement('a');a.href=url;a.download='omni101-context-'+draft.id+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
