@@ -12,7 +12,8 @@ test('public demo page: banner, noindex, read-only landing, CTA with brief',asyn
  const href=await page.getByRole('link',{name:'Book now'}).getAttribute('href');
  expect(href).toContain('/start-project?brief=');
  expect(new URL(href||'').searchParams.get('brief')).toContain('Harbour Cafe');
- await expect(page.locator('input,textarea,form')).toHaveCount(0);
+ // The demo itself is read-only. The assistant widget from root.tsx (always mounted, closed) owns its own form and textarea, so scope to the demo wrapper.
+ await expect(page.getByRole('note').locator('..').locator('input,textarea,form')).toHaveCount(0);
 });
 test('revoked or unknown share shows a neutral message',async({page})=>{
  await page.route('**/api/demo/'+demoRef,route=>route.fulfill({status:404,json:{error:'Demo non disponibile.'}}));
