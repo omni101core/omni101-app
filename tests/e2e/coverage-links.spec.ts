@@ -16,9 +16,9 @@ test('coverage opens the authorized Knowledge source and retains task and handof
  await panel.getByRole('link',{name:'Apri fonte in archivio ↗'}).click();
  await expect(page).toHaveURL(new RegExp('record='+id));
  await expect(page.getByLabel('Titolo',{exact:true})).toHaveValue(record.name);
- await expect(page.getByLabel('Contenuto originale o nota',{exact:true})).toHaveValue(record.body);
+ await expect(page.getByLabel('Contenuto originale o nota')).toHaveValue(record.body);
  await page.route('**/api/knowledge/'+id,r=>r.fulfill({status:404,json:{error:'Elemento non disponibile.'}}));
  await page.reload();
  await expect(page.getByRole('alert')).toContainText('Elemento non disponibile.');
- await expect(page.getByLabel('Contenuto originale o nota',{exact:true})).toHaveCount(0);
+ await expect(page.getByLabel('Contenuto originale o nota')).toHaveCount(0);
 });

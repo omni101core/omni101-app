@@ -162,7 +162,7 @@
   "source": "consolidamento-operativo-2026-10-23",
   "status": "IN_PROGRESS",
   "acceptance": "Costi per cadenza, formule esplicite, snapshot, conflitti, approvazione backend e collegamento al lead.",
-  "remaining": "24/10: motore v2 (calcolatore-omni101, docs/modello-prezzi-v2.md): formula unica max(pavimento, valore), 3 livelli, bundle, mercato e valuta, quote() per ogni richiesta, Shopify rimosso; 'da' pubblici in apps/web/app/content/prezzi-pubblici.json (MOSTRA_PREZZI=false). W29 accettazione proposta in corso. Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*. Non coperti: contratti, spese e margini come modulo Operations; preventivo accettato→contratto/ordine→progetto e task; opzioni/varianti, imposte, valuta e condizioni di pagamento.",
+  "remaining": "Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*. Non coperti: contratti, spese e margini come modulo Operations; preventivo accettato→contratto/ordine→progetto e task; opzioni/varianti, imposte, valuta e condizioni di pagamento.",
   "priority": "HIGH",
   "evidence": "Produzione LIVE 01805108595ba1bc21866bcc84825fae829792ff, run CI 39962720977 verde (verify e production, health a SHA esatto). Fonte: docs/operativo/consegna-sonnet-a-opus-2026-10-23.md."
  },
@@ -306,7 +306,7 @@
   "status": "PLANNED",
   "priority": "HIGH",
   "acceptance": "Tre livelli (routing deterministico, interpretazione, azioni autorizzate); generative UI solo da registry di componenti con schema validato; risposte su memoria con fonti e distinzione approvato/ipotesi; lead creato con conferma; handoff umano; azioni interne solo con permessi e approvazione; tool tipizzati validati lato server con i permessi dell'utente.",
-  "remaining": "24/10: redesign UI (launcher, bottom sheet mobile, badge informativa/azione) in CI. Assistente NVIDIA esistente con limiti resta la base; nessuna azione autorizzata né generative UI verificata. Nessun codice arbitrario generato dai modelli. Inbox unificata e command palette restano nei gruppi dedicati.",
+  "remaining": "Assistente NVIDIA esistente con limiti resta la base; nessuna azione autorizzata né generative UI verificata. Nessun codice arbitrario generato dai modelli. Inbox unificata e command palette restano nei gruppi dedicati.",
   "source": "product-quality-integrazione-2026-10-23"
  },
  {
@@ -333,7 +333,7 @@
   "status": "PLANNED",
   "priority": "HIGH",
   "acceptance": "Builder a blocchi su componenti approvati del design system con template, preview, versioni/rollback, custom domains, A/B e funnel multi-step sorgente→landing→form→lead→offerta→contratto→pagamento misurabile per stage con ramificazioni; esperimenti con obiettivi, eventi, guardrails e storico (heatmap solo privacy-aware); l'AI compone solo componenti autorizzati, mai JS generato pubblicato.",
-  "remaining": "24/10: landing /en con 3 offerte e lead magnet mini-demo (W14, W23); configuratore landing in dashboard (W2); mini-demo automatica da lead (W21); contenuti del funnel USA 'Local Desk' pronti in /tmp/omni101-deleghe/w20b-funnel-us (non pubblicati). Nessun builder o funnel in produzione. Valutare Puck come candidato; valutare PostHog, GrowthBook e Formbricks prima di duplicare infrastruttura sperimentale. Nessun dominio, pubblico o invio attivato senza autorizzazione.",
+  "remaining": "Nessun builder o funnel in produzione. Valutare Puck come candidato; valutare PostHog, GrowthBook e Formbricks prima di duplicare infrastruttura sperimentale. Nessun dominio, pubblico o invio attivato senza autorizzazione.",
   "source": "consolidamento-operativo-2026-10-23"
  },
  {
@@ -627,7 +627,7 @@
   "status": "PLANNED",
   "priority": "HIGH",
   "acceptance": "Una prima offerta riutilizza catalogo e formule esistenti, mostra demo autentica/inclusioni/esclusioni/prerequisiti, salva configurazione e snapshot prezzo server, distingue READY_TO_DEMO e READY_TO_CONFIGURE da acquistabile. Fonte§2–5,19.",
-  "remaining": "24/10: backend configurazioni (0016) + configuratore admin + renderer LandingProduct integrati, in CI. Verificare capability riutilizzabili, definire offerta e regole approvate; storefront/configurazione persistente e demo da integrare. Non inventare prezzi né presentare mock come prodotto erogabile."
+  "remaining": "Verificare capability riutilizzabili, definire offerta e regole approvate; storefront/configurazione persistente e demo da integrare. Non inventare prezzi né presentare mock come prodotto erogabile."
  },
  {
   "key": "commerce-sandbox-order-fulfillment",

@@ -11,7 +11,7 @@ test('home adapts to reduced-motion changes without reload or lost navigation',a
  // CI probe: a fresh listener records the media event. The class assertion stays.
  await page.evaluate(() => {
   const mq = matchMedia('(prefers-reduced-motion: reduce)');
-  const read = () => ({matches:mq.matches,hidden:document.hidden,visibility:document.visibilityState,reel:document.querySelector('.omni-reel')?.className||'',phase:document.querySelector('.omni-reel')?.getAttribute('data-reel-phase')||'',cinema:document.querySelector('.cinema-experience')?.className||''});
+  const read = () => ({matches:mq.matches,hidden:document.hidden,visibility:document.visibilityState,reel:document.querySelector('.omni-reel')?.className||'',phase:document.querySelector('.omni-reel')?.getAttribute('data-reel-phase')||'',cinema:document.querySelector('#capitolo')?.className||''});
   const hits:{eventMatches:boolean;listMatches:boolean;reel:string}[] = [];
   const on = (event:MediaQueryListEvent) => {hits.push({eventMatches:event.matches,listMatches:mq.matches,reel:document.querySelector('.omni-reel')?.className||''})};
   mq.addEventListener('change', on);
@@ -22,7 +22,7 @@ test('home adapts to reduced-motion changes without reload or lost navigation',a
   const bag = (window as unknown as {__omniMotionProbe:{before:unknown;hits:unknown[];on:(event:MediaQueryListEvent)=>void}}).__omniMotionProbe;
   const mq = matchMedia('(prefers-reduced-motion: reduce)');
   mq.removeEventListener('change', bag.on);
-  const now = {matches:mq.matches,hidden:document.hidden,visibility:document.visibilityState,reel:document.querySelector('.omni-reel')?.className||'',phase:document.querySelector('.omni-reel')?.getAttribute('data-reel-phase')||'',cinema:document.querySelector('.cinema-experience')?.className||''};
+  const now = {matches:mq.matches,hidden:document.hidden,visibility:document.visibilityState,reel:document.querySelector('.omni-reel')?.className||'',phase:document.querySelector('.omni-reel')?.getAttribute('data-reel-phase')||'',cinema:document.querySelector('#capitolo')?.className||''};
   const out = {before:bag.before,hits:bag.hits,now};
   delete (window as unknown as {__omniMotionProbe?:unknown}).__omniMotionProbe;
   return out;

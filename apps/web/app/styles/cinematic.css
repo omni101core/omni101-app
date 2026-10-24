@@ -7,5 +7,5 @@
 .has-demo .cinema-copy{width:min(36vw,480px)}
 .has-demo .cinema-copy h2{font-size:clamp(40px,5vw,78px);letter-spacing:-3px}
 .cinema-static-story .cinema-demo{position:static;width:auto;max-height:none;margin-top:20px;animation:none}
-@media(max-width:900px){.cinema-demo{top:auto;bottom:112px;left:5vw;right:5vw;width:auto;max-height:40svh}.has-demo .cinema-copy{top:84px;bottom:auto;width:90vw}.has-demo .cinema-copy h2{font-size:clamp(34px,10vw,52px);letter-spacing:-1.5px;margin:10px 0}.has-demo .cinema-copy p{max-width:none}}
+@media(max-width:900px){.cinema-demo{top:auto;bottom:112px;left:5vw;right:5vw;width:auto;max-height:40svh}.has-demo .cinema-copy{top:84px;bottom:auto;width:90vw}.has-demo .cinema-copy h2{font-size:clamp(34px,10vw,52px);letter-spacing:-1.5px;margin:10px 0}.has-demo .cinema-copy p{max-width:none}.cinema-demo .sc-pd-quadro{max-height:22svh}}
 @media(prefers-reduced-motion:reduce){.cinema-demo{animation:none}}

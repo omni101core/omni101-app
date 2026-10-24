@@ -67,7 +67,7 @@ test('sector portfolio shows original hospitality cover and concrete scope',asyn
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/work');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();await page.getByLabel('Settore',{exact:true}).selectOption('B&B e ospitalità');
  await expect(page.locator('.work-grid .work-card')).toHaveCount(1);
- await expect(page.locator('.work-grid img')).toHaveAttribute('src','/media/originali/work-07-casa-luce.jpg');
+ await expect(page.locator('.work-grid img')).toHaveAttribute('src','/media/originali/work-07-casa-luce.webp');
  await page.getByRole('link',{name:/Casa Luce/}).click();await expect(page).toHaveURL(/\/work\/casa-luce$/);
  await expect(page.getByText('Richiesta soggiorno e disponibilità da confermare',{exact:true})).toBeVisible();
 });

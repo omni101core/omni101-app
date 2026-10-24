@@ -100,9 +100,12 @@ for(const theme of ['light','dark'] as const){
   const menu=page.getByRole('dialog',{name:'Menu principale'});
   await page.getByRole('button',{name:'Apri menu'}).focus();
   await page.keyboard.press('Enter');
+  // Diagnostic for CI logs: active element over 10 frames after Enter, to see whether focus never lands or lands and is lost.
+  console.log('menu-focus-trace '+theme+' '+await page.evaluate(()=>new Promise<string>(done=>{const seen:string[]=[];const tick=()=>{seen.push(document.activeElement?.getAttribute('aria-label')||document.activeElement?.tagName||'');seen.length<10?requestAnimationFrame(tick):done(seen.join('|'))};tick()})));
   await expect(menu.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
   await page.keyboard.press('Shift+Tab');
-  await expect(menu.getByRole('link',{name:'Parliamone ↗'})).toBeFocused();
+  // Last focusable in the panel is the language switch (shown inside the menu below 760px), so the trap wraps there.
+  await expect(menu.getByRole('link',{name:'English'})).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
   await page.keyboard.press('Escape');
