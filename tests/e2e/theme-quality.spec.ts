@@ -72,7 +72,7 @@ for(const theme of ['light','dark'] as const){
  });
 
  // Focus is not asserted here: touch emulation (hasTouch, iPhone 13) leaves it on the trigger after the tap.
- // Open finding QS-MENU-TAP-FOCUS, CI run 40082463444. The keyboard test owns that contract.
+ // Open finding QS24-06, CI run 40082463444. The keyboard test owns that contract.
  test(`mobile menu text stays readable on its dark surface in the ${theme} theme`,async({page,isMobile})=>{
   test.skip(!isMobile,'the menu button only exists on small screens');
   await visit(page,theme,'/work');

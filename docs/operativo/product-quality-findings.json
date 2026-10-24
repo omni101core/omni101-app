@@ -124,7 +124,7 @@
       "standardsNote": "Observed30px target exceeds WCAG2.2AA24px baseline.44px is AAA/ergonomic guidance; no AA failure claimed."
     },
     {
-      "id": "QS-MENU-TAP-FOCUS",
+      "id": "QS24-06",
       "page": "menu mobile (shell pubblica)",
       "viewport": "iPhone 13 emulato su chromium, hasTouch",
       "theme": "light+dark",
@@ -139,7 +139,9 @@
       "evidence": "log CI 40082463444 menu-focus-probe; test da tastiera verde",
       "possiblecause": "comportamento del tap emulato in Playwright/Chromium mobile, non riprodotto su browser reale",
       "requirement": "continuous-quality-scout-24 / accessibilità menu",
-      "suggestion": "Riprodurre su dispositivo reale o WebKit; se si conferma, gestire il focus su pointerup."
+      "suggestion": "Riprodurre su dispositivo reale o WebKit; se si conferma, gestire il focus su pointerup.",
+      "source": "continuous-product-quality-2026-10-24",
+      "evidenceScreenshotpath": "docs/operativo/evidenze/quality-2026-10-24/menu-tap-focus.png"
     }
   ],
   "limitations": [
