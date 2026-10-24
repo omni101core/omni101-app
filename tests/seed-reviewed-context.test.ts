@@ -46,11 +46,11 @@ describe('seed-reviewed-context conservative sync',()=>{
 });
 
 describe('reviewed scout findings in Knowledge',()=>{
- it('imports five traceable team risks under the existing task without creating extra tasks',()=>{
+ it('imports every traceable team risk under the existing task without creating extra tasks',()=>{
   const db=database();db.exec(sql());
   const findings=JSON.parse(readFileSync('docs/operativo/product-quality-findings.json','utf8')).findings;
   const rows=db.prepare("SELECT * FROM knowledge_records WHERE kind='RISK' AND source LIKE 'docs/operativo/product-quality-findings.json#%' ORDER BY name").all() as Record<string,unknown>[];
-  expect(rows).toHaveLength(5);
+  expect(rows).toHaveLength(findings.length);
   expect(one(db,'SELECT count(*) n FROM tasks').n).toBe(JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8')).length);
   for(const finding of findings){
    const row=rows.find(r=>String(r.name).startsWith(finding.id+' · '))!;
@@ -77,7 +77,7 @@ describe('reviewed scout findings in Knowledge',()=>{
  });
  it('reports added risk count and sync statements without printing SQL or original bodies',()=>{
   const result=JSON.parse(execFileSync('node',['scripts/seed-reviewed-context.mjs','--dry-run'],{encoding:'utf8',env:{PATH:process.env.PATH}}));
-  expect(result.qualityFindings).toBe(5);
+  expect(result.qualityFindings).toBe(JSON.parse(readFileSync('docs/operativo/product-quality-findings.json','utf8')).findings.length);
   expect(result.syncStatements.knowledgeRecords).toBe(result.requirements+result.sources+result.privateOriginals+result.references+result.qualityFindings);
   expect(result.tasks).toBe(result.requirements);
   expect(result.mutations).toBe(false);
