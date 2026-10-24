@@ -24,7 +24,7 @@ Il tipo `Role` include anche `AGENT_SERVICE_ACCOUNT`. L'invito HTTP non lo offre
 | SALES | CRM e preventivi. |
 | FINANCE | Contratti, fatture, spese, cifre di ricavo e costo AI. |
 | DEVELOPER, DESIGNER | Task e ticket, con i manager. |
-| CLIENT | Solo il portale (`/api/portal`): righe del proprio `client_id` con filtri di stato/visibility e colonne proiettate. `/api/records/*` risponde 403 a CLIENT (collection e ID). Test: `tests/client-records-acl.test.ts`. |
+| CLIENT | Solo il portale (`/api/portal`): righe del proprio `client_id` con filtri di stato/visibility e colonne proiettate. `/api/records/*` risponde 403 a CLIENT (collection e ID), tranne `issues`: i propri ticket, con le stesse colonne del portale. Test: `tests/client-records-acl.test.ts`. |
 
 `/api/dashboard` azzera `revenueCents` e `aiCostCents` se il ruolo non è OWNER, ADMIN o FINANCE. Il workspace manda un CLIENT su `/portal` (`admin.tsx`).
 

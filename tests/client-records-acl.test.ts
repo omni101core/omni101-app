@@ -22,8 +22,8 @@ function seed(sqlite:DatabaseSync){
  ins('issues',{id:'tA',organization_id:'omni101',name:'T-A',client_id:'cliA',project_id:'pA-client',created_by:'x'});
  ins('issues',{id:'tB',organization_id:'omni101',name:'T-B',client_id:'cliB',project_id:'pB-client',created_by:'x'});
 }
-// ids per risorsa: [collection generica, id interno di A, id di B, id estraneo]
-const targets:[string,string,string,string][]=[['projects','pA-team','pB-client','pX-client'],['proposals','qA-draft','qB-ok','qX-ok'],['contracts','cA-draft','cB-ok','cX-ok'],['invoices','iA-draft','iB-ok','iX-ok'],['issues','tA','tB','tA']];
+// ids per risorsa: [risorsa, id interno di A, id di B, id estraneo]. issues e' a parte: CLIENT legge i propri ticket anche dal generico.
+const targets:[string,string,string,string][]=[['projects','pA-team','pB-client','pX-client'],['proposals','qA-draft','qB-ok','qX-ok'],['contracts','cA-draft','cB-ok','cX-ok'],['invoices','iA-draft','iB-ok','iX-ok']];
 
 describe('CLIENT non legge il generico /api/records',()=>{
  it.each(targets)('%s: collection e ID negati a CLIENT A, nessun dato nel corpo',async(res,own,otherClient,foreign)=>{
@@ -36,6 +36,18 @@ describe('CLIENT non legge il generico /api/records',()=>{
  it('CLIENT negato anche su risorse non client (clients, contacts)',async()=>{
   const {sqlite,env}=database();seed(sqlite);const cookie=await member(sqlite,'CLIENT','clienteA','cliA');
   for(const res of ['clients','contacts','leads'])expect((await handleApi(get('/api/records/'+res,cookie),env))!.status).toBe(403);
+ });
+});
+
+describe('ticket CLIENT dal generico',()=>{
+ it('A vede solo i propri, con colonne del portale; B, altro tenant e scritture no',async()=>{
+  const {sqlite,env}=database();seed(sqlite);const cookie=await member(sqlite,'CLIENT','clienteA','cliA');
+  const list=await handleApi(get('/api/records/issues',cookie),env);expect(list!.status).toBe(200);
+  const rows=(await list!.json() as {records:Record<string,unknown>[]}).records;expect(rows.map(x=>x.id)).toEqual(['tA']);
+  expect(Object.keys(rows[0]).sort()).toEqual(['created_at','description','id','name','priority','project_id','status']);
+  const own=await handleApi(get('/api/records/issues/tA',cookie),env);expect((await own!.json() as {records:unknown[]}).records).toHaveLength(1);
+  const other=await handleApi(get('/api/records/issues/tB',cookie),env);expect(other!.status).toBe(200);expect((await other!.json() as {records:unknown[]}).records).toHaveLength(0);
+  const patch=await handleApi(new Request('https://omni101.app/api/records/issues/tA',{method:'PATCH',headers:{Origin:'https://omni101.app','Content-Type':'application/json',Cookie:cookie},body:JSON.stringify({status:'CLOSED'})}),env);expect(patch!.status).toBe(403);
  });
 });
 
