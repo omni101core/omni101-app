@@ -6,7 +6,7 @@ import {media} from '../../content/media';
 import {loadProgress,ringPose,ringScene,slotAngle} from './reel-ring';
 import '../../styles/reel-entrance.css';
 
-const cards=[['Commerce experience','/explore/commerce'],['Digital products','/solutions/build'],['Creative intelligence','/explore/creative'],['Connected workflows','/explore/workflow'],['Brand systems','/work/identity'],['Omni portal','/solutions'],['Custom software','/solutions/build'],['Digital storefronts','/explore/commerce'],['Content in motion','/explore/creative'],['AI operations','/explore/workflow'],['Editorial experiences','/work/editorial'],['New possibilities','/start-project']];
+const cards=[['Un negozio per vendere online','/explore/commerce'],['Un sito per ricevere richieste','/solutions/build'],['Contenuti creati con l’AI','/explore/creative'],['Strumenti che lavorano insieme','/explore/workflow'],['Un’identità di marca coerente','/work/identity'],['Un portale per i tuoi clienti','/solutions'],['Software su misura','/solutions/build'],['Una vetrina online','/explore/commerce'],['Video e animazioni','/explore/creative'],['Meno lavoro manuale','/explore/workflow'],['Un sito che racconta','/work/editorial'],['La tua idea, da qui','/start-project']];
 const STEP=360/cards.length;
 const SEEN='omni:reel-seen';
 const covers=cards.map((_,i)=>media.reel.length?media.reel[i%media.reel.length]:null);
@@ -89,6 +89,8 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
   document.addEventListener('visibilitychange',wake);
   observer.observe(el);
   coverUrls.forEach(src=>{const image=new Image();image.onload=image.onerror=settle;image.src=src});
+  // ponytail: a slow link must not hold the intro hostage; open after 2 s with whatever has loaded.
+  setTimeout(()=>{if(alive&&!ready){ready=true;tryOpen()}},2000);
   const patience=window.setTimeout(()=>{ready=true;tryOpen()},6000);
   if(motionReduced||introSeen()){finish()}
   else{
@@ -144,7 +146,7 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
    <div className="reel-wheel" ref={ring}>{cards.map(([name,to],i)=>{
     const cover=covers[i];
     return <Link to={to} className="reel-card" key={name} onClick={e=>{if(dragged.current)e.preventDefault()}} onFocus={()=>{skip.current();pause();model.current.target=-i*STEP}} draggable={false} tabIndex={reduced||active===i?0:-1}>
-     <div className="reel-campaign img-hover">{cover?<img src={cover.src} alt="" width={cover.w} height={cover.h} decoding="async" draggable={false} {...(isNear(i)?{}:{loading:'lazy' as const,fetchPriority:'low' as const})}/>:<Visual kind={i}/>}</div>
+     <div className="reel-campaign img-hover">{cover?<img src={cover.src} alt="" width={cover.w} height={cover.h} decoding="async" draggable={false} {...(i===0?{fetchPriority:'high' as const}:isNear(i)?{}:{loading:'lazy' as const,fetchPriority:'low' as const})}/>:<Visual kind={i}/>}</div>
      <div><span>{name}</span><b>↗</b></div>
     </Link>;
    })}</div>
@@ -154,7 +156,7 @@ export default function ReelOrbit({head,foot}:{head:ReactNode;foot:ReactNode}){
    <div className="reel-count" aria-hidden="true">{[0,1,2].map(i=><span key={i} className="reel-digit"><span ref={node=>{digits.current[i]=node}}>{Array.from({length:10},(_,n)=><i key={n}>{n}</i>)}</span></span>)}<em>%</em></div>
    <button type="button" className="reel-skip" onClick={()=>skip.current()}>Salta intro ↗</button>
   </div>
-  <div className="reel-controls"><span>{entering?'12 POSSIBILITÀ PRENDONO FORMA.':'12 POSSIBILITÀ. NESSUN LIMITE.'}</span><div><button aria-label="Progetto precedente" onClick={()=>step(1)}>←</button><button aria-label={isPaused?'Riprendi animazione':'Pausa animazione'} onClick={()=>{skip.current();pause(!isPaused)}}>{isPaused?'▷':'Ⅱ'}</button><button aria-label="Progetto successivo" onClick={()=>step(-1)}>→</button></div></div>
+  <div className="reel-controls"><span>{entering?'12 IDEE PRENDONO FORMA.':'12 IDEE DA CUI PARTIRE.'}</span><div><button aria-label="Progetto precedente" onClick={()=>step(1)}>←</button><button aria-label={isPaused?'Riprendi animazione':'Pausa animazione'} onClick={()=>{skip.current();pause(!isPaused)}}>{isPaused?'▷':'Ⅱ'}</button><button aria-label="Progetto successivo" onClick={()=>step(-1)}>→</button></div></div>
   {foot}
  </section>;
 }

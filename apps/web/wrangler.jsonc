@@ -97,8 +97,10 @@
         "AI_MODEL": "nvidia/nemotron-3.5-lightning-30b-a3b",
         "AI_INPUT_CENTS_PER_MILLION": "0",
         "AI_OUTPUT_CENTS_PER_MILLION": "0",
-        "ENVIRONMENT": "production"
+        "ENVIRONMENT": "production",
+        "LEAD_NOTIFY_TO": "omni101.core@gmail.com"
       },
+      "send_email": [{"name": "NOTIFY_MAIL", "destination_address": "omni101.core@gmail.com"}],
       "d1_databases": [
         {
           "binding": "DB",

@@ -1241,5 +1241,16 @@
         ]
       }
     ]
+  },
+  {
+    "id": "ux-ui-product-experience-2026-10-24",
+    "file": "docs/mandati/ux-ui-product-experience-2026-10-24.md",
+    "source": "founder chat 2026-10-24 (testo incollato; sintesi, originale non salvato)",
+    "imported_at": "2026-10-24",
+    "sha256": "7ecdf868493176afcba5a5e86be077d7548afaea115fdfce27efc6acceb232a5",
+    "original_preserved": false,
+    "coverage": "captured as summary only; original not preserved; implementation status must be verified per requirement",
+    "record_id": "1afad7a3-ba36-4744-ad7b-04c3ba533247",
+    "title": "UX/UI ultimate · 24 ottobre (sintesi)"
   }
 ]

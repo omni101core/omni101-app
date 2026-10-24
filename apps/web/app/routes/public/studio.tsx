@@ -3,6 +3,7 @@ import {PageHero} from '../../components/public/shell/PageHero';
 import {Process} from '../../components/public/Process';
 import {StudioPortal} from '../../components/public/StudioPortal';
 import {media} from '../../content/media';
+import {t,useLocale} from '../../components/public/shell/i18n';
 import '../../styles/work-studio.css';
 
 /** Lenis runs on /studio only (REGIA v2): smooth wheel scroll over native scroll, sticky stage, no pin. Off with reduced motion and loaded on demand. */
@@ -20,6 +21,7 @@ function useStudioScroll(){
  },[]);
 }
 export function Studio(){
+ const locale=useLocale();
  useStudioScroll();
- return <><PageHero kicker="04 / LO STUDIO" title={<>Curiosi per natura.<br/><em>Concreti per scelta.</em></>} text="OMNI101 è uno studio digitale che unisce strategia, design e sviluppo. Ci occupiamo di possibilità, e del lavoro necessario per farle accadere."/>{media.studio.src&&<img className="studio-hero-img" src={media.studio.src} alt={media.studio.alt} width={media.studio.w} height={media.studio.h} loading="lazy" style={{display:'block',width:'100%',height:'auto',objectFit:'cover'}}/>}<section className="section manifesto"><span className="section-index">IL NOSTRO MODO</span><div><h2 className="editorial">Lavoriamo dove si incontrano<br/>le idee, le persone<br/><em>e la tecnologia.</em></h2><p>Crediamo nel dialogo diretto, nelle scelte spiegate bene e nei prodotti che risolvono problemi reali. L’AI amplia ciò che possiamo fare: la responsabilità delle scelte resta umana.</p></div></section><StudioPortal/><Process/></>;
+ return <><PageHero kicker={t('studio_kicker',locale)} title={<>{t('studio_title_a',locale)}<br/><em>{t('studio_title_b',locale)}</em></>} text={t('studio_hero_text',locale)}/>{media.studio.src&&<img className="studio-hero-img" src={media.studio.src} alt={media.studio.alt} width={media.studio.w} height={media.studio.h} loading="lazy" style={{display:'block',width:'100%',height:'auto',objectFit:'cover'}}/>}<section className="section manifesto"><span className="section-index">{t('studio_way',locale)}</span><div><h2 className="editorial">{t('studio_manifesto_a',locale)}<br/>{t('studio_manifesto_b',locale)}<br/><em>{t('studio_manifesto_c',locale)}</em></h2><p>{t('studio_manifesto_text',locale)}</p></div></section><StudioPortal/><Process/></>;
 }

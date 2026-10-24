@@ -9,7 +9,7 @@ describe('indexable content and honest structured data',()=>{
   expect(xml).not.toContain('/admin');expect(new Set(publicPaths).size).toBe(publicPaths.length);
  });
  it('uses unique case metadata and identifies concepts without fake commercial ratings',()=>{
-  expect(publicMeta('/work/casa-luce')[0]).toEqual({title:'Casa Luce / Ospitalità diretta · OMNI101'});
+  expect(publicMeta('/work/casa-luce')[0]).toEqual({title:'OMNI101 · Casa Luce / Ospitalità diretta'});
   const schema=JSON.stringify(structuredData('/work/casa-luce'));expect(schema).toContain('Concept dimostrativo');expect(schema).not.toContain('aggregateRating');expect(structuredData('/admin')).toBeNull();
   expect(safeJson({text:'</script><script>alert(1)</script>'})).not.toContain('<');
  });

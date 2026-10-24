@@ -5,7 +5,7 @@ const demos=['voice','commerce','workflow','creative','vision','avatar','softwar
 
 test('explore: the path loads with every station, real links and one WebGL canvas at most',async({page,isMobile})=>{
  const response=await page.goto('/explore');expect(response?.status()).toBe(200);await hydrated(page);
- await expect(page).toHaveTitle(/Playground · OMNI101/);
+ await expect(page).toHaveTitle(/OMNI101 · Playground/);
  await expect(page.getByRole('heading',{level:1})).toContainText('Le possibilità');
  await expect(page.locator('.ex-card')).toHaveCount(12);
  for(const demo of demos)await expect(page.locator(`.ex-card>a[href="/explore/${demo}"]`)).toHaveCount(1);
@@ -41,7 +41,7 @@ test('explore: reduced motion keeps every station visible without pinning',async
 
 test('solutions: the wheel opens on a family, tabs work with the keyboard and the catalogue follows',async({page})=>{
  const response=await page.goto('/solutions');expect(response?.status()).toBe(200);await hydrated(page);
- await expect(page).toHaveTitle(/Soluzioni · OMNI101/);
+ await expect(page).toHaveTitle(/OMNI101 · Soluzioni/);
  const tabs=page.getByRole('tab');await expect(tabs).toHaveCount(5);
  await expect(page.getByRole('tab',{name:/BUILD/})).toHaveAttribute('aria-selected','true');
  await page.getByRole('tab',{name:/BUILD/}).focus();
@@ -136,6 +136,18 @@ test('solutions/:family: each family has its page, its catalogue and a 404 for t
  await page.locator('.cap-card a[href="/explore/workflow"]').first().click();
  await expect(page).toHaveURL(/\/explore\/workflow$/);
  const missing=await page.goto('/solutions/inesistente');expect(missing?.status()).toBe(404);
+});
+
+test('solutions/build: each card has per chi, risultato, cosa serve, da; Disponibile chip hidden when it matches Tutte',async({page})=>{
+ await page.goto('/solutions/build');await hydrated(page);
+ const card=page.locator('.cap-card[data-capability="siti-premium"]');
+ for(const label of ['Per chi','Risultato','Cosa serve','Da','Tempi'])await expect(card.getByText(label,{exact:true})).toBeVisible();
+ await expect(card).toContainText('4400');
+ await expect(card).not.toContainText('Da definire nel preventivo');
+ await expect(page.locator('.cap-card[data-capability="saas"]')).toContainText('Da definire nel preventivo');
+ await expect(page.locator('.cap-card[data-capability="saas"]')).not.toContainText('€');
+ await expect(page.getByRole('button',{name:/^Disponibile/})).toHaveCount(0);
+ await expect(page.getByRole('button',{name:/^Tutte/})).toHaveCount(0);
 });
 
 test('solutions/:family: a segment demo opens in its card only on request',async({page})=>{

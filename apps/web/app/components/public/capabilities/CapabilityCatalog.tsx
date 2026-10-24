@@ -1,25 +1,31 @@
 import {useState} from 'react';
 import {Link} from 'react-router';
 import {capabilities,type Availability} from '../../../content/capabilities';
-import {availabilityLabel,availabilityNote,panels} from './panels';
-
-const states:(Availability|'ALL')[]=['ALL','DISPONIBILE','SU_MISURA','SPERIMENTALE'];
+import {availabilityLabel,availabilityNote,cosaServe,filtriVisibili,panels,schedaPrezzo} from './panels';
 
 export default function CapabilityCatalog({index}:{index:number}){
  const [availability,setAvailability]=useState<Availability|'ALL'>('ALL'),panel=panels[index];
- const family=capabilities.filter(c=>c.family===panel.family),items=family.filter(c=>availability==='ALL'||c.availability===availability);
+ const family=capabilities.filter(c=>c.family===panel.family);
  const count=(state:Availability|'ALL')=>state==='ALL'?family.length:family.filter(c=>c.availability===state).length;
+ const filters=filtriVisibili({ALL:count('ALL'),DISPONIBILE:count('DISPONIBILE'),SU_MISURA:count('SU_MISURA'),SPERIMENTALE:count('SPERIMENTALE')});
+ const active=filters.includes(availability)?availability:'ALL',items=family.filter(c=>active==='ALL'||c.availability===active);
  return <section id="catalogo" className="cap-catalog" role="tabpanel" tabIndex={-1} aria-labelledby={'cap-tab-'+panel.slug}>
   <header className="cap-catalog-head">
    <div><span className="eyebrow">CATALOGO / {panel.name}</span><h2>{panel.title}: {family.length} soluzioni.</h2><p>{panel.claim}</p></div>
-   <div className="cap-filter" role="group" aria-label="Filtra per disponibilità">{states.map(state=>count(state)>0&&<button key={state} type="button" aria-pressed={availability===state} onClick={()=>setAvailability(state)}>{state==='ALL'?'Tutte':availabilityLabel[state]} <span>{count(state)}</span></button>)}</div>
+   {filters.length>0&&<div className="cap-filter" role="group" aria-label="Filtra per disponibilità">{filters.map(state=><button key={state} type="button" aria-pressed={active===state} onClick={()=>setAvailability(state)}>{state==='ALL'?'Tutte':availabilityLabel[state]} <span>{count(state)}</span></button>)}</div>}
   </header>
   <ul className="cap-grid">{items.map(c=>{
-   const own=c.cta.to.startsWith('/solutions/');
+   const own=c.cta.to.startsWith('/solutions/'),prezzo=schedaPrezzo(c.id,c.availability);
    return <li key={c.id}><article className="cap-card" data-capability={c.id}>
     <span className="cap-badge" data-availability={c.availability}>{availabilityLabel[c.availability]}</span>
     <h3>{c.title}</h3>
-    <p>{c.description}</p>
+    <dl className="cap-facts">
+     <div><dt>Per chi</dt><dd>{c.businessUse}</dd></div>
+     <div><dt>Risultato</dt><dd>{c.description}</dd></div>
+     <div><dt>Cosa serve</dt><dd>{cosaServe[c.availability]}</dd></div>
+     <div><dt>Da</dt><dd>{prezzo.da}</dd></div>
+     <div><dt>Tempi</dt><dd>{prezzo.tempi}</dd></div>
+    </dl>
     <p className="cap-example"><small>Esempio</small>{c.example}</p>
     <p className="cap-note">{availabilityNote[c.availability]}</p>
     <div className="cap-actions">
