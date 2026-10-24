@@ -6,12 +6,12 @@
 .capitolo-cards>li{display:flex;min-width:0}
 .capitolo-cards article{display:flex;flex-direction:column;width:100%;padding:28px 28px 22px;border:1px solid var(--line);border-top-color:#d2b77b66;background:var(--surface,#191a1c);transition:border-color .3s}
 .capitolo-cards article:hover,.capitolo-cards article:focus-within{border-color:var(--gold)}
-.capitolo-num{font-size:10px;letter-spacing:2.5px;color:var(--gold)}
+.capitolo-num{font-size:12px;letter-spacing:2.5px;color:var(--gold)}
 .capitolo-cards h3{margin:18px 0 12px;font-size:clamp(28px,3vw,44px);font-weight:400;line-height:1.05;letter-spacing:-.04em;text-wrap:balance}
 .capitolo-cards article>p{margin:0;max-width:460px;font-size:13px;line-height:1.8;color:var(--muted)}
 .capitolo-demo{flex:1;min-height:220px;margin:24px 0}
 .capitolo-cards footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
-.capitolo-cards footer small{font-size:10px;letter-spacing:1px;color:#8e8d85}
+.capitolo-cards footer small{font-size:12px;letter-spacing:1px;color:#8e8d85}
 .capitolo-cards footer a{display:inline-flex;align-items:center;gap:14px;min-height:44px;padding:0 2px;color:var(--gold);font-size:12px;border-bottom:1px solid #d2b77b77;scroll-margin-block:200px}
 .capitolo-cards footer a:hover{border-bottom-color:var(--gold)}
 .capitolo-cards footer a:focus-visible,.capitolo-close a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}

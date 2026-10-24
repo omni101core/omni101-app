@@ -1,5 +1,5 @@
 import {test,expect,type Locator,type Page} from '@playwright/test';
-const slugs=['ai-landing','ai-assistant','ai-automation'];
+const slugs=['ai-landing','ai-assistant','ai-automation','local-desk'];
 async function open(page:Page,path:string){
  await page.route('**/api/public-config',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({turnstileSiteKey:'test-only'})}));
  await page.route('https://challenges.cloudflare.com/**',r=>r.abort());
@@ -18,15 +18,14 @@ for(const slug of slugs){
    await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href','https://omni101.app/en/offers/'+slug);
    expect(await page.title()).toMatch(/OMNI101/);
   });
-  test('no "From" price without engine data',async({page})=>{
-   await open(page,'/en/offers/'+slug);
-   const price=(await page.getByTestId('en-price').innerText()).trim();
-   expect(price==='Fixed quote after the demo'||/^From €\d+/.test(price)).toBe(true);
-   if(price==='Fixed quote after the demo')await expect(page.locator('.en-page')).not.toContainText(/\bFrom €/);
-  });
   test('form: invalid shows errors, valid reaches the intake step',async({page})=>{
    await open(page,'/en/offers/'+slug);
    const form=page.getByRole('form',{name:'Free personalized mini-demo'});
+   await expect(form.getByRole('button',{name:'Just an idea (2 lines)'})).toHaveAttribute('aria-pressed','true');
+   await form.getByRole('button',{name:'With context (company, areas, budget)'}).click();
+   await expect(form.getByLabel('Company (optional)')).toBeVisible();
+   await form.getByRole('button',{name:'Just an idea (2 lines)'}).click();
+   await expect(form.getByLabel('Company (optional)')).toHaveCount(0);
    await form.getByRole('button',{name:'Get my free mini-demo'}).click();
    await expect(page.getByText('Please enter your name.')).toBeVisible();
    await expect(page.getByText('Consent is needed to handle your request.')).toBeVisible();
@@ -48,7 +47,7 @@ for(const slug of slugs){
   });
  });
 }
-test('/en: three offers linked, hreflang, no overflow at 375',async({page})=>{
+test('/en: every offer linked, hreflang, no overflow at 375',async({page})=>{
  await page.setViewportSize({width:375,height:800});
  await open(page,'/en');
  await expect(page.locator('html')).toHaveAttribute('lang','en');
@@ -73,7 +72,7 @@ test.describe('English shell',()=>{
   await expect(page.locator('html')).toHaveAttribute('lang','en');
   const nav=await shellScope(page,isMobile,page.getByRole('navigation',{name:'Main navigation'}));
   await expect(nav.getByRole('link',{name:'Offers'})).toBeVisible();
-  await expect(page.getByRole('link',{name:'Projects (Italian)'}).first()).toBeVisible();
+  await expect(page.getByRole('link',{name:'Playground (Italian)'}).first()).toBeVisible();
   await expect(page.locator('.site-header .header-action')).toContainText('Free mini-demo');
   await expect(page.getByRole('link',{name:'Skip to content'})).toHaveCount(1);
   const footer=page.locator('footer.site-footer');

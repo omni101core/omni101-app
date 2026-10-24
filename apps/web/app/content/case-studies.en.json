@@ -1,0 +1,128 @@
+[
+  {
+    "slug": "essenza",
+    "title": "Essenza",
+    "kind": "studio concept",
+    "problem": "A catalog is hard to judge when products, variants, and a demo purchase sit in separate sketches.",
+    "approach": "The studio put those pieces in one concept shop. It is not a commercial client and it records no sales.",
+    "what_we_built": [
+      "A catalog laid out for browsing",
+      "Variants shown on the same product",
+      "A demonstration purchase path, with no real payment"
+    ],
+    "offer_slug": "ai-landing",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-landing"}
+  },
+  {
+    "slug": "atelier",
+    "title": "Atelier",
+    "kind": "studio concept",
+    "problem": "Daily work is hard to read when tasks and decisions have no shared picture.",
+    "approach": "The studio drew an internal interface so a person can see the work. It is not a commercial client and it reports no time saved.",
+    "what_we_built": [
+      "A single view of work in progress",
+      "Tasks and decisions placed where a person can find them",
+      "Labels written for the people doing the work"
+    ],
+    "offer_slug": "ai-automation",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-automation"}
+  },
+  {
+    "slug": "flow",
+    "title": "Flow",
+    "kind": "studio concept",
+    "problem": "A request can disappear between the first message and the next action.",
+    "approach": "The studio drew the path so each step stays visible. It is not a commercial client and it reports no volume handled.",
+    "what_we_built": [
+      "A path from the first request to the next action",
+      "Steps a person can follow",
+      "The whole path left visible"
+    ],
+    "offer_slug": "ai-automation",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-automation"}
+  },
+  {
+    "slug": "identity",
+    "title": "Forma",
+    "kind": "studio concept",
+    "problem": "A brand is hard to judge when type and motion live in separate samples.",
+    "approach": "The studio put type and motion in one visual language. It is not a commercial client and it reports no recognition.",
+    "what_we_built": [
+      "A type system for the concept",
+      "Motion used as part of the same language",
+      "A visual study, not a campaign"
+    ],
+    "offer_slug": "ai-landing",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-landing"}
+  },
+  {
+    "slug": "editorial",
+    "title": "Prospettiva",
+    "kind": "studio concept",
+    "problem": "A long story is hard to follow when the page has no depth and no path.",
+    "approach": "The studio tried a reading experience with depth and narrative. It is not a commercial client and it reports no readership.",
+    "what_we_built": [
+      "A page built for reading",
+      "Depth used to separate parts of the story",
+      "A narrative path through the concept"
+    ],
+    "offer_slug": "ai-landing",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-landing"}
+  },
+  {
+    "slug": "portal",
+    "title": "Omni Portal",
+    "kind": "studio concept",
+    "problem": "An idea is hard to show while it is still changing form.",
+    "approach": "The studio made an original digital sculpture about that change. It is an internal concept, not a commercial client, and it reports no audience.",
+    "what_we_built": [
+      "A single visual piece",
+      "A sequence that shows an idea changing",
+      "No product claim attached to the piece"
+    ],
+    "offer_slug": "ai-landing",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-landing"}
+  },
+  {
+    "slug": "casa-luce",
+    "title": "Casa Luce",
+    "kind": "studio concept",
+    "problem": "Stay requests arrive by phone, message, and portals, and the same facts are repeated for each guest.",
+    "approach": "The studio drew one page for the place and a request a person confirms. It is not a commercial client and it promises no stays.",
+    "what_we_built": [
+      "A page with rooms, services, and images",
+      "A stay request, with availability left for a person to confirm",
+      "Notes before arrival, reviewed by a person"
+    ],
+    "offer_slug": "local-desk",
+    "cta": {"label": "See the offer", "href": "/en/offers/local-desk"}
+  },
+  {
+    "slug": "tavola",
+    "title": "Tavola",
+    "kind": "studio concept",
+    "problem": "Calls and messages cut into service, and requests and preferences get lost.",
+    "approach": "The studio connected the room to a menu, a table request the staff confirms, and notes that wait for approval. It is not a commercial client and it promises no covers.",
+    "what_we_built": [
+      "A menu that can be updated and opened from a QR",
+      "A table request confirmed by the staff",
+      "Content held until a person approves it"
+    ],
+    "offer_slug": "ai-automation",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-automation"}
+  },
+  {
+    "slug": "studio-forma",
+    "title": "Studio Forma",
+    "kind": "studio concept",
+    "problem": "Files and feedback sit in email and folders, so the status of an engagement is hard to see.",
+    "approach": "The studio drew a site, a brief, an agenda, and a shared area with approvals. It is not a commercial client and it reports no engagements won.",
+    "what_we_built": [
+      "A site and a structured brief",
+      "An agenda with confirmations",
+      "A shared area with access and approvals"
+    ],
+    "offer_slug": "ai-landing",
+    "cta": {"label": "See the offer", "href": "/en/offers/ai-landing"}
+  }
+]

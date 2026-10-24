@@ -4,6 +4,8 @@ import HomeCapitolo from '../../components/public/HomeCapitolo';
 import {homeStages} from '../../components/public/HomeShowcase';
 import {RevealTitle} from '../../components/public/shell/RevealTitle';
 import {media} from '../../content/media';
+import {minSetup,money} from '../../components/public/landing/offers';
+import {t} from '../../components/public/shell/i18n';
 import {projects,services} from '../../components/public/shell/site-data';
 import '../../styles/home-regia.css';
 
@@ -36,11 +38,13 @@ export function Home(){
    head={<>
     <div className="home-top"><span className="eyebrow">DIGITAL POSSIBILITY STUDIO</span><span className="availability">NUOVE IDEE, NUOVE POSSIBILITÀ</span></div>
     <h1 className="home-title">La tua idea.<em>Oltre il software.</em></h1>
+    <p className="home-sentence">Realizziamo <Link to="/solutions/build">siti e software</Link>, <Link to="/solutions/automate">assistenti AI e automazioni</Link> su misura per professionisti e piccole imprese: dal brief alla consegna.</p>
+    <div className="hero-actions"><Link className="button" to="/start-project">Raccontaci la tua idea <span>↗</span></Link><Link className="button ghost" to="/solutions">Vedi cosa facciamo <span>→</span></Link></div>
+    <p className="home-from"><Link className="text-link" to="/solutions" data-testid="home-from">{t('landing_home_from_line','it',{amount:money(minSetup(),'it')})}</Link></p>
    </>}
    foot={<>
-    <p className="home-sentence">Costruiamo <Link to="/solutions/build">prodotti</Link>, automatizziamo <Link to="/solutions/automate">processi</Link>, creiamo <Link to="/solutions/create">contenuti</Link> e facciamo crescere <Link to="/solutions/grow">ciò che hai già</Link>.</p>
     <div className="home-foot">
-     <div className="hero-actions"><Link className="button" to="/start-project">Raccontaci la tua idea <span>↗</span></Link><a className="text-link" href="#capitolo">Guarda come lavoriamo <span>↓</span></a></div>
+     <div className="hero-actions"><a className="text-link" href="#capitolo">Guarda come lavoriamo <span>↓</span></a></div>
      <dl className="home-numbers"><div><dt>famiglie di servizio</dt><dd>{services.length}</dd></div><div><dt>concept da esplorare</dt><dd>{projects.length}</dd></div><div><dt>demo da provare</dt><dd>{demos}</dd></div></dl>
     </div>
    </>}

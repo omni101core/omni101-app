@@ -18,9 +18,19 @@
 .en-form input[type=checkbox]{width:20px;height:20px;flex:none}
 .en-form textarea{width:100%}
 .en-done{max-width:60ch}
+.en-modes{display:flex;flex-wrap:wrap;gap:8px}
+.en-modes button{min-height:44px}
+.en-done dl{display:grid;gap:10px;margin:18px 0 0}
+.en-done dt{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.en-done dd{margin:0}
 @media (max-width:760px){.en-grid,.en-steps{grid-template-columns:1fr}.en-form{grid-template-columns:1fr}}
 .lang-switch{display:flex;gap:2px;font-size:11px;letter-spacing:.08em;margin-right:12px}
 .lang-switch a{display:inline-grid;place-items:center;min-width:32px;min-height:32px;padding:0 4px}
 .lang-switch a[aria-current=true]{text-decoration:underline;font-weight:600}
 .site-menu .lang-switch{display:none;margin:18px 0 0}
 @media (max-width:760px){.site-header>.lang-switch{display:none}.site-menu .lang-switch{display:flex}}
+/* Header CTA: one 44px target, arrow inside it, same in IT and EN. */
+.site-header .header-action{min-height:44px;padding:0 18px;gap:10px;border:1px solid #68665f;border-radius:22px;font-size:12px;white-space:nowrap}
+.site-header .header-action i{border:0;border-radius:0;width:auto;height:auto}
+.site-header .header-action:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (max-width:760px){.site-header .header-action{padding:0 14px;font-size:12px;margin-right:8px}}

@@ -21,19 +21,21 @@
   "source": "product-excellence-2026-10-23",
   "status": "IMPLEMENTED",
   "acceptance": "Piani reali SEM/GEO/local SEO, UTM locale, blocchi e consenso idempotente, registro diritti con RBAC.",
-  "remaining": "Fornitori, titolare, retention e procedure da verificare. Nessun invio o budget ads attivato. Non coperti: cifratura, gestione dei segreti, permessi degli agenti e audit degli accessi."
+  "remaining": "Fornitori, titolare, retention e procedure da verificare. Nessun invio o budget ads attivato. Non coperti: cifratura, gestione dei segreti, permessi degli agenti e audit degli accessi.",
+  "evidence": "24/10: testo privacy riscritto: titolare e dati legali ancora segnaposto ([DA CONFERMARE]), avviso lead descritto. Stato lasciato IMPLEMENTED: da riportare a IN_PROGRESS se il founder conferma che il testo legale non è completo. Esito ux-c1-privacy; snapshot base40/41, non rilasciato."
  },
  {
   "key": "calendar",
   "name": "Calendario operativo unificato",
   "source": "persistent-intelligence-2026-10-23",
-  "status": "PLANNED",
+  "status": "IN_PROGRESS",
   "acceptance": "Unire date originali di task, milestone, campagne e revisioni con timezone, filtri e agenda senza duplicarle.",
   "remaining": "Il registro eventi esiste; aggregazione e scheduling ricorrente da realizzare. Non coperti: drag&drop, multi-calendario, vista team, fusi orari e gestione dei conflitti.",
   "priority": "HIGH",
   "findings": [
    "REC-015"
-  ]
+  ],
+  "evidence": "24/10: fonti preventivi (scadenza) e consegne, filtro persona, esportazione .ics. Nessuna migrazione. Esito m-calendario; snapshot base40/41, non rilasciato."
  },
  {
   "key": "social",
@@ -82,14 +84,15 @@
   "key": "intake",
   "name": "Intake adattivo, autosalvataggio e ripresa",
   "source": "product-excellence-2026-10-23",
-  "status": "PLANNED",
+  "status": "IN_PROGRESS",
   "acceptance": "Quattro ingressi (freeform, guided, conversational, Express nome/email+messaggio), modello condiviso, logica deterministica, revisione e recupero bozza; Express crea un lead valido, cattura parziale salvata, test di convergenza dei quattro percorsi.",
   "remaining": "Usare AI solo per trasformazioni semantiche con conferma. Non coperta la catena agentica del mandato (lingua, brief, dedup, complessità e urgenza, prossima azione, 15 passi) né duplicati, follow-up, allegati e voce opzionale. Anti-abuse e attribution su Express da coprire.",
   "priority": "HIGH",
   "findings": [
    "REC-016",
    "REC-017"
-  ]
+  ],
+  "evidence": "24/10: intake adattivo per tipo di progetto, bozza salvabile con link, ripresa da link o dispositivo, minimizzazione (nessun nome, email o consenso salvato). Migrazione 0022. Esito m-intake; snapshot base40/41, non rilasciato."
  },
  {
   "key": "coding-agents",
@@ -154,7 +157,8 @@
   "priority": "HIGH",
   "findings": [
    "REC-015"
-  ]
+  ],
+  "evidence": "24/10: avviso lead per email da codice (solo in produzione, destinatario da verificare nel dominio prima del rilascio, senza verifica il lead resta salvato e l'avviso fallisce). Esiti v-vendita-oggi, i-onda1; snapshot base40/41, non rilasciato. Non rilasciato."
  },
  {
   "key": "pricing",
@@ -162,18 +166,19 @@
   "source": "consolidamento-operativo-2026-10-23",
   "status": "IN_PROGRESS",
   "acceptance": "Costi per cadenza, formule esplicite, snapshot, conflitti, approvazione backend e collegamento al lead.",
-  "remaining": "Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*. Non coperti: contratti, spese e margini come modulo Operations; preventivo accettato→contratto/ordine→progetto e task; opzioni/varianti, imposte, valuta e condizioni di pagamento.",
+  "remaining": "24/10: motore v2 (calcolatore-omni101, docs/modello-prezzi-v2.md): formula unica max(pavimento, valore), 3 livelli, bundle, mercato e valuta, quote() per ogni richiesta, Shopify rimosso; 'da' pubblici in apps/web/app/content/prezzi-pubblici.json (MOSTRA_PREZZI=false). W29 accettazione proposta in corso. Slice LIVE in produzione (0180510, run CI 39962720977): preventivatore, migrazione 0011, review con motivo, portale cliente isolato. Residui: catalogo/listini approvati, opzioni commerciali, accettazione cliente, fatturazione, PDF. Hardening aperto nei gruppi pricing-hardening-*. Non coperti: contratti, spese e margini come modulo Operations; preventivo accettato→contratto/ordine→progetto e task; opzioni/varianti, imposte, valuta e condizioni di pagamento.",
   "priority": "HIGH",
-  "evidence": "Produzione LIVE 01805108595ba1bc21866bcc84825fae829792ff, run CI 39962720977 verde (verify e production, health a SHA esatto). Fonte: docs/operativo/consegna-sonnet-a-opus-2026-10-23.md."
+  "evidence": "Produzione LIVE 01805108595ba1bc21866bcc84825fae829792ff, run CI 39962720977 verde (verify e production, health a SHA esatto). Fonte: docs/operativo/consegna-sonnet-a-opus-2026-10-23.md. | 24/10: W29 multiopzione e follow-up: un'opzione per livello con versione approvata, approvazione di tre livelli in una richiesta, accettazione con controllo importi (409 senza scritture), stato ACCEPTED non scrivibile dal CRUD generico, versioni approvate immutabili (migrazione 0019). Esiti r2-w29-multiopzione, r2-w29-followup; snapshot base40/41, non rilasciato. Non rilasciato."
  },
  {
   "key": "crm-completion",
   "name": "CRM completo e pipeline commerciale",
   "source": "consolidamento-operativo-2026-10-23",
-  "status": "PLANNED",
+  "status": "IN_PROGRESS",
   "acceptance": "Kanban persistente con audit, conflitti, timeline, opportunità, fasi configurabili e collegamenti offerte/progetti.",
   "remaining": "Kanban e CRUD esistono; transizioni concorrenti, eventi condivisi, filtri salvati e deduplicazione avanzata da completare. Non coperti: SLA, forecast, motivi perdita, automazioni di stato, promemoria, allegati, import/export contatti e aziende, conversione lead→cliente→progetto e collegamenti a contratti/fatture.",
-  "priority": "HIGH"
+  "priority": "HIGH",
+  "evidence": "24/10: spostamento fase con motivo obbligatorio per Perso, storico cambi fase, valore pesato per fase. Migrazione 0021 con trigger. Esito m-crm; snapshot base40/41, non rilasciato."
  },
  {
   "key": "integrations-mcp",
@@ -298,7 +303,8 @@
   "priority": "HIGH",
   "acceptance": "Hero fullscreen con svh/dvh e CTA immediata, scroll storytelling cinematica con fallback e motion saltabile, capitoli BUILD/SPEAK/SEE/CREATE/ACT/GROW, showcase con player audio, avatar video, comparatore media, workflow animato e preview software; reel orbit, OMNI PORTAL R3F, page transitions, gallery e typography motion verificati con reduced motion, skip, fallback statico e regole performance §5.10; nessun risultato inventato, demo etichettate.",
   "remaining": "Home, Explore, portfolio, reel orbit, capitoli e demo cinematiche presenti; non ricostruirli. Riduzione movimento dinamica e teardown/reentry GPU verificati su CI desktop/mobile emulato: run40004937242, 154server e15browser/3skip. Release corrente da confermare prima di dichiararli live. Screenshot mobile: OMNIASSIST fisso copre parte delle tab cinematiche, correggere ingombro. Qualità media/immagini concept, prestazioni su dispositivi reali, transizioni e copertura completa §5.10 restano da verificare; nessun avatar/video esterno operativo dichiarato.",
-  "source": "product-excellence-2026-10-23"
+  "source": "product-excellence-2026-10-23",
+  "evidence": "24/10: home: capitolo sostituito da card, hero con sottotitolo e CTA sopra la piega, tessere in italiano, bersagli tocco 44px nell'header, cover webp e apertura anello con timeout, cover reel in webp e peso ridotto (-85%), preload font, LCP mobile stimato ma non misurato, sitemap senza URL di redirect, 404 con tre sbocchi, link demo e proposta con messaggi per stato. Esiti u-capitolo-home, ux-b1-hero, perf-home, ux-d-tecnico, ux-f1-flussi; snapshot base40/41, non rilasciato. Nulla rilasciato."
  },
  {
   "key": "ai-assist",
@@ -306,7 +312,7 @@
   "status": "PLANNED",
   "priority": "HIGH",
   "acceptance": "Tre livelli (routing deterministico, interpretazione, azioni autorizzate); generative UI solo da registry di componenti con schema validato; risposte su memoria con fonti e distinzione approvato/ipotesi; lead creato con conferma; handoff umano; azioni interne solo con permessi e approvazione; tool tipizzati validati lato server con i permessi dell'utente.",
-  "remaining": "Assistente NVIDIA esistente con limiti resta la base; nessuna azione autorizzata né generative UI verificata. Nessun codice arbitrario generato dai modelli. Inbox unificata e command palette restano nei gruppi dedicati.",
+  "remaining": "24/10: redesign UI (launcher, bottom sheet mobile, badge informativa/azione) in CI. Assistente NVIDIA esistente con limiti resta la base; nessuna azione autorizzata né generative UI verificata. Nessun codice arbitrario generato dai modelli. Inbox unificata e command palette restano nei gruppi dedicati.",
   "source": "product-quality-integrazione-2026-10-23"
  },
  {
@@ -333,17 +339,18 @@
   "status": "PLANNED",
   "priority": "HIGH",
   "acceptance": "Builder a blocchi su componenti approvati del design system con template, preview, versioni/rollback, custom domains, A/B e funnel multi-step sorgente→landing→form→lead→offerta→contratto→pagamento misurabile per stage con ramificazioni; esperimenti con obiettivi, eventi, guardrails e storico (heatmap solo privacy-aware); l'AI compone solo componenti autorizzati, mai JS generato pubblicato.",
-  "remaining": "Nessun builder o funnel in produzione. Valutare Puck come candidato; valutare PostHog, GrowthBook e Formbricks prima di duplicare infrastruttura sperimentale. Nessun dominio, pubblico o invio attivato senza autorizzazione.",
+  "remaining": "24/10: landing /en con 3 offerte e lead magnet mini-demo (W14, W23); configuratore landing in dashboard (W2); mini-demo automatica da lead (W21); contenuti del funnel USA 'Local Desk' pronti in /tmp/omni101-deleghe/w20b-funnel-us (non pubblicati). Nessun builder o funnel in produzione. Valutare Puck come candidato; valutare PostHog, GrowthBook e Formbricks prima di duplicare infrastruttura sperimentale. Nessun dominio, pubblico o invio attivato senza autorizzazione.",
   "source": "consolidamento-operativo-2026-10-23"
  },
  {
   "key": "dashboard-ux",
   "name": "Dashboard verificata, comandi rapidi e command palette",
-  "status": "PLANNED",
+  "status": "IN_PROGRESS",
   "priority": "HIGH",
   "acceptance": "Ogni schermata chiave verificata a browser su leggibilità, stati vuoti/loading/errore, responsive, tema chiaro/scuro e accessibilità; ogni pulsante visibile funziona o dichiara l'indisponibilità; palette globale che cerca pagine, lead, progetti, clienti, workflow, tool MCP, agenti e azioni, con comandi contestuali per schermata che rispettano i permessi.",
   "remaining": "Solo QA visiva puntuale su pricing e CTA; nessun presidio continuo né catalogo comandi rapidi. Palette da collegare ai dati e al backend esistenti: azioni reali, non suggerimenti statici.",
-  "source": "consolidamento-operativo-2026-10-23"
+  "source": "consolidamento-operativo-2026-10-23",
+  "evidence": "24/10: carte dashboard cliccabili con ruolo, palette con azioni non disponibili per ruolo, menu admin ridotto, etichette stati unificate, portale senza token in URL. Esiti m-dashboard, ux-e-admin, i-onda1; snapshot base40/41, non rilasciato."
  },
  {
   "key": "model-router-governance",
@@ -624,19 +631,21 @@
   "key": "commerce-offer-configurator",
   "name": "Prima offerta concreta e configurazione persistente",
   "source": "commerce-engine-2026-10-24",
-  "status": "PLANNED",
+  "status": "IN_PROGRESS",
   "priority": "HIGH",
   "acceptance": "Una prima offerta riutilizza catalogo e formule esistenti, mostra demo autentica/inclusioni/esclusioni/prerequisiti, salva configurazione e snapshot prezzo server, distingue READY_TO_DEMO e READY_TO_CONFIGURE da acquistabile. Fonte§2–5,19.",
-  "remaining": "Verificare capability riutilizzabili, definire offerta e regole approvate; storefront/configurazione persistente e demo da integrare. Non inventare prezzi né presentare mock come prodotto erogabile."
+  "remaining": "24/10: backend configurazioni (0016) + configuratore admin + renderer LandingProduct integrati, in CI. Verificare capability riutilizzabili, definire offerta e regole approvate; storefront/configurazione persistente e demo da integrare. Non inventare prezzi né presentare mock come prodotto erogabile.",
+  "evidence": "24/10: offerta Local Desk nel catalogo (prezzi da JSON motore, valuta bundle in USD da confermare), pagine offerte IT in /offerte (esiste nel codice, non in produzione). Esiti i-onda1, ux-c2-offerte-it, v-vendita-oggi; snapshot base40/41, non rilasciato. Flag prezzi spento."
  },
  {
   "key": "commerce-sandbox-order-fulfillment",
   "name": "Checkout sandbox → ordine → cliente → progetto",
   "source": "commerce-engine-2026-10-24",
-  "status": "PLANNED",
+  "status": "IN_PROGRESS",
   "priority": "HIGH",
   "acceptance": "Percorso test§7/19/20: importo server, provider sandbox verificato, webhook firmato/idempotente/fuoriordine, ordine persistente collegato al tenant, fulfillment ripetibile cliente/progetto/task/portale isolato e recovery. Nessun pagamento live.",
-  "remaining": "Provider sandbox non verificato; implementare contratto ordine/fulfillment e test completi prima di dichiarare READY_TO_BUY_IN_TEST. Attivazione live richiede readiness commerciale/fiscale/tecnica e approvazione."
+  "remaining": "Provider sandbox non verificato; implementare contratto ordine/fulfillment e test completi prima di dichiarare READY_TO_BUY_IN_TEST. Attivazione live richiede readiness commerciale/fiscale/tecnica e approvazione.",
+  "evidence": "24/10: checkout sandbox dopo accettazione: ordine interno, cliente e progetto creati in un batch, stato bonifico, nessun pagamento live, nessun provider. Migrazione 0020. Esito m-checkout; snapshot base40/41, non rilasciato."
  },
  {
   "key": "commerce-entitlements-self-service",
@@ -682,6 +691,17 @@
    "landing-funnel-builder"
   ],
   "acceptance": "Una lingua sorgente; traduzioni generate dall'AI in build/CI con glossario e firme protette, cache e controlli (segnaposto, lunghezza, firme); URL per lingua, hreflang, sitemap e metadati localizzati; html lang corretto anche in SSR; header/footer/form/errori/email/assistente nella lingua della pagina; prezzi in valuta del mercato dal motore; nessuna pagina con lingue mischiate; test e2e per lingua.",
-  "remaining": "24/10: decisione Paraglide JS 2 (MIT, compile-time, guida RR7 SSR, prefisso /en), traduzioni dei messaggi prodotte dalla flotta AI con glossario e firme protette, check automatico in CI. Fase 1 (infrastruttura, shell, landing EN) = W23. Fase 2: migrazione delle pagine pubbliche ai messaggi; fase 3: es/de/fr; fase 4: dashboard, portale, email, assistente. 24/10: scout lingua (225 finding, 179 da correggere), correzioni IT in corso (W8a fatto, W8b in corso), landing /en scritte (W14) ma header/footer italiani; ricerca libreria AI-native in corso (W17: Lingo.dev, Paraglide, Lingui, i18next, gt, Intlayer, Tolgee). Decisione architetturale dopo la ricerca, poi migrazione per fasi."
+  "remaining": "24/10: decisione Paraglide JS 2 (MIT, compile-time, guida RR7 SSR, prefisso /en), traduzioni dei messaggi prodotte dalla flotta AI con glossario e firme protette, check automatico in CI. Fase 1 (infrastruttura, shell, landing EN) = W23. Fase 2: migrazione delle pagine pubbliche ai messaggi; fase 3: es/de/fr; fase 4: dashboard, portale, email, assistente. 24/10: scout lingua (225 finding, 179 da correggere), correzioni IT in corso (W8a fatto, W8b in corso), landing /en scritte (W14) ma header/footer italiani; ricerca libreria AI-native in corso (W17: Lingo.dev, Paraglide, Lingui, i18next, gt, Intlayer, Tolgee). Decisione architetturale dopo la ricerca, poi migrazione per fasi.",
+  "evidence": "24/10: pagine work, studio, explore demo, insights, product labs e Local Desk con chiavi IT/EN; case study IT/EN; offerte IT in /offerte. Controllo i18n locale ok, test non eseguiti. Esiti i-onda1, ux-c2-offerte-it; snapshot base40/41, non rilasciato. Non rilasciato."
+ },
+ {
+  "key": "ux-ui-ultimate-24",
+  "name": "UX/UI ultimate: flussi pubblici, admin, portale, offerte e performance (24/10)",
+  "source": "mandato founder 24/10 chat",
+  "status": "IN_PROGRESS",
+  "priority": "HIGH",
+  "acceptance": "Audit reale delle pagine pubbliche e dei flussi con prove (screenshot, misure); correzioni per gruppi sui fatti verificati; nessun risultato dichiarato senza verifica in browser e release.",
+  "remaining": "Verifica in browser di ogni schermata chiave a 390 e 1440; integrazione dei pezzi nel repo e CI; misura LCP mobile dopo deploy; dati legali del titolare; decisione flag prezzi; QA a browser per admin e portale (non fatta: solo da codice).",
+  "evidence": "24/10: audit reale e matrice (ux-a-reality, sola lettura, 90 route e 22 finding); ricerca pattern (ux-research); pezzi di correzione in base40: ux-b1-hero, u-capitolo-home, ux-c1-privacy, ux-c2-offerte-it, ux-d-tecnico, ux-e-admin, ux-f1-flussi, perf-home. snapshot base40/41, non rilasciato. Non rilasciato."
  }
 ]

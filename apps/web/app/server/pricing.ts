@@ -88,15 +88,25 @@ export async function handlePricing(request:Request,env:Env,actor:Identity):Prom
   const versions=await stmt('SELECT * FROM pricing_versions WHERE quote_id=? AND organization_id=? ORDER BY version DESC LIMIT 100',quoteId,org).all<Version>();const rawVersion=new URL(request.url).searchParams.get('version');if(rawVersion!==null){const wanted=z.number().int().min(1).max(1000000000).parse(Number(rawVersion));if(!versions.results.some(v=>v.version===wanted)){const extra=await stmt('SELECT * FROM pricing_versions WHERE quote_id=? AND organization_id=? AND version=?',quoteId,org,wanted).first<Version>();if(!extra)throw new HttpError(404,'Versione non disponibile.');versions.results.push(extra)}}const reviews=(await stmt("SELECT a.id,a.status,a.reason,a.decided_by,a.decided_at,v.version AS pricingVersion FROM approvals a LEFT JOIN pricing_versions v ON a.id='pricing:'||v.id AND v.organization_id=a.organization_id AND v.quote_id=a.resource_id WHERE a.organization_id=? AND a.resource_type='quotes' AND a.resource_id=? ORDER BY a.created_at DESC LIMIT 100",org,quoteId).all()).results;return json({quote,reviews,versions:versions.results.map(v=>({...v,input:JSON.parse(v.input),calculation:JSON.parse(v.calculation)})),historyLimit:100,sendingEnabled:false});
  }
  if(match[2]&&request.method==='POST'){
-  const data=z.object({version:z.number().int().min(1),riskReason:z.string().trim().max(2000).default('')}).strict().parse(await body(request));if(data.version!==quote.pricing_version)throw new HttpError(409,'Versione superata.');
+  // tierVersions: other approved-together price versions of this quote for ESSENZIALE / COMPLETA (CONSIGLIATA is `version`). One request, one decision, one audit row per version.
+  const tierVersion=z.number().int().min(1).optional();
+  const data=z.object({version:z.number().int().min(1),riskReason:z.string().trim().max(2000).default(''),tierVersions:z.object({ESSENZIALE:tierVersion,COMPLETA:tierVersion}).strict().default({})}).strict().parse(await body(request));if(data.version!==quote.pricing_version)throw new HttpError(409,'Versione superata.');
   const snapshot=await stmt('SELECT * FROM pricing_versions WHERE quote_id=? AND organization_id=? AND version=?',quoteId,org,data.version).first<Version>();if(!snapshot)throw new HttpError(409,'Snapshot assente.');
   const approvalId='pricing:'+snapshot.id;const existing=await stmt('SELECT id,status FROM approvals WHERE id=? AND organization_id=?',approvalId,org).first();if(existing)return json({approval:existing,duplicate:true});
-  const computed=JSON.parse(snapshot.calculation) as ReturnType<typeof calculatePricing>;const belowCost=computed.groups.some(g=>g.belowCost),belowTarget=computed.groups.some(g=>g.belowTarget);if((belowCost||belowTarget)&&data.riskReason.length<10)throw new HttpError(400,'Documenta il motivo dello sconto o del prezzo sotto costo prima di chiedere approvazione.');
-  const evidence=JSON.stringify({quoteId,pricingVersion:data.version,snapshotId:snapshot.id,belowCost,belowTarget,riskReason:data.riskReason,...(snapshot.lead_id?{leadId:snapshot.lead_id}:{})});
+  const tiers:Record<string,{pricingVersion:number;snapshotId:string}>={},rows:Version[]=[snapshot];
+  for(const [tier,v] of Object.entries(data.tierVersions)){
+   if(v===undefined)continue;
+   if(v===data.version||Object.values(tiers).some(t=>t.pricingVersion===v))throw new HttpError(400,'Ogni livello usa una versione di prezzo diversa.');
+   const row=await stmt('SELECT * FROM pricing_versions WHERE quote_id=? AND organization_id=? AND version=?',quoteId,org,v).first<Version>();if(!row)throw new HttpError(409,'Versione di prezzo del livello '+tier+' assente.');
+   if(await stmt('SELECT 1 FROM approvals WHERE id=? AND organization_id=?','pricing:'+row.id,org).first())throw new HttpError(409,'La versione del livello '+tier+' ha già una revisione.');
+   tiers[tier]={pricingVersion:v,snapshotId:row.id};rows.push(row);
+  }
+  const computed=rows.map(r=>JSON.parse(r.calculation) as ReturnType<typeof calculatePricing>);const belowCost=computed.some(c=>c.groups.some(g=>g.belowCost)),belowTarget=computed.some(c=>c.groups.some(g=>g.belowTarget));if((belowCost||belowTarget)&&data.riskReason.length<10)throw new HttpError(400,'Documenta il motivo dello sconto o del prezzo sotto costo prima di chiedere approvazione.');
+  const evidence=JSON.stringify({quoteId,pricingVersion:data.version,snapshotId:snapshot.id,belowCost,belowTarget,riskReason:data.riskReason,...(Object.keys(tiers).length?{tiers}:{}),...(snapshot.lead_id?{leadId:snapshot.lead_id}:{})});
   await env.DB.batch([
    stmt("UPDATE quotes SET status='IN_REVIEW',updated_at=? WHERE id=? AND organization_id=? AND pricing_version=? AND status='DRAFT'",stamp,quoteId,org,data.version),
    stmt("INSERT OR IGNORE INTO approvals(id,organization_id,name,status,resource_type,resource_id,evidence,requested_by,version,created_at,updated_at) SELECT ?,?,?,'PENDING','quotes',?,?,?,1,?,? WHERE changes()=1",approvalId,org,'Preventivo / '+quote.name,quoteId,evidence,actor.id,stamp,stamp),
-   audit('PRICING_REVIEW_REQUESTED',quoteId,{approvalId,version:data.version})
+   audit('PRICING_REVIEW_REQUESTED',quoteId,{approvalId,version:data.version,tiers})
   ]);
   const approval=await stmt('SELECT id,status FROM approvals WHERE id=? AND organization_id=?',approvalId,org).first();if(!approval)throw new HttpError(409,'La proposta non è una bozza disponibile per revisione.');return json({approval},201);
  }

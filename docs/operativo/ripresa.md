@@ -2,6 +2,52 @@
 
 Come una AI, o il founder, rientra su OMNI101 senza rifare la mappa.
 
+## Ripresa — 24 ottobre pomeriggio (Testa + publisher)
+
+Fatti presi solo dagli esiti in `/tmp/omni101-deleghe/*/esito.md`. Nessun push, deploy, worker nuovo o tab in questo pomeriggio.
+
+### Catena release (snapshot e CI)
+
+| Base | Contenuto | CI registrata nei file letti |
+|---|---|---|
+| base32 | snapshot da 32cdb51, W29 escluso, fix ACL ticket CLIENT | `cddd2f0`: log in `r2-browser-17/ci-cddd2f0-failed.log` (17 failed, 182 passed); conductor scrive run 40095072101 "in corso". Attribuzione da confermare |
+| base33 | fix test owners e selettori en-landing, da base32 | nessuna run propria: usa i log di `cddd2f0` |
+| base34 | focus menu e mini-demo, da base33 | `7115eae`: 4 failed, 195 passed. `617b04b`: 3 failed, 196 passed (nessun esito scritto) |
+| base35 | focus assist e theme-quality, da base34 | nessuna run |
+| base36 | `r2-release36` | `ba76362`: 1 failed (`assist-mobile.spec.ts:55`), 204 passed |
+| `c88d378` | — | nessun riferimento nei file letti (compare solo nella spec) |
+
+- ACL ticket CLIENT: review indipendente `RELEASE_OK`, nessun blocco. Non ancora rilasciata.
+- Release: non avviata. Gate: CI verde, review del diff, poi staging e canary, poi release dallo stesso snapshot.
+- Incidente: un comando di lettura ha avviato per errore un publish su `rebuild-commercial` (SHA `fcd6556`, run 40094990351). Annullato prima di migrazioni o deploy; produzione non toccata. Il commit resta sul branch: cancellarlo spetta al founder.
+
+### Snapshot onda (base40–base43)
+
+- base40 (`i-onda1`): integra W29 multiopzione e follow-up, dashboard, CRM con motivo LOST, calendario `.ics`, checkout sandbox, bozza intake, i18n fase 2, Local Desk, case study, focus di base35. Migrazioni 0018–0022 applicate in SQLite in memoria; nessun test di suite eseguito.
+- Numerazione riconciliata in integrazione: checkout 0020, CRM 0021, intake 0022; 0019 = immutabilità prezzi approvati.
+- base41: base40 più capitolo home a card (base36), avviso lead per mail (solo produzione) e prezzi "da" (base37). Prezzo Local Desk dal blocco `bundle` del file prezzi.
+- base42: pezzi UX (hero, 404, stati admin, token portale fuori dall'URL, privacy, pagine `/offerte`), cover in webp, fix F1–F6 della review (limite di richieste per ambito, cliente dell'ordine solo dal preventivo, verifica del bundle sul motore). Migrazioni invariate (0018–0022).
+- base43: base42 più SEO/GEO (titoli, JSON-LD, sitemap EN, `llms.txt`, chiave IndexNow), touch target, catalogo e modulo con contesto, messaggi per link scaduti, guardia sulla decisione di prezzo, fondamenta email (migrazione 0023: consensi e soppressioni), fix2 del capitolo (icona OMNI ASSIST su telefono), quattro articoli, `prod-smoke.py`. Nessun test di suite eseguito: tsc, vitest e playwright solo in CI.
+
+### Decisioni founder
+
+- Avviso lead: email a `omni101.core@gmail.com` via inoltro email del dominio. Il destinatario va verificato prima del rilascio; senza verifica il lead resta salvato e l'avviso fallisce.
+- Prezzi "da": strategia Testa. Flag `MOSTRA_PREZZI` spento in base40; base37 lo accende: da confermare. Prezzo solo da snapshot approvato.
+- Turnstile: verificare dopo la release (chiave pubblica di produzione presente, form non verificabile dall'esterno).
+- Capitolo home: sostituito da griglia di card (scelta A, non verificata in browser).
+- Anteprima fissa `127.0.0.1:4177` + link Desktop. Nessun worker nuovo.
+
+### Prossimi passi
+
+1. Chiudere CI `ba76362` (assist-mobile) e theme-quality dai log; massimo quattro cicli sul rosso.
+2. Review indipendente del pacchetto base40 prima di push. Test di suite e tsc solo in CI.
+3. Verificare destinatario avviso lead; poi release e invio di prova (founder).
+4. Verificare Turnstile dopo release.
+5. Decidere branch `rebuild-commercial` con `fcd6556` (founder).
+6. Archiviare orfani del capitolo (con founder, nessuna cancellazione).
+7. Rimuovere log diagnostico `menu-focus-trace` quando la CI è verde.
+8. Aggiornare docs dei moduli e `docs/decisioni.md` (righe dei mandati non ancora scritte).
+
 ## Prima di editare
 
 1. `AGENTS.md` e `docs/README.md`.
@@ -68,7 +114,7 @@ Run `39839506752`, SHA `25ecd29929eb34d49b1e851b867b5bae20244010`: typecheck, te
 
 Il founder ha fornito il token esistente dalla clipboard macOS. Verificati D1 e lettura configurazione Worker, aggiornato il solo secret GitHub `CLOUDFLARE_API_TOKEN` via stdin senza scrivere o mostrare il valore. La clipboard del browser risultava vuota: non era la clipboard macOS. Nessun nuovo token creato e nessun cambio DNS. Run staging avviata: `39884379497`, SHA `a4a84028fed40dddcc57dc8abf1a810f6d9b7e36`; leggere esito prima di dichiarare deploy riuscito.
 
-Preview locale aggiornata: runtime in `/tmp/omni101-preview-25ecd29`, stessa porta 4176, revisione artefatto `25ecd29929eb34d49b1e851b867b5bae20244010`, database conservato in `/tmp/omni101-preview-7289881/state`. Confronto GitHub tree: tutti i blob in apps/ e packages/ identici tra artefatto locale e run staging a4a8402; differenze solo test/documenti. Health locale OK, database presente, storage assente. Screenshot portfolio: `/Users/alessandropeloso/.codex/visualizations/2026/10/22/01a16100-836b-7c31-845b-9cb04879cffb/omni101-sector-work.jpg`. Vecchio artefatto e backup conservati per rollback; non cambiare gli altri servizi del Mac.
+Preview locale aggiornata: runtime in `/tmp/omni101-preview-25ecd29`, stessa porta 4176, revisione artefatto `25ecd29929eb34d49b1e851b867b5bae20244010`, database conservato in `/tmp/omni101-preview-7289881/state`. Confronto GitHub tree: tutti i blob in apps/ e packages/ identici tra artefatto locale e run staging a4a8402; differenze solo test/documenti. Health locale OK, database presente, storage assente. Screenshot portfolio: `~/.codex/visualizations/2026/10/22/01a16100-836b-7c31-845b-9cb04879cffb/omni101-sector-work.jpg`. Vecchio artefatto e backup conservati per rollback; non cambiare gli altri servizi del Mac.
 
 ## 23/10 — rilascio riuscito e nuova memoria in verifica
 
@@ -205,3 +251,5 @@ Coordinatore/publisher ripreso da Codex App. Nuovo mandato chiede fase piano: ne
 
 ## Esecuzione R2 autorizzata dal founder — 24ott
 Il founder ha autorizzato esecuzione integrale progressiva e deleghe Claude/Grok. Il precedente PLAN_READ_ONLY è superato per gli ambiti assegnati. Codex coordina/publisherunico; budget sessione19%residuo, CLI fanno implementazioni. R2canonico: docs/operativo/piano-strategico-2026-10-24.md; backupR1 /tmp/omni101-deleghe/execute-r2-24/p24-before-r2.md. P0CLIENTACLprimaogni release, poiCI/preview/W29/pricing e tutti66gruppi; nessunMVP. Raw privati nonnelrepo, immaginiCodexonly, noAIlocale.
+
+R2 wave1: ClaudeACL+guard+seed consegnati, Grokconfigrete+2E2Eerrori consegnati. Snapshotisolato /tmp/omni101-deleghe/r2-release-snapshot/base32 da32cdb51, W29escluso, suitebrowserfull forzata senza filtri. PrimaCI3dab367/run40094454825 in esecuzione; fixtureorganizationduplicate rilevata review e giàcorretta perprossimasnapshot. Non dichiararelive. W29financialguard corretto in /tmp/omni101-deleghe/r2-w29-financial-guard/in, ancora dareview/integrazione eCIseparata. Importprivato successivo bloccato da securitygatepreparation; nessunaccessosegreti o update trasportocorrente5fonti.

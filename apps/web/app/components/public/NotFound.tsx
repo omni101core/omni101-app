@@ -8,7 +8,7 @@ import '../../styles/not-found.css';
  * Reduced motion: the cylinder stands still and the page does not stretch.
  */
 const rows=['404','PAGINA NON TROVATA','NIENTE QUI','404','FORSE ALTROVE','RIPARTI DA QUI','404','STRADA CHIUSA','UN’ALTRA APERTA','404','SCEGLI DOVE','TORNA ALLO STUDIO'];
-const links=[['/','Inizio','Lo studio'],['/work','Progetti','Idee da vedere'],['/solutions','Soluzioni','Cosa possiamo costruire'],['/explore','Playground','Il laboratorio'],['/studio','Studio','Come lavoriamo'],['/start-project','Parliamone','Raccontaci la tua idea']];
+const links=[['/offerte','Offerte','Cosa possiamo costruire'],['/work','Lavori','Progetti e concept'],['/start-project','Brief','Raccontaci la tua idea']];
 export function NotFound(){
  const track=useRef<HTMLDivElement>(null);
  useEffect(()=>{

@@ -138,6 +138,18 @@ test('solutions/:family: each family has its page, its catalogue and a 404 for t
  const missing=await page.goto('/solutions/inesistente');expect(missing?.status()).toBe(404);
 });
 
+test('solutions/build: each card has per chi, risultato, cosa serve, da; Disponibile chip hidden when it matches Tutte',async({page})=>{
+ await page.goto('/solutions/build');await hydrated(page);
+ const card=page.locator('.cap-card[data-capability="siti-premium"]');
+ for(const label of ['Per chi','Risultato','Cosa serve','Da','Tempi'])await expect(card.getByText(label,{exact:true})).toBeVisible();
+ await expect(card).toContainText('4400');
+ await expect(card).not.toContainText('Da definire nel preventivo');
+ await expect(page.locator('.cap-card[data-capability="saas"]')).toContainText('Da definire nel preventivo');
+ await expect(page.locator('.cap-card[data-capability="saas"]')).not.toContainText('€');
+ await expect(page.getByRole('button',{name:/^Disponibile/})).toHaveCount(0);
+ await expect(page.getByRole('button',{name:/^Tutte/})).toHaveCount(0);
+});
+
 test('solutions/:family: a segment demo opens in its card only on request',async({page})=>{
  await page.goto('/solutions/automate');await hydrated(page);
  const card=page.locator('.cap-segment[data-segment="ristoranti"]'),live=card.locator('.cap-segment-live');

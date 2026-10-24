@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router';
 import {Search, X} from 'lucide-react';
 
 type Nav = {label: string; path: string; group: string};
-type Item = {key: string; label: string; group: string; path: string; hint: string; disabled: boolean};
+type Item = {key: string; label: string; group: string; path: string; hint: string; disabled: boolean; schema?: string};
 type Load = 'loading' | 'ok' | 'unauth' | 'error';
 type Section = {key: string; label: string; state: Load};
 type Source = {key: string; label: string; url: string; href: (id: string) => string};
@@ -18,9 +18,9 @@ const SOURCES: Source[] = [
 
 // ponytail: MCP e nuovo agente non hanno creazione nella shell. Restano visibili, non spariscono.
 const ACTIONS: Item[] = [
-  {key: 'act-lead', label: 'Nuovo lead', group: 'Azioni', path: '/admin/leads', hint: 'Apre Richieste. Lì premi Nuovo.', disabled: false},
-  {key: 'act-project', label: 'Nuovo progetto', group: 'Azioni', path: '/admin/projects', hint: 'Apre Progetti. Lì premi Nuovo.', disabled: false},
-  {key: 'act-client', label: 'Nuovo cliente', group: 'Azioni', path: '/admin/clients', hint: 'Apre Clienti. Lì premi Nuovo.', disabled: false},
+  {key: 'act-lead', label: 'Nuovo lead', group: 'Azioni', path: '/admin/leads', hint: 'Apre Richieste. Lì premi Nuovo.', disabled: false, schema: 'leads'},
+  {key: 'act-project', label: 'Nuovo progetto', group: 'Azioni', path: '/admin/projects', hint: 'Apre Progetti. Lì premi Nuovo.', disabled: false, schema: 'projects'},
+  {key: 'act-client', label: 'Nuovo cliente', group: 'Azioni', path: '/admin/clients', hint: 'Apre Clienti. Lì premi Nuovo.', disabled: false, schema: 'clients'},
   {key: 'act-flow', label: 'Nuovo workflow', group: 'Azioni', path: '/admin/automations', hint: 'Apre Automazioni. Lì salvi il workflow.', disabled: false},
   {key: 'act-agent', label: 'Nuovo agente', group: 'Azioni', path: '', hint: 'non disponibile', disabled: true},
   {key: 'act-mcp', label: 'Tool MCP', group: 'Azioni', path: '', hint: 'non disponibile', disabled: true},
@@ -73,6 +73,7 @@ export default function CommandPalette({navigation}: {navigation: Nav[]}) {
   const [sections, setSections] = useState<Section[]>(blank);
   const [index, setIndex] = useState(0);
   const [tick, setTick] = useState(0);
+  const [readonly, setReadonly] = useState<string[]>([]);
 
   const openPalette = useCallback(() => {
     returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -122,17 +123,27 @@ export default function CommandPalette({navigation}: {navigation: Nav[]}) {
       setSections(all.map(({source, result}) => ({key: source.key, label: source.label, state: result.state})));
       setItems(all.flatMap(({result}) => result.items));
     });
+    // ponytail: /api/schema/<risorsa> torna fields:[] se il ruolo non scrive; errori di rete lasciano l'azione attiva (il server decide comunque).
+    void Promise.all(ACTIONS.filter(a => a.schema).map(async a => {
+      try {
+        const response = await fetch('/api/schema/' + a.schema);
+        if (!response.ok) return null;
+        const data = await response.json() as {fields?: unknown[]};
+        return Array.isArray(data.fields) && data.fields.length === 0 ? a.key : null;
+      } catch { return null; }
+    })).then(keys => { if (live) setReadonly(keys.filter((k): k is string => k !== null)); });
     return () => { live = false; };
   }, [open, tick]);
 
   const view = useMemo(() => {
     const q = query.trim().toLocaleLowerCase('it');
     const pages: Item[] = navigation.map(n => ({key: 'page:' + n.path, label: n.label, group: n.group, path: n.path, hint: 'Apre la pagina', disabled: false}));
-    const local = [...ACTIONS, ...pages].filter(item => hit(item, q));
+    const actions = ACTIONS.map(a => readonly.includes(a.key) ? {...a, disabled: true, hint: 'non disponibile per il tuo ruolo'} : a);
+    const local = [...actions, ...pages].filter(item => hit(item, q));
     const remote = items.filter(item => hit(item, q));
     // ponytail: pagine e azioni intere; record tagliati a 40. Togli il tetto se una ricerca reale ne chiede di più.
     return {rows: [...local, ...remote.slice(0, 40)], more: remote.length > 40};
-  }, [navigation, items, query]);
+  }, [navigation, items, query, readonly]);
 
   const active = view.rows.length === 0 ? -1 : Math.min(index, view.rows.length - 1);
   const loading = sections.some(section => section.state === 'loading');
