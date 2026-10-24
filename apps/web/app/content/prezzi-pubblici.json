@@ -92,5 +92,20 @@
         "Completa"
       ]
     }
+  },
+  "bundle": {
+    "local_desk": {
+      "nome": "Local Desk",
+      "livello": "Essenziale",
+      "valuta": "USD",
+      "daUnaTantum": 1900,
+      "daMensile": 148,
+      "prodotti": [
+        "sito_pronto",
+        "risponde_lui"
+      ],
+      "fonte": "motore v2 W12b quote sito_pronto+risponde_lui intl USD (quote() -> da_pubblico, livello Essenziale, sconto bundle 10% incluso)",
+      "verificatoIl": "2026-10-24"
+    }
   }
 }

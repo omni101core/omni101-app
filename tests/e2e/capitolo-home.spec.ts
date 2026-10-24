@@ -14,7 +14,7 @@ for(const motion of ['no-preference','reduce'] as const){
   expect(await cards.count()).toBeGreaterThanOrEqual(3);
   expect(await cards.count()).toBeLessThanOrEqual(4);
   for(const card of await cards.all()){
-   await expect(card.getByRole('heading',{level:3})).toBeVisible();
+   await expect(card.locator('h3[id^="capitolo-"]')).toBeVisible(); // ponytail: card title only; lazy demos add their own h3
    const link=card.locator('footer a');
    await expect(link).toHaveAttribute('href',/^\/explore\/[a-z]+$/);
   }

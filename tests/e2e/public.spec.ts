@@ -19,7 +19,7 @@ test('home: loader and hero are one scene, skippable, with doors instead of the 
  await expect(page.locator('.omni-reel')).toHaveAttribute('data-reel-phase','expanded');
  await expect(page.locator('.reel-loader')).toBeHidden();
  await expect(page.locator('.spatial-gallery,.portal-visual,.portal-narrative,.process')).toHaveCount(0);
- await expect(page.getByRole('link',{name:'prodotti',exact:true})).toHaveAttribute('href','/solutions/build');
+ await expect(page.locator('.home-pillars a[href="/solutions/build"]')).toHaveCount(1);
  for(const href of ['/work','/explore','/start-project'])await expect(page.locator('.home-doors').locator('a[href="'+href+'"]')).toHaveCount(1);
  expect(await page.locator('canvas').count()).toBeLessThanOrEqual(1);
 });

@@ -2,12 +2,12 @@
 .sc-box{display:flex;flex-direction:column;gap:14px;box-sizing:border-box;max-width:100%;min-width:0;padding:20px;border:1px solid var(--line);background:var(--surface)}
 .sc-testa{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 14px}
 .sc-testa .sc-stato{margin:0}
-.sc-stato{font-size:11px;line-height:1.5;color:var(--muted)}
-.sc-stato strong{display:inline-block;padding:2px 8px;border:1px solid var(--gold);color:var(--gold);font-size:9px;font-weight:400;letter-spacing:2px}
+.sc-stato{font-size:12px;line-height:1.5;color:var(--muted)}
+.sc-stato strong{display:inline-block;padding:2px 8px;border:1px solid var(--gold);color:var(--gold);font-size:12px;font-weight:400;letter-spacing:2px}
 .sc-stato[data-stato="OPERATIVA"] strong{background:var(--gold);color:#111}
 .sc-nota{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
 .sc-chips{display:flex;flex-wrap:wrap;gap:8px}
-.sc-chips button{min-height:40px;padding:0 16px;border:1px solid var(--line);background:transparent;color:var(--ivory);font:inherit;font-size:12px;letter-spacing:1px;cursor:pointer}
+.sc-chips button{min-width:44px;min-height:44px;padding:0 16px;border:1px solid var(--line);background:transparent;color:var(--ivory);font:inherit;font-size:12px;letter-spacing:1px;cursor:pointer}
 .sc-chips button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
 .sc-chips button:focus-visible,.sc-azioni button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
@@ -28,15 +28,15 @@
 
 .sc-binario{gap:16px}
 .sc-grafo{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin:4px 0 0;padding:0;list-style:none}
-.sc-grafo li{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font-size:10px;line-height:1.3;color:var(--muted);transition:color .4s}
+.sc-grafo li{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font-size:12px;line-height:1.3;color:var(--muted);transition:color .4s}
 .sc-grafo li::before{content:"";position:absolute;top:19px;left:calc(-50% + 20px);right:calc(50% + 20px);height:1px;background:var(--line);transition:background .4s}
 .sc-grafo li:first-child::before{display:none}
 .sc-grafo li[data-acceso="true"]::before{background:var(--gold)}
-.sc-grafo span{position:relative;display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:var(--surface);font-size:11px;transition:border-color .4s,background .4s,color .4s}
+.sc-grafo span{position:relative;display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:var(--surface);font-size:12px;transition:border-color .4s,background .4s,color .4s}
 .sc-grafo li[data-acceso="true"]{color:var(--ivory)}
 .sc-grafo li[data-acceso="true"] span{border-color:var(--gold);background:var(--gold);color:#111}
 .sc-grafo em{font-style:normal;overflow-wrap:anywhere}
-.sc-binario[data-nodi="3"] .sc-grafo em{font-size:11px}
+.sc-binario[data-nodi="3"] .sc-grafo em{font-size:12px}
 
 .sc-vetrina .product-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
 .sc-vetrina[data-ritaglio="true"] .product-grid{grid-template-columns:1fr}
@@ -45,5 +45,5 @@
 .sc-servire{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
 .sc-servire ul{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0;padding:0;list-style:none;font-size:13px}
 .sc-servire .button{margin-left:auto}
-@media(max-width:700px){.sc-box{padding:16px}.sc-servire .button{margin-left:0}.sc-grafo li{font-size:9px}.sc-grafo span{width:32px;height:32px}.sc-grafo li::before{top:16px;left:calc(-50% + 16px);right:calc(50% + 16px)}}
+@media(max-width:700px){.sc-box{padding:16px}.sc-servire .button{margin-left:0}.sc-grafo li{font-size:12px}.sc-grafo span{width:32px;height:32px}.sc-grafo li::before{top:16px;left:calc(-50% + 16px);right:calc(50% + 16px)}}
 @media(prefers-reduced-motion:reduce){.sc-grafo li,.sc-grafo li::before,.sc-grafo span{transition:none}}

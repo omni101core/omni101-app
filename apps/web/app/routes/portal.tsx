@@ -1,4 +1,5 @@
 import AuthGate from '../components/AuthGate';
+import { etichettaStato } from '../stati';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'react-router';
 import '../styles/portal-narrative.css';
@@ -6,13 +7,7 @@ type Row = Record<string, unknown>;
 export function meta() { return [{ title: 'Il tuo progetto · OMNI101' }, { name: 'robots', content: 'noindex,nofollow' }]; }
 const text = (v: unknown) => v === undefined || v === null || v === '' ? '—' : String(v);
 const money = (v: unknown) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(Number(v || 0) / 100);
-const statusLabel: Record<string, string> = {
-    DELIVERED: 'Da approvare', APPROVED: 'Approvato', CHANGES_REQUESTED: 'Modifiche richieste',
-    OPEN: 'Aperta', IN_PROGRESS: 'In lavorazione', RESOLVED: 'Risolta', CLOSED: 'Chiusa',
-    ACTIVE: 'Attivo', DRAFT: 'Bozza', COMPLETED: 'Completato', PENDING: 'In attesa',
-    PAID: 'Pagata', SENT: 'Inviata', SIGNED: 'Firmato', CANCELLED: 'Annullata',
-};
-const humanStatus = (v: unknown) => statusLabel[String(v)] || text(v);
+const humanStatus = (v: unknown) => v === undefined || v === null || v === '' ? '—' : etichettaStato(v, 'portale');
 async function call(path: string, init?: RequestInit) {
     const response = await fetch(path, { ...init, headers: { 'Content-Type': 'application/json', ...init?.headers } });
     const data = await response.json() as Row;
@@ -31,7 +26,9 @@ function nextAction(deliverables: Row[], tickets: Row[], proposals: Row[], proje
 export default function Portal() {
     const location = useLocation();
     const [data, setData] = useState<Row | null>(null), [error, setError] = useState(''), [notice, setNotice] = useState(''), [busy, setBusy] = useState(false), [changes, setChanges] = useState<Record<string, string>>({});
-    const token = new URLSearchParams(location.search).get('token');
+    // Token d'invito: tenuto in memoria, tolto subito dalla URL (cronologia, referrer).
+    const [token] = useState(() => new URLSearchParams(location.search).get('token'));
+    useEffect(() => { if (token) window.history.replaceState(null, '', location.pathname + location.hash); }, [token, location.pathname, location.hash]);
     const load = useCallback(async () => { try { setData(await call('/api/portal')); setError(''); } catch (e) { setError((e as Error).message); } }, []);
     useEffect(() => { if (!token) void load(); }, [token, load]);
     async function decide(id: string, decision: 'APPROVED' | 'CHANGES_REQUESTED') {

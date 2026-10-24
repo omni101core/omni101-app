@@ -12,7 +12,7 @@ export default {async fetch(request:Request,env:Env,ctx:ExecutionContext){
  const api=await handleApi(request,env);
  const response=api||await handler(request,{cloudflare:{env,ctx}});
  const headers=new Headers(response.headers);
- headers.set('X-Content-Type-Options','nosniff');headers.set('Referrer-Policy','strict-origin-when-cross-origin');headers.set('X-Frame-Options','DENY');headers.set('Permissions-Policy',permissionsPolicy(new URL(request.url).pathname));
+ headers.set('X-Content-Type-Options','nosniff');headers.set('Referrer-Policy',headers.get('Referrer-Policy')||'strict-origin-when-cross-origin');headers.set('X-Frame-Options','DENY');headers.set('Permissions-Policy',permissionsPolicy(new URL(request.url).pathname));
  const indexing=indexPolicy(new URL(request.url).pathname,env.ENVIRONMENT,response.status);if(indexing)headers.set('X-Robots-Tag',indexing);
  if(new URL(request.url).pathname.startsWith('/admin')||new URL(request.url).pathname.startsWith('/portal'))headers.set('Cache-Control','no-store');
  return new Response(response.body,{status:response.status,headers});

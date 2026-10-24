@@ -69,5 +69,5 @@ test('sector portfolio shows original hospitality cover and concrete scope',asyn
  await expect(page.locator('.work-grid .work-card')).toHaveCount(1);
  await expect(page.locator('.work-grid img')).toHaveAttribute('src','/media/originali/work-07-casa-luce.webp');
  await page.getByRole('link',{name:/Casa Luce/}).click();await expect(page).toHaveURL(/\/work\/casa-luce$/);
- await expect(page.getByText('Richiesta soggiorno e disponibilità da confermare',{exact:true})).toBeVisible();
+ await expect(page.locator('.case-scope').getByText('Una richiesta di soggiorno, con la disponibilità lasciata a una persona',{exact:true})).toBeVisible();
 });

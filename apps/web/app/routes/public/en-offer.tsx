@@ -2,7 +2,7 @@ import {Link} from 'react-router';
 import type {LoaderFunctionArgs} from 'react-router';
 import {PageHero} from '../../components/public/shell/PageHero';
 import {LandingForm} from '../../components/public/landing/LandingForm';
-import {fixedQuote,offerBySlug,offerText,priceFrom} from '../../components/public/landing/offers';
+import {finalPrice,fixedQuote,offerBySlug,offerText,priceFrom} from '../../components/public/landing/offers';
 import {PricingMethod,Trust} from '../../components/public/landing/OfferExtras';
 import {flagged,t,useLocale} from '../../components/public/shell/i18n';
 import {enMeta} from '../../content/seo';
@@ -11,7 +11,7 @@ export function loader({params}:LoaderFunctionArgs){const o=offerBySlug(params.s
 export function meta({params}:{params:{slug?:string}}){const o=offerBySlug(params.slug||'');if(!o)return [{title:t('landing_offer_not_found','en')}];const x=offerText(o,'en');return enMeta('/en/offers/'+o.slug,x.title,x.description)}
 export default function EnOffer({loaderData}:{loaderData:{slug:string}}){const l=useLocale();const o=offerBySlug(loaderData.slug);if(!o)return null;const x=offerText(o,l),price=priceFrom(o,l);return <EnShell>
  <PageHero kicker={x.name.toUpperCase()} title={x.tagline} text={x.what}/>
- <section className="section"><p className="en-price" data-testid="en-price">{price??fixedQuote(l)}</p><a className="button en-cta" href="#mini-demo">{t('landing_offer_cta',l)}</a></section>
+ <section className="section"><p className="en-price" data-testid="en-price">{price??fixedQuote(l)}</p>{price?<p className="en-note" data-testid="en-final">{finalPrice(l)}</p>:null}<a className="button en-cta" href="#mini-demo">{t('landing_offer_cta',l)}</a></section>
  <section className="section" aria-labelledby="en-get"><h2 id="en-get">{t('landing_offer_get_h',l)}</h2><ul className="en-list">{x.get.map(g=><li key={g}>{g}</li>)}</ul></section>
  <section className="section" aria-labelledby="en-steps"><h2 id="en-steps">{t('landing_how_h',l)}</h2><ol className="en-steps">{x.steps.map(([title,text])=><li key={title}><h3>{title}</h3><p>{text}</p></li>)}</ol></section>
  <section className="section" aria-labelledby="en-needs"><h2 id="en-needs">{t('landing_offer_needs_h',l)}</h2><ul className="en-list">{x.needs.map(n=><li key={n}>{n}</li>)}</ul></section>

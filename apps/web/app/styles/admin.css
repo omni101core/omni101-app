@@ -136,3 +136,10 @@ dialog.os-command::backdrop{background:#000b;backdrop-filter:blur(5px)}
 .os-pipeline-board .os-status-control select{max-width:100%;flex:1 1 8rem;font-size:13px;padding:10px}
 }
 
+.os-dashboard-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr))}
+.os-dashboard-cards .os-metric{border-top:1px solid var(--os-line);margin-top:-1px}
+a.os-metric.is-link{display:block;color:inherit;transition:background .15s}
+a.os-metric.is-link:hover{background:rgba(210,183,123,.07)}
+a.os-metric.is-link:focus-visible{outline:2px solid var(--os-gold);outline-offset:-2px}
+a.os-metric.is-link strong{text-decoration:underline;text-decoration-color:transparent;text-underline-offset:6px}
+a.os-metric.is-link:hover strong{text-decoration-color:var(--os-gold)}

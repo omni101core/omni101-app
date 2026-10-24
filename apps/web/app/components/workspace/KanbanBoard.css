@@ -1,0 +1,8 @@
+.os-pipeline-board .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.os-kanban-value{display:block;margin-top:2px;color:var(--os-muted);font-weight:400;font-variant-numeric:tabular-nums}
+.os-kanban-lost{display:block;color:var(--os-muted)}
+.os-kanban-card:focus-visible{outline:2px solid var(--os-gold);outline-offset:2px}
+.os-lost-form{margin:0 0 16px;padding:16px;border:1px solid var(--os-gold);border-radius:6px;background:var(--os-panel);display:grid;gap:8px;min-width:0}
+.os-lost-form textarea{width:100%;min-height:88px;box-sizing:border-box}
+.os-lost-form small{color:var(--os-muted)}
+.os-lost-form .os-button{min-height:44px;min-width:44px}
