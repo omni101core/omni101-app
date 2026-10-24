@@ -697,7 +697,7 @@
  {
   "key": "ux-ui-ultimate-24",
   "name": "UX/UI ultimate: flussi pubblici, admin, portale, offerte e performance (24/10)",
-  "source": "mandato founder 24/10 chat",
+  "source": "ux-ui-product-experience-2026-10-24",
   "status": "IN_PROGRESS",
   "priority": "HIGH",
   "acceptance": "Audit reale delle pagine pubbliche e dei flussi con prove (screenshot, misure); correzioni per gruppi sui fatti verificati; nessun risultato dichiarato senza verifica in browser e release.",
