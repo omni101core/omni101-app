@@ -1,4 +1,4 @@
-import {test,expect,type Page} from '@playwright/test';
+import {test,expect,type Locator,type Page} from '@playwright/test';
 const slugs=['ai-landing','ai-assistant','ai-automation'];
 async function open(page:Page,path:string){
  await page.route('**/api/public-config',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({turnstileSiteKey:'test-only'})}));
@@ -58,11 +58,20 @@ test('/en: three offers linked, hreflang, no overflow at 375',async({page})=>{
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)).toBe(false);
  await expect(page.getByLabel(/interested in/)).toBeVisible();
 });
+/** Wide screens: header scope. Phones: open the menu dialog (reduced motion, no clip animation) and scope to it. */
+async function shellScope(page:Page,isMobile:boolean,wide:Locator){
+ if(!isMobile)return wide;
+ await page.emulateMedia({reducedMotion:'reduce'});
+ const dialog=page.getByRole('dialog');
+ if(!await dialog.isVisible())await page.getByRole('button',{name:/Open menu|Apri menu/}).click();
+ await expect(dialog).toBeVisible();
+ return dialog;
+}
 test.describe('English shell',()=>{
- for(const path of ['/en','/en/offers/ai-landing'])test('header, menu and footer are English on '+path,async({page})=>{
+ for(const path of ['/en','/en/offers/ai-landing'])test('header, menu and footer are English on '+path,async({page,isMobile})=>{
   await open(page,path);
   await expect(page.locator('html')).toHaveAttribute('lang','en');
-  const nav=page.getByRole('navigation',{name:'Main navigation'});
+  const nav=await shellScope(page,isMobile,page.getByRole('navigation',{name:'Main navigation'}));
   await expect(nav.getByRole('link',{name:'Offers'})).toBeVisible();
   await expect(page.getByRole('link',{name:'Projects (Italian)'}).first()).toBeVisible();
   await expect(page.locator('.site-header .header-action')).toContainText('Free mini-demo');
@@ -73,7 +82,7 @@ test.describe('English shell',()=>{
   await expect(footer).toContainText('What we build');
   await expect(footer).not.toContainText(/Possibilità|Esplora|Termini|Una conversazione/);
   await expect(page.locator('.site-header')).not.toContainText(/Soluzioni|Progetti|Parliamone/);
-  await expect(page.locator('.site-header .wordmark')).toHaveAttribute('href','/en');
+  await expect(page.locator('.site-header > .wordmark')).toHaveAttribute('href','/en');
   await expect(page.locator('.cta-section')).toHaveCount(0);
  });
  test('menu dialog is English and keeps its focus behaviour',async({page})=>{
@@ -87,16 +96,17 @@ test.describe('English shell',()=>{
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button',{name:'Open menu'})).toBeFocused();
  });
- test('language switch: EN to IT and back, selected language marked',async({page})=>{
+ test('language switch: EN to IT and back, selected language marked',async({page,isMobile})=>{
   await open(page,'/en');
-  const sw=page.locator('.site-header > .lang-switch');
+  const switchScope=()=>shellScope(page,isMobile,page.locator('.site-header > .lang-switch'));
+  const sw=await switchScope();
   await expect(sw.locator('a[aria-current=true]')).toHaveText('EN');
   await sw.getByRole('link',{name:'Italiano'}).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang','it');
   await expect(page.locator('.site-header > .lang-switch a[aria-current=true]')).toHaveText('IT');
   await expect(page.locator('footer.site-footer')).toContainText('Possibilità');
-  await page.locator('.site-header > .lang-switch').getByRole('link',{name:'English'}).click();
+  await (await switchScope()).getByRole('link',{name:'English'}).click();
   await expect(page).toHaveURL(/\/en$/);
   await expect(page.locator('html')).toHaveAttribute('lang','en');
  });
@@ -105,10 +115,11 @@ test.describe('English shell',()=>{
   expect(await (await request.get('/')).text()).toMatch(/<html[^>]*lang="it"/);
   expect(await (await request.get('/en/offers/ai-assistant')).text()).toMatch(/<html[^>]*lang="en"/);
  });
- test('Italian shell stays Italian',async({page})=>{
+ test('Italian shell stays Italian',async({page,isMobile})=>{
   await page.goto('/');
   await expect(page.locator('html')).toHaveAttribute('lang','it');
-  await expect(page.getByRole('navigation',{name:'Navigazione principale'}).getByRole('link',{name:'Soluzioni'})).toBeVisible();
+  const nav=await shellScope(page,isMobile,page.getByRole('navigation',{name:'Navigazione principale'}));
+  await expect(nav.getByRole('link',{name:'Soluzioni'})).toBeVisible();
   await expect(page.locator('footer.site-footer')).toContainText('IDEAS INTO POSSIBILITIES.');
  });
 });

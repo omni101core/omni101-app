@@ -39,6 +39,8 @@ test('landing configurator: form, live preview, validation error, mobile 375',as
  await expect(page.getByRole('alert')).toContainText('Titolo');
  await expect(preview.getByText('Correggi i campi')).toBeVisible();
  await page.getByLabel('Titolo',{exact:true}).fill('Una landing chiara per Verdi');
+ await page.getByLabel('Titolo funzione 2').fill('Promemoria automatici');
+ await page.getByLabel('Descrizione funzione 2').fill('Un messaggio ricorda l\'appuntamento al cliente.');
  await expect(page.getByRole('alert')).toHaveCount(0);
 
  await page.setViewportSize({width:375,height:812});
@@ -78,14 +80,14 @@ test('landing configurator: POST abort and malformed 2xx keep the draft',async({
  await expect(page.getByRole('status')).toHaveText('Connessione non riuscita. Riprova.');
  await expect(save).toBeEnabled();
  await expect(name).toHaveValue('Studio Verdi');
- await expect(page.getByText('Configurazione salvata.')).toHaveCount(0);
+ await expect(page.getByText('Configurazione salvata.',{exact:true})).toHaveCount(0);
  mode='bad';
  await save.click();
  await expect(page.getByRole('status')).toHaveText('Salvataggio non riuscito.');
  await expect(save).toBeEnabled();
  await expect(name).toHaveValue('Studio Verdi');
- await expect(page.getByText('Configurazione salvata.')).toHaveCount(0);
- await expect(page.getByText('Configurazione aggiornata.')).toHaveCount(0);
+ await expect(page.getByText('Configurazione salvata.',{exact:true})).toHaveCount(0);
+ await expect(page.getByText('Configurazione aggiornata.',{exact:true})).toHaveCount(0);
 });
 
 test('landing configurator: 409 offers reload and does not overwrite the draft',async({page},testInfo)=>{
@@ -101,5 +103,5 @@ test('landing configurator: 409 offers reload and does not overwrite the draft',
  await expect(page.getByRole('button',{name:'Salva'})).toBeEnabled();
  await expect(page.getByLabel('Nome attività')).toHaveValue('Studio Verdi');
  await expect(page.getByLabel('Titolo',{exact:true})).toHaveValue('Una landing chiara per Verdi');
- await expect(page.getByText('Configurazione salvata.')).toHaveCount(0);
+ await expect(page.getByText('Configurazione salvata.',{exact:true})).toHaveCount(0);
 });

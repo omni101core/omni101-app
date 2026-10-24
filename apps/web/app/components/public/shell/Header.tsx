@@ -37,7 +37,7 @@ function Menu({locale}:{locale:Locale}){
    document.addEventListener('focusin',containFocus);
    const focusClose=()=>{if(alive&&element.dataset.open==='true')close.current?.focus({preventScroll:true})};
    const releaseFocus=()=>{alive=false;cancelAnimationFrame(frame);document.removeEventListener('focusin',containFocus)};
-   if(reduced){void element.offsetWidth;focusClose();return releaseFocus}
+   if(reduced){void element.offsetWidth;focusClose();frame=requestAnimationFrame(()=>{if(alive&&!element.contains(document.activeElement))focusClose()});return releaseFocus}
    gsap.to(element,{clipPath:opened,duration:.8,ease:'expo.out',onComplete:focusClose});
    gsap.fromTo(items,{yPercent:70,opacity:0},{yPercent:0,opacity:1,duration:.8,ease:'expo.out',stagger:.05,delay:.12});
    return releaseFocus;

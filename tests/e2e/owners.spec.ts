@@ -55,7 +55,9 @@ test('client portal: each invited client sees only their own project and deliver
   // Direct requests for the other client's records are indistinguishable from missing ones.
   expect((await api(portal,'POST','/api/portal/deliverables/'+other.deliverable+'/decision',{decision:'APPROVED'})).status).toBe(404);
   expect((await api(portal,'POST','/api/portal/tickets',{projectId:other.project,name:'Richiesta intrusa',description:'Un cliente non può aprire ticket sul progetto di un altro.'})).status).toBe(404);
-  expect((await api(portal,'GET','/api/records/projects/'+other.project)).body.records).toEqual([]);
+  const foreign=await api(portal,'GET','/api/records/projects/'+other.project);
+  expect(foreign.status).toBe(403);
+  expect(foreign.body.records).toBeUndefined();
   for(const staffOnly of ['/api/mission-control','/api/projects/'+own.project+'/pipeline','/api/records/deliverables','/api/team'])expect((await api(portal,'GET',staffOnly)).status).toBe(403);
   await portal.screenshot({path:'test-results/portal-'+own.label.split(' ')[0].toLowerCase()+'.png',fullPage:true});
   sessions.push({context,page:portal,own,other});

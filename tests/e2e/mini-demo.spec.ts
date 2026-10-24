@@ -11,7 +11,7 @@ test('public demo page: banner, noindex, read-only landing, CTA with brief',asyn
  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content',/noindex/);
  const href=await page.getByRole('link',{name:'Book now'}).getAttribute('href');
  expect(href).toContain('/start-project?brief=');
- expect(decodeURIComponent(href||'')).toContain('Harbour Cafe');
+ expect(new URL(href||'').searchParams.get('brief')).toContain('Harbour Cafe');
  await expect(page.locator('input,textarea,form')).toHaveCount(0);
 });
 test('revoked or unknown share shows a neutral message',async({page})=>{
