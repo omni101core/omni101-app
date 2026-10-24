@@ -172,7 +172,8 @@ describe('proposal share and acceptance',()=>{
   for(const cadence of ['ANNUAL','USAGE']){
    const groups=[{cadence:'ONE_TIME',netCents:200000},{cadence:'MONTHLY',netCents:9000},{cadence,netCents:50000}];
    sqlite.prepare('UPDATE pricing_versions SET calculation=? WHERE quote_id=? AND version=1').run(JSON.stringify({groups}),QUOTE);
-   for(const body of [{},OPTIONS])expect((await staff(env,actor('o-'+cadence,'OWNER'),'POST',body))?.status).toBe(400);
+   const owner=actor('o-'+cadence,'OWNER'); // one user per cadence: a second insert would hit the unique e-mail
+   for(const body of [{},OPTIONS])expect((await staff(env,owner,'POST',body))?.status).toBe(400);
   }
   expect(sqlite.prepare('SELECT count(*) n FROM proposal_shares').get()?.n).toBe(0);
  });
@@ -219,7 +220,7 @@ describe('proposal share and acceptance',()=>{
   fail=true;expect((await accept(env,made.token))?.status).toBe(409);
  });
  const review=(env:Env,who:Identity,body:unknown)=>asResponse(()=>handlePricing(new Request('https://omni101.app/api/pricing/'+QUOTE+'/review',{method:'POST',body:JSON.stringify(body)}),env,who));
- const decide=(env:Env,who:Identity,approvalId:string)=>asResponse(()=>decision(new Request('https://omni101.app/api/approvals/'+approvalId+'/decision',{method:'POST',body:JSON.stringify({decision:'APPROVED',reason:'Prezzi verificati'})}),env,who));
+ const decide=(env:Env,who:Identity,approvalId:string)=>asResponse(()=>decision(new Request('https://omni101.app/api/approvals/'+approvalId+'/decision',{method:'POST',body:JSON.stringify({decision:'APPROVED',reason:'Prezzi verificati'})}),env,who,approvalId));
  it('one review request approves all three tiers together, then a 3-tier share is 201; roles are enforced',async()=>{
   const {env,actor,quote,catalog,sqlite}=fixture();quote(QUOTE,'DRAFT','org-a',null,false);catalog(1,100000);
   const sales=actor('req','SALES'),owner=actor('own','OWNER');

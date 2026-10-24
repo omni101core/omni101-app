@@ -97,6 +97,9 @@ describe('sandbox checkout',()=>{
   expect(order.client_id).not.toBe('c1');
   expect(f.sqlite.prepare("SELECT count(*) n FROM projects WHERE client_id='c1'").get()).toEqual({n:0});
   expect(f.sqlite.prepare("SELECT count(*) n FROM tasks WHERE name LIKE 'Verifica cliente%'").get()).toEqual({n:1});
+  // contacts.email is unique per organization: the new contact is stored without the taken e-mail and says why.
+  const fresh=f.sqlite.prepare("SELECT k.email,k.notes FROM clients c JOIN contacts k ON k.id=c.contact_id WHERE c.id=?").get(order.client_id) as {email:string|null;notes:string};
+  expect(fresh.email).toBeNull();expect(fresh.notes).toContain('mario@example.com');
  });
  it('a failing write rolls back everything and leaves no half-created client',async()=>{
   const {env,sqlite,made}=await accepted();

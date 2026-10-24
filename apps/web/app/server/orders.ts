@@ -15,13 +15,15 @@ export async function createSandboxOrder(env:Env,orgId:string,acceptanceId:strin
  if(!acc)throw new HttpError(404,'Accettazione non trovata.');
  // Reuse only the quote's own client. The e-mail typed in the public form is never matched to an existing client (anyone holding the link could attach the order to someone else's portal); otherwise a new contact + client, and staff merge by hand (task below).
  const clientId=acc.client_id;
+ // contacts.email is unique per organization (case-insensitive). If the typed e-mail already belongs to a contact, the new contact is stored without it and says so in the note; the e-mail stays on the acceptance and staff merge by hand.
+ const taken=clientId?false:!!await env.DB.prepare('SELECT 1 AS x FROM contacts WHERE organization_id=? AND lower(email)=lower(?)').bind(orgId,acc.signer_email).first();
  const orderId=crypto.randomUUID(),projectId=crypto.randomUUID(),contactId=crypto.randomUUID(),newClientId=crypto.randomUUID(),stamp=Date.now();
  const reference='PROP-'+acceptanceId.slice(0,8).toUpperCase(),finalClient=clientId??newClientId;
  // Every write is conditioned on "no order yet for this acceptance"; the unique index on orders is the last guard and rolls the whole batch back.
  const open='NOT EXISTS(SELECT 1 FROM orders WHERE acceptance_id=?)',made='EXISTS(SELECT 1 FROM orders WHERE id=?)';
  const statements=[
   ...(clientId?[]:[
-   env.DB.prepare(`INSERT INTO contacts(id,organization_id,name,email,created_at,updated_at) SELECT ?,?,?,?,?,? WHERE ${open}`).bind(contactId,orgId,acc.signer_name,acc.signer_email,stamp,stamp,acceptanceId),
+   env.DB.prepare(`INSERT INTO contacts(id,organization_id,name,email,notes,created_at,updated_at) SELECT ?,?,?,?,?,?,? WHERE ${open}`).bind(contactId,orgId,acc.signer_name,taken?null:acc.signer_email,taken?'E-mail indicata nel modulo pubblico: '+acc.signer_email+'. Esiste già un contatto con questa e-mail: verificare e unire a mano.':null,stamp,stamp,acceptanceId),
    env.DB.prepare(`INSERT INTO clients(id,organization_id,name,contact_id,status,created_at,updated_at) SELECT ?,?,?,?,'ACTIVE',?,? WHERE ${open}`).bind(newClientId,orgId,acc.signer_name,contactId,stamp,stamp,acceptanceId)
   ]),
   // Amount is read from the frozen acceptance snapshot (the approved price), never from the request.

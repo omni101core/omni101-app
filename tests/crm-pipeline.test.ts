@@ -12,7 +12,9 @@ const seedOrg=(sqlite:DatabaseSync,id:string)=>{const t=Date.now();sqlite.prepar
 const json=async(r:Response|null)=>await r?.json() as any;
 
 describe('crm pipeline',()=>{
- const seedLead=(sqlite:DatabaseSync,id='lead-1',status='QUALIFICATION',value:number|null=100000)=>{const t=Date.now();sqlite.prepare('INSERT INTO leads(id,organization_id,name,status,estimated_value_cents,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run(id,'omni101','Lead '+id,status,value,t,t)};
+// A lead can only be inserted as LOST with a reason (trigger in migration 0021), so the fixture gives one.
+ const seedLeadReason=(status:string)=>status==='LOST'?'motivo di prova':null;
+ const seedLead=(sqlite:DatabaseSync,id='lead-1',status='QUALIFICATION',value:number|null=100000)=>{const t=Date.now();sqlite.prepare('INSERT INTO leads(id,organization_id,name,status,estimated_value_cents,lost_reason,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)').run(id,'omni101','Lead '+id,status,value,seedLeadReason(status),t,t)};
  const move=(cookie:string,env:Env,leadId:string,payload:object,kind='leads')=>handleApi(req('/api/crm/'+kind+'/'+leadId+'/move',cookie,'POST',payload),env);
 
  it('requires a lost reason on the move endpoint and stores it with history and audit',async()=>{

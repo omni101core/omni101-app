@@ -84,7 +84,7 @@ describe('disiscrizione firmata',()=>{
  });
  it('firma alterata, email cambiata o segreto diverso: 400 e nessuna suppression',async()=>{
   const {env}=setup();const link=await unsubscribeLink(env,T);const u=new URL(link);
-  const bad=[link.replace(/s=[0-9a-f]/,m=>m.slice(0,2)+(u.searchParams.get('s')![0]==='a'?'b':'a')),link.replace(/e=[^&]+/,'e='+Buffer.from('altro@example.test').toString('base64url')),link+'x'.repeat(0)+'&s=zz'];
+  const bad=[link.replace(/s=[0-9a-f]/,m=>m.slice(0,2)+(u.searchParams.get('s')![0]==='a'?'b':'a')),link.replace(/e=[^&]+/,'e='+Buffer.from('altro@example.test').toString('base64url')),link.replace(/&s=[0-9a-f]+$/,'&s=zz')]; // not link+'&s=zz': URLSearchParams.get returns the first s, which would still be the valid one
   for(const b of bad)expect((await call(env,b,'POST')).status).toBe(400);
   const other=await unsubscribeLink({...env,EMAIL_LINK_SECRET:'altro-segreto'} as Env,T);expect((await call(env,other,'POST')).status).toBe(400);
   expect(await isSuppressed(env,T)).toBe(false);

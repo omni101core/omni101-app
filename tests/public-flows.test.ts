@@ -44,10 +44,12 @@ const OPTIONS={options:{ESSENZIALE:{voce:'ess',pricingVersion:2},CONSIGLIATA:'co
 const share=async(env:Env,who:Identity,body:unknown=OPTIONS)=>(await (await staff(env,who,'POST',body))!.json()) as {token:string;path:string;expiresAt:number};
 
 // Public links /demo/:token and /proposal/:token, through the real API router on SQLite: every state answers with a status the page maps to a human message.
-const api=(env:Env,path:string,method='GET',body?:unknown)=>handleApi(new Request('https://omni101.app'+path,{method,headers:{'cf-connecting-ip':'203.0.113.9'},...(body===undefined?{}:{body:JSON.stringify(body)})}),env) as Promise<Response>;
+// Browser-like requests: same-origin Origin on writes (assertSameOrigin), and a fresh client IP per call so the per-minute limit of the public endpoints is not what these tests measure.
+let hits=0;
+const api=(env:Env,path:string,method='GET',body?:unknown)=>handleApi(new Request('https://omni101.app'+path,{method,headers:{Origin:'https://omni101.app','cf-connecting-ip':'198.51.100.'+(++hits%250+1)},...(body===undefined?{}:{body:JSON.stringify(body)})}),env) as Promise<Response>;
 const sharedDemo=async(f:ReturnType<typeof fixture>,token:string)=>{
  f.sqlite.prepare("INSERT INTO leads(id,organization_id,name,message,status,created_at,updated_at) VALUES('lead-d','org-a','Mario','Sito per trattoria','NEW',1,1)").run();
- f.sqlite.prepare("INSERT INTO commerce_configurations(id,organization_id,owner_user_id,version,configuration,lead_id,language,share_token_hash,shared_at,created_at,updated_at) VALUES(?,?,NULL,1,?,'lead-d','it',?,1,1,1)").run('33333333-3333-4333-8333-333333333333','org-a',JSON.stringify({businessName:'Trattoria Verde',ctaUrl:'https://omni101.app/start-project'}),await digest(token));
+ f.sqlite.prepare("INSERT INTO commerce_configurations(id,organization_id,owner_user_id,version,configuration,lead_id,language,share_token_hash,shared_at,created_at,updated_at) VALUES(?,?,'author',1,?,'lead-d','it',?,1,1,1)").run('33333333-3333-4333-8333-333333333333','org-a',JSON.stringify({businessName:'Trattoria Verde',ctaUrl:'https://omni101.app/start-project'}),await digest(token));
 };
 
 describe('public link states',()=>{

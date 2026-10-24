@@ -45,7 +45,7 @@ describe('hreflang and canonical',()=>{
  });
  it('pages without a pair declare only themselves; every sitemap page has a canonical',()=>{
   expect(altOf('/start-project')).toBeNull();expect(links('/start-project')).toEqual([{tagName:'link',rel:'alternate',hreflang:'it',href:'https://omni101.app/start-project'}]);
-  expect(links('/en/offers/ai-landing')[0].hreflang).toBe('en');
+  expect(links('/en/offers/ai-landing').map(x=>x.hreflang)).toEqual(['it','en','x-default']); // the English offers pair with /offerte/<slug>
   for(const p of sitemapPaths)expect(val(meta(p),'rel','canonical')?.href).toBe('https://omni101.app'+p);
  });
 });
