@@ -10,7 +10,7 @@ export default function LeadMiniDemo({leadId}: {leadId: string}) {
   const path = '/api/leads/' + encodeURIComponent(leadId) + '/mini-demo';
   useEffect(() => {
     setDemo(undefined);
-    fetch(path).then(r => (r.ok ? r.json() : Promise.reject())).then((v: {demo: Demo}) => setDemo(v.demo)).catch(() => setDemo(null));
+    fetch(path).then(r => (r.ok ? r.json() : Promise.reject())).then(v => setDemo((v as {demo: Demo}).demo)).catch(() => setDemo(null));
   }, [path]);
   async function generate() {
     setBusy(true);
