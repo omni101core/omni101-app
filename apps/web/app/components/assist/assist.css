@@ -17,8 +17,8 @@
 .omni-assist-launch span{color:var(--assist-muted)}
 .omni-assist-launch:hover{background:var(--assist-surface)}
 .omni-assist-dialog{
- position:fixed;inset:auto 24px 24px auto;width:min(420px,calc(100vw - 48px));height:min(640px,calc(var(--assist-viewport-height,100dvh) - 48px));
- max-height:calc(var(--assist-viewport-height,100dvh) - 48px);max-width:none;
+ position:fixed;inset:auto 24px 24px auto;width:min(420px,calc(100vw - 48px));height:min(640px,calc(var(--assist-viewport-height,100vh) - 48px));
+ max-height:calc(var(--assist-viewport-height,100vh) - 48px);max-width:none;
  margin:0;padding:0;border:1px solid var(--assist-line);border-top:2px solid var(--assist-gold);border-radius:8px;
  background:var(--assist-bg);color:var(--assist-ink);box-shadow:0 24px 80px #0006;overflow:hidden;
 }
@@ -94,7 +94,7 @@
 .omni-assist-turnstile{min-height:65px;max-width:100%;overflow-x:auto}
 @media(max-width:760px){
  .omni-assist-launch{right:max(12px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));font-size:10px}
- .omni-assist-dialog{inset:auto 0 auto 0;top:calc(var(--assist-viewport-top,0px) + env(safe-area-inset-top) + 12px);width:100%;height:calc(var(--assist-viewport-height,100dvh) - env(safe-area-inset-top) - 12px);max-height:none;border-radius:14px 14px 0 0;border-bottom:0}
+ .omni-assist-dialog{inset:auto 0 auto 0;top:calc(var(--assist-viewport-top,0px) + env(safe-area-inset-top) + 12px);width:100%;height:calc(var(--assist-viewport-height,100vh) - env(safe-area-inset-top) - 12px);max-height:none;border-radius:14px 14px 0 0;border-bottom:0}
  .omni-assist-dialog[open]{animation-name:assist-up}
  .omni-assist-header{padding:12px 14px;gap:8px}
  .omni-assist-header h2{font-size:18px}

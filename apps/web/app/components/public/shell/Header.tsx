@@ -26,11 +26,14 @@ function Menu(){
   if(open){
    wasOpen.current=true;
    element.dataset.open='true';
-   // aria-modal does not contain focus itself. Keep native/pointer focus from returning to the background trigger.
+   // aria-modal does not contain focus itself. WebKit drops focus() while the menu is still visibility:hidden, so reflow before focusing and retry one frame later.
    const containFocus=(event:FocusEvent)=>{if(event.target instanceof Node&&!element.contains(event.target))close.current?.focus({preventScroll:true})};
    document.addEventListener('focusin',containFocus);
-   close.current?.focus({preventScroll:true});
-   const releaseFocus=()=>document.removeEventListener('focusin',containFocus);
+   void element.offsetWidth;
+   const focusClose=()=>{if(element.dataset.open==='true')close.current?.focus({preventScroll:true})};
+   focusClose();
+   const frame=requestAnimationFrame(focusClose);
+   const releaseFocus=()=>{cancelAnimationFrame(frame);document.removeEventListener('focusin',containFocus)};
    if(reduced)return releaseFocus;
    gsap.to(element,{clipPath:opened,duration:.8,ease:'expo.out'});
    gsap.fromTo(items,{yPercent:70,opacity:0},{yPercent:0,opacity:1,duration:.8,ease:'expo.out',stagger:.05,delay:.12});

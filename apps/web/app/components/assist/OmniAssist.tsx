@@ -14,7 +14,7 @@ export function OmniAssist({mode='public'}:{mode?:'public'|'internal'}){
  useEffect(()=>{const clear=()=>{setConversation(undefined);setMessages([]);setHistory([]);setOpen(false);};window.addEventListener('omni:session-changed',clear);return()=>window.removeEventListener('omni:session-changed',clear);},[]);
  useEffect(()=>{
   if(!open)return;const viewport=window.visualViewport,element=dialog.current;
-  const update=()=>{element?.style.setProperty('--assist-viewport-height',(viewport?.height??window.innerHeight)+'px');element?.style.setProperty('--assist-viewport-top',(viewport?.offsetTop??0)+'px')};
+  const update=()=>{const layout=document.documentElement.clientHeight;const visual=Math.min(layout,viewport?.height??layout);element?.style.setProperty('--assist-viewport-height',visual+'px');element?.style.setProperty('--assist-viewport-top',(visual<layout?(viewport?.offsetTop??0):0)+'px')};
   update();viewport?.addEventListener('resize',update);viewport?.addEventListener('scroll',update);
   return()=>{viewport?.removeEventListener('resize',update);viewport?.removeEventListener('scroll',update)};
  },[open]);
