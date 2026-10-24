@@ -26,7 +26,7 @@
 :root[data-theme=light] .cap-segment p,:root[data-theme=light] .cap-panel p,:root[data-theme=light] .cap-catalog p{color:var(--muted)}
 .wp,.cap-case,.deal-stage{--bg:#101112;--surface:#191a1c;--elevated:#252629;--ivory:#f2eee6;--gold:#d2b77b;--muted:#b0ada6;--line:#353535;color:#f2eee6;color-scheme:dark}
 .work-kind dd,.sp-step p{color:var(--muted)}
-.lab-avatar-portrait{width:min(100%,240px);aspect-ratio:3/4;margin:28px 0 12px;background-image:url('/media/omni-cinematic-atlas.png');background-size:400% 100%;background-position:66.6667% center;border:1px solid var(--line);border-radius:120px 120px 4px 4px}
+.lab-avatar-portrait{width:min(100%,240px);aspect-ratio:3/4;margin:28px 0 12px;background-image:url('/media/omni-cinematic-atlas.webp');background-size:400% 100%;background-position:66.6667% center;border:1px solid var(--line);border-radius:120px 120px 4px 4px}
 .button{color:var(--bg)}.button:hover{background:color-mix(in srgb,var(--gold) 86%,var(--ivory))}.button.ghost{color:var(--ivory)}.text-link{color:var(--muted)}
 .os-button{color:var(--os-bg)}.os-button.secondary{color:var(--os-text)}
 .button:disabled{opacity:.45;cursor:not-allowed;transform:none}

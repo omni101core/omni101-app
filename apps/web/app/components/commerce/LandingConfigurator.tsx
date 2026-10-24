@@ -57,6 +57,36 @@ export default function LandingConfigurator() {
     setStale(null);
     setMessage('');
   };
+  // ?id= opens a configuration straight from the lead card.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('id');
+    if (!id) return;
+    void call('GET', '/api/commerce/configurations/' + encodeURIComponent(id)).then(({status, data}) => {
+      if (status === 200) open(data as unknown as Saved);
+      else setMessage('Configurazione non disponibile.');
+    });
+  }, []);
+  // Only mini-demos answer here; for any other configuration the share button stays hidden.
+  const [share, setShare] = useState<{shared: boolean} | null>(null);
+  const [link, setLink] = useState('');
+  useEffect(() => {
+    setShare(null);
+    setLink('');
+    if (!current) return;
+    void call('GET', '/api/mini-demos/' + encodeURIComponent(current.id)).then(({status, data}) => {
+      if (status === 200) setShare({shared: data.shared === true});
+    });
+  }, [current?.id]);
+  async function toggleShare(revoke: boolean) {
+    if (!current) return;
+    const {status, data} = await call(revoke ? 'DELETE' : 'POST', '/api/mini-demos/' + encodeURIComponent(current.id) + '/share');
+    if (status >= 200 && status < 300) {
+      setShare({shared: !revoke});
+      setLink(revoke ? '' : window.location.origin + String(data.path));
+    } else {
+      setMessage(String(data.error || 'Condivisione non riuscita.'));
+    }
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -147,7 +177,10 @@ export default function LandingConfigurator() {
           <div className="os-button-row">
             <button type="submit" className="os-button" disabled={busy}>{current ? 'Aggiorna' : 'Salva'}</button>
             {current ? <button type="button" className="os-button secondary" onClick={() => {setCurrent(null); setStale(null); setMessage('');}}>Nuova configurazione</button> : null}
+            {share ? <button type="button" className="os-button secondary" onClick={() => void toggleShare(false)}>{share.shared ? 'Nuovo link' : 'Condividi'}</button> : null}
+            {share && share.shared ? <button type="button" className="os-button secondary" onClick={() => void toggleShare(true)}>Revoca link</button> : null}
           </div>
+          {share ? <p className="landing-configurator-note">Il link mostra l'ultima versione salvata. Salva prima di condividere.{link ? <> Link privato (mostrato una volta): <a href={link}>{link}</a></> : null}</p> : null}
         </form>
         <div className="landing-configurator-side">
           <section className="landing-configurator-preview" aria-label="Anteprima dal vivo">

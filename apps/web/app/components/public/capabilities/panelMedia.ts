@@ -7,7 +7,7 @@ interface Original{src:string;alt:string;w?:number;h?:number}
 const found=import.meta.glob<{media?:{solutions?:Record<string,Original|undefined>}}>('../../../content/media.ts',{eager:true});
 const originals=Object.values(found)[0]?.media?.solutions||{};
 
-const atlas='/media/omni-cinematic-atlas.png';
+const atlas='/media/omni-cinematic-atlas.webp';
 // background-size is a multiple of the figure width, so each scene is cropped from the 3:1 atlas by its position.
 const crops:Record<string,{alt:string;size:string;x:string;y:string}>={
  build:{alt:'Arco in ottone lucido su una terrazza di pietra, davanti al mare.',size:'400% auto',x:'0%',y:'55%'},

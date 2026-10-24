@@ -669,5 +669,19 @@
   ],
   "acceptance": "Scout indipendente in sola lettura, senza nuovi job persistenti: ogni finding conserva ID, schermata/percorso, riproduzione, misura o prova, severità, priorità, criterio di chiusura e verifica dopo la correzione. Misurare contrasto, tipografia e temi su schermate reali; verificare chatbot adattivo, brief artistico rispetto agli asset effettivi, lingua/copy e percorso di conversione. Collegare gli interventi a brand, design-system e public-experience, preservando il lavoro precedente senza redesign distruttivi.",
   "remaining": "Scout attivo: output temporaneo findings.json da rivedere e importare dal coordinatore. Misure, correzioni e prove di chiusura non ancora consolidate né rilasciate; nessuna qualità complessiva dichiarata."
+ },
+ {
+  "key": "i18n-multilingua",
+  "name": "Multilingua AI-native (IT/EN subito, poi ES/DE/FR)",
+  "source": "continuous-product-quality-2026-10-24",
+  "status": "IN_PROGRESS",
+  "priority": "HIGH",
+  "related_backlog_keys": [
+   "public-experience",
+   "seo",
+   "landing-funnel-builder"
+  ],
+  "acceptance": "Una lingua sorgente; traduzioni generate dall'AI in build/CI con glossario e firme protette, cache e controlli (segnaposto, lunghezza, firme); URL per lingua, hreflang, sitemap e metadati localizzati; html lang corretto anche in SSR; header/footer/form/errori/email/assistente nella lingua della pagina; prezzi in valuta del mercato dal motore; nessuna pagina con lingue mischiate; test e2e per lingua.",
+  "remaining": "24/10: decisione Paraglide JS 2 (MIT, compile-time, guida RR7 SSR, prefisso /en), traduzioni dei messaggi prodotte dalla flotta AI con glossario e firme protette, check automatico in CI. Fase 1 (infrastruttura, shell, landing EN) = W23. Fase 2: migrazione delle pagine pubbliche ai messaggi; fase 3: es/de/fr; fase 4: dashboard, portale, email, assistente. 24/10: scout lingua (225 finding, 179 da correggere), correzioni IT in corso (W8a fatto, W8b in corso), landing /en scritte (W14) ma header/footer italiani; ricerca libreria AI-native in corso (W17: Lingo.dev, Paraglide, Lingui, i18next, gt, Intlayer, Tolgee). Decisione architetturale dopo la ricerca, poi migrazione per fasi."
  }
 ]

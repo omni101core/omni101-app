@@ -74,7 +74,6 @@ describe('commerce configurations',()=>{
 describe('commerce configurations via handleApi',()=>{
  it('anonimo respinto, CLIENT altrui 404, POST e PATCH ok',async()=>{
   const {sqlite,env}=fixture(),t=Date.now();
-  sqlite.prepare('INSERT INTO organizations(id,name,slug,created_at,updated_at) VALUES(?,?,?,?,?)').run('omni101','omni101','omni101',t,t);
   sqlite.prepare('INSERT INTO clients(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('route-client-1','omni101','c1',t,t);
   sqlite.prepare('INSERT INTO clients(id,organization_id,name,created_at,updated_at) VALUES(?,?,?,?,?)').run('route-client-2','omni101','c2',t,t);
   const login=async(name:string,role:string,clientId:string|null=null)=>{sqlite.prepare('INSERT INTO users(id,email,name,created_at,updated_at) VALUES(?,?,?,?,?)').run(name,name+'@example.test',name,t,t);sqlite.prepare('INSERT INTO memberships(id,organization_id,user_id,role,client_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run(name,'omni101',name,role,clientId,t,t);sqlite.prepare('INSERT INTO sessions(id,organization_id,user_id,token_hash,expires_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run(name,'omni101',name,await digest('tok-'+name),t+3600000,t,t);return '__Host-omni_session=tok-'+name};

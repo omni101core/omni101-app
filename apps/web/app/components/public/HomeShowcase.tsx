@@ -21,7 +21,7 @@ export function homeStages():CinemaStage[]{
  if(hasPair)stages.push({id:'prima-dopo',label:'PRIMA / DOPO',title:'Guarda la differenza.',body:'Due immagini, una maniglia. Trascina e confronta lo stesso soggetto prima e dopo il lavoro creativo.',detail:'Immagini / prodotto / campagne',to:'/explore/creative',cta:'Apri il laboratorio creativo',demo:<Suspense fallback={null}><PrimaDopo segmento="bottega" chiusura={false}/></Suspense>});
  stages.push(
   {id:'binario',label:'BINARIO',title:'Segui il lavoro.',body:'Una richiesta entra, passa per tre punti e arriva a una persona. Ogni passaggio si accende quando succede ed è simulato: non scrive nei tuoi strumenti.',detail:'Workflow / approvazioni / tracce',to:'/explore/workflow',cta:'Avvia il flusso',demo:<Suspense fallback={null}><Binario nodi={3} chiusura={false}/></Suspense>},
-  {id:'vetrina',label:'VETRINA',title:'Scegli un oggetto.',body:'Cerca, apri una scheda, aggiungi al carrello. Un ritaglio del negozio dimostrativo: tutto il resto sta nel playground.',detail:'E-commerce / catalogo / acquisto',to:'/explore/commerce',cta:'Entra nel negozio dimostrativo',demo:<Suspense fallback={null}><Vetrina ritaglio chiusura={false}/></Suspense>},
+  {id:'vetrina',label:'VETRINA',title:'Scegli un oggetto.',body:'Cerca, apri una scheda, aggiungi al carrello. Un ritaglio del negozio dimostrativo: tutto il resto sta nel laboratorio.',detail:'E-commerce / catalogo / acquisto',to:'/explore/commerce',cta:'Entra nel negozio dimostrativo',demo:<Suspense fallback={null}><Vetrina ritaglio chiusura={false}/></Suspense>},
  );
  return stages;
 }

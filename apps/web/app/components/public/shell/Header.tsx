@@ -5,7 +5,7 @@ import {gsap} from 'gsap';
 import '../../../styles/public-grammar.css';
 
 const links=[['/solutions','Soluzioni'],['/work','Progetti'],['/explore','Playground'],['/studio','Studio']];
-const menu=[['/solutions','Soluzioni','Costruire, automatizzare, creare, far crescere.'],['/work','Progetti','Idee da vedere e da esplorare.'],['/explore','Playground','Le possibilità, da provare con le tue mani.'],['/studio','Studio','Come pensiamo e come lavoriamo.'],['/insights','Insights','Appunti e metodi dal nostro lavoro.'],['/start-project','Parliamone ↗','Raccontaci la tua idea.']];
+const menu=[['/solutions','Soluzioni','Costruire, automatizzare, creare, far crescere.'],['/work','Progetti','Idee da vedere e da esplorare.'],['/explore','Playground','Le possibilità, da provare con le tue mani.'],['/studio','Studio','Come pensiamo e come lavoriamo.'],['/insights','Appunti','Appunti e metodi dal nostro lavoro.'],['/start-project','Parliamone ↗','Raccontaci la tua idea.']];
 /** Menu clip: Codrops EaseReverseClipMenu, https://github.com/codrops/EaseReverseClipMenu (MIT, Copyright (c) 2009-2024 Codrops). */
 const closed='polygon(50% 50%,50% 50%,50% 50%,50% 50%)',opened='polygon(0% 0%,100% 0%,100% 100%,0% 100%)';
 

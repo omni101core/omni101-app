@@ -1,0 +1,38 @@
+{
+  "$comment": "Read by scripts/i18n-check.mjs and by the translation worker. signatures: exact strings that must stay identical in every locale wherever the source (it) message contains them. keep: product and brand terms that stay untranslated. tone: house voice per locale.",
+  "baseLocale": "it",
+  "signatures": [
+    "OMNI101",
+    "Digital Possibility Studio",
+    "IDEAS INTO POSSIBILITIES",
+    "BUILD",
+    "AUTOMATE",
+    "CREATE",
+    "GROW",
+    "OMNI ASSIST"
+  ],
+  "keep": [
+    "Playground",
+    "mini-demo",
+    "Studio Forma",
+    "Casa Luce",
+    "Flow",
+    "Tavola"
+  ],
+  "terms": {
+    "mini-demo": { "it": "mini-demo", "en": "mini-demo" },
+    "preventivo fisso": { "it": "preventivo fisso", "en": "fixed quote" },
+    "concept dello studio": { "it": "concept dello studio", "en": "studio concept" },
+    "piccola impresa": { "it": "piccola impresa", "en": "small business" }
+  },
+  "tone": {
+    "it": "Diretto, concreto, dà del tu. Frasi brevi, niente gergo e niente promesse vaghe.",
+    "en": "Plain, direct, second person. Short sentences, no buzzwords, no vague promises. Do not sound like a translation from Italian."
+  },
+  "rules": [
+    "Placeholders such as {year} or {amount} stay identical in every locale.",
+    "Arrows and symbols (↗ → ©) stay where the source puts them.",
+    "Prices and currency come from the pricing engine, never from a translation.",
+    "Length: a translation should stay within 0.4x to 2.5x of the source length for short strings."
+  ]
+}
