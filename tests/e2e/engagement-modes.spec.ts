@@ -4,7 +4,7 @@ test('solutions exposes three engagement modes and sends the selected intention 
  let intake=0,payment=0;
  await page.route('**/api/intake',route=>{intake++;return route.abort()});
  await page.route('**/api/commerce/checkout',route=>{payment++;return route.abort()});
- const choices=[['Richiedi una proposta una tantum','Vorrei una proposta una tantum.'],['Richiedi una proposta continuativa','Vorrei valutare un servizio continuativo o in abbonamento.'],['Prepara il brief del progetto','Vorrei definire un progetto su misura.']] as const;
+ const choices=[['Richiedi una proposta una tantum','Vorrei una proposta una tantum. Il risultato che cerco è: '],['Richiedi una proposta continuativa','Vorrei valutare un servizio continuativo o in abbonamento. Le attività ricorrenti che mi servono sono: '],['Prepara il brief del progetto','Vorrei definire un progetto su misura. Il problema da risolvere e le persone coinvolte sono: ']] as const;
  for(const [label,brief] of choices){
   await page.goto('/solutions');const section=page.getByRole('region',{name:/Un intervento, un percorso/});
   await expect(section.getByRole('heading',{name:'Una tantum',exact:true})).toBeVisible();
@@ -13,7 +13,7 @@ test('solutions exposes three engagement modes and sends the selected intention 
   await expect(section).toContainText('non attiva abbonamenti');
   await section.getByRole('link',{name:label+' ↗',exact:true}).click();
   await expect(page).toHaveURL(/\/start-project\?brief=/);
-  await expect(page.getByLabel('Raccontaci la tua idea')).toHaveValue(new RegExp('^'+brief.split('.')[0]));
+  await expect(page.getByLabel('Raccontaci la tua idea')).toHaveValue(brief);
   await expect(page.getByRole('checkbox',{name:/Ho letto/})).not.toBeChecked();
  }
  expect(intake).toBe(0);expect(payment).toBe(0);

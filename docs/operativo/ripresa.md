@@ -134,3 +134,10 @@ Dieci originali e 21 gruppi nel manifest locale; 34 record Knowledge previsti. N
 2. Integrare rendererG8 e configurazionipersistenti solo dopo handoff/review/test, separati dalpackquality. Riutilizzare il renderer per demo/preview, nessun checkoutsimulato dichiaratopagamento; prerequisitireali secondo contractcommercegiàsalvato.
 3. Copy6bozzesocialrevisionato pronto in /tmp/omni101-deleghe/g7-social-copy/review; importcomeDRAFTneglistoresesistenti, nessunpost/send. ImmaginiCodex-only.
 4. Continuare gruppi65 inmatrice pervalore/dipendenze; coperturasemanticaNON_ESTABLISHED, nonconfonderecatturaecompletamento. QAindipendentedurantelases­sione, nessunnuovojobpersistente.
+
+## Ripresa coordinatore — 24 ottobre 09:45 (Opus Testa e publisher)
+Il coordinatore precedente era a quota piena fino alle 11:23; il founder ha ripassato coordinamento e publisher. Harness unico: `~/omni101/00-Control-Plane/istruzioni/harness.md`; chi lavora adesso: `omni-delega.py board`. Ogni worker parte da script con Caveman+Ponytail.
+- Orca: chiusi 13 tab conclusi; restano Testa, runner Grok e tab di altri progetti.
+- CI verify `1694c9c`: focus del menu (contenimento focusin), launcher reduced-motion, modalità commerciali, collegamenti copertura, tipografia footer mobile.
+- Worker attivi: W1 integrazione backend configurazioni (classe A), W2 configuratore Landing in dashboard, W3 test brief modalità, W4 scout lingua/copy (Grok, copia filtrata), W5 inventario asset (le immagini le genera la Testa).
+- Decisione founder aperta: prezzi pubblici dal motore (una tantum/abbonamento) sulla pagina Soluzioni.

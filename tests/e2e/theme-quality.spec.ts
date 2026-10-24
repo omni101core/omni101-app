@@ -77,11 +77,21 @@ for(const theme of ['light','dark'] as const){
   await page.getByRole('button',{name:'Apri menu'}).click();
   const menu=page.getByRole('dialog',{name:'Menu principale'});
   await expect(menu).toBeVisible();
-  // On failure the received object names who holds focus and whether the close button could take it.
-  await expect.poll(()=>page.evaluate(()=>{
-   const active=document.activeElement,close=document.querySelector('#site-menu>header button')!,style=getComputedStyle(close);
-   return {active:active?.getAttribute('aria-label')||active?.tagName,activeClass:active?.className||'',hasFocus:document.hasFocus(),inertAncestor:close.closest('[inert]')?.className||null,visibility:style.visibility,display:style.display,open:(document.querySelector('#site-menu') as HTMLElement).dataset.open};
-  })).toMatchObject({active:'Chiudi menu',hasFocus:true});
+  try{
+   // On failure the received object names who holds focus and whether the close button could take it.
+   await expect.poll(()=>page.evaluate(()=>{
+    const active=document.activeElement,close=document.querySelector('#site-menu>header button')!,style=getComputedStyle(close);
+    return {active:active?.getAttribute('aria-label')||active?.tagName,activeClass:active?.className||'',hasFocus:document.hasFocus(),inertAncestor:close.closest('[inert]')?.className||null,visibility:style.visibility,display:style.display,open:(document.querySelector('#site-menu') as HTMLElement).dataset.open};
+   })).toMatchObject({active:'Chiudi menu',hasFocus:true});
+  }finally{
+   // Probe for CI logs (list reporter prints console.log). It runs after the poll, even when the poll fails, so its own focus() cannot mask the failure: duplicate nodes, stale refs, or focus() failing on a touch-emulated click.
+   console.log('menu-focus-probe '+theme+' '+JSON.stringify(await page.evaluate(()=>{
+    const active=()=>document.activeElement?.getAttribute('aria-label')||document.activeElement?.tagName;
+    const close=document.querySelector<HTMLElement>('#site-menu>header button'),activeBefore=active();
+    close?.focus();
+    return {menus:document.querySelectorAll('#site-menu').length,triggers:document.querySelectorAll('button[aria-label="Apri menu"]').length,activeBefore,focusResult:active(),inert:!!close?.closest('[inert]'),isConnected:close?.isConnected};
+   })));
+  }
   // A native focus default or another control must not leave an aria-modal panel's focus outside it.
   await page.getByRole('button',{name:'Apri menu'}).focus();
   await expect(menu.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
@@ -105,6 +115,15 @@ for(const theme of ['light','dark'] as const){
   await menu.getByRole('button',{name:'Chiudi menu'}).tap();
   await expect(menu).toBeHidden();
   await expect(page.getByRole('button',{name:'Apri menu'})).toBeFocused();
+ });
+
+ // The accessibility contract: keyboard opening (focus the trigger, press Enter) lands focus on "Chiudi menu".
+ test(`mobile menu opened from the keyboard moves focus to the close button in the ${theme} theme`,async({page,isMobile})=>{
+  test.skip(!isMobile,'the menu button only exists on small screens');
+  await visit(page,theme,'/work');
+  await page.getByRole('button',{name:'Apri menu'}).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog',{name:'Menu principale'}).getByRole('button',{name:'Chiudi menu'})).toBeFocused();
  });
 }
 
