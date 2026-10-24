@@ -19,3 +19,8 @@
 .en-form textarea{width:100%}
 .en-done{max-width:60ch}
 @media (max-width:760px){.en-grid,.en-steps{grid-template-columns:1fr}.en-form{grid-template-columns:1fr}}
+.lang-switch{display:flex;gap:2px;font-size:11px;letter-spacing:.08em;margin-right:12px}
+.lang-switch a{display:inline-grid;place-items:center;min-width:32px;min-height:32px;padding:0 4px}
+.lang-switch a[aria-current=true]{text-decoration:underline;font-weight:600}
+.site-menu .lang-switch{display:none;margin:18px 0 0}
+@media (max-width:760px){.site-header>.lang-switch{display:none}.site-menu .lang-switch{display:flex}}

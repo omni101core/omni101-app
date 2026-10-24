@@ -32,7 +32,7 @@ Chiamata modello: NVIDIA, `response_format` json_schema, timeout 25 s, `max_toke
 
 ## Stato
 
-Parziale, 2026-10-22. L'assistente interno con UI generativa ampia è SPEC-15, dopo SPEC-06. Oggi ci sono lettura di record, navigazione e task confermato. Non c'è un agente che clicca il workspace al posto della persona. 2026-10-23: su viewport fino a 700px il trigger pubblico è più compatto. Se in pagina c'è l'esperienza cinema e il movimento è consentito, sale sopra la barra dei capitoli; con movimento ridotto quella barra non è in pagina e il trigger resta basso. Il nome accessibile resta «OMNI ASSIST».
+Parziale, 2026-10-22. L'assistente interno con UI generativa ampia è SPEC-15, dopo SPEC-06. Oggi ci sono lettura di record, navigazione e task confermato. Non c'è un agente che clicca il workspace al posto della persona. 2026-10-23: su viewport fino a 700px il trigger pubblico è più compatto. Se in pagina c'è l'esperienza cinema e il movimento è consentito, sale sopra la barra dei capitoli; con movimento ridotto quella barra non è in pagina e il trigger resta basso. Il nome accessibile resta «OMNI ASSIST». 2026-10-24: su viewport 390×844 la misura del dialogo dava 876. Il keyframe di apertura spostava il pannello di 32px verso il basso mentre il bordo basso era già a filo (844+32). Ora quel keyframe cambia solo l'opacità. Non ancora in una verify verde.
 
 ## Decisioni
 
@@ -45,6 +45,7 @@ Il messaggio del cliente è dato non fidato: il prompt di intake lo dice esplici
 - Il cookie assistente non è la sessione. Non usarlo per autorizzare un CRUD.
 - Cronologia pubblica e interna sono isolate per `owner_hash` e `mode`.
 - Non abbassare di nuovo `.omni-assist-launch` sotto i 700px quando in pagina c'è `.cinema-experience`: la barra capitoli occupa il fondo dello stage e il trigger la copre. La posizione alta vale solo con `prefers-reduced-motion: no-preference`. Il foglio è `apps/web/app/components/assist/assist.css`, dell'assistente, non un foglio condiviso del sito.
+- Non rimettere `translateY` su `assist-up`. Sotto i 760px il dialogo è già a filo del viewport: ogni spostamento verso il basso esce dall'area visibile. L'apertura larga tiene 12px di spostamento perché sotto restano 24px di margine.
 
 ## Chi lo possiede ora
 

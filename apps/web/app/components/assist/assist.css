@@ -114,5 +114,5 @@
 }
 /* Cinema demos retain bottom controls when motion is reduced; keep the same clearance. */
 @media(max-width:700px){body:has(.cinema-experience) .omni-assist-launch{bottom:calc(72px + env(safe-area-inset-bottom));box-shadow:none}}
-@keyframes assist-up{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+@keyframes assist-up{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.omni-assist-body{scroll-behavior:auto}.omni-assist-dialog[open],.omni-assist-loading i{animation:none}}

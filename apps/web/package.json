@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
+    "i18n:check": "node ../../scripts/i18n-check.mjs",
     "i18n:compile": "paraglide-js compile --project ./project.inlang --outdir ./app/paraglide --strategy baseLocale",
     "typecheck": "npm run i18n:compile && react-router typegen && tsc --noEmit",
     "deploy": "wrangler deploy",

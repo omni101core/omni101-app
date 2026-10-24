@@ -52,9 +52,63 @@ test('/en: three offers linked, hreflang, no overflow at 375',async({page})=>{
  await page.setViewportSize({width:375,height:800});
  await open(page,'/en');
  await expect(page.locator('html')).toHaveAttribute('lang','en');
- for(const s of slugs)await expect(page.locator('a[href="/en/offers/'+s+'"]')).toHaveCount(1);
+ for(const s of slugs)await expect(page.locator('.en-page a[href="/en/offers/'+s+'"]')).toHaveCount(1);
  await expect(page.locator('link[hreflang=it]')).toHaveAttribute('href','https://omni101.app/');
  await expect(page.locator('link[hreflang=en]')).toHaveAttribute('href','https://omni101.app/en');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)).toBe(false);
  await expect(page.getByLabel(/interested in/)).toBeVisible();
+});
+test.describe('English shell',()=>{
+ for(const path of ['/en','/en/offers/ai-landing'])test('header, menu and footer are English on '+path,async({page})=>{
+  await open(page,path);
+  await expect(page.locator('html')).toHaveAttribute('lang','en');
+  const nav=page.getByRole('navigation',{name:'Main navigation'});
+  await expect(nav.getByRole('link',{name:'Offers'})).toBeVisible();
+  await expect(page.getByRole('link',{name:'Projects (Italian)'}).first()).toBeVisible();
+  await expect(page.locator('.site-header .header-action')).toContainText('Free mini-demo');
+  await expect(page.getByRole('link',{name:'Skip to content'})).toHaveCount(1);
+  const footer=page.locator('footer.site-footer');
+  await expect(footer).toContainText('IDEAS INTO POSSIBILITIES.');
+  await expect(footer).toContainText('Digital Possibility Studio.');
+  await expect(footer).toContainText('What we build');
+  await expect(footer).not.toContainText(/Possibilità|Esplora|Termini|Una conversazione/);
+  await expect(page.locator('.site-header')).not.toContainText(/Soluzioni|Progetti|Parliamone/);
+  await expect(page.locator('.site-header .wordmark')).toHaveAttribute('href','/en');
+  await expect(page.locator('.cta-section')).toHaveCount(0);
+ });
+ test('menu dialog is English and keeps its focus behaviour',async({page})=>{
+  await page.setViewportSize({width:375,height:800});
+  await open(page,'/en');
+  await page.getByRole('button',{name:'Open menu'}).click();
+  const dialog=page.getByRole('dialog',{name:'Main menu'});
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Digital Possibility Studio / Italy');
+  await expect(dialog.getByRole('button',{name:'Close menu'})).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button',{name:'Open menu'})).toBeFocused();
+ });
+ test('language switch: EN to IT and back, selected language marked',async({page})=>{
+  await open(page,'/en');
+  const sw=page.locator('.site-header > .lang-switch');
+  await expect(sw.locator('a[aria-current=true]')).toHaveText('EN');
+  await sw.getByRole('link',{name:'Italiano'}).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang','it');
+  await expect(page.locator('.site-header > .lang-switch a[aria-current=true]')).toHaveText('IT');
+  await expect(page.locator('footer.site-footer')).toContainText('Possibilità');
+  await page.locator('.site-header > .lang-switch').getByRole('link',{name:'English'}).click();
+  await expect(page).toHaveURL(/\/en$/);
+  await expect(page.locator('html')).toHaveAttribute('lang','en');
+ });
+ test('SSR html carries the right lang before hydration',async({request})=>{
+  expect(await (await request.get('/en')).text()).toMatch(/<html[^>]*lang="en"/);
+  expect(await (await request.get('/')).text()).toMatch(/<html[^>]*lang="it"/);
+  expect(await (await request.get('/en/offers/ai-assistant')).text()).toMatch(/<html[^>]*lang="en"/);
+ });
+ test('Italian shell stays Italian',async({page})=>{
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('lang','it');
+  await expect(page.getByRole('navigation',{name:'Navigazione principale'}).getByRole('link',{name:'Soluzioni'})).toBeVisible();
+  await expect(page.locator('footer.site-footer')).toContainText('IDEAS INTO POSSIBILITIES.');
+ });
 });
