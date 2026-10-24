@@ -49,3 +49,5 @@ Test aggiunti in `tests/calendar.test.ts`: dedup fonte+id, mezzanotte Roma da 23
 `/api/commerce/configurations`: POST `{configuration}` crea (versione record 1), PATCH `{expectedVersion,configuration}` aggiorna con CAS (409 `{error,current}` se superata), GET lista (max 100) e dettaglio. OWNER/ADMIN vedono il tenant; CLIENT solo le proprie (owner_user_id + client_id), altrui 404; altri ruoli 403.
 Dispatch in `api.ts` dopo `authenticate`, same-origin e `rateLimit` (20/min sulle scritture), prima dei router generici. Migrazione `0016_commerce_configurations.sql` non applicata a D1 reali. Salvare non crea ordine, offerta, pagamento o progetto.
 Test: `tests/commerce-configurations.test.ts` (handler diretto + route `handleApi`) eseguiti solo in CI, non ancora lanciati.
+
+24ott R2 in implementazione: configuratore recupera busy in finally, preserva bozza/CAS e rifiuta risposta successo malformata. Patch Grok revisionata, CI ancora da eseguire. P0ACL nega genericCRUD aiCLIENT preservando portale dedicato; testSQLite/handleApi e stato nel modulo portale. Nessun lavoro dichiarato live.

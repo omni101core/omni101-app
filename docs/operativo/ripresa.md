@@ -147,3 +147,61 @@ Il coordinatore precedente era a quota piena fino alle 11:23; il founder ha ripa
 - 24/10 10:35. Verify `40076276240` rossa: slug organizzazione duplicato nel test commerce (la migration 0001 inserisce già `omni101`). Fix locale: un solo insert. E2e allineati a «Copione» e «Essenza / commercio». Atlas cinema e galleria sul webp già presente; il png resta. W23 fermo fino alle 11:20, file infrastruttura già nel tree. Release solo dopo una verify verde. Preview 4177 resta l’ultimo artefatto, non questo tree.
 - 24/10 10:45. Verify `40078656846` rossa sul controllo copertura (gruppo i18n-multilingua assente dalla matrice). Matrice rigenerata dallo script: 66 gruppi, 179 gap, il gruppo nuovo resta senza prove. Nuova verify `40078985066`, un solo file, non è un release. Tre worker su copie di classe C: etichette filtro lavori, elenco residui italiani, asserzioni e2e senza importi. Integrazione solo dopo lettura degli esiti.
 - 24/10 11:05. Verify `40079559100` ancora rossa, stessi 9 browser. Assist: il keyframe di apertura stretta sposta il dialogo di 32px e la misura fa 876 su viewport 844. Keyframe ridotto alla sola opacità, non ancora in CI. Menu: il focus resta sul pulsante di apertura per tutta la poll; il file shell è del worker fermo fino alle 11:20, non si tocca prima. Quattro tab aperti col comando sbagliato chiusi. Quota messaggi gratis del giorno esaurita fino alle 02:00 del 25/10. Nessun release. Preview 4177 invariata.
+
+## Passaggio al coordinatore app — 24 ottobre ~12:00 (dalla Testa)
+Il founder ridà il comando al coordinatore app. La Testa non pubblica e non lancia più worker; nessun monitor è attivo.
+
+### Stato CI e produzione
+- Produzione: invariata a 59988 (ultimo rilascio verde). Nessun rilascio fatto oggi.
+- verify-commercial `32cdb51`: CI ancora in corso al passaggio. È lo snapshot di tutto il lavoro tranne W29 (vedi sotto). L'ultima rossa (`b42d5c8`) aveva solo il conteggio fisso dei finding in tests/seed-reviewed-context.test.ts, ora dinamico. Prima di quella, a parte il menu, era tutto verde: typecheck, test server, controllo traduzioni, test browser.
+- Se `32cdb51` è verde: rilascio con `scripts/cloud-verify.py --release` dallo STESSO snapshot (escludendo i file di W29), poi verifica online e anteprima locale 4177 (anteprima-locale.md). La pipeline applica da sola le migrazioni 0016 e 0017, che sono solo additive.
+- Script per pubblicare senza il lavoro a metà di un worker: `~/.omni101/bin/omni-delega/pubblica-snapshot.sh <repo> <dir-pre> <file nuovi da escludere...>`.
+
+### Fatto oggi (nel repo, tutto in CI tranne W29)
+- Shell: menu e footer con superfici scure leggibili in entrambi i temi; footer mobile con link a 14px e testo legale a 12px; campi intake a 16px su mobile. Menu: contenimento del focus con redirect rimandato di un frame; test diviso tra tastiera (contratto a11y, verde) e tap. QS24-06: con il tap emulato il focus non entra nel menu, in un browser reale sì; finding aperto, gravità bassa.
+- OMNI Assist ridisegnato: launcher con firma tipografica, bottom sheet su mobile, badge "Risposta informativa"/"Azione eseguita", composer a 16px. Keyframe di apertura solo in opacità, perché la traslazione mandava il pannello fuori dal viewport.
+- Commerce:
+  - backend delle configurazioni landing (migrazione 0016, CAS, ruoli, audit) e configuratore landing in dashboard (admin/landing-configurator);
+  - modalità una tantum, continuativa e su misura in Soluzioni, con CTA verso il brief;
+  - mini-demo automatica: dal brief del lead l'LLM dell'assistente compila una configurazione landing; anti-claim deterministico; link pubblico /demo/:token con hash a DB, revocabile, noindex (migrazione 0017).
+- Lingua: scout di 225 finding (179 corretti), testi pubblici in italiano, firme preservate. Multilingua con Paraglide JS 2, fase 1: <html lang> anche in SSR, shell in IT e EN, selettore, landing /en con 3 offerte e la mini-demo gratuita, scripts/i18n-check.mjs in CI, glossario in apps/web/messages. Voce di backlog: i18n-multilingua.
+- Asset: tre foto esistenti finalmente collegate (Explore, Studio, Appunti); webp per l'atlas (da 2,5 MB a 202 KB) e per 3 foto dei lavori; inventario completo in /tmp/omni101-deleghe/w5-asset-audit/assets.json.
+- Prezzi: motore v2 in ~/omni101/01-Projects/active/calcolatore-omni101 (docs/modello-prezzi-v2.md lì): prezzo = max(pavimento di costo, valore di mercato), 3 livelli, setup + canone, bundle, mercato e valuta (EUR, USD, GBP), quote() unica per ogni richiesta. Shopify tolto: niente piattaforme di terzi. I "da" pubblici sono in apps/web/app/content/prezzi-pubblici.json, nascosti con MOSTRA_PREZZI=false.
+
+### In corso al passaggio
+- W29: preventivo approvato → link cliente → accettazione registrata, istruzioni di bonifico (worker attivo; file: server/proposals.ts, migrazione 0018, route proposta, QuoteProposalShare, PricingWorkspace, api.ts, routes.ts). Esito: /tmp/omni101-deleghe/w29-proposal-accept/esito.md. Da revisionare e mandare in CI. Togliere apps/web/app/server/.claude/HANDOFF.md, creato dal worker dentro l'albero pubblicato.
+
+### Prossimi passi consigliati (in ordine)
+1. Rilascio del verde e anteprima locale.
+2. Integrare W29 e mandarlo in CI.
+3. Multilingua fase 2: migrare le pagine pubbliche ai messaggi. Le traduzioni sono lavoro di classe C: prima i modelli gratuiti, il cui tetto giornaliero si azzera alle 02:00.
+4. Prima risposta automatica al lead, quando c'è il provider email.
+5. Pagamento: serve un PSP del founder.
+6. Rivedere i finding di contrasto e tipografia nella dashboard.
+
+### Funnel internazionale pronto (non pubblicato, nessun invio)
+- Offerta Local Desk per attività locali USA: pagina di prenotazione + bozze di risposta alle recensioni. Dal motore: "from 1,900 USD + 148 USD/month" (Essenziale del bundle).
+- Contenuti in /tmp/omni101-deleghe/w20b-funnel-us/ (offerta, Contra, email CAN-SPAM, teardown LinkedIn) e /tmp/omni101-deleghe/w20-funnel-content/.
+- Ricerche: /tmp/omni101-deleghe/w13-intl-research/ (internazionale), w9-pricing-research (Italia), w17-i18n-research (librerie), w18-revenue-path (cosa manca per incassare).
+
+### Bloccato dal founder (aggiornato 24/10 ~12:10)
+- Immagini: le genera il coordinatore app con la sua generazione integrata (decisione del founder). Il saldo fal.ai non serve più. Va comunque ruotata la chiave fal, stampata per errore in un terminale locale.
+- Turnstile (anti-spam gratuito di Cloudflare sul modulo intake, già integrato; senza chiave di produzione il modulo risponde 503 per scelta): NON serve il founder. Il coordinatore app crea il widget e imposta la chiave segreta con l'accesso Cloudflare che usa già per i deploy (API/wrangler secret), senza stampare segreti. Non va sostituito con un sistema fatto in casa, che sarebbe più debole.
+- Contra (marketplace freelance senza commissioni: un canale di vendita, non uno strumento): FACOLTATIVO. Serve un profilo a nome del founder; testi pronti in /tmp/omni101-deleghe/w20b-funnel-us/contra.md. Alternativa senza account: landing /en + contatti diretti conformi.
+- Restano del founder: account email con dominio (SPF/DKIM/DMARC) e un PSP per i pagamenti; conferma dei claim (consegna guidata dal fondatore, supporto post lancio).
+
+### Harness
+~/omni101/00-Control-Plane/istruzioni/harness.md, letto da tutte le CLI tramite AGENTS.md:
+- Testa e publisher unico.
+- Ordine delle corsie: gratuiti (solo classe C) → Grok/Hermes/Cursor (pool xAI, max 3) → Sonnet per la classe A → Haiku per il meccanico.
+- Merlin (Chrome, getmerlin.in/chat) per la ricerca.
+- Lancio solo con `omni-delega.py agente|lancia`, che iniettano Caveman e Ponytail.
+- `board --chiudi-fatti` per vedere chi fa cosa e chiudere i tab finiti.
+- preview.omni101.app è vecchio: non si apre.
+Registro dei lavori: /tmp/omni101-deleghe/registro.jsonl. Originali privati del founder di oggi: ~/.omni101/mandati/richiesta-founder-harness-2026-10-24.md e richiesta-founder-acquisizione-2026-10-24.md.
+
+## Ripresa Codex App — piano del24ott
+Coordinatore/publisher ripreso da Codex App. Nuovo mandato chiede fase piano: nessun nuovo push/deploy/migrazione o refactor. Piano proposto: docs/operativo/piano-strategico-2026-10-24.md (14sezioni, taskP24-01..14). CI32cdb51/run40084388255 FAILED240server/1fail/3TODO; browser nonpartiti, nonrilasciare. W29 consegnato NOT_READY dopo review; prezzi/opzioni nonlegatiapprovazione eANNUAL/USAGE omessi confermati. Prodhealth59988HTTP200;preview4177nessunlistener,config077draft. Originaleblueprint art_20261024T111423_130fc0e42009 sha b034245fbfcbc3775494f33c3e6401a163d7a8f6d58df7979edb4b0b447103e6; importKnowledgepending. Prossimo: approvazione piano, P24-01/02 e W29separato; dettagli/contratti nel piano, nonripetereauditgenerale.
+
+## Esecuzione R2 autorizzata dal founder — 24ott
+Il founder ha autorizzato esecuzione integrale progressiva e deleghe Claude/Grok. Il precedente PLAN_READ_ONLY è superato per gli ambiti assegnati. Codex coordina/publisherunico; budget sessione19%residuo, CLI fanno implementazioni. R2canonico: docs/operativo/piano-strategico-2026-10-24.md; backupR1 /tmp/omni101-deleghe/execute-r2-24/p24-before-r2.md. P0CLIENTACLprimaogni release, poiCI/preview/W29/pricing e tutti66gruppi; nessunMVP. Raw privati nonnelrepo, immaginiCodexonly, noAIlocale.

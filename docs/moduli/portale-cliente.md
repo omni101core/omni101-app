@@ -42,6 +42,7 @@ Il cliente non è un ruolo dello staff con la nav tagliata. Ha route, API e quer
 - `client_visible=0` nasconde il deliverable. La consegna (`POST .../deliver`) è il passo che lo mostra.
 - Accettare un invito CLIENT senza `client_id` è rifiutato in creazione (400). Non aggirarlo in `accept`.
 - Non loggare l'`inviteUrl`.
+- CLIENT non usa `/api/records/*`: il generico fa `SELECT *` senza filtri di stato/visibility e restituirebbe bozze, progetti `TEAM` e colonne interne. Ogni lettura cliente passa da `/api/portal`; per aprire una lettura generica serve una policy per risorsa condivisa col portale. Test: `tests/client-records-acl.test.ts`.
 
 ## Chi lo possiede ora
 

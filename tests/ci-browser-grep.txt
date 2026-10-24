@@ -1,1 +1,0 @@
-footer text stays readable|mobile menu text stays readable|footer contacts reflow|intake text entry is 16px|assistant reflows|cinema commands|chapter tabs

@@ -1,4 +1,4 @@
-import {test,expect,type Page} from '@playwright/test';
+import {test,expect,type Page,type Route} from '@playwright/test';
 import {createHash,randomBytes,randomUUID} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {resolve} from 'node:path';
@@ -43,4 +43,63 @@ test('landing configurator: form, live preview, validation error, mobile 375',as
 
  await page.setViewportSize({width:375,height:812});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+});
+
+async function openConfigurator(page:Page){
+ await authenticator(page);
+ await page.goto('/portal/invite?token='+ownerInvitation());
+ await page.getByRole('button',{name:'Attiva il tuo account'}).click();
+ await expect(page).toHaveURL(/\/admin$/,{timeout:20000});
+ await page.getByRole('link',{name:'Configuratore landing'}).first().click();
+ await expect(page).toHaveURL(/\/admin\/landing-configurator$/);
+ await page.getByLabel('Nome attività').fill('Studio Verdi');
+ await page.getByLabel('Titolo',{exact:true}).fill('Una landing chiara per Verdi');
+}
+
+async function routePost(page:Page,fail:(route:Route)=>Promise<void>){
+ await page.route('**/api/commerce/configurations',async route=>{
+  if(route.request().method()!=='POST'){await route.continue();return}
+  await fail(route);
+ });
+}
+
+test('landing configurator: POST abort and malformed 2xx keep the draft',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Virtual WebAuthn is exercised once on desktop Chromium.');
+ test.setTimeout(90000);
+ await openConfigurator(page);
+ let mode:'abort'|'bad'='abort';
+ await routePost(page,async route=>{
+  if(mode==='abort'){await route.abort();return}
+  await route.fulfill({status:200,contentType:'application/json',body:'{"ok":true}'});
+ });
+ const save=page.getByRole('button',{name:'Salva'});
+ const name=page.getByLabel('Nome attività');
+ await save.click();
+ await expect(page.getByRole('status')).toHaveText('Connessione non riuscita. Riprova.');
+ await expect(save).toBeEnabled();
+ await expect(name).toHaveValue('Studio Verdi');
+ await expect(page.getByText('Configurazione salvata.')).toHaveCount(0);
+ mode='bad';
+ await save.click();
+ await expect(page.getByRole('status')).toHaveText('Salvataggio non riuscito.');
+ await expect(save).toBeEnabled();
+ await expect(name).toHaveValue('Studio Verdi');
+ await expect(page.getByText('Configurazione salvata.')).toHaveCount(0);
+ await expect(page.getByText('Configurazione aggiornata.')).toHaveCount(0);
+});
+
+test('landing configurator: 409 offers reload and does not overwrite the draft',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop','Virtual WebAuthn is exercised once on desktop Chromium.');
+ test.setTimeout(90000);
+ await openConfigurator(page);
+ await routePost(page,async route=>{
+  await route.fulfill({status:409,contentType:'application/json',body:JSON.stringify({current:{id:'cfg-server',version:2,createdAt:1,updatedAt:2,configuration:{version:1,theme:'studio',businessName:'Copia server',headline:'Titolo del server che non deve entrare',description:'Testo server.',ctaLabel:'Contattaci',ctaUrl:'https://example.com/contatti',features:[{title:'Server',description:'Non in bozza'}]}}})});
+ });
+ await page.getByRole('button',{name:'Salva'}).click();
+ await expect(page.getByRole('alert')).toContainText('Versione superata');
+ await expect(page.getByRole('button',{name:'Ricarica la versione corrente'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Salva'})).toBeEnabled();
+ await expect(page.getByLabel('Nome attività')).toHaveValue('Studio Verdi');
+ await expect(page.getByLabel('Titolo',{exact:true})).toHaveValue('Una landing chiara per Verdi');
+ await expect(page.getByText('Configurazione salvata.')).toHaveCount(0);
 });

@@ -15,7 +15,7 @@ def api(path,payload=None):
 ref=subprocess.run(['gh','api',f'repos/{REPO}/git/ref/heads/{BRANCH}'],capture_output=True,text=True)
 exists=ref.returncode==0
 parent=json.loads(ref.stdout)['object']['sha'] if exists else api('git/ref/heads/main')['object']['sha']
-SKIP_PARTS=['node_modules','.wrangler','.react-router','build','.dev.vars','.env','.DS_Store']
+SKIP_PARTS=['node_modules','.wrangler','.react-router','build','.dev.vars','.env','.DS_Store','.claude','.codex','.gemini','.cursor','.omx']  # tool task state, never source; docs/**/handoff*.md are kept
 DOC_MAX_BYTES=1_000_000  # docs/ is published whole; a file above this (a heavy docs/preview asset, say) is left out and reported
 paths=[];left_out=[]
 for directory in ['apps/web','packages','.github/workflows','tests','docs']:
@@ -26,6 +26,10 @@ for directory in ['apps/web','packages','.github/workflows','tests','docs']:
 for filename in ['scripts/cloud-verify.py','scripts/seed-reviewed-context.mjs','scripts/private-mandates.mjs','scripts/project-context.mjs','scripts/local-preview.py','scripts/catalogo-listino.mjs','scripts/reconcile-requirements.mjs','scripts/i18n-check.mjs','package.json','vitest.config.ts','playwright.config.ts','README.md','AGENTS.md','CLAUDE.md','GEMINI.md']:
  path=ROOT/filename
  if path.is_file():paths.append(path)
+# Perimeter guard: tool state dirs must never reach the branch (a SKIP_PARTS regression fails here, not in CI).
+TOOL_STATE=('.claude','.codex','.gemini','.cursor','.omx')
+leaked=[str(p.relative_to(ROOT)) for p in paths if any(part in TOOL_STATE for part in p.parts)]
+if leaked:print('Tool state in publish perimeter, nothing pushed:');print('\n'.join(leaked));sys.exit(1)
 # Anti-secret scan, before anything leaves this machine. It reports file, line and rule only, never the matched text.
 SECRET_RULES={
  'private key block':re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----'),

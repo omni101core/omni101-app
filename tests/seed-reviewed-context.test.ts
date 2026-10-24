@@ -58,7 +58,8 @@ describe('reviewed scout findings in Knowledge',()=>{
    const detail=JSON.parse(String(row.body)),proof=JSON.parse(String(row.evidence));
    expect(detail).toMatchObject({observed:finding.observed,expected:finding.expected,confidence:finding.confidence,viewport:finding.viewport,theme:finding.theme,language:finding.language,authstate:finding.authstate,possiblecause:finding.possiblecause});
    if(finding.standardsNote)expect(detail.standardsNote).toBe(finding.standardsNote);
-   expect(proof).toMatchObject({screenshot:finding.evidenceScreenshotpath,runtimeRevision:finding.runtimeRevision,repositoryImage:'https://github.com/omni101core/omni101-app/blob/'+'a'.repeat(40)+'/'+finding.evidenceScreenshotpath});
+   expect(proof).toMatchObject({screenshot:finding.evidenceScreenshotpath,...(finding.runtimeRevision===undefined?{}:{runtimeRevision:finding.runtimeRevision}),repositoryImage:'https://github.com/omni101core/omni101-app/blob/'+'a'.repeat(40)+'/'+finding.evidenceScreenshotpath});
+   if(finding.runtimeRevision===undefined)expect(proof).not.toHaveProperty('runtimeRevision');
    expect(String(row.source)).toContain('art_20261024T042351_a495f8339026');
    expect(one(db,'SELECT count(*) n FROM knowledge_revisions WHERE record_id=?',String(row.id)).n).toBe(1);
   }

@@ -23,6 +23,20 @@ async function call(method: string, path: string, body?: unknown) {
   return {status: response.status, data};
 }
 
+function isSaved(value: unknown): value is Saved {
+  if (typeof value !== 'object' || value === null) return false;
+  const row = value as Record<string, unknown>;
+  const cfg = row.configuration;
+  if (typeof row.id !== 'string' || row.id === '' || typeof row.version !== 'number' || typeof row.createdAt !== 'number' || typeof row.updatedAt !== 'number') return false;
+  if (typeof cfg !== 'object' || cfg === null) return false;
+  const c = cfg as Record<string, unknown>;
+  return typeof c.version === 'number' && typeof c.theme === 'string' && typeof c.businessName === 'string' && typeof c.headline === 'string' && typeof c.description === 'string' && typeof c.ctaLabel === 'string' && typeof c.ctaUrl === 'string' && Array.isArray(c.features) && c.features.every(f => {
+    if (typeof f !== 'object' || f === null) return false;
+    const item = f as Record<string, unknown>;
+    return typeof item.title === 'string' && typeof item.description === 'string';
+  });
+}
+
 export default function LandingConfigurator() {
   const [config, setConfig] = useState<LandingConfiguration>(blank);
   const [saved, setSaved] = useState<Saved[]>([]);
@@ -96,21 +110,32 @@ export default function LandingConfigurator() {
     }
     setBusy(true);
     setMessage('');
-    const result = current
-      ? await call('PATCH', '/api/commerce/configurations/' + encodeURIComponent(current.id), {expectedVersion: current.version, configuration: config})
-      : await call('POST', '/api/commerce/configurations', {configuration: config});
-    setBusy(false);
-    if (result.status === 409) {
-      setStale((result.data.current as Saved) || null);
-      return;
-    }
-    if (result.status >= 200 && result.status < 300) {
-      setCurrent(result.data as unknown as Saved);
-      setStale(null);
-      setMessage(current ? 'Configurazione aggiornata.' : 'Configurazione salvata.');
-      await refresh();
-    } else {
-      setMessage(String(result.data.error || 'Salvataggio non riuscito.'));
+    try {
+      const result = current
+        ? await call('PATCH', '/api/commerce/configurations/' + encodeURIComponent(current.id), {expectedVersion: current.version, configuration: config})
+        : await call('POST', '/api/commerce/configurations', {configuration: config});
+      if (result.status === 409) {
+        const next = isSaved(result.data.current) ? result.data.current : null;
+        setStale(next);
+        if (!next) setMessage('Versione superata. La bozza resta qui.');
+        return;
+      }
+      if (result.status >= 200 && result.status < 300 && isSaved(result.data)) {
+        setCurrent(result.data);
+        setStale(null);
+        setMessage(current ? 'Configurazione aggiornata.' : 'Configurazione salvata.');
+        try {
+          await refresh();
+        } catch {
+          setMessage(current ? 'Configurazione aggiornata. Elenco non aggiornato.' : 'Configurazione salvata. Elenco non aggiornato.');
+        }
+      } else {
+        setMessage(typeof result.data.error === 'string' && result.data.error ? result.data.error : 'Salvataggio non riuscito.');
+      }
+    } catch {
+      setMessage('Connessione non riuscita. Riprova.');
+    } finally {
+      setBusy(false);
     }
   }
 
