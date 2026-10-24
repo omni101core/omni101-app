@@ -72,3 +72,13 @@ Lo script ora allinea anche stato, descrizione, priorità ed evidenza delle righ
 - Requisiti e task derivati (fonte `Private founder mandate · art_…`) restano `TEAM_INTERNAL`: metadata e provenienza visibili al team, non il testo originale.
 - Test: `tests/knowledge.test.ts` (SQLite reale con tutte le migrazioni: backfill e trigger, Owner A/B e Admin ammessi, cinque ruoli interni negati, cliente 403, altra organizzazione 404, salvataggio legacy che conserva `OWNER_ADMIN`, v1 intatta, tentativi di declassificazione/creazione/collegamento negati).
 - Resta al root: impostare `access_scope='OWNER_ADMIN'` esplicito nel seeder (il trigger è solo rete di sicurezza), aggiornare cloud-smoke e UI.
+
+### Collegamenti operativi — PERSISTENCE-LINKS24, 24 ottobre (da verificare in CI)
+
+La matrice arricchisce le righe con attività soltanto per `backlogKeys` presenti nel backlog canonico: ID identici al seeder, apertura `/admin/tasks?record=...` già gestita dalla route admin. REC-020/045 senza gruppo restano senza link, non vengono inventati task. Link generale alle Fasi `/admin/pipeline` e al documento pubblico di handoff indicato da `agent-context.json.handoff`; non sono prove di esecuzione o un handoff specifico del requisito.
+
+Le fonti pubbliche risolvono l'ID Knowledge da `sources.json.record_id`. Solo Owner/Admin ricevono il link degli originali privati registrati per import, con la stessa identità deterministica del seeder; nessun corpo viene letto dall'endpoint copertura. Knowledge supporta `?record=<UUID>` con GET ordinario autorizzato, annullamento delle richieste superate, rimozione dell'editor precedente prima del caricamento e errore esplicito se assente/negato. ACL e canary originali v1 invariati; il link non certifica un'importazione riuscita.
+
+Prove aggiunte: test API nel file `tests/requirement-coverage.test.ts` su registro reale, task noti, fonte, handoff, Owner/Admin contro Developer e Client403; E2E `coverage-links.spec.ts` su apertura fonte, href task/pipeline/handoff e reload404 senza corpo precedente. Nessuna suite eseguita sul Mac; CI e verifica release a cura del coordinatore. Restano completezza ingressi/chat non dimostrata e copertura semantica NOT_ESTABLISHED; nessun nuovo manifest o motore.
+
+Riconciliazione ingressi sessione (coordinatore, 24 ottobre):61 messaggi utente nel tratto disponibile;14 allegati accessibili unici riconciliati per hash con11 originali pubblici e3 privati. Nessun allegato accessibile nuovo mancante in quel campione. Nove compattazioni impediscono di attestare ALL storico. Inventario metadati e ultimo messaggio sono preservati in memoria privata, non ancora importati come ulteriori originali D1: il registro resta5 fonti private, senza promozioni automatiche.

@@ -11,7 +11,10 @@ const users=(component:string)=>files.filter(file=>!file.endsWith(component+'.ts
 
 describe('signature effects stay on one page',()=>{
  it('the reel ring is only used by the home',()=>expect(users('ReelOrbit')).toEqual(['routes/public/home.tsx']));
- it('the curved-wall chapters are only used by the home',()=>expect(users('CinematicExperience')).toEqual(['routes/public/home.tsx']));
+ it('the home chapter is option cards, not the curved wall',()=>{
+  expect(users('CinematicExperience')).toEqual([]);
+  expect(users('HomeCapitolo')).toEqual(['routes/public/home.tsx']);
+ });
  it('the headline image expansion is not on the home',()=>expect(users('ImageExpansionTypography')).not.toContain('routes/public/home.tsx'));
  it('the retired home effects are not on the home',()=>{
   const home=readFileSync(join(app,'routes/public/home.tsx'),'utf8');

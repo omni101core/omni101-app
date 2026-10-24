@@ -161,18 +161,28 @@ test('inputs and workflow selection stay locked until the save request ends',asy
  await expect(name).toHaveValue('In attesa');
 });
 
+/** React Flow animates fitView on mount and after graph changes; act on a still canvas, so a click never waits for a moving target. */
+async function stillCanvas(page:Page){
+ const viewport=page.locator('.react-flow__viewport');
+ await expect.poll(async()=>{const a=await viewport.getAttribute('style',{timeout:5000});await page.waitForTimeout(150);return a===await viewport.getAttribute('style',{timeout:5000})},{timeout:10000}).toBe(true);
+}
+
 test('undo restores a deleted node and copy paste creates a new id',async({page},testInfo)=>{
  test.skip(testInfo.project.name!=='desktop','The mocked builder is exercised once on desktop Chromium.');
  await install(page);
  const nodes=page.locator('.react-flow__node');
- await page.getByRole('combobox',{name:'Workflow salvato'}).selectOption({label:'Già salvato · v1'});
+ const picker=page.getByRole('combobox',{name:'Workflow salvato'});
+ // The saved list arrives after the canvas: wait for the option, so selectOption cannot sit on it until the test timeout.
+ await expect(picker.locator('option',{hasText:'Già salvato · v1'})).toBeAttached();
+ await picker.selectOption({label:'Già salvato · v1'},{timeout:10000});
  await expect(page.getByText('Coincide con la versione 1 salvata.')).toBeVisible();
  await expect(page.getByRole('button',{name:'Valida senza eseguire'})).toBeEnabled();
  await expect(nodes).toHaveCount(2);
- const sourceId=await nodes.nth(1).getAttribute('data-id');
+ const sourceId=await nodes.nth(1).getAttribute('data-id',{timeout:10000});
  expect(sourceId).toBeTruthy();
- await nodes.nth(1).click();
- await page.getByRole('button',{name:'Rimuovi nodo dalla bozza'}).click();
+ await stillCanvas(page);
+ await nodes.nth(1).click({timeout:10000});
+ await page.getByRole('button',{name:'Rimuovi nodo dalla bozza'}).click({timeout:10000});
  await expect(nodes).toHaveCount(1);
  await expect(page.getByRole('button',{name:'Valida senza eseguire'})).toBeDisabled();
  await expect(page.getByText('Bozza diversa dalla versione 1 salvata.')).toBeVisible();
@@ -184,7 +194,11 @@ test('undo restores a deleted node and copy paste creates a new id',async({page}
  await expect(nodes).toHaveCount(1);
  await page.keyboard.press('Control+z');
  await expect(page.locator('.react-flow__node[data-id="'+sourceId+'"]')).toHaveCount(1);
- await page.locator('.react-flow__node[data-id="'+sourceId+'"]').click();
+ await stillCanvas(page);
+ const source=page.locator('.react-flow__node[data-id="'+sourceId+'"]');
+ await source.click({timeout:10000});
+ // The app tracks the selected node itself: its inspector (with the remove button) is the state to wait on before the shortcuts.
+ await expect(page.getByRole('button',{name:'Rimuovi nodo dalla bozza'})).toBeVisible();
  await page.keyboard.press('Control+c');
  await page.keyboard.press('Control+v');
  await page.keyboard.press('Control+d');
@@ -192,7 +206,7 @@ test('undo restores a deleted node and copy paste creates a new id',async({page}
  const ids=await nodes.evaluateAll(list=>list.map(node=>node.getAttribute('data-id')||''));
  expect(new Set(ids).size).toBe(4);
  expect(ids.filter(id=>id===sourceId).length).toBe(1);
- await page.getByRole('button',{name:'Adatta alla vista'}).click();
+ await page.getByRole('button',{name:'Adatta alla vista'}).click({timeout:10000});
  await expect(page.locator('.react-flow__minimap')).toBeVisible();
  await expect(page.getByRole('button',{name:'Valida senza eseguire'})).toBeDisabled();
 });

@@ -17,6 +17,14 @@
         {
           "path": "apps/web/app/components/workspace/KnowledgeWorkspace.tsx",
           "reason": "Cattura e cronologia nella UI."
+        },
+        {
+          "path": "packages/db/migrations/0015_knowledge_access.sql",
+          "reason": "Scope OWNER_ADMIN per originali privati, default TEAM_INTERNAL per i derivati."
+        },
+        {
+          "path": "scripts/seed-reviewed-context.mjs",
+          "reason": "Import originale e revisioni con scope esplicito; nessuna sovrascrittura delle modifiche umane."
         }
       ],
       "tests": [
@@ -31,18 +39,26 @@
         {
           "path": "tests/e2e/workspace.spec.ts",
           "name": "Owner captures a versioned requirement, reloads its provenance and creates a campaign link without sending"
+        },
+        {
+          "path": "tests/knowledge.test.ts",
+          "reason": "Scope Owner/Admin, diniego altri ruoli/tenant e conservazione scope nei PATCH legacy."
+        },
+        {
+          "path": "tests/cloud-smoke.mjs",
+          "reason": "Import e hash v1 dei quattro originali, con diniego degli accessi non autorizzati sul rilascio indicato."
         }
       ],
       "release": {
-        "revision": "5808a6ef1f9eafe8deabadbde63b81317ed5aeeb",
-        "run": "40007650626"
+        "revision": "59988ae8d2e0278a6227dfc1b1c57000c6ae024d",
+        "run": "40042088078"
       },
       "verification": {
         "status": "TESTED",
-        "reason": "Slice di memoria provata da integrazione e browser; il gruppo esteso resta parziale."
+        "reason": "Release59988ae8/run40042088078 SUCCESS:208server,131browser,25skip. Quattro originali privati importati e hash v1 verificati in produzione e staging; accesso OWNER_ADMIN e diniego collaboratori/clienti verificati. Il quinto originale è solo CAPTURED in questo giro; gruppo memoria ancora parziale e copertura semantica NOT_ESTABLISHED."
       },
       "gaps": [
-        "ACL progetto e documenti clienti non disponibili; solo TEAM_INTERNAL.",
+        "ACL per progetto e documenti clienti non disponibili; TEAM_INTERNAL e OWNER_ADMIN sono ora distinti e verificati per gli originali privati.",
         "Ricerca semantica/duplicati, decision log fino al commit e export completo non provati."
       ],
       "confidence": "high"
@@ -2190,6 +2206,31 @@
         "Recovery/autenticazione alternativa Product24§7 richiede review e approvazione prima di migrazione."
       ],
       "confidence": "high"
+    },
+    {
+      "key": "continuous-quality-scout-24",
+      "implementationStatus": "IN_PROGRESS",
+      "operationalStatus": "NOT_YET_RELEASED",
+      "implementation": [
+        {
+          "path": "docs/operativo/mandate-backlog.json",
+          "reason": "Un solo gruppo trasversale collegato ai task brand/design-system/public-experience esistenti; esiti scout da importare dopo review."
+        }
+      ],
+      "tests": [],
+      "release": {
+        "revision": null,
+        "run": null
+      },
+      "verification": {
+        "status": "UNKNOWN",
+        "reason": "Originale privato preservato; scout in sola lettura attivo. Output temporaneo /tmp/omni101-deleghe/quality-scout-24/findings.json non ancora importato o verificato: nessuna prova di qualità o completamento dedotta dalla cattura."
+      },
+      "gaps": [
+        "Importare e revisionare finding con riproduzioni e misure reali; associare correzioni ai gruppi esistenti.",
+        "Verificare contrasto, tipografia/temi, chatbot adattivo, coerenza brief/asset e copy/CRO con prove prima e dopo; nessun redesign distruttivo o nuovo job persistente."
+      ],
+      "confidence": "medium"
     }
   ]
 }

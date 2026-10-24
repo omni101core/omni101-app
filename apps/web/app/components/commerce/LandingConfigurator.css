@@ -1,0 +1,14 @@
+.landing-configurator { padding: 20px 16px 40px; }
+.landing-configurator-head { max-width: 1200px; margin: 0 auto 16px; }
+.landing-configurator-head h2 { margin: 8px 0; font-size: 22px; }
+.landing-configurator-note { color: var(--os-muted); margin: 0; }
+.landing-configurator-grid { display: grid; gap: 20px; max-width: 1200px; margin: 0 auto; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .landing-configurator-grid { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); align-items: start; } }
+.landing-configurator-side { display: grid; gap: 20px; min-width: 0; }
+.landing-configurator-feature { border: 1px solid var(--os-line); border-radius: 6px; padding: 8px 12px; margin: 12px 0; min-width: 0; }
+.landing-configurator-preview { border: 1px solid var(--os-line); border-radius: 7px; overflow: hidden; min-width: 0; }
+.landing-configurator-preview > .os-eyebrow { padding: 12px 16px 0; }
+.landing-configurator-error { color: #ff9b8f; }
+.landing-configurator-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+.landing-configurator .os-button { min-height: 44px; }
+.landing-configurator .os-button.secondary { background: transparent; color: var(--os-text, #f2eee6) !important; }

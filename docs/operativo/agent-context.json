@@ -520,6 +520,21 @@
       "predecessor": "product-excellence-delivery-2026-10-24",
       "coverage": "CAPTURED; percorso sandbox da costruire, pagamenti live non autorizzati",
       "require_app_import": true
+    },
+    {
+      "id": "continuous-product-quality-2026-10-24",
+      "artifact_id": "art_20261024T042351_a495f8339026",
+      "sha256": "b48c217fa689ebeaa182f0326bb08e05ef88d23b863810a002a2175a7322e28f",
+      "size_bytes": 30645,
+      "title": "Continuous Product Excellence · execution and recovery",
+      "source": "Founder mandate Codex App 2026-10-24",
+      "classification": "PRIVATE_INTERNAL_MANDATE",
+      "access_scope": "OWNER_ADMIN",
+      "priority": "P0",
+      "version": 1,
+      "predecessor": "commerce-engine-2026-10-24",
+      "coverage": "CAPTURED; originale privato preservato; import app e prove scout da confermare separatamente",
+      "require_app_import": true
     }
   ],
   "coverage": {

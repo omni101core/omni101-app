@@ -34,9 +34,9 @@ export const media: {
     {src: "/media/originali/work-04-identity.jpg", alt: "Carta e telefono con gli stessi tre colori, segno astratto senza lettere", w: 1600, h: 1000},
     {src: "/media/originali/work-05-editorial.jpg", alt: "Mani tengono un tablet con una rivista: foto a sinistra, testo sfocato", w: 1600, h: 1000},
     {src: "/media/originali/work-06-portal.jpg", alt: "Laptop con tre schede di progetto e fascicoli avorio sul tavolo", w: 1600, h: 1000},
-    {src: "/media/originali/work-07-casa-luce.jpg", alt: "Concept B&B: corte in pietra, ulivo e piscina al sole", w: 1536, h: 1024},
-    {src: "/media/originali/work-08-tavola.jpg", alt: "Concept ristorante: sala intima, tavoli in travertino e luci calde", w: 1536, h: 1024},
-    {src: "/media/originali/work-09-studio.jpg", alt: "Concept studio professionale: tavolo con plastico e materiali nella luce del mattino", w: 1536, h: 1024},
+    {src: "/media/originali/work-07-casa-luce.webp", alt: "Concept B&B: corte in pietra, ulivo e piscina al sole", w: 1536, h: 1024},
+    {src: "/media/originali/work-08-tavola.webp", alt: "Concept ristorante: sala intima, tavoli in travertino e luci calde", w: 1536, h: 1024},
+    {src: "/media/originali/work-09-studio.webp", alt: "Concept studio professionale: tavolo con plastico e materiali nella luce del mattino", w: 1536, h: 1024},
   ],
   explore: [
     {src: "/media/originali/explore-01-commerce.jpg", alt: "Bottega: di spalle, telefono con il carrello della stessa ciotola sul banco", w: 1600, h: 1000},

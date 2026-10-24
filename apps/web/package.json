@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
-    "typecheck": "react-router typegen && tsc --noEmit",
+    "i18n:check": "node ../../scripts/i18n-check.mjs",
+    "i18n:compile": "paraglide-js compile --project ./project.inlang --outdir ./app/paraglide --strategy baseLocale",
+    "typecheck": "npm run i18n:compile && react-router typegen && tsc --noEmit",
     "deploy": "wrangler deploy",
     "preview": "vite preview"
   },
@@ -33,6 +35,7 @@
     "@mediapipe/tasks-vision": "1.1.1"
   },
   "devDependencies": {
+    "@inlang/paraglide-js": "2.29.1",
     "@cloudflare/vite-plugin": "1.64.0",
     "@cloudflare/workers-types": "5.20261021.1",
     "@react-router/dev": "7.18.4",
