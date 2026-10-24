@@ -77,6 +77,7 @@ def extract(archive, destination):
     selected = []
     total = 0
     seen = set()
+    layouts = set()
     with zipfile.ZipFile(archive) as bundle:
         if len(bundle.infolist()) > 12000:
             fail('Artifact entry count exceeds bound.')
@@ -84,9 +85,14 @@ def extract(archive, destination):
             path = PurePosixPath(entry.filename)
             if path.is_absolute() or '..' in path.parts or '\\' in entry.filename or stat.S_ISLNK(entry.external_attr >> 16):
                 fail('Unsafe artifact path or symlink.')
-            if tuple(path.parts[:4]) not in (('apps', 'web', 'build', 'server'), ('apps', 'web', 'build', 'client')):
+            # Two layouts of the same build: nested under apps/web/build (old) or server/ and client/ at the root (new).
+            if tuple(path.parts[:4]) in (('apps', 'web', 'build', 'server'), ('apps', 'web', 'build', 'client')):
+                layout, relative = 'nested', Path(*path.parts[3:])
+            elif path.parts and path.parts[0] in ('server', 'client'):
+                layout, relative = 'root', Path(*path.parts)
+            else:
                 continue
-            relative = Path(*path.parts[3:])
+            layouts.add(layout)
             if str(relative) in seen:
                 fail('Duplicate artifact path.')
             seen.add(str(relative))
@@ -94,6 +100,8 @@ def extract(archive, destination):
             if total > LIMIT or entry.file_size > 50 * 1024 * 1024:
                 fail('Extracted artifact exceeds size bound.')
             selected.append((entry, relative))
+        if len(layouts) > 1:
+            fail('Artifact mixes the nested and root build layouts.')
         if not any(str(path) == 'server/index.js' for _, path in selected) or not any(path.parts[0] == 'client' for _, path in selected):
             fail('Verified artifact lacks server/client build.')
         for entry, relative in selected:
@@ -135,6 +143,8 @@ def update(run, apply, draft=False):
         fail('Only completed successful CI runs are accepted unless --draft explicitly selects a failed build.')
     artifacts = gh_json(f'repos/{REPO}/actions/runs/{run}/artifacts?per_page=100')['artifacts']
     matches = [a for a in artifacts if a['name'] == 'omni101-verified-build' and not a.get('expired')]
+    if not matches and info['head_branch'] == 'verify-commercial':
+        fail('Runs on verify-commercial produce no build artifact; use a run on rebuild-commercial.')
     if len(matches) != 1 or matches[0]['size_in_bytes'] > LIMIT:
         fail('Exactly one bounded, unexpired verified build is required.')
     plan = {'run': run, 'sha': sha, 'verification': 'CI_SUCCEEDED' if info['conclusion']=='success' else 'DRAFT_NOT_VERIFIED', 'testScope': 'FULL_RELEASE_PIPELINE' if info['head_branch']=='release-commercial' else 'ISOLATED_OR_FOCUSED_CHECKS', 'apply': apply, 'serverRestarted': False}

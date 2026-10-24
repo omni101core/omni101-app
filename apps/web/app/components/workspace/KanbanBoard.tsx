@@ -31,7 +31,7 @@ export default function KanbanBoard({records,statuses,canWrite,onMove,onOpen,sum
  const dragId=useRef<string|null>(null),[over,setOver]=useState(''),[pending,setPending]=useState<string[]>([]),[fail,setFail]=useState<Fail|null>(null),[ask,setAsk]=useState<{row:Row;status:string}|null>(null),[reason,setReason]=useState(''),[said,setSaid]=useState(''),[stages,setStages]=useState<Record<string,Stage>>({});
  // Valore per fase dal preventivo collegato (o dalla stima), pesato per fase. Se l'endpoint non risponde il board resta valido, senza cifre.
  const sig=records.map(r=>r.id+':'+r.status+':'+r.updated_at).join('|');
- useEffect(()=>{if(!summaryUrl)return;let live=true;void fetch(summaryUrl).then(r=>r.ok?r.json():null).then((d:{stages?:Stage[]}|null)=>{if(live&&d?.stages)setStages(Object.fromEntries(d.stages.map(s=>[s.status,s])))}).catch(()=>{});return()=>{live=false}},[summaryUrl,sig]);
+ useEffect(()=>{if(!summaryUrl)return;let live=true;void fetch(summaryUrl).then(r=>r.ok?r.json():null).then((value:unknown)=>{const d=value as {stages?:Stage[]}|null;if(live&&d?.stages)setStages(Object.fromEntries(d.stages.map(s=>[s.status,s])))}).catch(()=>{});return()=>{live=false}},[summaryUrl,sig]);
  async function move(row:Row,status:string,extra?:Extra){
   const id=String(row.id);
   if(!canWrite||pending.includes(id)||inColumn(row,status))return;
