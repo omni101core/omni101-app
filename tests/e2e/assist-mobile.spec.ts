@@ -21,7 +21,13 @@ function overlaps(a:Box,b:Box){
  return a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y;
 }
 
+/** Measure at rest: a smooth scroll still in flight makes the overlap depend on the frame. */
+async function settle(page:Page){
+ await expect.poll(async()=>{const a=await page.evaluate(()=>window.scrollY);await page.waitForTimeout(150);return a===await page.evaluate(()=>window.scrollY)}).toBe(true);
+}
+
 async function assertClear(page:Page){
+ await settle(page);
  const launch=await rings(page,'.omni-assist-launch');
  const commands=await rings(page,'#capitolo button, #capitolo a, #capitolo input, #capitolo select, #capitolo textarea');
  expect(launch).toHaveLength(1);
@@ -75,6 +81,7 @@ for(const motion of ['no-preference','reduce'] as const){
   await assertClear(page);
   await launch.focus();
   await expect(launch).toBeFocused();
+  await settle(page);
   const y=await page.evaluate(()=>window.scrollY);
   await page.keyboard.press('Shift+Tab');
   await page.keyboard.press('Tab');

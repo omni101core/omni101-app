@@ -18,4 +18,6 @@
 .capitolo-close{margin:44px 0 0;font-size:15px;color:var(--muted)}
 .capitolo-close a{display:inline-flex;align-items:center;gap:12px;min-height:44px;margin-left:8px;color:var(--ivory);border-bottom:1px solid #d2b77b88;scroll-margin-block:96px}
 @media(max-width:900px){.capitolo-cards{grid-template-columns:1fr;gap:20px}.capitolo-cards article{padding:22px 20px 18px}.capitolo-cards footer{flex-direction:column;align-items:flex-start;gap:6px}}
+/* Il lanciatore fisso (<=160px + 20px di bordo) sta in basso a destra: su telefono ogni link del capitolo resta nella fascia a sinistra, a qualsiasi scroll. */
+@media(max-width:520px){.capitolo-cards footer,.capitolo-close{padding-right:176px}}
 @media(prefers-reduced-motion:reduce){.capitolo-cards article{transition:none}}
