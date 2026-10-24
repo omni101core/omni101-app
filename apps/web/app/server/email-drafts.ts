@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {renderEmail,type EmailLayout} from '../../../../packages/email/render';
 import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 
 const writers:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','SALES'];
@@ -8,16 +9,20 @@ type Row={id:string;campaign_id:string|null;version:number;status:'DRAFT'|'IN_RE
 
 export function escapeHtml(value:string){return value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 export function httpsOnly(value:string){
+ if(/[\u0000-\u001f\u007f]/.test(value))throw new HttpError(400,'Il pulsante accetta solo un indirizzo https, senza credenziali.');
  let url:URL;try{url=new URL(value)}catch{throw new HttpError(400,'Il pulsante accetta solo un indirizzo https, senza credenziali.')}
  if(url.protocol!=='https:'||url.username||url.password||!url.hostname)throw new HttpError(400,'Il pulsante accetta solo un indirizzo https, senza credenziali.');
  return url.href;
 }
-export function renderEmailDraft(draft:{subject:string;preheader:string;body:string;ctaLabel:string;ctaUrl:string}){
- const subject=escapeHtml(draft.subject),preheader=escapeHtml(draft.preheader),body=escapeHtml(draft.body),href=draft.ctaUrl?escapeHtml(draft.ctaUrl):'',label=escapeHtml(draft.ctaLabel);
- const cta=href?`<p><a href="${href}">${label}</a></p>`:'';
- const html='<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src \'none\'; script-src \'none\'"><title>'+subject+'</title></head><body><div style="display:none;max-height:0;overflow:hidden">'+preheader+'</div><h1>'+subject+'</h1><pre style="white-space:pre-wrap;font:16px/1.5 sans-serif">'+body+'</pre>'+cta+'</body></html>';
+export function renderEmailDraft(draft:{subject:string;preheader:string;body:string;ctaLabel:string;ctaUrl:string},layout:EmailLayout='studio'){
+ const html=renderEmail(draft,layout);
  const text=[draft.subject,draft.preheader,draft.body,draft.ctaLabel&&draft.ctaUrl?draft.ctaLabel+'\n'+draft.ctaUrl:''].filter(part=>part.length>0).join('\n\n');
  return {html,text};
+}
+function requestedLayout(request:Request):EmailLayout{
+ const layout=new URL(request.url).searchParams.get('layout')??'studio';
+ if(layout!=='studio'&&layout!=='update'&&layout!=='proposal')throw new HttpError(400,'Layout non disponibile.');
+ return layout;
 }
 function view(row:Row){
  return {id:row.id,version:row.version,status:row.status,subject:row.subject,preheader:row.preheader,body:row.body,ctaLabel:row.cta_label,ctaUrl:row.cta_url,campaignId:row.campaign_id,updatedAt:row.updated_at,provider:null,sendingEnabled:false,account:null,savedIsApproval:false};
@@ -53,10 +58,10 @@ export async function handleEmailDrafts(request:Request,env:Env,actor:Identity):
  }
  const match=path.match(/^\/api\/email-drafts\/([0-9a-f-]{36})(\/preview|\/export|\/review)?$/i);if(!match)throw new HttpError(404,'Percorso non disponibile.');
  const id=match[1],tail=match[2]||'',row=await load(env,org,id);if(!row)throw new HttpError(404,'Bozza non disponibile.');
- if(tail==='/preview'&&request.method==='GET'){const rendered=renderEmailDraft({subject:row.subject,preheader:row.preheader,body:row.body,ctaLabel:row.cta_label,ctaUrl:row.cta_url});return json({...rendered,status:row.status,version:row.version,provider:null,sendingEnabled:false,account:null})}
+ if(tail==='/preview'&&request.method==='GET'){const rendered=renderEmailDraft({subject:row.subject,preheader:row.preheader,body:row.body,ctaLabel:row.cta_label,ctaUrl:row.cta_url},requestedLayout(request));return json({...rendered,status:row.status,version:row.version,provider:null,sendingEnabled:false,account:null})}
  if(tail==='/export'&&request.method==='GET'){
   const format=new URL(request.url).searchParams.get('format');if(format!=='html'&&format!=='text')throw new HttpError(400,'Formato di export non disponibile.');
-  const rendered=renderEmailDraft({subject:row.subject,preheader:row.preheader,body:row.body,ctaLabel:row.cta_label,ctaUrl:row.cta_url});
+  const rendered=renderEmailDraft({subject:row.subject,preheader:row.preheader,body:row.body,ctaLabel:row.cta_label,ctaUrl:row.cta_url},requestedLayout(request));
   return file(format==='html'?rendered.html:rendered.text,format);
  }
  if(tail==='/review'&&request.method==='POST'){

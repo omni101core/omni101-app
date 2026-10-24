@@ -68,4 +68,53 @@ describe('requirement coverage reconciliation',()=>{
   expect(matrix.summary.semanticRequirements).toBe(1);expect(matrix.summary.unreviewedBlocks).toBe(5);
   expect(matrix.gapQueue[0].mandatory).toBe(true);expect(matrix.gapQueue[0].score).toBe(5);expect(run(root,true)).toContain('"mode":"check"');
  });
+ it('ingests the real findings schema with scalar criteria and never inherits macro VERIFIED',()=>{
+  const root=fixture(),sources=get(root,'docs/mandati/sources.json');
+  put(root,'docs/operativo/requirement-evidence.json',{baseline:{revision:'a'.repeat(40),run:'123'},requirements:[{key:'sample',implementationStatus:'IMPLEMENTED',operationalStatus:'VERIFIED',implementation:['apps/slice.ts'],tests:['tests/slice.test.ts'],release:{revision:'a'.repeat(40),run:'123'},verification:{status:'VERIFIED',reason:'Atomic macro slice proven'}}]});
+  put(root,'docs/operativo/mandate-reconciliation-findings.json',{reviewedSources:[{id:'source-one',sha256:sources[0].sha256,complete:true}],findings:[{id:'REC-001',sourceId:'source-one',startLine:6,endLine:7,kind:'omission',requirement:'Deeper capability',acceptance:'Persist and connect provider',backlogKeys:['sample'],gap:'Provider missing',severity:'high',confidence:0.9,dependencies:[]}]});
+  run(root);const matrix=get(root),row=matrix.requirements.find((r:any)=>r.id==='REC-001');
+  expect(matrix.summary.semanticRequirements).toBe(1);expect(row.source.startLine).toBe(6);expect(row.acceptance).toEqual(['Persist and connect provider']);
+  expect(row.implementationStatus).toBe('CAPTURED');expect(row.verification.status).toBe('UNKNOWN');expect(row.release).toBeNull();
+  expect(row.findingKind).toBe('omission');expect(row.gaps[0].description).toBe('Provider missing');
+  expect(matrix.summary.unreviewedBlocks).toBe(5);expect(matrix.sources[0].originalRead).toBe(true);
+  const review=get(root,'docs/operativo/mandate-reconciliation-findings.json');review.reviewedSources[0].sha256='b'.repeat(64);put(root,'docs/operativo/mandate-reconciliation-findings.json',review);expect(()=>run(root)).toThrow();
+ });
+ it('rejects unsupported findings schemas, dangling dependencies and invalid original ranges',()=>{
+  const root=fixture();put(root,'docs/operativo/mandate-reconciliation-findings.json',{unknown:[]});expect(()=>run(root)).toThrow();
+  const finding={id:'REC-001',sourceId:'source-one',startLine:6,endLine:7,requirement:'Capability',acceptance:'Criterion',backlogKeys:['sample'],dependencies:['REC-missing']};
+  put(root,'docs/operativo/mandate-reconciliation-findings.json',{findings:[finding]});expect(()=>run(root)).toThrow();
+  finding.dependencies=[];finding.endLine=100;put(root,'docs/operativo/mandate-reconciliation-findings.json',{findings:[finding]});expect(()=>run(root)).toThrow();
+ });
+
+});
+
+describe('coverage operational navigation from the real registry',()=>{
+ it('links only registered task keys, original records and the canonical handoff without granting clients access',async()=>{
+  const {handleRequirementCoverage}=await import('../apps/web/app/server/requirement-coverage');
+  const backlog=JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8'));
+  const context=JSON.parse(readFileSync('docs/operativo/agent-context.json','utf8'));
+  const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8'));
+  const actor={id:'synthetic-owner',orgId:'omni101',role:'OWNER'} as any,env={ORGANIZATION_ID:'omni101'} as any;
+  const read=async(query:string,who=actor)=>await handleRequirementCoverage(new Request('https://omni101.app/api/requirement-coverage'+query),env,who)!.json() as any;
+  const page=await read('?kind=MACRO_GROUP');
+  expect(page.navigation).toEqual({pipeline:'/admin/pipeline',handoff:context.handoff});
+  expect(readFileSync(page.navigation.handoff,'utf8').length).toBeGreaterThan(0);
+  for(const offset of [0,25,50])for(const row of (await read('?kind=MACRO_GROUP&offset='+offset)).records){
+   expect(row.tasks.length).toBeGreaterThan(0);
+   for(const task of row.tasks){const key=task.id.replace('mandate:omni101:','');expect(backlog.some((item:any)=>item.key===key&&item.name===task.name)).toBe(true);expect(task.href).toBe('/admin/tasks?record='+encodeURIComponent(task.id))}
+  }
+  const publicRow=(await read('?source='+sources[0].id+'&kind=CANDIDATE')).records[0];
+  expect(publicRow.source.knowledgeRecordId).toBe(sources[0].record_id);
+  const privateSource=context.private_sources.find((s:any)=>s.id==='commerce-engine-2026-10-24');
+  for(const role of ['OWNER','ADMIN']){
+   const row=(await read('?source='+privateSource.id,{...actor,role})).records[0];
+   const hex=digest('omni101-context-v1:'+privateSource.id),id=hex.slice(0,8)+'-'+hex.slice(8,12)+'-4'+hex.slice(13,16)+'-a'+hex.slice(17,20)+'-'+hex.slice(20,32);
+   expect(row.source.knowledgeHref).toBe('/admin/knowledge?record='+id);
+   expect(row.source.knowledgeRecordId).toBe(id);
+  }
+  const team=(await read('?source='+privateSource.id,{...actor,role:'DEVELOPER'})).records[0];
+  expect(team.source.knowledgeHref).toBeUndefined();expect(team.source.knowledgeRecordId).toBeUndefined();expect(team.source.body).toBeUndefined();
+  const unlinked=(await read('?kind=REQUIREMENT&q=REC-020')).records.find((r:any)=>r.id==='REC-020');expect(unlinked.tasks).toEqual([]);
+  try{handleRequirementCoverage(new Request('https://omni101.app/api/requirement-coverage'),env,{...actor,role:'CLIENT'});throw new Error('Client unexpectedly allowed')}catch(error){expect((error as {status:number}).status).toBe(403)}
+ });
 });

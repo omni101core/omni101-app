@@ -8,7 +8,7 @@ test('work grid card opens a full preview, then the case page continues from it'
  await openFirstCard(page);
  const dialog=page.getByRole('dialog');
  await expect(dialog).toBeVisible();
- await expect(dialog.getByRole('heading',{name:'Essenza / Commerce'})).toBeVisible();
+ await expect(dialog.getByRole('heading',{name:'Essenza / commercio'})).toBeVisible();
  await page.keyboard.press('Escape');
  await expect(page.getByRole('dialog')).toHaveCount(0);
  await expect(page).toHaveURL(/\/work$/);

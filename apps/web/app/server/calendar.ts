@@ -3,25 +3,40 @@ import {HttpError,requireRole,type Env,type Identity,type Role} from './auth';
 import {resources} from './schema';
 const staff:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','DEVELOPER','DESIGNER','SALES','FINANCE'];
 const sales:Role[]=['OWNER','ADMIN','PROJECT_MANAGER','SALES'];
-const json=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
-type Row={id:string;title:string;date:string;status:string|null;campaign_id?:string|null;lead_id?:string|null};
-type Item={type:string;id:string;title:string;start:string;end:string|null;status:string|null;link:string};
-type Source={key:string;base:string;col:string};
-const sources:Source[]=[
- {key:'tasks',base:'SELECT id,name AS title,substr(due_date,1,10) AS date,status FROM tasks',col:'substr(due_date,1,10)'},
- {key:'milestones',base:'SELECT id,name AS title,substr(due_date,1,10) AS date,status FROM milestones',col:'substr(due_date,1,10)'},
- {key:'projects',base:'SELECT id,name AS title,substr(due_date,1,10) AS date,status FROM projects',col:'substr(due_date,1,10)'},
- {key:'calendar',base:'SELECT id,name AS title,substr(due_date,1,10) AS date,NULL AS status FROM activities',col:'substr(due_date,1,10)'},
- {key:'revenue',base:"SELECT id,description AS title,date(created_at/1000,'unixepoch') AS date,NULL AS status,campaign_id,lead_id FROM revenue_events",col:"date(created_at/1000,'unixepoch')"}
+const json=(data:unknown)=>new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
+type Row={id:string;title:string;date:string|number;status:string|null;project_id:string|null;campaign_id?:string|null;lead_id?:string|null};
+type Item={type:string;id:string;title:string;start:string;date:string;allDay:boolean;end:null;status:string|null;link:string;projectId:string|null};
+const sources=[
+ {key:'tasks',table:'tasks',date:'due_date',project:'project_id'},
+ {key:'milestones',table:'milestones',date:'due_date',project:'project_id'},
+ {key:'projects',table:'projects',date:'due_date',project:'id'},
+ {key:'campaigns',table:'campaigns',date:'due_date',project:'project_id'},
+ {key:'growth-plans',table:'growth_plans',date:'due_date',project:'project_id'},
+ {key:'calendar',table:'activities',date:'due_date',project:'NULL'},
+ {key:'revenue',table:'revenue_events',date:'created_at',project:'NULL'},
+ {key:'reviews',table:'qa_reviews',date:'created_at',project:'project_id'},
+ {key:'approvals',table:'approvals',date:'created_at',project:'NULL'}
 ];
 export async function handleCalendar(request:Request,env:Env,actor:Identity):Promise<Response|null>{
  const url=new URL(request.url);if(url.pathname!=='/api/calendar')return null;requireRole(actor,staff);if(request.method!=='GET')throw new HttpError(405,'Metodo non supportato.');
  const from=z.iso.date().parse(url.searchParams.get('from')),to=z.iso.date().parse(url.searchParams.get('to'));if(from>to||Date.parse(to)-Date.parse(from)>92*86400000)throw new HttpError(400,'Scegli un intervallo ordinato di massimo 92 giorni.');
- const org=actor.orgId,role=actor.role;
- const readable=(key:string)=>{if(key==='revenue')return sales.includes(role);const r=resources[key];return !r.read||r.read.includes(role)};
- const link=(key:string,row:Row)=>key==='revenue'?(row.campaign_id?'/admin/campaigns?record='+encodeURIComponent(row.campaign_id):row.lead_id?'/admin/leads?record='+encodeURIComponent(row.lead_id):''):'/admin/'+key+'?record='+encodeURIComponent(row.id);
- const grouped=await Promise.all(sources.filter(s=>readable(s.key)).map(async s=>({key:s.key,rows:(await env.DB.prepare(s.base+' WHERE organization_id=? AND '+s.col+'>=? AND '+s.col+'<=? ORDER BY date,id LIMIT 501').bind(org,from,to).all<Row>()).results})));
- const items:Item[]=grouped.flatMap(g=>g.rows.map(r=>({type:g.key,id:r.id,title:r.title,start:r.date,end:null,status:r.status,link:link(g.key,r)})));
- items.sort((a,b)=>a.start.localeCompare(b.start)||a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
- return json({items:items.slice(0,500),truncated:items.length>500});
+ const type=url.searchParams.get('type'),project=url.searchParams.get('project');if(type&&!sources.some(s=>s.key===type))throw new HttpError(400,'Tipo non valido.');
+ // No organization timezone setting exists yet; use the organization default.
+ const timeZone='Europe/Rome',formatter=new Intl.DateTimeFormat('en-CA',{timeZone,year:'numeric',month:'2-digit',day:'2-digit'});
+ const readable=(key:string)=>key==='revenue'||key==='campaigns'||key==='growth-plans'?sales.includes(actor.role):key==='approvals'?['OWNER','ADMIN'].includes(actor.role):key==='reviews'?['OWNER','ADMIN','PROJECT_MANAGER','DEVELOPER','DESIGNER'].includes(actor.role):!resources[key].read||resources[key].read!.includes(actor.role);
+ let truncated=false;const items=new Map<string,Item>();
+ for(const s of sources.filter(s=>(!type||s.key===type)&&readable(s.key))){
+  const instant=s.date==='created_at',date=instant?`datetime(${s.date}/1000,'unixepoch')`:s.date;
+  const title=s.key==='revenue'?'description':s.key==='reviews'?"'Revisione QA'":'name',status=['calendar','revenue'].includes(s.key)?'NULL':'status';
+  const rows=(await env.DB.prepare(`SELECT id,${title} AS title,${s.date} AS date,${status} AS status,${s.project} AS project_id${s.key==='revenue'?',campaign_id,lead_id':''} FROM ${s.table} WHERE organization_id=? AND julianday(${date})>=julianday(?)-2 AND julianday(${date})<julianday(?)+3${project?` AND ${s.project}=?`:''} ORDER BY ${s.date},id LIMIT 501`).bind(actor.orgId,from,to,...(project?[project]:[])).all<Row>()).results;
+  if(rows.length>500)truncated=true;
+  for(const row of rows){
+   const allDay=typeof row.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row.date),stamp=new Date(row.date),start=allDay?String(row.date):Number.isFinite(stamp.getTime())?stamp.toISOString():null;if(!start)continue;
+   const parts=allDay?[]:formatter.formatToParts(stamp),day=allDay?start:['year','month','day'].map(k=>parts.find(p=>p.type===k)!.value).join('-');if(day<from||day>to)continue;
+   const link=s.key==='reviews'?'/admin/pipeline?project='+encodeURIComponent(row.project_id||''):s.key==='revenue'?(row.campaign_id?'/admin/campaigns?record='+encodeURIComponent(row.campaign_id):row.lead_id?'/admin/leads?record='+encodeURIComponent(row.lead_id):'/admin/revenue'):'/admin/'+s.key+'?record='+encodeURIComponent(row.id);
+   items.set(s.key+':'+row.id,{type:s.key,id:row.id,title:row.title,start,date:day,allDay,end:null,status:row.status,link,projectId:row.project_id});
+  }
+ }
+ const sorted=[...items.values()].sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start)||a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
+ return json({items:sorted.slice(0,500),truncated:truncated||sorted.length>500,timeZone});
 }

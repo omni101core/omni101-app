@@ -1,0 +1,26 @@
+.en-page{overflow-x:clip}
+.en-page .page-hero h1{max-width:18ch;overflow-wrap:anywhere}
+.en-page .page-hero p{max-width:62ch}
+.en-cta{margin-top:28px}
+.en-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.en-grid>*{min-width:0;border-top:1px solid var(--line);padding-top:18px}
+.en-grid h3,.en-grid h2{overflow-wrap:anywhere}
+.en-list{padding-left:1.1em;display:grid;gap:10px;max-width:70ch}
+.en-steps{counter-reset:s;list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.en-steps li{counter-increment:s;border-top:1px solid var(--line);padding-top:18px}
+.en-steps li::before{content:counter(s);display:block;color:var(--gold);font-size:12px;margin-bottom:8px}
+.en-price{color:var(--muted);margin-top:14px}
+.en-faq details{border-top:1px solid var(--line);padding:16px 0;max-width:70ch}
+.en-faq summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+.en-faq p{margin:8px 0 0}
+.en-note{color:var(--muted);font-size:13px;max-width:70ch}
+.en-form{max-width:760px}
+.en-form input[type=checkbox]{width:20px;height:20px;flex:none}
+.en-form textarea{width:100%}
+.en-done{max-width:60ch}
+@media (max-width:760px){.en-grid,.en-steps{grid-template-columns:1fr}.en-form{grid-template-columns:1fr}}
+.lang-switch{display:flex;gap:2px;font-size:11px;letter-spacing:.08em;margin-right:12px}
+.lang-switch a{display:inline-grid;place-items:center;min-width:32px;min-height:32px;padding:0 4px}
+.lang-switch a[aria-current=true]{text-decoration:underline;font-weight:600}
+.site-menu .lang-switch{display:none;margin:18px 0 0}
+@media (max-width:760px){.site-header>.lang-switch{display:none}.site-menu .lang-switch{display:flex}}

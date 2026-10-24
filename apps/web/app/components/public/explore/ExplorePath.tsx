@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {Visual} from '../Visual';
+import {familyImage} from '../capabilities/panelMedia';
 import {useWebGLSlot} from '../webglSlot';
 import {stations} from './stations';
 import Scena from './Scena';
@@ -53,7 +54,7 @@ export default function ExplorePath(){
   </div>
   <ol className="ex-stations">{stations.map((s,i)=><li key={s.id} ref={node=>{items.current[i]=node}} className="ex-station" data-side={i%2===0?'left':'right'}>
    <article className="ex-card" data-station={s.id} data-kind={s.kind} data-scena={s.scena} data-active={enhanced&&i===active}>
-    {!s.scena&&<div className="ex-visual"><Visual kind={s.visual}/></div>}
+    {!s.scena&&<div className="ex-visual">{(()=>{const img=s.kind==='family'?familyImage(s.id):null;return img&&!img.fallback?<img src={img.src} alt={img.alt} width={img.width} height={img.height} loading="lazy" style={{width:'100%',height:'100%',objectFit:'cover'}}/>:<Visual kind={s.visual}/>})()}</div>}
     <span className="eyebrow">{pad(i+1)} / {s.kicker}</span>
     <h2 tabIndex={-1}>{s.title}</h2>
     {s.scena&&<div className="ex-scena"><Scena id={s.scena}/></div>}

@@ -1,4 +1,24 @@
+## 24 ottobre — produzione verificata e qualità in corso
+Online59988ae8d2e0278a6227dfc1b1c57000c6ae024d, CI40042088078 SUCCESS208server131browser25skip; healthproduzione/staging200 conSHAesatto eD1true. Workerproduction41c0d6dd-c243-4acd-b8dc-78db119d5329. ImportD1 conferma11originalipubblici+4privati,64requisiti,6reference; privatiOwner/Admin conhashv1verificati, altriinterni/clientinegati in canary.
+Prossimopacchetto checkupregole+UI+wrapperpreview:521ee6ff815302ec30852713b86b934da0a60847, verify-only40042446141 SUCCESS217server6browsermirati6skip; nononline. Review indipendente ha trovato/corretto fencing tentativi e retryNULL.
+UltimomandatoContinuousProductExcellence archiviatoprivato art_20261024T042351_a495f8339026/hashb48c217f…; quinta fonte e65gruppi registrati, importapp5PENDING prossimo release. Trasporto cifrato aggiornato5, copia4conservata perrollbackcoerente. Scoutread-only:5findingcanonici docs/operativo/product-quality-findings.json, provePNG/standardfontiprimarie preservati; nessun jobautonomonuovo. Claude correggetema/footer/intake, worker separatochatbot.
+Local4177 aggiornato conwrapper all’artifact59988, healthSHAconfermato, nessunriavvioserver. Migrazione0015localeapplicata conbackupSQLite. Previewcard/emailconservate.
+
+## 24 ottobre — integrazione Codex in verifica
+Snapshot9564112ec1cfe69cac501e30a5ac02c3bcac69cc, pipeline40040870969 in corso: privacy OWNER_ADMIN/assistente, import privati4 con preflight, CRM Kanban, calendario, mission controls, email3layout, galleria social3asset. Review statica indipendente senza blocker; test runtime ancora da eseguire in CI. Produzione resta5808a6e finché canary/release non confermano.
+Deleghe concluse e ownership restituite: Opus sicurezza; subagenti import, review, email, social. Grok fermato su500 ripetuti, output recuperato. Anteprima card standalone http://127.0.0.1:4177/social-review/preview aperta; app4177 resta artifactf5 verificato, nessuna navigazione utente sovrascritta.
+
 # OMNI101 — stato corrente
+
+## Ripresa24ott — stato del nuovo giro (prevale sullo storico)
+
+- Produzione confermata ancora5808a6ef; staging3af1af4/run40037582017 SUCCESS. Il workingtree include anche calendarioC1 e import privato nuovo: non confonderli con quel rilascio.
+- Verify-onlyf5f4a3f/run40038811187 SUCCESS:192server/3TODO e12browser/12skip (filtro mirato). Non è una suite completa né un deploy.
+- Mandati24ott ProductExcellence eCommerce preservati byte-per-byte in MemPalace, metadati in agent-context.private_sources. Import nell'app di4originali privati via secretCI pronto, da confermare nei job staging/produzione e negli hash v1 Knowledge; non dichiarato online finché non passa.
+- Matrice:11fonti pubbliche+4private,64macrogruppi con evidenze,51clausole riconciliate,176gap.8392blocchi ancora da classificare semanticamente: nessuna percentuale di completamento inventata. Check di freschezza ora obbligatorio inCI.
+- Preview locale http://127.0.0.1:4177/ revisione f5f4a3f, DBisolato in /tmp/omni101-preview-3af1af4/state, nessun binding workflow remoto. È una previewvisiva con runtime locale diverso daCI, non una prova release. Port4176 precedente preservato.
+- Owner: Codex publisher; Claude revisione readonly importprivato; Grok G6rendereremail in copia isolata. G5kanban consegnato in copia, da integrare dopo revisione; nessun publisher concorrente. Pagamenti/provider/invii live non attivati.
+
 
 Aggiornato: 23 ottobre 2026. Questa è la matrice corrente; lo storico precedente è preservato in `docs/operativo/stato-storico-prima-matrice-2026-10-23.md`. Non dedurre il live dal working tree.
 

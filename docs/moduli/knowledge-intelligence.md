@@ -1,5 +1,20 @@
 # Knowledge & Intelligence
 
+## Riconciliazione requisiti — 24 ottobre 2026
+
+La copertura persistente è `docs/operativo/requirement-coverage.json`, generata con `node scripts/reconcile-requirements.mjs`; `--check` ricalcola e rifiuta output obsoleto/modificato, originali con hash diverso, riferimenti fuori dal repository, file di prova assenti, dipendenze sconosciute e `VERIFIED` senza criteri, implementazione, test, release e motivazione. Nessun accesso di rete o modifica D1 nel generatore. Test regressione in `tests/requirement-coverage.test.ts`, da eseguire in CI; il solo check Node locale non sostituisce quei test.
+
+Input canonici: `docs/mandati/sources.json` (originali pubblici), `agent-context.json.private_sources` (solo puntatori/hash privati), `mandate-backlog.json` (macrogruppi), `requirement-evidence.json` (prove revisionate delle slice) e `mandate-reconciliation-findings.json` (clausole/gap estratti). Il formato reale Opus `findings[]` usa `startLine/endLine`, criterio scalare, `gap/severity/dependencies`: viene normalizzato in requisiti consultabili. Anche i precedenti formati `requirements[]` e `semanticRequirements[]` sono riconosciuti. Formati sconosciuti sono errori, non zero requisiti silenziosi. Gli hash di `reviewedSources` devono coincidere con gli originali; `complete:true` attesta soltanto la lettura dichiarata, mai completezza semantica o funzionale.
+
+La prima rigenerazione del 24/10 contiene 11 fonti pubbliche, 4 private, 8.392 blocchi originali, 51 clausole estratte e 60 macrogruppi. Restano 8.392 blocchi da revisione semantica: collegare una clausola non approva automaticamente i blocchi circostanti. Le prove dei macrogruppi non vengono ereditate dalle clausole; un test su una slice non dimostra tutto il gruppo. I 12 gruppi aggiunti senza prova specifica sono elencati in `summary.missingEvidenceGroups`, non promossi dallo stato del backlog. Conteggi aggiornati sempre nel JSON, non derivati dallo storico sotto.
+
+Per restare sotto il limite publisher di 1 MB, i candidati conservano ID stabile basato su fonte+contenuto+occorrenza, alias fonte e intervallo righe; ereditano `candidateDefaults` (CAPTURED, UNKNOWN, reviewNeeded). I corpi originali non sono duplicati. `sources[].originalId` risolve gli alias pubblici. Le fonti private conservano esclusivamente artifact/hash: non vengono lette né copiate nel repository. Clausole e macrogruppi hanno campi espliciti. Gap: prima vincoli obbligatori CRITICAL/P0, poi gravità dichiarata; solo dimensioni numeriche revisionate producono `confidence*(value+dependency)`. Nessun punteggio inferito automaticamente.
+
+La vista prodotto è in Knowledge (`RequirementCoverage`), tramite GET autenticato `/api/requirement-coverage`: soli ruoli interni, organizzazione autorizzata, pagine da 25 e filtri kind/source/q. L'API espande i default e normalizza alias/path; nessuna autorevisione o avvio agente. Controlli endpoint e browser sono del coordinatore, separati dai test del generatore. Finché la relativa release non è verificata, codice locale e matrice non equivalgono a pubblicazione.
+
+Le sezioni successive preservano lo storico delle vertical slice.
+
+
 23 ottobre 2026. Prima vertical slice online su omni101.app, revisione 3fa90a5, run 39889662855 interamente verde. Le sezioni seguenti preservano anche le tappe di costruzione; l’esito finale è in fondo.
 
 ## Confine e stato reale
@@ -48,3 +63,22 @@ Otto originali preservati, 15 requisiti/task e tre reference (26 elementi) impor
 
 ### Sync del backlog importato (23/10)
 Lo script ora allinea anche stato, descrizione, priorità ed evidenza delle righe già importate, ma solo se nessuna persona le ha toccate. Criterio: `knowledge_records.updated_by='system:founder-mandate-import'` (ogni PATCH API lo sostituisce con l'utente, `apps/web/app/server/knowledge.ts`); per `tasks`, che non ha `updated_by`, `updated_at=created_at` (PATCH generico e pipeline bumpano sempre `updated_at`; il sync no, così la riga resta dell'importer). Task con dipendenze attive sono saltati. Ogni UPDATE è condizionato a un valore realmente diverso: la seconda run non modifica nulla. Knowledge: `version+1`, riga `knowledge_revisions` e `audit_logs` `MANDATE_CONTEXT_SYNCED`, tutti state-based (nessuna dipendenza da `changes()`). `mandate-backlog.json` accetta `priority` (HIGH/NORMAL/LOW, default HIGH), `evidence` e `origin` (docs/operativo/*.md, per gruppi non nati da un mandato). L'evidenza dei gruppi IMPLEMENTED non contiene più lo SHA, per non cambiare a ogni deploy. `--dry-run` stampa `syncStatements` (tetto massimo); `--sql` mostra gli UPDATE. Test: `tests/seed-reviewed-context.test.ts` (SQLite in memoria). Non applicato in staging/produzione da questo lavoro.
+
+### Accesso agli originali privati — 24 ottobre, codice da verificare in CI
+
+- Migrazione `0015_knowledge_access.sql` (additiva): `knowledge_records.access_scope` `TEAM_INTERNAL` (default) o `OWNER_ADMIN`. Backfill dei record con `source` che inizia `Private founder original`; trigger `knowledge_private_original_scope` classifica anche gli insert futuri con quella fonte, se l'importer non imposta lo scope.
+- Lettura `OWNER_ADMIN`: solo OWNER (entrambi i soci) e ADMIN. Per PROJECT_MANAGER, DEVELOPER, DESIGNER, SALES, FINANCE il record non esiste: escluso da lista, ricerca `q`, filtro `kind`, `/:id`, `?version=`, e non collegabile come `source_id` nuovo. CLIENT resta 403 su tutta Knowledge. Isolamento per organizzazione invariato.
+- Scrittura: `access_scope` nel payload è facoltativo; senza il campo resta lo scope salvato (un salvataggio dalla UI attuale non declassifica). Solo Owner/Admin possono impostare `OWNER_ADMIN`, declassificare o salvare un record con fonte `Private founder original`; per gli altri 403. Un collegamento `source_id` già esistente verso un privato resta modificabile sul record di team (il derivato è condiviso, il corpo dell'originale no).
+- Requisiti e task derivati (fonte `Private founder mandate · art_…`) restano `TEAM_INTERNAL`: metadata e provenienza visibili al team, non il testo originale.
+- Test: `tests/knowledge.test.ts` (SQLite reale con tutte le migrazioni: backfill e trigger, Owner A/B e Admin ammessi, cinque ruoli interni negati, cliente 403, altra organizzazione 404, salvataggio legacy che conserva `OWNER_ADMIN`, v1 intatta, tentativi di declassificazione/creazione/collegamento negati).
+- Resta al root: impostare `access_scope='OWNER_ADMIN'` esplicito nel seeder (il trigger è solo rete di sicurezza), aggiornare cloud-smoke e UI.
+
+### Collegamenti operativi — PERSISTENCE-LINKS24, 24 ottobre (da verificare in CI)
+
+La matrice arricchisce le righe con attività soltanto per `backlogKeys` presenti nel backlog canonico: ID identici al seeder, apertura `/admin/tasks?record=...` già gestita dalla route admin. REC-020/045 senza gruppo restano senza link, non vengono inventati task. Link generale alle Fasi `/admin/pipeline` e al documento pubblico di handoff indicato da `agent-context.json.handoff`; non sono prove di esecuzione o un handoff specifico del requisito.
+
+Le fonti pubbliche risolvono l'ID Knowledge da `sources.json.record_id`. Solo Owner/Admin ricevono il link degli originali privati registrati per import, con la stessa identità deterministica del seeder; nessun corpo viene letto dall'endpoint copertura. Knowledge supporta `?record=<UUID>` con GET ordinario autorizzato, annullamento delle richieste superate, rimozione dell'editor precedente prima del caricamento e errore esplicito se assente/negato. ACL e canary originali v1 invariati; il link non certifica un'importazione riuscita.
+
+Prove aggiunte: test API nel file `tests/requirement-coverage.test.ts` su registro reale, task noti, fonte, handoff, Owner/Admin contro Developer e Client403; E2E `coverage-links.spec.ts` su apertura fonte, href task/pipeline/handoff e reload404 senza corpo precedente. Nessuna suite eseguita sul Mac; CI e verifica release a cura del coordinatore. Restano completezza ingressi/chat non dimostrata e copertura semantica NOT_ESTABLISHED; nessun nuovo manifest o motore.
+
+Riconciliazione ingressi sessione (coordinatore, 24 ottobre):61 messaggi utente nel tratto disponibile;14 allegati accessibili unici riconciliati per hash con11 originali pubblici e3 privati. Nessun allegato accessibile nuovo mancante in quel campione. Nove compattazioni impediscono di attestare ALL storico. Inventario metadati e ultimo messaggio sono preservati in memoria privata, non ancora importati come ulteriori originali D1: il registro resta5 fonti private, senza promozioni automatiche.

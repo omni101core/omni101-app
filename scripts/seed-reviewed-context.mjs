@@ -1,17 +1,24 @@
 // Idempotent, additive import of explicitly supplied founder mandates. No agents, invitations or external sends.
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {decodePrivateMandates,verifyPrivateRevisions,preflightPrivateMandates,scopedImportRecord} from './private-mandates.mjs';
 const target=process.argv[2];
-if(!['staging','production','--dry-run','--sql'].includes(target))throw new Error('Specify staging, production, --dry-run or --sql.');
+if(!['staging','production','--dry-run','--sql','--preflight'].includes(target))throw new Error('Specify staging, production, --dry-run, --sql or --preflight.');
 const stamp=Date.now(),org='omni101',actor='system:founder-mandate-import',project='operating:omni101:project';
+const privateRegistry=JSON.parse(readFileSync('docs/operativo/agent-context.json','utf8')).private_sources||[];
+const privateTransport=(process.env.OMNI101_PRIVATE_MANDATES_GZIP_1||'')+(process.env.OMNI101_PRIVATE_MANDATES_GZIP_2||'');
+if(target==='--preflight'){console.log(JSON.stringify(preflightPrivateMandates(privateTransport,privateRegistry)));process.exit(0)}
 const sources=JSON.parse(readFileSync('docs/mandati/sources.json','utf8')),backlog=JSON.parse(readFileSync('docs/operativo/mandate-backlog.json','utf8'));
+if(target==='--sql'&&privateTransport)throw new Error('Private originals cannot be printed as SQL.');
+const privateOriginals=decodePrivateMandates(privateTransport,privateRegistry,{required:['staging','production'].includes(target)});
 const hash=s=>createHash('sha256').update(s).digest('hex');
 const uid=key=>{const hex=hash('omni101-context-v1:'+key);return hex.slice(0,8)+'-'+hex.slice(8,12)+'-4'+hex.slice(13,16)+'-a'+hex.slice(17,20)+'-'+hex.slice(20,32)};
 const value=v=>v===null?'NULL':typeof v==='number'?String(v):"'"+String(v).replaceAll("'","''")+"'";
 const insert=(table,row)=>`INSERT OR IGNORE INTO ${table}(${Object.keys(row).join(',')}) VALUES(${Object.values(row).map(value).join(',')});`;
 const batches=[],syncs=[];
-const fields=['name','kind','status','body','source','acceptance','evidence','source_id','task_id'];
-function record(key,data){
+const fields=['name','kind','status','body','source','acceptance','evidence','source_id','task_id','access_scope'];
+function record(key,data,options){
+ data=scopedImportRecord(data,options);
  const id=uid(key),row={id,organization_id:org,...data,version:1,created_by:actor,updated_by:actor,created_at:stamp,updated_at:stamp};
  const revision=uid(key+':v1'),audit=uid(key+':audit');
  // Each insert is independently repeatable; a partial API failure can be resumed without overwriting edits.
@@ -31,16 +38,29 @@ for(const source of sources){
  if(source.record_id&&source.record_id!==uid(source.id))throw new Error('Source identity mismatch.');
  record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body:original.toString('utf8'),source:source.source+' · '+source.file+' · sha256:'+source.sha256,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null});
 }
+for(const {source,body} of privateOriginals)record(source.id,{name:source.title||source.id,kind:'MANDATE',status:'CAPTURED',body,source:'Private founder original · '+source.artifact_id+' · sha256:'+source.sha256,acceptance:'Preservare originale e provenienza. Implementazione e operatività richiedono prove separate.',evidence:'Originale verificato byte-per-byte nel trasporto CI; v1 preservata.',source_id:null,task_id:null},{privateOriginal:true});
 const origins=new Map();
-for(const o of new Set(backlog.filter(i=>!sources.some(s=>s.id===i.source)).map(i=>i.origin)))origins.set(o,record('reference:'+o,{name:o.replace(/^docs\/operativo\//,''),kind:'REFERENCE',status:'CAPTURED',body:readFileSync(o,'utf8'),source:o,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null}));
+for(const o of new Set(backlog.filter(i=>![...sources,...privateRegistry].some(s=>s.id===i.source)).map(i=>i.origin)))origins.set(o,record('reference:'+o,{name:o.replace(/^docs\/operativo\//,''),kind:'REFERENCE',status:'CAPTURED',body:readFileSync(o,'utf8'),source:o,acceptance:'Conservare originale e provenienza; verificare separatamente la copertura dei requisiti.',evidence:'',source_id:null,task_id:null}));
 for(const item of backlog){
- const task='mandate:'+org+':'+item.key,known=sources.some(s=>s.id===item.source);
+ const task='mandate:'+org+':'+item.key,known=[...sources,...privateRegistry].some(s=>s.id===item.source);
  if(!known&&!/^docs\/operativo\/[a-z0-9-]+\.md$/.test(item.origin||''))throw new Error('Backlog item without mandate source needs a docs/operativo origin.');
  const taskRow={id:task,organization_id:org,project_id:project,name:item.name,priority:item.priority||'HIGH',description:item.acceptance+'\nDa completare: '+item.remaining+'\nFonte: docs/operativo/mandate-backlog.json. Nessun agente avviato.',status:{IMPLEMENTED:'REVIEW',BLOCKED:'BLOCKED',IN_PROGRESS:'IN_PROGRESS'}[item.status]||'TODO',kind:'WORK',estimate_minutes:0,created_at:stamp,updated_at:stamp};
  batches.push(insert('tasks',taskRow));
  // tasks have no updated_by: every writer (API PATCH, pipeline) bumps updated_at, so updated_at=created_at means untouched by humans. The sync keeps it that way.
  syncs.push(`UPDATE tasks SET name=${value(taskRow.name)},priority=${value(taskRow.priority)},description=${value(taskRow.description)},status=${value(taskRow.status)} WHERE id=${value(task)} AND organization_id=${value(org)} AND updated_at=created_at AND NOT EXISTS(SELECT 1 FROM task_dependencies d WHERE d.task_id=tasks.id AND d.active=1) AND (name IS NOT ${value(taskRow.name)} OR priority IS NOT ${value(taskRow.priority)} OR description IS NOT ${value(taskRow.description)} OR status IS NOT ${value(taskRow.status)});`);
- record('requirement:'+item.key,{name:item.name,kind:'REQUIREMENT',status:item.status,body:item.acceptance+'\nLimiti e prossima azione: '+item.remaining,source:known?'Founder mandate · docs/mandati/'+item.source+'.md':'Review backend · '+item.origin,acceptance:item.acceptance,evidence:item.evidence||(item.status==='IMPLEMENTED'?'Codice e test in CI (revisione nel registro audit). Revisione umana e limiti residui ancora aperti.':''),source_id:known?uid(item.source):origins.get(item.origin),task_id:task});
+ record('requirement:'+item.key,{name:item.name,kind:'REQUIREMENT',status:item.status,body:item.acceptance+'\nLimiti e prossima azione: '+item.remaining,source:known?(privateRegistry.find(s=>s.id===item.source)?'Private founder mandate · '+privateRegistry.find(s=>s.id===item.source).artifact_id:'Founder mandate · docs/mandati/'+item.source+'.md'):'Review backend · '+item.origin,acceptance:item.acceptance,evidence:item.evidence||(item.status==='IMPLEMENTED'?'Codice e test in CI (revisione nel registro audit). Revisione umana e limiti residui ancora aperti.':''),source_id:known?(sources.some(s=>s.id===item.source)||privateOriginals.some(p=>p.source.id===item.source)?uid(item.source):null):origins.get(item.origin),task_id:task});
+}
+const qualityRegistryPath='docs/operativo/product-quality-findings.json';
+const qualityFindings=JSON.parse(readFileSync(qualityRegistryPath,'utf8')).findings;
+for(const finding of qualityFindings){
+ const source=privateRegistry.find(s=>s.id===finding.source);
+ if(!source||!/^QS24-[0-9]+$/.test(finding.id)||!backlog.some(item=>item.key==='continuous-quality-scout-24'))throw new Error('Quality finding source or task missing.');
+ if(!/^docs\/operativo\/evidenze\/quality-2026-10-24\/[a-z0-9-]+\.png$/.test(finding.evidenceScreenshotpath))throw new Error('Quality finding screenshot path invalid.');
+ const detail={};for(const field of ['confidence','page','observed','expected','viewport','theme','language','authstate','severity','impact','possiblecause','suggestion','classification','standardsNote','measuredContrast'])if(finding[field]!==undefined)detail[field]=finding[field];
+ const status=finding.verificationStatus==='PRODUCTION_VERIFIED'?'VERIFIED':finding.implementationStatus==='IMPLEMENTED'?'IMPLEMENTED':'IN_PROGRESS';
+ const proof={screenshot:finding.evidenceScreenshotpath,runtimeRevision:finding.runtimeRevision,verificationStatus:finding.verificationStatus||'OBSERVED_LOCAL_ONLY',scope:'Scout observation is local; production verification requires explicit separate proof.'};
+ if(/^[a-f0-9]{40}$/.test(process.env.GITHUB_SHA||''))proof.repositoryImage='https://github.com/omni101core/omni101-app/blob/'+process.env.GITHUB_SHA+'/'+finding.evidenceScreenshotpath;
+ record('quality-finding:'+finding.id,{name:finding.id+' · '+finding.page,kind:'RISK',status,body:JSON.stringify(detail,null,2),source:qualityRegistryPath+'#'+finding.id+' · Private founder mandate · '+source.artifact_id+' · sha256:'+source.sha256,acceptance:finding.expected,evidence:JSON.stringify(proof),source_id:privateOriginals.some(p=>p.source.id===source.id)?uid(source.id):null,task_id:'mandate:'+org+':continuous-quality-scout-24'});
 }
 for(const [key,name,url,note] of [
  ['codrops','Codrops Cinematic 3D Scroll','https://tympanus.net/Tutorials/Cinematic3DScroll/','Reference esplicita del founder: narrativa cinematica, mobile e reduced motion; verificare licenza e differenze prima del riuso.'],
@@ -48,9 +68,16 @@ for(const [key,name,url,note] of [
  ['sandbox','Cloudflare Agent Sandboxes','https://developers.cloudflare.com/agents/tools/sandbox/','Reference del founder da valutare per isolamento, rete, credenziali, persistenza e costi. Non attivare servizi a pagamento.']])record('reference:'+key,{name,kind:'REFERENCE',status:'CAPTURED',body:note,source:url,acceptance:'Verifica tecnica, licenza e costi prima di collegare una implementazione.',evidence:'',source_id:null,task_id:'mandate:'+org+':'+(key==='codrops'?'brand':'coding-agents')});
 batches.push(...syncs);
 if(target==='--sql'){writeFileSync(1,batches.join('\n'));process.exit(0)}
-if(target==='--dry-run'){console.log(JSON.stringify({sources:sources.length,requirements:backlog.length,references:3+origins.size,tasks:backlog.length,syncStatements:{knowledgeRecords:backlog.length+sources.length+3+origins.size,tasks:backlog.length},syncNote:'upper bound; each UPDATE is conditional on importer-owned and changed rows',batches:batches.length,originalHashesVerified:true,mutations:false}));process.exit(0)}
+if(target==='--dry-run'){console.log(JSON.stringify({sources:sources.length,privateOriginals:privateOriginals.length,privateOriginalsExpected:privateRegistry.filter(s=>s.require_app_import).length,requirements:backlog.length,qualityFindings:qualityFindings.length,references:3+origins.size,tasks:backlog.length,syncStatements:{knowledgeRecords:backlog.length+sources.length+privateOriginals.length+qualityFindings.length+3+origins.size,tasks:backlog.length},syncNote:'upper bound; each UPDATE is conditional on importer-owned and changed rows',batches:batches.length,originalHashesVerified:true,mutations:false}));process.exit(0)}
 const token=process.env.CLOUDFLARE_API_TOKEN;if(!token)throw new Error('CI secret unavailable.');
 const database=target==='staging'?'28dfa732-5f93-4b10-8c7d-542d8ccdb9e1':'1887a135-05be-4b2e-a764-8ab5b3018a00';
 const endpoint=`https://api.cloudflare.com/client/v4/accounts/179e35741ac5e7a9e2c3be26f5a482b8/d1/database/${database}/query`;
 for(const sql of batches){const response=await fetch(endpoint,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({sql}),signal:AbortSignal.timeout(45000)});const result=await response.json();if(!response.ok||!result.success||result.result.some(row=>!row.success))throw new Error('Context import not confirmed; no credential or response body printed. Rerun safely after diagnosis.');}
-console.log(JSON.stringify({target,originalSources:sources.length,requirements:backlog.length,references:3+origins.size,insertOrIgnore:true,conservativeSync:true,executionsStarted:0}));
+if(privateOriginals.length){
+ const ids=privateOriginals.map(({source})=>value(uid(source.id))).join(',');
+ const sql=`SELECT k.id,r.snapshot FROM knowledge_records k JOIN knowledge_revisions r ON r.record_id=k.id AND r.organization_id=k.organization_id AND r.version=1 WHERE k.organization_id=${value(org)} AND k.id IN (${ids})`;
+ const response=await fetch(endpoint,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({sql}),signal:AbortSignal.timeout(45000)});
+ const result=await response.json();if(!response.ok||!result.success)throw new Error('Private originals verification unavailable.');
+ verifyPrivateRevisions(privateOriginals,result.result.flatMap(row=>row.results||[]),uid);
+}
+console.log(JSON.stringify({target,originalSources:sources.length,verifiedPrivateOriginals:privateOriginals.length,requirements:backlog.length,qualityFindings:qualityFindings.length,references:3+origins.size,insertOrIgnore:true,conservativeSync:true,executionsStarted:0}));

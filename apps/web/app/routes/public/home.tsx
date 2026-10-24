@@ -11,24 +11,24 @@ import '../../styles/home-regia.css';
 const stages=homeStages();
 const demos=7;
 const doors=[
- ['/work','Concept','Prototipi dello studio, non clienti.'],
+ ['/work','Concept dello studio','Prototipi dello studio, non clienti.'],
  ['/explore','Playground','Le possibilità, da provare con le tue mani.'],
  ['/start-project','Raccontaci la tua idea','Un brief in poche righe.'],
 ];
 
 const pillars=[
- ['build','PRODOTTO','Prodotti che funzionano.','Siti, commerce, SaaS, CRM, portali e software su misura.'],
- ['automate','PROCESSO','Meno passaggi. Più tempo.','Workflow, agenti, documenti, qualificazione lead e supporto.'],
+ ['build','PRODOTTO','Prodotti che funzionano.','Siti, commercio, SaaS, CRM, portali e software su misura.'],
+ ['automate','PROCESSO','Meno passaggi. Più tempo.','Workflow, agenti, documenti, qualificazione dei contatti e supporto.'],
  ['create','CONTENUTO','La tua idea prende forma.','Visual, campagne, video, avatar, voce e mondi interattivi.'],
  ['grow','CRESCITA','Il prodotto continua a crescere.','Funnel, contenuti, SEO, email e ottimizzazione delle conversioni.'],
 ];
 const senses=[
- ['SEE','vision','Il gesto diventa interfaccia.','Hand tracking reale nel browser. Webcam solo dopo consenso.'],
- ['SPEAK','voice','Una voce per ogni incontro.','Sintesi del browser e scenari dimostrativi. Nessuna telefonata reale.'],
+ ['VEDE','vision','Il gesto diventa interfaccia.','Tracciamento reale della mano nel browser. Webcam solo dopo consenso.'],
+ ['PARLA','voice','Una voce per ogni incontro.','Sintesi del browser e scenari dimostrativi. Nessuna telefonata reale.'],
  ['CREA','creative','Da un soggetto a una campagna.','Confronta composizioni e formati. Nessuna generazione live a pagamento.'],
- ['ACT','workflow','Una richiesta diventa un percorso.','Simulazione del flusso: intake, brief, attività e approvazione.'],
+ ['AGISCI','workflow','Una richiesta diventa un percorso.','Simulazione del flusso: ingresso, brief, attività e approvazione.'],
 ];
-const labs=[['avatar','Avatar Studio','Storyboard e script multilingua · simulato'],['voice','Voice AI','Voce del browser · reale'],['vision','Vision / Gesture','Hand tracking nel browser · reale'],['workflow','Agent Workflow','Percorso guidato · simulato'],['commerce','Commerce','Catalogo e carrello · demo locale'],['creative','Creative AI','Varianti e confronto · composizione locale'],['software','Software Lab','Mini CRM e prenotazioni · demo locale']];
+const labs=[['avatar','Avatar Studio','Storyboard e copione multilingua · simulato'],['voice','Voce AI','Voce del browser · reale'],['vision','Visione / gesto','Tracciamento della mano nel browser · reale'],['workflow','Flusso con agenti','Percorso guidato · simulato'],['commerce','Commerce','Catalogo e carrello · demo locale'],['creative','Creative AI','Varianti e confronto · composizione locale'],['software','Software Lab','Mini CRM e prenotazioni · demo locale']];
 
 export function Home(){
  return <>

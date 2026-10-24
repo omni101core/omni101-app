@@ -1,0 +1,96 @@
+{
+  "generatoIl": "2026-10-24T08:16:29.935759+00:00",
+  "valuta": "EUR",
+  "prodotti": {
+    "sito_pronto": {
+      "nome": "Sito pronto",
+      "daUnaTantum": 1600,
+      "daMensile": 39,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "sito_premium": {
+      "nome": "Sito premium",
+      "daUnaTantum": 4400,
+      "daMensile": 69,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "ecommerce": {
+      "nome": "E-commerce",
+      "daUnaTantum": 3750,
+      "daMensile": 99,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "ti_trovano": {
+      "nome": "Ti trovano",
+      "daUnaTantum": 0,
+      "daMensile": 199,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "risponde_lui": {
+      "nome": "Risponde lui",
+      "daUnaTantum": 0,
+      "daMensile": 99,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "social": {
+      "nome": "Social",
+      "daUnaTantum": 0,
+      "daMensile": 309,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "ufficio_automatico": {
+      "nome": "Ufficio automatico",
+      "daUnaTantum": 569,
+      "daMensile": 19,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "gestionale_su_misura": {
+      "nome": "Gestionale/app su misura",
+      "daUnaTantum": 16000,
+      "daMensile": 249,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    },
+    "agente_ai": {
+      "nome": "Agente AI",
+      "daUnaTantum": 0,
+      "daMensile": 149,
+      "livelli": [
+        "Essenziale",
+        "Consigliata",
+        "Completa"
+      ]
+    }
+  }
+}

@@ -33,3 +33,21 @@ Verifica visiva canary della prima pubblicazione 76d17bd: lo stile legacy `.os-i
 Esito finale storico: 39950784094 verde. Health di produzione ancora da confermare sullo SHA della run successiva a questa nota.
 
 2026-10-23, non ancora in produzione: `GET /api/calendar?from&to` (max 92 giorni, 500 righe, CLIENT 403) legge tasks, milestones, projects, activities e revenue_events della sola organizzazione. Nessuna tabella nuova, `end` sempre null, niente ricorrenze. Il calendario revenue esistente (`/api/revenue/calendar`) resta. Migrazione 0012 additiva: versioni di listino importate, solo OWNER/ADMIN in scrittura. Importi di test sintetici, non il listino reale.
+
+## C1 — 24 ottobre 2026, copia delegata (non pubblicato)
+
+Agenda Revenue usa GET `/api/calendar?from=YYYY-MM-DD&to=YYYY-MM-DD&type=tasks&project=ID`: tipo/progetto facoltativi, intervallo massimo 92 giorni di distanza. Unisce task, milestone, progetti, campagne, iniziative, attività, eventi revenue, richieste QA e approvazioni dalle date originali; nessuna tabella o sincronizzazione nuova. Chiave evento: fonte+id. Revisioni/approvazioni espongono la data originale di richiesta (`created_at`), non una scadenza inventata.
+
+Timestamp restituiti come istanti ISO; visualizzazione e filtro giorni in Europe/Rome (default: lo schema organizzazione non contiene un fuso configurabile). Date senza ora invariate. Query sempre tenant-scoped; campagne/iniziative/revenue solo ruoli commerciali; approvazioni solo OWNER/ADMIN, senza costi o motivazioni; QA solo ruoli di consegna. Le altre sorgenti rispettano `resources.read`. Nessuna finanza aggiunta. Massimo 501 candidati per fonte/500 eventi mostrati, troncamento dichiarato; restringere i filtri se parziale.
+
+Test aggiunti in `tests/calendar.test.ts`: dedup fonte+id, mezzanotte Roma da 23:30 UTC, giorno pieno, tipo/progetto, entrambe le organizzazioni, ruolo senza permessi. Test non eseguiti: verifica ammessa solo CI, rete vietata nella delega. Fuori scope: drag&drop, ricorrenze, multi-calendario, conflitti. Il vecchio endpoint `/api/revenue/calendar` resta compatibile, ma la vista usa quello unificato.
+
+24 ottobre — COMMERCE-VISIBLE-24 (locale, non pubblicato): Soluzioni e famiglie presentano modalità una tantum, continuativa/abbonamento e progetto su misura. Tre CTA aprono il brief reale precompilato senza invio o acquisto. Nessun prezzo, checkout o abbonamento attivo inventato; catalogo prezzi approvati, provider e provisioning restano da collegare. Test engagement-modes.spec.ts da eseguire in CI.
+
+## Configurazioni commerce — 24 ottobre 2026, integrato, CI da verificare
+
+`/api/commerce/configurations`: POST `{configuration}` crea (versione record 1), PATCH `{expectedVersion,configuration}` aggiorna con CAS (409 `{error,current}` se superata), GET lista (max 100) e dettaglio. OWNER/ADMIN vedono il tenant; CLIENT solo le proprie (owner_user_id + client_id), altrui 404; altri ruoli 403.
+Dispatch in `api.ts` dopo `authenticate`, same-origin e `rateLimit` (20/min sulle scritture), prima dei router generici. Migrazione `0016_commerce_configurations.sql` non applicata a D1 reali. Salvare non crea ordine, offerta, pagamento o progetto.
+Test: `tests/commerce-configurations.test.ts` (handler diretto + route `handleApi`) eseguiti solo in CI, non ancora lanciati.
+
+24ott R2 in implementazione: configuratore recupera busy in finally, preserva bozza/CAS e rifiuta risposta successo malformata. Patch Grok revisionata, CI ancora da eseguire. P0ACL nega genericCRUD aiCLIENT preservando portale dedicato; testSQLite/handleApi e stato nel modulo portale. Nessun lavoro dichiarato live.

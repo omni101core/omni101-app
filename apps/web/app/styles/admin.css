@@ -115,3 +115,24 @@ dialog.os-command::backdrop{background:#000b;backdrop-filter:blur(5px)}
 .os-operations .os-table th,.os-operations .os-table td{padding:10px 8px}
 }
 
+/* G5 pipeline kanban UX 24/10 — append, solo .os-pipeline-board / .os-kanban */
+.os-pipeline-board{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.os-kanban-now{margin:0 0 16px;padding:16px;border:1px solid var(--os-gold);border-radius:6px;background:var(--os-panel);min-width:0}
+.os-kanban-now .os-eyebrow{display:block;margin:0 0 6px}
+.os-kanban-now .os-kanban-next{margin:0 0 12px;max-width:65ch;font-size:16px;line-height:1.45;color:var(--os-text,#f2eee6);text-wrap:pretty}
+.os-kanban-now .os-button{margin:0;max-width:100%}
+.os-kanban-column h3{font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--os-text,#f2eee6)}
+.os-kanban-column h3 span{color:var(--os-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.os-kanban-empty{margin:12px 0 0;font-size:13px;line-height:1.45;color:var(--os-muted)}
+.os-pipeline-board .pui-feedback{max-width:100%}
+@media(max-width:480px){
+.os-pipeline-board{overflow-x:clip}
+.os-kanban{flex-direction:column;overflow-x:clip;max-width:100%;min-width:0}
+.os-kanban-column{min-width:0;width:100%;flex:none}
+.os-kanban-card p{white-space:normal;overflow:visible;text-overflow:clip}
+.os-pipeline-board .os-button,.os-pipeline-board .os-card-open,.os-pipeline-board .os-status-control select,.os-pipeline-board .pui-feedback-retry{min-height:44px;min-width:44px}
+.os-pipeline-board .os-card-open{display:inline-flex;align-items:center;padding:10px 12px;font-size:13px}
+.os-pipeline-board .os-status-control{flex-wrap:wrap;font-size:13px}
+.os-pipeline-board .os-status-control select{max-width:100%;flex:1 1 8rem;font-size:13px;padding:10px}
+}
+

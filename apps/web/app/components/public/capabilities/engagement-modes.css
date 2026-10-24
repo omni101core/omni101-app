@@ -1,0 +1,6 @@
+.engagement-modes{padding-bottom:60px}
+.engagement-modes .cap-segment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.engagement-modes .cap-segment p,.engagement-modes .cap-segments-head p{font-size:16px}
+.engagement-modes .engagement-cta{margin-top:auto;font-size:16px}
+.engagement-modes .engagement-note{max-width:780px;font-size:16px;line-height:1.6;color:var(--muted);margin:24px 0 0}
+@media(max-width:850px){.engagement-modes .cap-segment-grid{grid-template-columns:1fr}}

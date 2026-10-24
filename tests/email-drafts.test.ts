@@ -92,6 +92,18 @@ describe('bozze email',()=>{
   const rendered=renderEmailDraft({subject:'<b>',preheader:'',body:'x',ctaLabel:'',ctaUrl:''});
   expect(rendered.html).toContain('&lt;b&gt;');expect(rendered.html).not.toContain('<b>');
  });
+ it('usa lo stesso layout validato per preview ed export senza cambiare versione o revisione',async()=>{
+  const {sqlite,env}=database(),cookie=await owner(sqlite);
+  const saved=await (await handleApi(req('/api/email-drafts',cookie,'POST',draft({ctaLabel:'',ctaUrl:''})),env))?.json() as {id:string};
+  for(const layout of ['studio','update','proposal']){
+   const preview=await (await handleApi(req('/api/email-drafts/'+saved.id+'/preview?layout='+layout,cookie),env))?.json() as {html:string;version:number};
+   const exported=await (await handleApi(req('/api/email-drafts/'+saved.id+'/export?format=html&layout='+layout,cookie),env))?.text();
+   expect(preview.html).toBe(exported);expect(preview.version).toBe(1);expect(preview.html).toContain('data-layout="'+layout+'"');expect(preview.html).not.toContain('<a ');
+  }
+  for(const tail of ['/preview?layout=arbitrary','/export?format=html&layout=arbitrary'])expect((await handleApi(req('/api/email-drafts/'+saved.id+tail,cookie),env))?.status).toBe(400);
+  expect(sqlite.prepare('SELECT version,status FROM email_drafts WHERE id=?').get(saved.id)).toEqual({version:1,status:'DRAFT'});
+  expect(()=>renderEmailDraft({subject:'Test',preheader:'',body:'Test',ctaLabel:'Apri',ctaUrl:'javascript:alert(1)'})).toThrow();
+ });
  it('chiede revisione nel registro approvazioni e non tratta il salvataggio come approvazione',async()=>{
   const {sqlite,env}=database(),cookie=await owner(sqlite);
   const created=await (await handleApi(req('/api/email-drafts',cookie,'POST',draft()),env))?.json() as {id:string;version:number};
