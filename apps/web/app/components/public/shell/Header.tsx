@@ -26,16 +26,19 @@ function Menu({locale}:{locale:Locale}){
   if(open){
    wasOpen.current=true;
    element.dataset.open='true';
-   // aria-modal does not contain focus itself. WebKit drops focus() while the menu is still visibility:hidden, so reflow before focusing and retry one frame later.
-   const containFocus=(event:FocusEvent)=>{if(event.target instanceof Node&&!element.contains(event.target))close.current?.focus({preventScroll:true})};
+   // aria-modal does not contain focus. WebKit drops focus() while the clip is still the closed point.
+   // ponytail: focus() inside focusin is dropped; one rAF. Per-event queue only if a browser nests deeper.
+   let alive=true,frame=0;
+   const containFocus=(event:FocusEvent)=>{
+    if(!(event.target instanceof Node)||element.contains(event.target))return;
+    cancelAnimationFrame(frame);
+    frame=requestAnimationFrame(()=>{if(alive&&!element.contains(document.activeElement))close.current?.focus({preventScroll:true})});
+   };
    document.addEventListener('focusin',containFocus);
-   void element.offsetWidth;
-   const focusClose=()=>{if(element.dataset.open==='true')close.current?.focus({preventScroll:true})};
-   focusClose();
-   const frame=requestAnimationFrame(focusClose);
-   const releaseFocus=()=>{cancelAnimationFrame(frame);document.removeEventListener('focusin',containFocus)};
-   if(reduced)return releaseFocus;
-   gsap.to(element,{clipPath:opened,duration:.8,ease:'expo.out'});
+   const focusClose=()=>{if(alive&&element.dataset.open==='true')close.current?.focus({preventScroll:true})};
+   const releaseFocus=()=>{alive=false;cancelAnimationFrame(frame);document.removeEventListener('focusin',containFocus)};
+   if(reduced){void element.offsetWidth;focusClose();return releaseFocus}
+   gsap.to(element,{clipPath:opened,duration:.8,ease:'expo.out',onComplete:focusClose});
    gsap.fromTo(items,{yPercent:70,opacity:0},{yPercent:0,opacity:1,duration:.8,ease:'expo.out',stagger:.05,delay:.12});
    return releaseFocus;
   }else if(wasOpen.current){
