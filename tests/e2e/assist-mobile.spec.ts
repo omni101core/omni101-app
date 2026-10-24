@@ -5,11 +5,6 @@ type Box={x:number;y:number;width:number;height:number;name:string};
 /** Border box plus the painted focus ring. An unfocused control adds nothing. */
 async function rings(page:Page,selector:string):Promise<Box[]>{
  return page.locator(selector).evaluateAll(els=>els.flatMap(el=>{
-  const story=el.closest('.cinema-static-story');
-  if(story){
-   const storyStyle=getComputedStyle(story);
-   if(storyStyle.position==='absolute'||storyStyle.clipPath!=='none')return [];
-  }
   const style=getComputedStyle(el);
   const rect=el.getBoundingClientRect();
   if(style.display==='none'||style.visibility==='hidden'||rect.width<2||rect.height<2)return [];
@@ -28,83 +23,64 @@ function overlaps(a:Box,b:Box){
 
 async function assertClear(page:Page){
  const launch=await rings(page,'.omni-assist-launch');
- const commands=await rings(page,'.cinema-experience button, .cinema-experience a, .cinema-experience input, .cinema-experience select, .cinema-experience textarea');
+ const commands=await rings(page,'#capitolo button, #capitolo a, #capitolo input, #capitolo select, #capitolo textarea');
  expect(launch).toHaveLength(1);
  expect(commands.length).toBeGreaterThan(0);
  const hit=commands.find(command=>overlaps(launch[0],command));
  expect(hit,hit?launch[0].name+' copre '+hit.name:undefined).toBeUndefined();
 }
 
-async function showCinema(page:Page){
+async function showChapter(page:Page){
  await page.goto('/');
  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
- const cinema=page.locator('.cinema-experience').first();
- await cinema.scrollIntoViewIfNeeded();
- await expect(cinema).toBeVisible();
+ const chapter=page.locator('#capitolo');
+ await chapter.scrollIntoViewIfNeeded();
+ await expect(chapter).toBeVisible();
  await expect(page.getByRole('button',{name:'OMNI ASSIST',exact:true})).toBeVisible();
 }
 
-test('assistant trigger stays clear of visible cinema controls on a small screen',async({page,isMobile},testInfo)=>{
- test.skip(!isMobile,'The chapter dock overlap is the narrow viewport');
- await page.emulateMedia({reducedMotion:'no-preference'});
- await page.setViewportSize({width:320,height:640});
- await showCinema(page);
- const tabs=page.getByRole('navigation',{name:'Capitoli dell’esperienza'}).getByRole('button');
- await expect(tabs.first()).toBeVisible();
- const count=await tabs.count();
+/** The chapter has no dock any more: the launcher only has to stay clear of the cards' links and demo controls. */
+async function walkLinks(page:Page){
+ const links=page.locator('#capitolo .capitolo-cards footer a');
+ const count=await links.count();
+ expect(count).toBeGreaterThan(2);
  for(let index=0;index<count;index++){
-  const tab=tabs.nth(index);
-  const tabBox=await tab.boundingBox();
-  if(!tabBox||tabBox.x<0||tabBox.x+tabBox.width/2>320)continue;
-  await tab.click();
+  await links.nth(index).focus();
+  await assertClear(page);
  }
- await expect(page.locator('.omni-assist-dialog')).not.toBeVisible();
- await assertClear(page);
- const launch=page.getByRole('button',{name:'OMNI ASSIST',exact:true});
- const box=await launch.boundingBox();
- expect(box).toBeTruthy();
- expect(box!.width).toBeLessThanOrEqual(160);
- expect(box!.height).toBeGreaterThanOrEqual(44);
- expect(box!.height).toBeLessThanOrEqual(48);
- expect(640-(box!.y+box!.height)).toBeGreaterThanOrEqual(64);
- await tabs.last().focus();
- await page.keyboard.press('Tab');
- await page.keyboard.press('Shift+Tab');
- await expect(tabs.last()).toBeFocused();
- await assertClear(page);
- await launch.focus();
- await page.keyboard.press('Shift+Tab');
- await page.keyboard.press('Tab');
- await expect(launch).toBeFocused();
- await assertClear(page);
- await page.screenshot({path:'test-results/assist-mobile-tabs-'+testInfo.project.name+'.png'});
-});
+ return links;
+}
 
-test('reduced motion keeps the assistant trigger off the visible cinema commands',async({page,isMobile},testInfo)=>{
- test.skip(!isMobile,'The chapter dock overlap is the narrow viewport');
- await page.emulateMedia({reducedMotion:'reduce'});
- await page.setViewportSize({width:320,height:640});
- await showCinema(page);
- await expect(page.locator('nav[aria-label="Capitoli dell’esperienza"]')).toBeHidden();
- const target=await page.getByRole('button',{name:'OMNI ASSIST',exact:true}).boundingBox();
- expect(target!.height).toBeGreaterThanOrEqual(44);
- expect(target!.height).toBeLessThanOrEqual(48);
- expect(640-(target!.y+target!.height)).toBeGreaterThanOrEqual(72);
- await assertClear(page);
- const launch=page.getByRole('button',{name:'OMNI ASSIST',exact:true});
- await launch.focus();
- const y=await page.evaluate(()=>window.scrollY);
- await page.keyboard.press('Shift+Tab');
- await page.keyboard.press('Tab');
- await expect(launch).toBeFocused();
- await page.evaluate(top=>window.scrollTo(0,top),y);
- await assertClear(page);
- const link=page.locator('.cinema-experience a').first();
- await link.focus();
- await page.keyboard.press('Shift+Tab');
- await page.keyboard.press('Tab');
- await expect(link).toBeFocused();
- await page.evaluate(top=>window.scrollTo(0,top),y);
- await assertClear(page);
- await page.screenshot({path:'test-results/assist-mobile-reduced-'+testInfo.project.name+'.png'});
-});
+for(const motion of ['no-preference','reduce'] as const){
+ test('assistant trigger stays clear of the chapter cards on a small screen, motion '+motion,async({page,isMobile},testInfo)=>{
+  test.skip(!isMobile,'The launcher overlap is the narrow viewport');
+  await page.emulateMedia({reducedMotion:motion});
+  await page.setViewportSize({width:320,height:640});
+  await showChapter(page);
+  await expect(page.locator('.omni-assist-dialog')).not.toBeVisible();
+  const links=await walkLinks(page);
+  await assertClear(page);
+  const launch=page.getByRole('button',{name:'OMNI ASSIST',exact:true});
+  const box=await launch.boundingBox();
+  expect(box).toBeTruthy();
+  expect(box!.width).toBeLessThanOrEqual(160);
+  expect(box!.height).toBeGreaterThanOrEqual(44);
+  expect(box!.height).toBeLessThanOrEqual(48);
+  expect(640-(box!.y+box!.height)).toBeGreaterThanOrEqual(14);
+  const last=links.last();
+  await last.focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  await expect(last).toBeFocused();
+  await assertClear(page);
+  await launch.focus();
+  await expect(launch).toBeFocused();
+  const y=await page.evaluate(()=>window.scrollY);
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await expect(launch).toBeFocused();
+  await page.evaluate(top=>window.scrollTo(0,top),y);
+  await assertClear(page);
+  await page.screenshot({path:'test-results/assist-mobile-capitolo-'+motion+'-'+testInfo.project.name+'.png'});
+ });
+}

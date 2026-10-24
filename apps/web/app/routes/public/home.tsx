@@ -1,13 +1,13 @@
 import {Link} from 'react-router';
 import ReelOrbit from '../../components/public/ReelOrbit';
-import CinematicExperience from '../../components/public/CinematicExperience';
+import HomeCapitolo from '../../components/public/HomeCapitolo';
 import {homeStages} from '../../components/public/HomeShowcase';
 import {RevealTitle} from '../../components/public/shell/RevealTitle';
 import {media} from '../../content/media';
 import {projects,services} from '../../components/public/shell/site-data';
 import '../../styles/home-regia.css';
 
-/** Home: the reel ring (loader and hero are one scene), four families, then one cinematic chapter, the playground, concept work, method and the final doors. */
+/** Home: the reel ring (loader and hero are one scene), four families, then one chapter of option cards, the playground, concept work, method and the final doors. */
 const stages=homeStages();
 const demos=7;
 const doors=[
@@ -52,7 +52,7 @@ export function Home(){
    <p>Dal primo contatto alla consegna, dal contenuto alla vendita: colleghiamo software, creatività e intelligenza artificiale intorno a un obiettivo concreto.</p>
   </section>
   <section className="home-senses section" aria-label="Possibilità AI"><header><span className="eyebrow">02 / INTELLIGENZA DA PROVARE</span><RevealTitle as="h2" className="section-heading">Vede. Parla. Crea.<br/><em>Ti aiuta ad agire.</em></RevealTitle></header><div>{senses.map(([name,slug,title,body],i)=><Link to={'/explore/'+slug} key={name}><span className="home-sense-word">{name}</span><span className="home-sense-copy"><strong>{title}</strong><small>{body}</small></span><span aria-hidden="true">0{i+1} ↗</span></Link>)}</div></section>
-  <div id="capitolo"><CinematicExperience stages={stages}/></div>
+  <HomeCapitolo stages={stages}/>
   <section className="home-labs section"><span className="eyebrow">03 / PLAYGROUND</span><RevealTitle as="h2" className="section-heading">Non immaginarlo soltanto.<br/><em>Provalo.</em></RevealTitle><div>{labs.map(([slug,name,status])=><Link key={slug} to={'/explore/'+slug}><strong>{name}</strong><small>{status}</small><span aria-hidden="true">↗</span></Link>)}</div></section>
   <section className="home-proof section"><div><span className="eyebrow">04 / CONCEPT E PROTOTIPI</span><RevealTitle as="h2" className="section-heading">Possibilità<br/><em>che prendono forma.</em></RevealTitle><p>Esperienze dimostrative dello studio. Nessun risultato commerciale o cliente dichiarato senza prova.</p><Link className="text-link" to="/work">Esplora i concept ↗</Link></div><Link to="/work" className="img-hover" aria-label="Esplora i concept dello studio"><img src={media.work[0].src} alt={media.work[0].alt} width={media.work[0].w} height={media.work[0].h} loading="lazy"/></Link></section>
   <section className="home-method section"><span className="eyebrow">05 / DALL’IDEA AL PRODOTTO</span><RevealTitle as="h2" className="section-heading">Prima capiamo.<br/><em>Poi costruiamo insieme.</em></RevealTitle><ol>{[['Ascolto','Obiettivo, persone e vincoli. Un brief condiviso.'],['Prototipo','Una versione concreta da vedere e correggere.'],['Realizzazione','Software, contenuti e automazioni verificati.'],['Consegna e crescita','Accessi, formazione e prossimi passi misurabili.']].map(([title,body])=><li key={title}><h3>{title}</h3><p>{body}</p></li>)}</ol></section>

@@ -1,0 +1,21 @@
+/* Capitolo della home: quattro card, ciascuna con la sua demo e un link all'offerta. Scroll nativo, niente pin, niente canvas. */
+.home-capitolo{scroll-margin-top:72px}
+.home-capitolo>header p{max-width:560px;margin:0 0 50px;font-size:14px;line-height:1.8;color:var(--muted)}
+.home-capitolo .section-heading{margin:25px 0 18px}
+.capitolo-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin:0;padding:0;list-style:none}
+.capitolo-cards>li{display:flex;min-width:0}
+.capitolo-cards article{display:flex;flex-direction:column;width:100%;padding:28px 28px 22px;border:1px solid var(--line);border-top-color:#d2b77b66;background:var(--surface,#191a1c);transition:border-color .3s}
+.capitolo-cards article:hover,.capitolo-cards article:focus-within{border-color:var(--gold)}
+.capitolo-num{font-size:10px;letter-spacing:2.5px;color:var(--gold)}
+.capitolo-cards h3{margin:18px 0 12px;font-size:clamp(28px,3vw,44px);font-weight:400;line-height:1.05;letter-spacing:-.04em;text-wrap:balance}
+.capitolo-cards article>p{margin:0;max-width:460px;font-size:13px;line-height:1.8;color:var(--muted)}
+.capitolo-demo{flex:1;min-height:220px;margin:24px 0}
+.capitolo-cards footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
+.capitolo-cards footer small{font-size:10px;letter-spacing:1px;color:#8e8d85}
+.capitolo-cards footer a{display:inline-flex;align-items:center;gap:14px;min-height:44px;padding:0 2px;color:var(--gold);font-size:12px;border-bottom:1px solid #d2b77b77;scroll-margin-block:200px}
+.capitolo-cards footer a:hover{border-bottom-color:var(--gold)}
+.capitolo-cards footer a:focus-visible,.capitolo-close a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.capitolo-close{margin:44px 0 0;font-size:15px;color:var(--muted)}
+.capitolo-close a{display:inline-flex;align-items:center;gap:12px;min-height:44px;margin-left:8px;color:var(--ivory);border-bottom:1px solid #d2b77b88;scroll-margin-block:96px}
+@media(max-width:900px){.capitolo-cards{grid-template-columns:1fr;gap:20px}.capitolo-cards article{padding:22px 20px 18px}.capitolo-cards footer{flex-direction:column;align-items:flex-start;gap:6px}}
+@media(prefers-reduced-motion:reduce){.capitolo-cards article{transition:none}}

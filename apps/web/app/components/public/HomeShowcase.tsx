@@ -1,6 +1,9 @@
 import {lazy,Suspense} from 'react';
-import type {CinemaStage} from './CinematicExperience';
+import type {ReactNode} from 'react';
 import {coppiaMedia} from '../showcase/logica';
+
+/** One option card of the home chapter: a link to the matching offer plus an optional live demo. */
+export type HomeStage={id:string;label:string;title:string;body:string;detail:string;to:string;cta:string;demo?:ReactNode};
 
 /**
  * The four moments of the home chapter, in this order: BancoVoce, PrimaDopo, Binario, Vetrina.
@@ -16,8 +19,8 @@ const Vetrina=lazy(()=>import('../showcase/Vetrina').then(m=>({default:m.Vetrina
 /** PrimaDopo needs two real stills of ours; without them the moment is left out, never replaced by an empty frame. */
 const hasPair=coppiaMedia('bottega')!==null;
 
-export function homeStages():CinemaStage[]{
- const stages:CinemaStage[]=[{id:'voce',label:'VOCE',title:'Ascolta una risposta.',body:'Scegli una scena e premi play: la voce parla, la forma d’onda segue il suono. Una dimostrazione, non una promessa.',detail:'Voce / accoglienza / assistenti',to:'/explore/voice',cta:'Prova la voce',demo:<Suspense fallback={null}><BancoVoce segmento="studio" compatto chiusura={false}/></Suspense>}];
+export function homeStages():HomeStage[]{
+ const stages:HomeStage[]=[{id:'voce',label:'VOCE',title:'Ascolta una risposta.',body:'Scegli una scena e premi play: la voce parla, la forma d’onda segue il suono. Una dimostrazione, non una promessa.',detail:'Voce / accoglienza / assistenti',to:'/explore/voice',cta:'Prova la voce',demo:<Suspense fallback={null}><BancoVoce segmento="studio" compatto chiusura={false}/></Suspense>}];
  if(hasPair)stages.push({id:'prima-dopo',label:'PRIMA / DOPO',title:'Guarda la differenza.',body:'Due immagini, una maniglia. Trascina e confronta lo stesso soggetto prima e dopo il lavoro creativo.',detail:'Immagini / prodotto / campagne',to:'/explore/creative',cta:'Apri il laboratorio creativo',demo:<Suspense fallback={null}><PrimaDopo segmento="bottega" chiusura={false}/></Suspense>});
  stages.push(
   {id:'binario',label:'BINARIO',title:'Segui il lavoro.',body:'Una richiesta entra, passa per tre punti e arriva a una persona. Ogni passaggio si accende quando succede ed è simulato: non scrive nei tuoi strumenti.',detail:'Workflow / approvazioni / tracce',to:'/explore/workflow',cta:'Avvia il flusso',demo:<Suspense fallback={null}><Binario nodi={3} chiusura={false}/></Suspense>},
