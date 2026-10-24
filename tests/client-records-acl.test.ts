@@ -11,7 +11,8 @@ const get=(path:string,cookie:string)=>new Request('https://omni101.app'+path,{h
 // Fixture: SQL reale, nessun mock. Una org, clienti A e B, org estranea; per A righe pubbliche e interne.
 function seed(sqlite:DatabaseSync){
  const t=Date.now(),ins=(table:string,row:Record<string,unknown>)=>{const k=Object.keys(row);sqlite.prepare(`INSERT INTO ${table}(${k.join(',')},created_at,updated_at) VALUES(${k.map(()=>'?').join(',')},?,?)`).run(...Object.values(row) as [],t,t)};
- for(const o of ['omni101','estranea'])ins('organizations',{id:o,name:o,slug:o});
+ // omni101 la crea gia' la migrazione 0001; la fixture aggiunge solo cio' che manca.
+ for(const o of ['omni101','estranea'])if(!sqlite.prepare('SELECT 1 FROM organizations WHERE id=?').get(o))ins('organizations',{id:o,name:o,slug:o});
  for(const [id,org] of [['cliA','omni101'],['cliB','omni101'],['cliX','estranea']])ins('clients',{id,organization_id:org,name:id});
  const proj=(id:string,client:string,vis:string,org='omni101')=>ins('projects',{id,organization_id:org,name:'P-'+id,client_id:client,visibility:vis,budget_cents:999900,description:'d-'+id,status:'ACTIVE'});
  proj('pA-client','cliA','CLIENT');proj('pA-team','cliA','TEAM');proj('pB-client','cliB','CLIENT');proj('pX-client','cliX','CLIENT','estranea');
