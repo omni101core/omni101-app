@@ -125,19 +125,19 @@ def supplements(old, new):
             fail('Artifact conflicts with supplemental review directory.')
         shutil.copytree(source, new / name)
 
-def update(run, apply):
+def update(run, apply, draft=False):
     data = config()
     info = gh_json(f'repos/{REPO}/actions/runs/{run}')
     if (info.get('head_repository') or {}).get('full_name') != REPO or info.get('event') != 'push' or info.get('head_branch') not in ('release-commercial', 'rebuild-commercial', 'verify-commercial') or info.get('path') != '.github/workflows/verify.yml':
         fail('Only trusted repository push runs from the verify workflow and approved branches are accepted.')
     sha = info.get('head_sha', '')
-    if info.get('status') != 'completed' or info.get('conclusion') != 'success' or len(sha) != 40 or any(c not in '0123456789abcdef' for c in sha):
-        fail('Only completed successful CI runs are accepted.')
+    if info.get('status') != 'completed' or (info.get('conclusion') != 'success' and not (draft and info.get('conclusion') == 'failure')) or len(sha) != 40 or any(c not in '0123456789abcdef' for c in sha):
+        fail('Only completed successful CI runs are accepted unless --draft explicitly selects a failed build.')
     artifacts = gh_json(f'repos/{REPO}/actions/runs/{run}/artifacts?per_page=100')['artifacts']
     matches = [a for a in artifacts if a['name'] == 'omni101-verified-build' and not a.get('expired')]
     if len(matches) != 1 or matches[0]['size_in_bytes'] > LIMIT:
         fail('Exactly one bounded, unexpired verified build is required.')
-    plan = {'run': run, 'sha': sha, 'verification': 'CI_SUCCEEDED', 'testScope': 'FULL_RELEASE_PIPELINE' if info['head_branch']=='release-commercial' else 'ISOLATED_OR_FOCUSED_CHECKS', 'apply': apply, 'serverRestarted': False}
+    plan = {'run': run, 'sha': sha, 'verification': 'CI_SUCCEEDED' if info['conclusion']=='success' else 'DRAFT_NOT_VERIFIED', 'testScope': 'FULL_RELEASE_PIPELINE' if info['head_branch']=='release-commercial' else 'ISOLATED_OR_FOCUSED_CHECKS', 'apply': apply, 'serverRestarted': False}
     if apply:
         directory = Path(tempfile.mkdtemp(prefix=f'omni101-preview-{sha[:12]}-', dir='/tmp'))
         archive = directory / 'artifact.zip'
@@ -164,9 +164,10 @@ if __name__ == '__main__':
     command = commands.add_parser('update')
     command.add_argument('--run', required=True, type=lambda value: value if value.isdigit() else parser.error('Numeric run ID required.'))
     command.add_argument('--apply', action='store_true')
+    command.add_argument('--draft', action='store_true', help='Explicitly preview a failed trusted build; never release evidence.')
     args = parser.parse_args()
     try:
-        status() if args.command == 'status' else update(args.run, args.apply)
+        status() if args.command == 'status' else update(args.run, args.apply, args.draft)
     except Exception as error:
         print(json.dumps({'error': str(error) if isinstance(error, RuntimeError) else 'Preview operation failed; inspect locally without printing credentials.'}))
         raise SystemExit(1)

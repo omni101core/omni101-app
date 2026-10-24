@@ -27,9 +27,12 @@ function Menu(){
    wasOpen.current=true;
    element.dataset.open='true';
    close.current?.focus({preventScroll:true});
-   if(reduced)return;
+   // ponytail: retry on the next frame if focus did not land inside the panel; CI diagnostics name the cause.
+   const frame=requestAnimationFrame(()=>{if(!element.contains(document.activeElement))close.current?.focus({preventScroll:true})});
+   if(reduced)return()=>cancelAnimationFrame(frame);
    gsap.to(element,{clipPath:opened,duration:.8,ease:'expo.out'});
    gsap.fromTo(items,{yPercent:70,opacity:0},{yPercent:0,opacity:1,duration:.8,ease:'expo.out',stagger:.05,delay:.12});
+   return()=>cancelAnimationFrame(frame);
   }else if(wasOpen.current){
    trigger.current?.focus({preventScroll:true});
    if(reduced){element.dataset.open='false';return}

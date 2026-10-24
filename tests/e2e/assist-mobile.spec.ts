@@ -86,6 +86,10 @@ test('reduced motion keeps the assistant trigger off the visible cinema commands
  await page.setViewportSize({width:320,height:640});
  await showCinema(page);
  await expect(page.locator('nav[aria-label="Capitoli dell’esperienza"]')).toBeHidden();
+ const target=await page.getByRole('button',{name:'OMNI ASSIST',exact:true}).boundingBox();
+ expect(target!.height).toBeGreaterThanOrEqual(44);
+ expect(target!.height).toBeLessThanOrEqual(48);
+ expect(640-(target!.y+target!.height)).toBeGreaterThanOrEqual(72);
  await assertClear(page);
  const launch=page.getByRole('button',{name:'OMNI ASSIST',exact:true});
  await launch.focus();

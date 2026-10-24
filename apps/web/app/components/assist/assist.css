@@ -96,5 +96,6 @@
  .omni-assist-footer{padding:8px 14px 14px}
  .omni-assist-confirm,.omni-assist-error,.omni-assist-status{padding-inline:14px}
 }
-@media(max-width:700px) and (prefers-reduced-motion:no-preference){body:has(.cinema-experience) .omni-assist-launch{bottom:calc(72px + env(safe-area-inset-bottom));box-shadow:none}}
+/* Cinema demos retain bottom controls when motion is reduced; keep the same clearance. */
+@media(max-width:700px){body:has(.cinema-experience) .omni-assist-launch{bottom:calc(72px + env(safe-area-inset-bottom));box-shadow:none}}
 @media(prefers-reduced-motion:reduce){.omni-assist-body{scroll-behavior:auto}}

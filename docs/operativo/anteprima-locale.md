@@ -15,3 +15,5 @@ Rollback: copiare il backup indicato su `/tmp/omni101-preview-3af1af4/local.rest
 Vincoli: massimo 150 MiB archivio/build, 50 MiB per file, 12.000 entry ZIP; supplementi massimo 25 MiB/2.000 entry per directory. Il wrapper non legge `.env`, stato applicativo o credenziali locali. Prima applicazione riservata alla revisione del coordinatore; nessun aggiornamento eseguito durante l’implementazione.
 
 Il manifest distingue CI_SUCCEEDED da ampiezza delle verifiche: FULL_RELEASE_PIPELINE sul branchrelease-commercial, ISOLATED_OR_FOCUSED_CHECKS sugli altri branch consentiti. Una preview da test mirati non dimostra la verifica completa del prodotto.
+
+Per ispezionare un difetto quando i test browser falliscono: update --run ID --draft --apply. Restano obbligatori repository/branch/workflow fidati, run conclusa e artifact build integro. Il manifest riporta DRAFT_NOT_VERIFIED; questo stato non autorizza produzione e non sostituisce i test. Nessun fallback automatico a build rosse.

@@ -77,12 +77,21 @@ for(const theme of ['light','dark'] as const){
   await page.getByRole('button',{name:'Apri menu'}).click();
   const menu=page.getByRole('dialog',{name:'Menu principale'});
   await expect(menu).toBeVisible();
-  await expect(page.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
+  // On failure the received object names who holds focus and whether the close button could take it.
+  await expect.poll(()=>page.evaluate(()=>{
+   const active=document.activeElement,close=document.querySelector('#site-menu>header button')!,style=getComputedStyle(close);
+   return {active:active?.getAttribute('aria-label')||active?.tagName,activeClass:active?.className||'',hasFocus:document.hasFocus(),inertAncestor:close.closest('[inert]')?.className||null,visibility:style.visibility,display:style.display,open:(document.querySelector('#site-menu') as HTMLElement).dataset.open};
+  })).toMatchObject({active:'Chiudi menu',hasFocus:true});
   expectReadable(await contrast(page,'#site-menu'));
   const outside=await menu.locator('a,small,p,.wordmark').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.left<-.5||r.right>innerWidth+.5}).map(el=>el.textContent));
   expect(outside).toEqual([]);
+  await page.keyboard.press('Shift+Tab');
+  await expect(menu.getByRole('link',{name:'Parliamone ↗'})).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button',{name:'Chiudi menu'})).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(menu).toBeHidden();
+  await expect(page.getByRole('button',{name:'Apri menu'})).toBeFocused();
  });
 }
 
@@ -99,9 +108,12 @@ test('footer contacts reflow inside narrow phones without clipping or breaking t
    const mail=el.querySelector('a[href^="mailto:"]')!,range=document.createRange();
    range.selectNodeContents(mail);
    const lines=new Set(Array.from(range.getClientRects()).map(r=>Math.round(r.top))).size;
-   return {outside,lines,scroll:document.documentElement.scrollWidth,edge,mail:mail.textContent};
+   const smallest=(selector:string)=>Math.min(...Array.from(el.querySelectorAll(selector)).map(node=>parseFloat(getComputedStyle(node).fontSize)));
+   return {outside,lines,scroll:document.documentElement.scrollWidth,edge,mail:mail.textContent,links:smallest('.footer-links a'),legal:smallest('.footer-bottom span,.footer-bottom a')};
   });
   expect(layout.outside,`a ${width}px`).toEqual([]);
+  expect(layout.links,`link del footer a ${width}px`).toBeGreaterThanOrEqual(14);
+  expect(layout.legal,`testo legale a ${width}px`).toBeGreaterThanOrEqual(12);
   expect(layout.lines,`email su una riga a ${width}px`).toBe(1);
   expect(layout.scroll).toBeLessThanOrEqual(layout.edge);
   expect(layout.mail).toContain('info@omni101.app');

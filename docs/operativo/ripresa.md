@@ -128,3 +128,9 @@ Prossimo valore più alto: composer email/versioni e canali/purpose di consenso 
 ## Continuazione consolidamento ed ecosistema — in corso
 
 Dieci originali e 21 gruppi nel manifest locale; 34 record Knowledge previsti. Nuovi originali `consolidamento-operativo-2026-10-23` e `connected-ecosystem-2026-10-23`, hash byte-per-byte; indice sezioni con task e stati non valutati, non copertura atomica completa. Preventivatore 0011 con formule/cadenze/snapshot/CAS/approvazione reale in verifica. Prime CI: 39957701516 errore tipi API client corretto; 39957963104 unico test rosso per ID approval con %3A: corretto decodePathId. Review indipendente ha confermato la causa e segnalato associazione cliente mancante: aggiunta al payload e al percorso UI, protetta dal tenant e dalla versione. Non dichiarare live questa continuazione finché non esiste nuova prova. Nessuna nuova integrazione/MCP/provider connesso.
+
+## Ripresa corrente — qualità prima del prossimo blocco commerce
+1. Integrare correzioni CI077 senza indebolire controlli d’intersezione/focus. Verifica mirata, artifactlocale e revisionevisiva; poi releasecompleta e import5originali+65requisiti+5RISK conhash/permessi.
+2. Integrare rendererG8 e configurazionipersistenti solo dopo handoff/review/test, separati dalpackquality. Riutilizzare il renderer per demo/preview, nessun checkoutsimulato dichiaratopagamento; prerequisitireali secondo contractcommercegiàsalvato.
+3. Copy6bozzesocialrevisionato pronto in /tmp/omni101-deleghe/g7-social-copy/review; importcomeDRAFTneglistoresesistenti, nessunpost/send. ImmaginiCodex-only.
+4. Continuare gruppi65 inmatrice pervalore/dipendenze; coperturasemanticaNON_ESTABLISHED, nonconfonderecatturaecompletamento. QAindipendentedurantelases­sione, nessunnuovojobpersistente.
