@@ -112,6 +112,13 @@
  .omni-assist-form textarea,.omni-assist-lead input:not([type=checkbox]),.omni-assist-lead textarea{font-size:16px}
  .omni-assist-confirm,.omni-assist-error,.omni-assist-status{padding-inline:14px}
 }
+/* Telefono: il lanciatore e' solo icona 44x44 (il nome accessibile resta "OMNI ASSIST" da aria-label). Le card del capitolo riservano la fascia a destra. */
+@media(max-width:520px){
+ .omni-assist-launch{right:max(12px,env(safe-area-inset-right));bottom:calc(76px + env(safe-area-inset-bottom));width:44px;padding:0;gap:6px}
+ .omni-assist-launch span{display:none}
+ .omni-assist-launch b{font-size:0;letter-spacing:0}
+ .omni-assist-launch b::first-letter{font-size:15px}
+}
 /* Cinema demos retain bottom controls when motion is reduced; keep the same clearance. */
 @keyframes assist-up{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.omni-assist-body{scroll-behavior:auto}.omni-assist-dialog[open],.omni-assist-loading i{animation:none}}

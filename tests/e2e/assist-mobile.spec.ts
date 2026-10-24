@@ -69,10 +69,12 @@ for(const motion of ['no-preference','reduce'] as const){
   const launch=page.getByRole('button',{name:'OMNI ASSIST',exact:true});
   const box=await launch.boundingBox();
   expect(box).toBeTruthy();
-  expect(box!.width).toBeLessThanOrEqual(160);
+  expect(box!.width).toBeGreaterThanOrEqual(44);
+  expect(box!.width).toBeLessThanOrEqual(48);
   expect(box!.height).toBeGreaterThanOrEqual(44);
   expect(box!.height).toBeLessThanOrEqual(48);
-  expect(640-(box!.y+box!.height)).toBeGreaterThanOrEqual(14);
+  expect(640-(box!.y+box!.height)).toBeGreaterThanOrEqual(72);
+  expect(320-(box!.x+box!.width)).toBeGreaterThanOrEqual(12);
   const last=links.last();
   await last.focus();
   await page.keyboard.press('Tab');
